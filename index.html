@@ -978,7 +978,7 @@
     <div class="eyebrow rv up">HSE-005 · Gestión de seguridad de procesos</div>
     <h2 class="rv up" style="--d:1">Enfoque de seguridad de procesos</h2>
     <p class="lead rv up" style="--d:2">Pasa el cursor (o toca) los puntos titilantes del plano para descubrir la información. 👆</p>
-    <div class="plano rv up" id="plano"><div class="plano-ph" id="planoPh">Sube tu PNG del plano aquí (configura <b>PLANO_IMG</b> en el script)</div></div>
+    <div class="plano rv up" id="plano"><div class="plano-ph" id="planoPh">Sube la imagen del plano al repositorio como <b>imagenes/plano.png</b></div></div>
   </div>
 </section>
 <section class="slide dark" data-mod="4">
@@ -1268,9 +1268,10 @@ document.querySelectorAll('.acc').forEach(function(a){
   a.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); t(); } });
 });
 /* ====== PLANO isométrico (Módulo 4) — sube tu PNG y ajusta puntos ====== */
-// 1) Sube el PNG a Drive, hazlo público, y pon aquí un enlace directo, ej:
-//    "https://drive.google.com/file/d/1xXSxI48TlKACBcvuxA48ZUze2UOP8kAH/view?usp=sharing"
-var PLANO_IMG = "https://drive.google.com/thumbnail?id=1xXSxI48TlKACBcvuxA48ZUze2UOP8kAH&sz=w1000";
+// 1) Sube tu imagen del plano al repositorio dentro de la carpeta "imagenes/"
+//    (por ejemplo imagenes/plano.png) y deja aquí la ruta.  Si le pones otro
+//    nombre, cámbialo aquí. También puedes usar un enlace https si prefieres.
+var PLANO_IMG = "imagenes/plano.png";
 // 2) Ajusta x/y (en %) de cada punto según tu imagen. Los textos 3 y 5 edítalos si aplica.
 var PLANO = [
  {x:18, y:55, t:'Combustibles tradicionales (sólidos, líquidos, gas)'},
@@ -1286,7 +1287,12 @@ var PLANO = [
 (function(){
   var cont=document.getElementById('plano'); if(!cont) return;
   var ph=document.getElementById('planoPh');
-  if(PLANO_IMG){ var img=document.createElement('img'); img.loading='lazy'; img.decoding='async'; img.src=PLANO_IMG; img.alt='Plano de planta'; cont.insertBefore(img,ph); ph.style.display='none'; }
+  if(PLANO_IMG){
+    var img=document.createElement('img'); img.loading='lazy'; img.decoding='async'; img.alt='Plano de planta';
+    img.onload=function(){ ph.style.display='none'; };           // se muestra solo si carga bien
+    img.onerror=function(){ img.remove(); ph.style.display=''; }; // si falta la imagen, deja el aviso (sin ícono roto)
+    img.src=PLANO_IMG; cont.insertBefore(img,ph);
+  }
   PLANO.forEach(function(p,i){
     var b=document.createElement('button');
     b.className='hot gclick'; b.style.left=p.x+'%'; b.style.top=p.y+'%'; b.textContent=(i+1);
