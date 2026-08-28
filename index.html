@@ -1040,6 +1040,23 @@
 /* ====== CONFIGURACIÓN ====== */
 var EXIGIR_VIDEO_COMPLETO = true;   // pon false para no obligar a ver el video completo
 var URL_PORTAL = "";                // opcional: URL /exec del portal para el botón Salir
+
+/* ====== BODEGA DE ARCHIVOS (imágenes, audio, etc.) ======
+   IMPORTANTE: cuando este HTML se sirve dentro de Google Apps Script / el
+   portal interno, las rutas relativas NO cargan. Por eso los recursos usan
+   URL ABSOLUTA hacia GitHub Pages. Deja aquí la URL base de tu GitHub Pages
+   (con la barra final "/"). Si algún día sirves el HTML directo desde GitHub
+   Pages, puedes dejar BASE = "" y funcionará igual con rutas relativas. */
+var BASE = "https://zuicagerman-eng.github.io/Pagina-html-recapacitaciones-Holcim/";
+function asset(ruta){ return BASE + ruta; }   // helper: asset("imagenes/plano.png")
+
+/* Convierte automáticamente los recursos marcados con data-audio / data-img
+   en URL absoluta (BASE). Así puedes escribir en el HTML:
+     <source data-audio="audio/narracion.mp3" type="audio/mpeg">
+     <img data-img="imagenes/foto.png" alt="...">
+   y funcionará también dentro de Apps Script / el portal. */
+document.querySelectorAll('source[data-audio],audio[data-audio]').forEach(function(el){ el.src=asset(el.getAttribute('data-audio')); });
+document.querySelectorAll('img[data-img]').forEach(function(el){ el.src=asset(el.getAttribute('data-img')); });
 /* ===== PDFs Módulo 2 (pega los ID de Drive) ===== */
 var PDFS = {
   politica    : "1oANFGDzC4aV3DgqxJZHGcggIfBD59UHv",
@@ -1269,9 +1286,9 @@ document.querySelectorAll('.acc').forEach(function(a){
 });
 /* ====== PLANO isométrico (Módulo 4) — sube tu PNG y ajusta puntos ====== */
 // 1) Sube tu imagen del plano al repositorio dentro de la carpeta "imagenes/"
-//    (por ejemplo imagenes/plano.png) y deja aquí la ruta.  Si le pones otro
-//    nombre, cámbialo aquí. También puedes usar un enlace https si prefieres.
-var PLANO_IMG = "imagenes/plano.png";
+//    (por ejemplo imagenes/plano.png). Se carga con URL absoluta (variable BASE)
+//    para que funcione también dentro de Apps Script / el portal.
+var PLANO_IMG = asset("imagenes/plano.png");
 // 2) Ajusta x/y (en %) de cada punto según tu imagen. Los textos 3 y 5 edítalos si aplica.
 var PLANO = [
  {x:18, y:55, t:'Combustibles tradicionales (sólidos, líquidos, gas)'},
