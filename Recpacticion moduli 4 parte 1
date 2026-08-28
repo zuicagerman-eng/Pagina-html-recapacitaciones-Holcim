@@ -1,0 +1,3099 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>HSE-001 · Reinducción H&S · Módulos 1 y 2</title>
+
+<script src="https://player.vimeo.com/api/player.js"></script>
+
+<style>
+
+  :root{
+
+    --navy:#071a38; --navy-2:#0b2549; --panel:#0e2c56;
+
+    --light:#eef3f9; --white:#fff; --ink:#0b2545; --muted:#5b6b82;
+
+    --green:#97d13b; --cyan:#1bb4e4; --blue:#1877c4; --danger:#e23b32; --ok:#3fb559;
+
+    --grad:linear-gradient(90deg,#97d13b 0%,#1bb4e4 52%,#1877c4 100%);
+
+    --shadow:0 18px 45px -20px rgba(8,25,55,.55);
+
+    --font:"Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+
+    --hud:60px; --footer:74px;
+
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+
+  body{font-family:var(--font);color:var(--ink);background:var(--navy);overflow:hidden;-webkit-font-smoothing:antialiased}
+
+
+
+  /* ===== HUD superior ===== */
+
+  header.hud{position:fixed;top:0;left:0;right:0;height:var(--hud);z-index:60;
+
+    background:var(--navy);display:flex;align-items:center;gap:14px;padding:0 18px;
+
+    border-bottom:1px solid rgba(255,255,255,.08)}
+
+  .brand{display:flex;align-items:center;gap:10px;color:#fff}
+
+  .brand .logo{width:30px;height:30px;flex:none}
+
+  .brand b{font-size:13.5px;font-weight:700;line-height:1.1;display:block}
+
+  .brand small{font-size:11px;color:#8fa9cc;letter-spacing:.4px}
+
+  .step{margin-left:auto;color:#c2d3ea;font-size:12.5px;font-weight:600;white-space:nowrap}
+
+  #exit{margin-left:14px;display:flex;align-items:center;gap:8px;border:none;border-radius:999px;
+
+    padding:9px 15px;font-family:var(--font);font-weight:700;font-size:13px;cursor:pointer;transition:.2s;
+
+    background:#fff;color:var(--ink)}
+
+  #exit svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.3;stroke-linecap:round;stroke-linejoin:round}
+
+  #exit:not(.locked):hover{background:var(--danger);color:#fff;transform:translateY(-1px)}
+
+  #exit.locked{background:rgba(255,255,255,.14);color:#8fa9cc;cursor:not-allowed}
+
+  .hudbar{position:absolute;left:0;bottom:-1px;height:3px;width:100%;background:rgba(255,255,255,.08)}
+
+  #hudfill{height:100%;width:0;background:var(--grad);transition:width .45s ease}
+
+  @media(max-width:560px){.brand small{display:none}.step{font-size:11px}#exit span{display:none}#exit{padding:9px}}
+
+
+
+  /* ===== Deck ===== */
+
+  .deck{position:fixed;left:0;right:0;top:var(--hud);bottom:var(--footer);overflow:hidden;background:var(--navy)}
+
+  .slide{position:absolute;inset:0;overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch;transform:translateX(100%);
+
+    transition:transform .5s cubic-bezier(.6,.05,.2,1);padding:38px clamp(18px,6vw,80px);
+
+    display:flex;flex-direction:column}
+
+  .slide.active{transform:translateX(0)}
+
+  .slide::-webkit-scrollbar{width:8px}
+
+  .slide::-webkit-scrollbar-thumb{background:rgba(120,140,170,.4);border-radius:8px}
+
+  .slide.dark{background:radial-gradient(900px 520px at 80% 6%,rgba(27,180,228,.15),transparent 60%),radial-gradient(760px 520px at 4% 96%,rgba(151,209,59,.13),transparent 55%),var(--navy);color:#fff}
+
+  .slide.light{background:var(--light);color:var(--ink)}
+
+  .wrap{width:100%;max-width:1080px;margin:auto}
+
+
+
+  .eyebrow{display:inline-block;font-size:12px;font-weight:800;letter-spacing:2.2px;text-transform:uppercase;
+
+    background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:12px}
+
+  h1{font-size:clamp(30px,5.2vw,58px);line-height:1.04;font-weight:800;letter-spacing:-.5px}
+
+  h2{font-size:clamp(22px,3.5vw,38px);line-height:1.12;font-weight:800;letter-spacing:-.3px}
+
+  .lead{font-size:clamp(14px,1.6vw,17px);line-height:1.6;color:var(--muted);max-width:62ch;margin-top:12px}
+
+  .slide.dark .lead{color:#b9c7dc}
+
+  .gline{height:5px;width:110px;border-radius:4px;background:var(--grad);margin:16px 0 2px}
+
+
+
+  /* reveal */
+
+  .rv{opacity:0;transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1);transition-delay:calc(var(--d,0)*80ms)}
+
+  .rv.up{transform:translateY(30px)} .rv.left{transform:translateX(-40px)}
+
+  .rv.right{transform:translateX(40px)} .rv.scale{transform:scale(.9)}
+
+  .rv.in{opacity:1;transform:none}
+
+
+
+  /* ===== Footer nav ===== */
+
+  footer.nav{position:fixed;left:0;right:0;bottom:0;height:var(--footer);z-index:60;
+
+    background:var(--navy);border-top:1px solid rgba(255,255,255,.08);
+
+    display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 18px}
+
+  .nbtn{display:flex;align-items:center;gap:8px;border-radius:12px;padding:12px 22px;font-family:var(--font);
+
+    font-weight:700;font-size:14px;cursor:pointer;border:none;transition:.2s}
+
+  #prev{background:rgba(255,255,255,.1);color:#dbe6f5}
+
+  #prev:hover:not(:disabled){background:rgba(255,255,255,.18)}
+
+  #next{background:var(--grad);color:#062038;box-shadow:0 10px 24px -12px rgba(27,180,228,.9)}
+
+  #next:hover:not(:disabled){transform:translateY(-1px)}
+
+  .nbtn:disabled{opacity:.4;cursor:not-allowed}
+
+  #pips{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;max-width:50%}
+
+  #pips i{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.25);cursor:pointer;transition:.25s}
+
+  #pips i.on{background:var(--grad);transform:scale(1.3)}
+
+  #pips i.lock{opacity:.28;cursor:not-allowed}
+
+  @media(max-width:640px){#pips{display:none}.nbtn{padding:12px 18px}}
+
+
+
+  /* ===== HERO ===== */
+
+  .hero-code{font-weight:800;letter-spacing:3px;font-size:clamp(40px,8vw,84px);line-height:.98}
+
+  .hero-title{font-weight:800;font-size:clamp(24px,5vw,48px);margin-top:4px}
+
+  .tag{margin-top:24px;display:flex;gap:10px;flex-wrap:wrap}
+
+  .pill{border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:7px 15px;font-size:12.5px;font-weight:600;color:#dbe6f5;background:rgba(255,255,255,.04)}
+
+  .blob{position:absolute;border-radius:50%;filter:blur(70px);opacity:.45;pointer-events:none}
+
+  .b1{width:320px;height:320px;background:#1bb4e4;top:2%;right:5%}
+
+  .b2{width:280px;height:280px;background:#97d13b;bottom:2%;left:1%}
+
+
+
+  /* ===== VIDEO ===== */
+
+  .videobox{margin-top:22px;border-radius:16px;overflow:hidden;box-shadow:var(--shadow);background:#000;
+
+    position:relative;padding-top:56.25%}
+
+  .videobox iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+
+  .vhint{margin-top:14px;display:flex;align-items:center;gap:10px;font-size:14px;color:#b9c7dc}
+
+  .vhint.done{color:var(--green)}
+
+  .vhint svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2.2}
+
+  .vskip{margin-top:8px;font-size:12.5px;color:#7f93b0;background:none;border:none;text-decoration:underline;cursor:pointer;font-family:var(--font)}
+
+
+
+  /* ===== cards / generic ===== */
+
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+
+  @media(max-width:820px){.grid3{grid-template-columns:1fr 1fr}}
+
+  @media(max-width:520px){.grid3{grid-template-columns:1fr}}
+
+  .card{background:#fff;border-radius:16px;padding:22px;box-shadow:var(--shadow)}
+
+  .slide.dark .card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09)}
+
+  .ic{width:50px;height:50px;border-radius:13px;display:grid;place-items:center;background:var(--grad);margin-bottom:14px}
+
+  .ic svg{width:27px;height:27px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+  .card h3{font-size:17px;margin-bottom:7px} .card p{font-size:14px;line-height:1.5;color:var(--muted)}
+
+  .slide.dark .card p{color:#c2d0e6}
+
+
+
+  /* two columns emergencia */
+
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+
+  @media(max-width:820px){.two{grid-template-columns:1fr}}
+
+  .panel{border-radius:16px;padding:24px;box-shadow:var(--shadow)}
+
+  .panel.blue{background:var(--panel);color:#fff}
+
+  .panel.cyan{background:linear-gradient(160deg,#1bb4e4,#1481c4);color:#fff}
+
+  .panel h3{font-size:18px;margin-bottom:14px;font-weight:800}
+
+  .steplist{list-style:none;display:flex;flex-direction:column;gap:12px}
+
+  .steplist li{display:flex;gap:12px;align-items:flex-start;font-size:14.5px;line-height:1.45}
+
+  .num{flex:none;width:25px;height:25px;border-radius:50%;background:rgba(255,255,255,.18);display:grid;place-items:center;font-weight:800;font-size:12px}
+
+  .banner{margin-top:20px;text-align:center;font-weight:700;font-size:14.5px;padding:15px 20px;border-radius:13px;background:#fff;color:var(--ink);box-shadow:var(--shadow);position:relative}
+
+  .banner:before{content:"";position:absolute;left:0;top:11px;bottom:11px;width:5px;border-radius:4px;background:var(--grad)}
+
+
+
+  /* comportamientos */
+
+  .behaviors{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+
+  @media(max-width:900px){.behaviors{grid-template-columns:repeat(2,1fr)}}
+
+  @media(max-width:520px){.behaviors{grid-template-columns:1fr}}
+
+  .beh{background:#fff;border-radius:15px;padding:18px 14px;text-align:center;box-shadow:var(--shadow);transition:.3s}
+
+  .beh:hover{transform:translateY(-5px)}
+
+  .beh .sign{width:56px;height:56px;margin:0 auto 12px}
+
+  .beh p{font-size:13px;font-weight:600;line-height:1.35;color:var(--ink)}
+
+  .beh.rec{background:linear-gradient(160deg,#0e2c56,#123a6e)} .beh.rec p{color:#fff}
+
+
+
+  /* EPP */
+
+  .epp{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+
+  @media(max-width:820px){.epp{grid-template-columns:repeat(2,1fr)}}
+
+  @media(max-width:480px){.epp{grid-template-columns:1fr}}
+
+  .eppcard{background:#fff;border-radius:15px;padding:18px;display:flex;align-items:center;gap:14px;box-shadow:var(--shadow);transition:.3s}
+
+  .eppcard:hover{transform:translateY(-4px)} .eppcard .ic{margin-bottom:0;width:46px;height:46px}
+
+  .eppcard span{font-weight:700;font-size:14.5px;color:var(--ink)}
+
+  .redline{display:flex;align-items:center;gap:12px;margin:4px 0 22px}
+
+  .redline .dot{width:11px;height:11px;border-radius:50%;background:var(--danger)}
+
+  .redline .rl{flex:1;height:3px;background:var(--danger);border-radius:3px}
+
+  .redline b{color:var(--danger);font-weight:800;letter-spacing:.5px;text-transform:uppercase;font-size:13.5px}
+
+  .warn{margin-top:20px;background:linear-gradient(160deg,#1bb4e4,#1481c4);color:#fff;padding:15px 20px;border-radius:13px;font-weight:600;font-size:14px;display:flex;gap:12px;align-items:center}
+
+  .warn svg{width:24px;height:24px;flex:none;stroke:#fff;fill:none;stroke-width:2}
+
+
+
+  /* flip cards */
+
+  .flips{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+
+  @media(max-width:760px){.flips{grid-template-columns:1fr}}
+
+  .flip{perspective:1400px;height:250px;cursor:pointer}
+
+  .flip-in{position:relative;width:100%;height:100%;transition:transform .7s cubic-bezier(.4,.2,.2,1);transform-style:preserve-3d}
+
+  .flip.flipped .flip-in{transform:rotateY(180deg)}
+
+  .face{position:absolute;inset:0;border-radius:16px;padding:24px;backface-visibility:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column}
+
+  .front{background:var(--panel);color:#fff;justify-content:space-between}
+
+  .front .n{font-size:48px;font-weight:800;opacity:.18;line-height:1}
+
+  .front h3{font-size:21px;font-weight:800}
+
+  .front .hint{font-size:12px;color:#9fc7e8;display:flex;align-items:center;gap:6px}
+
+  .back{background:#fff;color:var(--ink);transform:rotateY(180deg);overflow:auto}
+
+  .back h4{font-size:15px;margin-bottom:7px;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:800}
+
+  .back p{font-size:13px;line-height:1.5;color:var(--muted)}
+
+  .back .ej{margin-top:10px;padding:10px 12px;border-radius:9px;background:#f0f6d9;color:#4d6b16;font-size:12.5px;line-height:1.45}
+
+
+
+  /* equation */
+
+  .eq{display:flex;align-items:stretch;justify-content:center;gap:14px;flex-wrap:wrap}
+
+  .eq-box{flex:1;min-width:170px;max-width:270px;border-radius:16px;padding:22px 18px;text-align:center;color:#fff;box-shadow:var(--shadow)}
+
+  .eq-box.a{background:linear-gradient(160deg,#1877c4,#0e2c56)} .eq-box.b{background:linear-gradient(160deg,#1bb4e4,#1481c4)} .eq-box.c{background:linear-gradient(160deg,#e23b32,#b0261f)}
+
+  .eq-box .lbl{font-size:11px;text-transform:uppercase;letter-spacing:1.4px;opacity:.85;margin-bottom:8px}
+
+  .eq-box .big{font-size:18px;font-weight:800;line-height:1.2} .eq-box .ex{font-size:12px;margin-top:8px;opacity:.9;line-height:1.4}
+
+  .eq-op{display:grid;place-items:center;font-size:36px;font-weight:800;color:#8fd6f2;min-width:30px}
+
+  @media(max-width:760px){.eq{flex-direction:column;align-items:center}.eq-op{transform:rotate(90deg)}.eq-box{max-width:340px;width:100%}}
+
+
+
+  /* peligro vs riesgo */
+
+  .pr{display:grid;grid-template-columns:1fr 1fr;gap:2px;border-radius:16px;overflow:hidden;box-shadow:var(--shadow)}
+
+  @media(max-width:760px){.pr{grid-template-columns:1fr}}
+
+  .pr .col{background:#fff;padding:22px}
+
+  .pr .head{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+
+  .pr .head .ic{margin-bottom:0;width:44px;height:44px} .pr .head h3{font-size:19px;font-weight:800}
+
+  .pr .col.pel .head h3{color:var(--blue)} .pr .col.rie .head h3{color:var(--cyan)}
+
+  .pr .def{font-size:13.5px;color:var(--muted);line-height:1.5;margin-bottom:14px}
+
+  .pr .row{padding:11px 0;border-top:1px dashed #cdd8e6;font-size:13.5px;line-height:1.45}
+
+  .pr .row b{color:var(--ink)}
+
+
+
+  /* quiz */
+
+  .quiz{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+
+  @media(max-width:760px){.quiz{grid-template-columns:1fr}}
+
+  .opt{background:#fff;border:3px solid transparent;border-radius:16px;padding:24px;cursor:pointer;transition:.25s;box-shadow:var(--shadow);position:relative}
+
+  .opt:hover{transform:translateY(-4px)} .opt .tg{font-size:30px;font-weight:800;color:var(--blue)}
+
+  .opt p{font-size:14px;line-height:1.5;color:var(--ink);margin-top:6px}
+
+  .opt .mark{position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;opacity:0;transition:.3s;color:#fff;font-weight:800}
+
+  .quiz.answered .opt{cursor:default}
+
+  .quiz.answered .opt.correct{border-color:var(--ok)} .quiz.answered .opt.correct .mark{opacity:1;background:var(--ok)}
+
+  .quiz.answered .opt.wrong{border-color:var(--danger);opacity:.65} .quiz.answered .opt.wrong .mark{opacity:1;background:var(--danger)}
+
+  .verdict{margin-top:20px;padding:16px 20px;border-radius:13px;background:var(--panel);color:#fff;font-size:14.5px;line-height:1.55;opacity:0;max-height:0;overflow:hidden;transition:.5s}
+
+  .verdict.show{opacity:1;max-height:260px} .verdict b{color:#8fd6f2}
+
+
+
+  /* steps3 shark */
+
+  .steps3{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:center;gap:10px}
+
+  @media(max-width:820px){.steps3{grid-template-columns:1fr;gap:14px}.steps3 .arrow{transform:rotate(90deg);justify-self:center}}
+
+  .s3{background:#fff;border-radius:16px;padding:22px 18px;text-align:center;box-shadow:var(--shadow)}
+
+  .s3 .k{font-size:11px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;padding:5px 13px;border-radius:999px;color:#fff;display:inline-block;margin-bottom:12px}
+
+  .s3.pel .k{background:var(--blue)} .s3.rie .k{background:var(--cyan)} .s3.accid .k{background:var(--danger)}
+
+  .s3 .art{width:70px;height:70px;margin:0 auto 12px} .s3 p{font-size:13.5px;line-height:1.5;color:var(--ink)}
+
+  .arrow svg{width:32px;height:32px;stroke:var(--cyan);fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+
+
+
+  /* clasificación de peligros */
+
+  .cats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+
+  @media(max-width:820px){.cats{grid-template-columns:1fr 1fr}}
+
+  @media(max-width:520px){.cats{grid-template-columns:1fr}}
+
+  .cat{border-radius:15px;overflow:hidden;box-shadow:var(--shadow);background:#fff}
+
+  .cat .top{height:96px;display:grid;place-items:center;background:#eef3f9}
+
+  .cat .top svg{width:52px;height:52px}
+
+  .cat .bd{padding:16px 16px 18px;color:#fff}
+
+  .bd.d{background:var(--panel)} .bd.c{background:linear-gradient(160deg,#1bb4e4,#1481c4)}
+
+  .cat .bd h3{font-size:16px;font-weight:800;margin-bottom:5px}
+
+  .cat .bd p{font-size:12.5px;line-height:1.45;opacity:.92}
+
+
+
+  /* condiciones — acordeón interactivo */
+
+  .accgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}
+
+  @media(max-width:720px){.accgrid{grid-template-columns:1fr}}
+
+  .acc{background:#fff;border-radius:13px;box-shadow:var(--shadow);cursor:pointer;overflow:hidden;
+
+    border:2px solid transparent;transition:border-color .25s,transform .2s}
+
+  .acc:hover{transform:translateY(-2px)}
+
+  .acc.open{border-color:var(--cyan)}
+
+  .acc-head{display:flex;gap:13px;align-items:center;padding:15px 16px}
+
+  .acc-head .tri{width:38px;height:38px;flex:none}
+
+  .acc-head h4{font-size:15px;font-weight:800;color:var(--blue);flex:1;line-height:1.2}
+
+  .acc-head .chev{width:26px;height:26px;flex:none;border-radius:50%;background:var(--grad);color:#062038;
+
+    display:grid;place-items:center;font-weight:800;font-size:18px;line-height:1;transition:transform .35s}
+
+  .acc.open .acc-head .chev{transform:rotate(45deg)}
+
+  .acc-body{max-height:0;overflow:hidden;opacity:0;transition:max-height .4s ease,opacity .35s ease,padding .4s ease;padding:0 16px}
+
+  .acc.open .acc-body{max-height:360px;opacity:1;padding:0 16px 16px 60px}
+
+  .acc-body p{font-size:13.5px;color:var(--muted);line-height:1.5}
+
+  .acc-body p b{color:var(--ink)}
+
+  .acc-body .tag{display:block;margin-bottom:4px;font-size:13.5px;font-weight:700;color:var(--ink)}
+
+  .acc-body .li{display:flex;gap:9px;font-size:13.5px;line-height:1.5;color:var(--muted);margin-top:6px}
+
+  .acc-body .li .b{flex:none;width:6px;height:6px;border-radius:50%;background:var(--green);margin-top:7px}
+
+
+
+  /* cierre */
+
+  .done-badge{width:96px;height:96px;border-radius:50%;background:var(--grad);display:grid;place-items:center;margin-bottom:24px}
+
+  .done-badge svg{width:52px;height:52px;stroke:#fff;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+
+  .recap{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+
+  .recap .chip{border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.05);border-radius:999px;padding:9px 16px;font-size:13px;font-weight:600;color:#dbe6f5}
+
+
+
+  /* toast */
+
+  #toast{position:fixed;left:50%;bottom:90px;transform:translate(-50%,20px);z-index:80;
+
+    background:#0b2549;color:#fff;padding:12px 20px;border-radius:12px;font-size:13.5px;font-weight:600;
+
+    box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:.3s;border:1px solid rgba(255,255,255,.12)}
+
+  #toast.show{opacity:1;transform:translate(-50%,0)}
+
+
+
+  /* ===== Ajustes celular ===== */
+
+  @media(max-width:640px){
+
+    :root{--hud:56px;--footer:68px}
+
+    h2{font-size:clamp(21px,6.5vw,30px)}
+
+    .flip{height:auto;min-height:230px}
+
+    .flip-in{min-height:230px}
+
+    .videobox{margin-top:16px}
+
+    .nbtn{font-size:13.5px}
+
+    .eq-op{font-size:30px}
+
+    .conf{padding:20px;gap:16px}.conf .tri{width:72px;height:72px}
+
+    .beh .sign{width:50px;height:50px}
+
+    .slide{padding:28px 16px}
+
+  }
+
+  @media(max-width:400px){
+
+    .step{display:none}
+
+    .nbtn{padding:11px 14px}
+
+  }
+
+
+
+  /* ===== Componentes Módulo 2 ===== */
+
+
+
+  :root{
+
+    --navy:#071a38; --navy-2:#0b2549; --panel:#0e2c56;
+
+    --light:#eef3f9; --white:#fff; --ink:#0b2545; --muted:#5b6b82;
+
+    --green:#97d13b; --cyan:#1bb4e4; --blue:#1877c4; --danger:#e23b32; --ok:#3fb559;
+
+    --teal:#17868a; --orange:#ef7d00; --magenta:#e6007e; --gold:#f5b700;
+
+    --grad:linear-gradient(90deg,#97d13b 0%,#1bb4e4 52%,#1877c4 100%);
+
+    --shadow:0 18px 45px -20px rgba(8,25,55,.55);
+
+    --font:"Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+
+    --hud:60px; --footer:74px;
+
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+
+  body{font-family:var(--font);color:var(--ink);background:var(--navy);overflow:hidden;-webkit-font-smoothing:antialiased}
+
+
+
+  /* ===== HUD ===== */
+
+  header.hud{position:fixed;top:0;left:0;right:0;height:var(--hud);z-index:60;background:var(--navy);display:flex;align-items:center;gap:14px;padding:0 18px;border-bottom:1px solid rgba(255,255,255,.08)}
+
+  .brand{display:flex;align-items:center;gap:10px;color:#fff}
+
+  .brand .logo{width:30px;height:30px;flex:none}
+
+  .brand b{font-size:13.5px;font-weight:700;line-height:1.1;display:block}
+
+  .brand small{font-size:11px;color:#8fa9cc;letter-spacing:.4px}
+
+  .step{margin-left:auto;color:#c2d3ea;font-size:12.5px;font-weight:600;white-space:nowrap}
+
+  #exit{margin-left:14px;display:flex;align-items:center;gap:8px;border:none;border-radius:999px;padding:9px 15px;font-family:var(--font);font-weight:700;font-size:13px;cursor:pointer;transition:.2s;background:#fff;color:var(--ink)}
+
+  #exit svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.3;stroke-linecap:round;stroke-linejoin:round}
+
+  #exit:not(.locked):hover{background:var(--danger);color:#fff;transform:translateY(-1px)}
+
+  #exit.locked{background:rgba(255,255,255,.14);color:#8fa9cc;cursor:not-allowed}
+
+  .hudbar{position:absolute;left:0;bottom:-1px;height:3px;width:100%;background:rgba(255,255,255,.08)}
+
+  #hudfill{height:100%;width:0;background:var(--grad);transition:width .45s ease}
+
+  @media(max-width:560px){.brand small{display:none}.step{font-size:11px}#exit span{display:none}#exit{padding:9px}}
+
+
+
+  /* ===== Deck ===== */
+
+  .deck{position:fixed;left:0;right:0;top:var(--hud);bottom:var(--footer);overflow:hidden;background:var(--navy)}
+
+  .slide{position:absolute;inset:0;overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch;transform:translateX(100%);transition:transform .5s cubic-bezier(.6,.05,.2,1);padding:38px clamp(18px,6vw,80px);display:flex;flex-direction:column}
+
+  .slide.active{transform:translateX(0)}
+
+  .slide::-webkit-scrollbar{width:8px}
+
+  .slide::-webkit-scrollbar-thumb{background:rgba(120,140,170,.4);border-radius:8px}
+
+  .slide.dark{background:radial-gradient(900px 520px at 80% 6%,rgba(27,180,228,.15),transparent 60%),radial-gradient(760px 520px at 4% 96%,rgba(151,209,59,.13),transparent 55%),var(--navy);color:#fff}
+
+  .slide.light{background:var(--light);color:var(--ink)}
+
+  .wrap{width:100%;max-width:1080px;margin:auto}
+
+
+
+  .eyebrow{display:inline-block;font-size:12px;font-weight:800;letter-spacing:2.2px;text-transform:uppercase;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:12px}
+
+  h1{font-size:clamp(30px,5.2vw,58px);line-height:1.04;font-weight:800;letter-spacing:-.5px}
+
+  h2{font-size:clamp(22px,3.5vw,38px);line-height:1.12;font-weight:800;letter-spacing:-.3px}
+
+  .lead{font-size:clamp(14px,1.6vw,17px);line-height:1.6;color:var(--muted);max-width:62ch;margin-top:12px}
+
+  .slide.dark .lead{color:#b9c7dc}
+
+  .gline{height:5px;width:110px;border-radius:4px;background:var(--grad);margin:16px 0 2px}
+
+
+
+  .rv{opacity:0;transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1);transition-delay:calc(var(--d,0)*80ms)}
+
+  .rv.up{transform:translateY(30px)} .rv.left{transform:translateX(-40px)} .rv.right{transform:translateX(40px)} .rv.scale{transform:scale(.9)}
+
+  .rv.in{opacity:1;transform:none}
+
+
+
+  /* ===== Footer nav ===== */
+
+  footer.nav{position:fixed;left:0;right:0;bottom:0;height:var(--footer);z-index:60;background:var(--navy);border-top:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 18px}
+
+  .nbtn{display:flex;align-items:center;gap:8px;border-radius:12px;padding:12px 22px;font-family:var(--font);font-weight:700;font-size:14px;cursor:pointer;border:none;transition:.2s}
+
+  #prev{background:rgba(255,255,255,.1);color:#dbe6f5} #prev:hover:not(:disabled){background:rgba(255,255,255,.18)}
+
+  #next{background:var(--grad);color:#062038;box-shadow:0 10px 24px -12px rgba(27,180,228,.9)} #next:hover:not(:disabled){transform:translateY(-1px)}
+
+  .nbtn:disabled{opacity:.4;cursor:not-allowed}
+
+  #pips{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;max-width:50%}
+
+  #pips i{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.25);cursor:pointer;transition:.25s}
+
+  #pips i.on{background:var(--grad);transform:scale(1.3)} #pips i.lock{opacity:.28;cursor:not-allowed}
+
+  @media(max-width:640px){#pips{display:none}.nbtn{padding:12px 18px}}
+
+
+
+  /* HERO */
+
+  .hero-code{font-weight:800;letter-spacing:3px;font-size:clamp(40px,8vw,84px);line-height:.98}
+
+  .hero-title{font-weight:800;font-size:clamp(22px,4.6vw,44px);margin-top:4px}
+
+  .tag{margin-top:24px;display:flex;gap:10px;flex-wrap:wrap}
+
+  .pill{border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:7px 15px;font-size:12.5px;font-weight:600;color:#dbe6f5;background:rgba(255,255,255,.04)}
+
+  .blob{position:absolute;border-radius:50%;filter:blur(70px);opacity:.45;pointer-events:none}
+
+  .b1{width:320px;height:320px;background:#1bb4e4;top:2%;right:5%} .b2{width:280px;height:280px;background:#97d13b;bottom:2%;left:1%}
+
+
+
+  /* ===== WHEEL SG-SST ===== */
+
+  .wheelwrap{display:grid;grid-template-columns:minmax(0,360px) 1fr;gap:30px;align-items:center;margin-top:22px}
+
+  @media(max-width:800px){.wheelwrap{grid-template-columns:1fr;justify-items:center}}
+
+  .wheel{position:relative;width:min(360px,82vw);aspect-ratio:1;flex:none}
+
+  .ring{position:absolute;inset:0;border-radius:50%;box-shadow:var(--shadow);
+
+    background:conic-gradient(var(--danger) 0 60deg,var(--gold) 60deg 120deg,var(--green) 120deg 180deg,var(--teal) 180deg 240deg,var(--orange) 240deg 300deg,#17a2a2 300deg 360deg)}
+
+  .core{position:absolute;inset:15%;border-radius:50%;overflow:hidden;background:linear-gradient(90deg,var(--panel) 0 50%,var(--cyan) 50% 100%);display:grid;grid-template-columns:1fr 1fr;color:#fff;box-shadow:inset 0 0 0 4px rgba(255,255,255,.14)}
+
+  .core .half{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:6px;gap:5px}
+
+  .core .half b{font-size:11px;font-weight:800;letter-spacing:.4px;line-height:1.12}
+
+  .core .half svg{width:26px;height:26px;stroke:#fff;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+
+  .wpoint{position:absolute;transform:translate(-50%,-50%);width:44px;height:44px;border-radius:50%;border:3px solid #fff;display:grid;place-items:center;cursor:pointer;box-shadow:0 6px 16px -4px rgba(0,0,0,.55);transition:transform .2s}
+
+  .wpoint::after{content:"";position:absolute;inset:-3px;border-radius:50%;animation:pulse 1.9s infinite}
+
+  .wpoint:hover,.wpoint.active{transform:translate(-50%,-50%) scale(1.16)}
+
+  .wpoint svg{width:22px;height:22px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,255,255,.55)}70%{box-shadow:0 0 0 12px rgba(255,255,255,0)}100%{box-shadow:0 0 0 0 rgba(255,255,255,0)}}
+
+  .winfo{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-left:6px solid var(--cyan);border-radius:16px;padding:24px;min-height:150px;transition:border-color .3s;width:100%}
+
+  .winfo .wp{font-size:11.5px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:#8fd6f2;margin-bottom:8px;display:block}
+
+  .winfo .wt{font-size:20px;font-weight:800;margin-bottom:8px;color:#fff}
+
+  .winfo .wd{font-size:15px;line-height:1.6;color:#c2d0e6}
+
+
+
+  /* ===== PDFs ===== */
+
+  .infobanner{background:var(--panel);color:#fff;border-radius:12px;padding:15px 20px;font-size:14px;line-height:1.5;border-left:5px solid;border-image:var(--grad) 1;margin-top:14px}
+
+  .pdfcards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:22px}
+
+  @media(max-width:760px){.pdfcards{grid-template-columns:1fr}}
+
+  .pdfcard{background:#fff;border-radius:16px;padding:24px 20px;text-align:center;box-shadow:var(--shadow);display:flex;flex-direction:column;align-items:center;gap:14px}
+
+  .pdfcard .pic{width:56px;height:56px;border-radius:15px;background:var(--grad);display:grid;place-items:center}
+
+  .pdfcard .pic svg{width:29px;height:29px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+  .pdfcard h3{font-size:15px;color:var(--ink);line-height:1.3;font-weight:800;flex:1;display:flex;align-items:center}
+
+  .pdfbtn{background:var(--cyan);color:#fff;border:none;border-radius:999px;padding:10px 24px;font-weight:700;font-size:13.5px;cursor:pointer;font-family:var(--font);transition:.2s}
+
+  .pdfbtn:hover{background:var(--blue);transform:translateY(-1px)}
+
+  .authbanner{margin-top:22px;background:linear-gradient(160deg,#1bb4e4,#1481c4);color:#fff;border-radius:14px;padding:18px 22px;font-size:14.5px;line-height:1.55;text-align:center}
+
+  .authbanner b{color:#fff;text-transform:uppercase;letter-spacing:.5px}
+
+
+
+  /* modal PDF */
+
+  .modal{position:fixed;inset:0;z-index:200;background:rgba(4,15,35,.82);display:none;align-items:center;justify-content:center;padding:18px;backdrop-filter:blur(3px)}
+
+  .modal.show{display:flex}
+
+  .modal-box{background:#fff;border-radius:16px;width:min(960px,100%);height:min(82vh,780px);display:flex;flex-direction:column;overflow:hidden;box-shadow:0 30px 80px -20px #000}
+
+  .modal-head{display:flex;align-items:center;gap:12px;padding:14px 18px;background:var(--navy);color:#fff}
+
+  .modal-head span{font-weight:700;font-size:15px;flex:1}
+
+  .modal-head button{background:rgba(255,255,255,.15);border:none;color:#fff;width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:16px;transition:.2s}
+
+  .modal-head button:hover{background:var(--danger)}
+
+  .modal iframe{flex:1;border:0;width:100%;background:#f4f7fb}
+
+  .modal .nopdf{flex:1;display:none;place-items:center;text-align:center;color:var(--muted);padding:34px;font-size:14px;line-height:1.6}
+
+
+
+  /* ===== Acordeón (Reglas y Objetivo) ===== */
+
+  .accgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}
+
+  @media(max-width:760px){.accgrid{grid-template-columns:1fr}}
+
+  .acc{background:#fff;border-radius:13px;box-shadow:var(--shadow);cursor:pointer;overflow:hidden;border:2px solid transparent;transition:border-color .25s,transform .2s}
+
+  .acc:hover{transform:translateY(-2px)} .acc.open{border-color:var(--cyan)}
+
+  .acc-head{display:flex;gap:13px;align-items:center;padding:15px 16px}
+
+  .acc-head .ico{width:38px;height:38px;flex:none;border-radius:10px;background:var(--grad);display:grid;place-items:center}
+
+  .acc-head .ico svg{width:22px;height:22px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+  .acc-head .stripe{width:8px;height:34px;border-radius:4px;flex:none}
+
+  .acc-head h4{font-size:15px;font-weight:800;color:var(--blue);flex:1;line-height:1.2}
+
+  .acc-head .chev{width:26px;height:26px;flex:none;border-radius:50%;background:var(--grad);color:#062038;display:grid;place-items:center;font-weight:800;font-size:18px;line-height:1;transition:transform .35s}
+
+  .acc.open .acc-head .chev{transform:rotate(45deg)}
+
+  .acc-body{max-height:0;overflow:hidden;opacity:0;transition:max-height .45s ease,opacity .35s ease,padding .45s ease;padding:0 16px}
+
+  .acc.open .acc-body{max-height:520px;opacity:1;padding:0 16px 16px 60px}
+
+  .acc-body p{font-size:13.5px;color:var(--muted);line-height:1.55} .acc-body p b{color:var(--ink)}
+
+  .acc-body .ptitle{display:block;margin-bottom:4px;font-size:11.5px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--cyan)}
+
+  .acc-body .pt{display:flex;gap:10px;font-size:13.5px;line-height:1.5;color:var(--muted);margin-top:7px}
+
+  .acc-body .pt .d{flex:none;width:7px;height:7px;border-radius:50%;background:var(--green);margin-top:6px}
+
+
+
+  /* objetivo hero */
+
+  .objhero{background:var(--panel);color:#fff;border-radius:14px;padding:20px;text-align:center;position:relative;overflow:hidden;margin-top:8px}
+
+  .objhero:after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;background:var(--grad)}
+
+  .objhero .t{font-size:18px;font-weight:800} .objhero .s{margin-top:6px;font-size:15px;opacity:.92}
+
+
+
+  /* ===== Liderazgo cards ===== */
+
+  .lead4{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:22px}
+
+  @media(max-width:720px){.lead4{grid-template-columns:1fr}}
+
+  .lcard{border-radius:16px;padding:22px;display:flex;gap:16px;box-shadow:var(--shadow)}
+
+  .lcard.a{background:var(--panel);color:#fff} .lcard.b{background:linear-gradient(160deg,#1bb4e4,#1481c4);color:#fff}
+
+  .lcard .lic{width:58px;height:58px;border-radius:14px;background:rgba(255,255,255,.16);display:grid;place-items:center;flex:none}
+
+  .lcard .lic svg{width:32px;height:32px;stroke:#fff;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+  .lcard h3{font-size:16px;font-weight:800;line-height:1.2}
+
+  .lcard .en{font-size:11.5px;opacity:.82;font-weight:700;letter-spacing:.4px;margin:3px 0 8px}
+
+  .lcard p{font-size:13.5px;line-height:1.5;opacity:.95}
+
+
+
+  /* cierre */
+
+  .done-badge{width:96px;height:96px;border-radius:50%;background:var(--grad);display:grid;place-items:center;margin:0 auto 24px}
+
+  .done-badge svg{width:52px;height:52px;stroke:#fff;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+
+  .recap{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px;justify-content:center}
+
+  .recap .chip{border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.05);border-radius:999px;padding:9px 16px;font-size:13px;font-weight:600;color:#dbe6f5}
+
+
+
+  /* toast */
+
+  #toast{position:fixed;left:50%;bottom:90px;transform:translate(-50%,20px);z-index:210;background:#0b2549;color:#fff;padding:12px 20px;border-radius:12px;font-size:13.5px;font-weight:600;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:.3s;border:1px solid rgba(255,255,255,.12)}
+
+  #toast.show{opacity:1;transform:translate(-50%,0)}
+
+
+
+  @media(max-width:640px){
+
+    :root{--hud:56px;--footer:68px}
+
+    h2{font-size:clamp(21px,6.5vw,30px)}
+
+    .slide{padding:28px 16px}
+
+    .winfo{min-height:auto}
+
+  }
+
+  @media(max-width:400px){.step{display:none}.nbtn{padding:11px 14px}}
+
+
+
+
+
+  /* barrera: elementos ya explorados */
+
+  .wpoint.done{border-color:var(--ok)} .wpoint.done::after{animation:none}
+
+  .acc.done .acc-head .chev{background:var(--ok);color:#fff}
+
+  .flip.done .front .hint{color:var(--green)}
+
+
+
+  /* ===== Módulo 3 ===== */
+
+  .chipgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:20px}
+
+  @media(max-width:900px){.chipgrid{grid-template-columns:repeat(2,1fr)!important}}
+
+  @media(max-width:520px){.chipgrid{grid-template-columns:1fr!important}}
+
+  .chip3{background:#fff;border-radius:14px;padding:14px;box-shadow:var(--shadow);cursor:pointer;border:2px solid transparent;transition:.2s;display:flex;gap:12px;align-items:center;position:relative}
+
+  .chip3:hover{transform:translateY(-3px)} .chip3.sel{border-color:var(--ok)}
+
+  .chip3 .code{font-weight:800;font-size:12.5px;color:#fff;padding:5px 8px;border-radius:8px;flex:none;min-width:60px;text-align:center}
+
+  .chip3 .nm{font-size:13px;font-weight:700;color:var(--ink);line-height:1.25}
+
+  .chip3 .tick{position:absolute;top:7px;right:7px;width:19px;height:19px;border-radius:50%;background:var(--ok);color:#fff;display:none;place-items:center;font-size:11px;font-weight:800}
+
+  .chip3.sel .tick{display:grid}
+
+  .slide.dark .chip3{background:rgba(255,255,255,.06);border:2px solid rgba(255,255,255,.1)} .slide.dark .chip3 .nm{color:#eaf1fb}
+
+  .acts{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:22px}
+
+  @media(max-width:900px){.acts{grid-template-columns:repeat(2,1fr)}} @media(max-width:520px){.acts{grid-template-columns:1fr}}
+
+  .act{border-radius:14px;padding:18px 12px;text-align:center;cursor:pointer;color:#fff;font-weight:800;font-size:13px;line-height:1.2;box-shadow:var(--shadow);border:3px solid transparent;transition:.2s;position:relative;min-height:96px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
+
+  .act:hover{transform:translateY(-4px)} .act.sel{border-color:#fff}
+
+  .act .tick{position:absolute;top:7px;right:7px;width:21px;height:21px;border-radius:50%;background:#fff;color:var(--ok);display:none;place-items:center;font-size:12px;font-weight:800}
+
+  .act.sel .tick{display:grid}
+
+  .pyr{display:flex;flex-direction:column;align-items:center;gap:4px;margin-top:22px}
+
+  .plevel{color:#fff;font-weight:800;text-align:center;padding:12px 10px;cursor:pointer;position:relative;transition:.2s;border:2px solid transparent;border-radius:6px;font-size:15px}
+
+  .plevel:hover{filter:brightness(1.08)} .plevel.sel{border-color:#0b2545}
+
+  .plevel .who{display:block;font-weight:600;font-size:12px;opacity:0;max-height:0;overflow:hidden;transition:.3s}
+
+  .plevel.sel .who{opacity:1;max-height:40px;margin-top:4px}
+
+  .pdfrow{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:20px}
+
+  @media(max-width:640px){.pdfrow{grid-template-columns:1fr}}
+
+  .pdfmini{background:linear-gradient(160deg,#1bb4e4,#1481c4);color:#fff;border-radius:14px;padding:15px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+
+  .pdfmini span{font-size:13px;font-weight:600;line-height:1.4}
+
+  .acc-body .tdd{margin-top:7px} .acc-body .tdd b{color:var(--blue)}
+
+  /* welcome */
+
+  #welcome{position:fixed;inset:0;z-index:300;background:rgba(4,15,35,.78);display:flex;align-items:center;justify-content:center;padding:18px;backdrop-filter:blur(3px)}
+
+  #welcome.hide{display:none}
+
+  .wbox{background:#eef3f9;border-radius:22px;max-width:560px;width:100%;padding:32px 30px 0;text-align:center;box-shadow:0 30px 80px -20px #000;overflow:hidden}
+
+  .wbox h3{color:#8bbf3a;font-size:25px;font-weight:800;margin-bottom:16px}
+
+  .wbox p{color:var(--ink);font-size:14.5px;line-height:1.55;margin:0 auto 13px;max-width:46ch}
+
+  .wbox .wn{font-weight:800;color:var(--ink)}
+
+  .wdemo{display:flex;gap:12px;justify-content:center;margin:16px 0}
+
+  .wdemo span{border-radius:999px;padding:9px 18px;font-weight:700;font-size:13.5px;color:#fff}
+
+  .wdemo .a{background:#8a97a8} .wdemo .s{background:var(--panel)}
+
+  .wstart{background:var(--cyan);color:#fff;border:none;border-radius:999px;padding:13px 42px;font-weight:800;font-size:16px;cursor:pointer;font-family:var(--font);margin-top:4px;transition:.2s}
+
+  .wstart:hover{background:var(--blue);transform:translateY(-1px)}
+
+  .wfoot{display:flex;align-items:center;justify-content:center;gap:10px;padding:16px;background:#fff;margin:24px -30px 0;border-top:3px solid;border-image:var(--grad) 1}
+
+  .wfoot .wlogo{width:26px;height:26px} .wfoot b{font-size:19px;letter-spacing:1px;color:var(--ink)}
+
+
+
+  /* ===== Módulo 4 ===== */
+
+  .plano{position:relative;max-width:840px;margin:18px auto 0;border-radius:14px;overflow:hidden;box-shadow:var(--shadow);background:#e7edf5;min-height:200px}
+
+  .plano img{width:100%;display:block}
+
+  .plano-ph{padding:60px 20px;text-align:center;color:#5b6b82;font-size:14px}
+
+  .hot{position:absolute;transform:translate(-50%,-50%);width:32px;height:32px;border-radius:50%;background:var(--blue);color:#fff;border:2px solid #fff;display:grid;place-items:center;font-weight:800;font-size:13px;cursor:pointer;box-shadow:0 4px 12px -3px rgba(0,0,0,.5);z-index:2}
+
+  .hot::before{content:"";position:absolute;inset:-3px;border-radius:50%;animation:pulse 1.9s infinite}
+
+  .hot.done{background:var(--ok)} .hot.done::before{animation:none}
+
+  .hot .hlabel{position:absolute;bottom:130%;left:50%;transform:translateX(-50%);background:var(--panel);color:#fff;padding:6px 11px;border-radius:8px;font-size:12px;font-weight:600;white-space:nowrap;max-width:220px;white-space:normal;width:max-content;opacity:0;pointer-events:none;transition:.2s;z-index:5}
+
+  .hot:hover .hlabel,.hot.sel .hlabel{opacity:1}
+
+  .seqdots{display:flex;gap:14px;justify-content:center;margin-top:20px;flex-wrap:wrap}
+
+  .seqdot{width:44px;height:44px;border-radius:50%;background:var(--panel);color:#fff;display:grid;place-items:center;font-weight:800;font-size:16px;cursor:pointer;border:3px solid transparent;transition:.2s}
+
+  .seqdot:hover{transform:translateY(-2px)} .seqdot.cur{border-color:var(--cyan)} .seqdot.done{background:var(--ok)}
+
+  .seqpanel{margin-top:20px;background:var(--panel);color:#fff;border-radius:14px;padding:20px 24px;font-size:15.5px;line-height:1.5;text-align:center;max-width:680px;margin-inline:auto}
+
+  .slide.light .seqpanel{background:var(--panel)}
+
+</style>
+
+</head>
+
+<body>
+
+
+
+<header class="hud">
+
+  <div class="brand"><span class="logo" id="brandlogo"></span><span><b>HSE-001 · Reinducción H&amp;S</b><small id="modlabel">Módulos 1 · 2</small></span></div>
+
+  <div class="step">Paso <span id="cur">1</span> / <span id="tot">15</span></div>
+
+  <button id="exit" class="locked" title="Disponible al finalizar la capacitación">
+
+    <svg id="exitIcon" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+
+    <span id="exitTxt">Salir</span>
+
+  </button>
+
+  <div class="hudbar"><div id="hudfill"></div></div>
+
+</header>
+
+
+
+<div class="deck" id="deck">
+
+
+
+  <!-- 1 PORTADA -->
+
+  <section class="slide dark active">
+
+    <div class="blob b1"></div><div class="blob b2"></div>
+
+    <div class="wrap">
+
+      <div class="eyebrow rv up">Salud &amp; Seguridad · 2026 · Reinducción completa</div>
+
+      <div class="hero-code rv up" style="--d:1">HSE-001</div>
+
+      <div class="hero-title rv up" style="--d:2">Reinducción H&amp;S</div>
+
+      <div class="gline rv up" style="--d:3"></div>
+
+      <div class="tag rv up" style="--d:4">
+
+        <span class="pill">Gestión de emergencias</span>
+
+        <span class="pill">Conceptos clave</span>
+
+        <span class="pill">Clasificación de peligros</span>
+
+      </div>
+
+      <p class="lead rv up" style="--d:5">Usa los botones <b>Atrás</b> y <b>Siguiente</b> para avanzar. Podrás salir solo al completar todo el módulo.</p>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- 3 PLAN DE EMERGENCIAS -->
+
+  <section class="slide dark">
+
+    <div class="wrap">
+
+      <div class="eyebrow rv up">Emergencias y prevención de incidentes</div>
+
+      <h2 class="rv up" style="--d:1">Emergencias: ¿qué hacer?</h2>
+
+      <p class="lead rv up" style="--d:2">Todos nuestros sitios de trabajo cuentan con un <b>Plan de Emergencias</b> con diferentes recursos:</p>
+
+      <div class="grid3" style="margin-top:28px">
+
+        <div class="card rv up" style="--d:0"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 21s-7-6.3-7-11a7 7 0 0 1 14 0c0 4.7-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></div><h3>Señalización</h3><p>Rutas de evacuación, punto de encuentro, etc.</p></div>
+
+        <div class="card rv up" style="--d:1"><div class="ic"><svg viewBox="0 0 24 24"><path d="M9 3h6v4H9zM7 7h10v14H7zM10 11v6M14 11v6"/></svg></div><h3>Recursos técnicos</h3><p>Extintores, botiquines, camillas, DEA, alarma, línea de emergencia, radios, etc.</p></div>
+
+        <div class="card rv up" style="--d:2"><div class="ic"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.2"/><path d="M4 20c0-3 2.5-5 5-5s5 2 5 5M15 20c0-2.2 1.3-3.6 3-3.6"/></svg></div><h3>Recursos humanos</h3><p>Brigadistas y evacuadores presentes en cada sede.</p></div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- 4 QUÉ HACER -->
+
+  <section class="slide light">
+
+    <div class="wrap">
+
+      <div class="eyebrow rv up">Gestión de emergencias</div>
+
+      <h2 class="rv up" style="--d:1">¿Qué hacer en caso de emergencia?</h2>
+
+      <div class="two" style="margin-top:24px">
+
+        <div class="panel blue rv left"><h3>En caso de una emergencia</h3>
+
+          <ul class="steplist">
+
+            <li><span class="num">1</span> Mantenga la calma.</li>
+
+            <li><span class="num">2</span> Esté atento a la alarma y a las indicaciones de su anfitrión.</li>
+
+            <li><span class="num">3</span> Identifique rutas de evacuación, salidas de emergencia y puntos de encuentro.</li>
+
+            <li><span class="num">4</span> Siga las instrucciones del equipo brigadista y evacuador.</li>
+
+          </ul>
+
+        </div>
+
+        <div class="panel cyan rv right"><h3>¿Qué debo informar?</h3>
+
+          <ul class="steplist">
+
+            <li><span class="num">?</span> ¿Qué ocurrió?</li>
+
+            <li><span class="num">?</span> ¿Dónde ocurrió?</li>
+
+            <li><span class="num">?</span> ¿Número de personas afectadas?</li>
+
+            <li><span class="num">?</span> ¿Qué tipo de ayuda se requiere?</li>
+
+            <li><span class="num">?</span> ¿Hay algún riesgo importante en el sitio?</li>
+
+          </ul>
+
+        </div>
+
+      </div>
+
+      <div class="banner rv up" style="--d:2">En cada turno hay brigadistas disponibles, identificados en cada sede.</div>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- 5 COMPORTAMIENTOS -->
+
+  <section class="slide dark">
+
+    <div class="wrap">
+
+      <div class="eyebrow rv up">Prevención de incidentes</div>
+
+      <h2 class="rv up" style="--d:1">Comportamientos para prevenir incidentes</h2>
+
+      <div class="behaviors" style="margin-top:26px">
+
+        <div class="beh rv scale" style="--d:0"><div class="sign" id="s_instr"></div><p>Atender instrucciones de seguridad</p></div>
+
+        <div class="beh rv scale" style="--d:1"><div class="sign" id="s_area"></div><p>Transitar con su anfitrión por áreas delimitadas</p></div>
+
+        <div class="beh rv scale" style="--d:2"><div class="sign" id="s_run"></div><p>No correr ni hacer bromas en operación</p></div>
+
+        <div class="beh rv scale" style="--d:3"><div class="sign" id="s_phone"></div><p>No hablar por celular mientras se desplaza</p></div>
+
+        <div class="beh rv scale" style="--d:4"><div class="sign" id="s_ring"></div><p>No usar accesorios en áreas operativas</p></div>
+
+        <div class="beh rv scale" style="--d:5"><div class="sign" id="s_gun"></div><p>No ingresar o usar armas</p></div>
+
+        <div class="beh rec rv scale" style="--d:6"><div class="sign" id="s_beard"></div><p>Se recomienda NO usar vello facial (barba/bigote) para el sello de la protección respiratoria</p></div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- 6 EPP -->
+
+  <section class="slide dark">
+
+    <div class="wrap">
+
+      <div class="redline rv up"><span class="dot"></span><b>Línea roja</b><span class="rl"></span></div>
+
+      <h2 class="rv up" style="--d:1">Inicia el área industrial</h2>
+
+      <p class="lead rv up" style="--d:2">Es <b>obligatorio</b> usar el EPP establecido en la señalética del área:</p>
+
+      <div class="epp" style="margin-top:26px">
+
+        <div class="eppcard rv up" style="--d:0"><div class="ic"><svg viewBox="0 0 24 24"><path d="M4 11h16M6 11c0 4 2 7 6 7s6-3 6-7M4 11c0-2 2-4 4-4h8c2 0 4 2 4 4"/></svg></div><span>Protección respiratoria</span></div>
+
+        <div class="eppcard rv up" style="--d:1"><div class="ic"><svg viewBox="0 0 24 24"><path d="M6 4v9l-2 4v3h16v-2c0-2-2-3-4-3l-4-2V4z"/></svg></div><span>Botas de seguridad</span></div>
+
+        <div class="eppcard rv up" style="--d:2"><div class="ic"><svg viewBox="0 0 24 24"><path d="M4 14a8 8 0 0 1 16 0M3 14h18M12 6v-2"/></svg></div><span>Casco</span></div>
+
+        <div class="eppcard rv up" style="--d:3"><div class="ic"><svg viewBox="0 0 24 24"><path d="M4 8a8 8 0 0 1 16 0M6 8v3a3 3 0 0 0 6 0M18 8v3a3 3 0 0 1-6 0"/></svg></div><span>Protección auditiva</span></div>
+
+        <div class="eppcard rv up" style="--d:4"><div class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="9" width="7" height="6" rx="3"/><rect x="14" y="9" width="7" height="6" rx="3"/><path d="M10 11h4"/></svg></div><span>Gafas</span></div>
+
+        <div class="eppcard rv up" style="--d:5"><div class="ic"><svg viewBox="0 0 24 24"><path d="M8 4l4 3 4-3 4 3v14H4V7zM12 7v13"/></svg></div><span>Alta visibilidad · manga larga</span></div>
+
+      </div>
+
+      <div class="warn rv up" style="--d:2"><svg viewBox="0 0 24 24"><path d="M12 3l9 16H3z"/><path d="M12 9v5M12 17h0"/></svg>No usar ropa holgada, para evitar atrapamientos con partes móviles de equipos.</div>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- 6 VIDEO (después de Línea roja) -->
+
+  <section class="slide light" data-gate="video">
+
+    <div class="wrap">
+
+      <div class="eyebrow rv up">Introducción</div>
+
+      <h2 class="rv up" style="--d:1">Video de bienvenida</h2>
+
+      <p class="lead rv up" style="--d:2">Observa el video completo para habilitar el botón <b>Siguiente</b>.</p>
+
+      <div class="videobox rv up" style="--d:3">
+
+        <iframe id="vimeo1"
+
+          src="https://player.vimeo.com/video/1173318931?badge=0&amp;player_id=0&amp;app_id=58479&amp;title=0&amp;byline=0&amp;portrait=0"
+
+          allow="autoplay; fullscreen; picture-in-picture; clipboard-write"
+
+          title="Video Reinducción H&amp;S"></iframe>
+
+      </div>
+
+      <div class="vhint rv up" id="vhint" style="--d:4">
+
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg>
+
+        <span id="vhintTxt">Reproduce el video hasta el final para continuar.</span>
+
+      </div>
+
+      <button class="vskip" id="vskip" style="display:none">El video ya terminó y el botón sigue bloqueado — habilitar manualmente</button>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- 7 CONCEPTOS CLAVE (flip) -->
+
+  <section class="slide light">
+
+    <div class="wrap">
+
+      <div class="eyebrow rv up">Generalidades</div>
+
+      <h2 class="rv up" style="--d:1">Conceptos clave</h2>
+
+      <p class="lead rv up" style="--d:2">Toca cada tarjeta para ver su definición y un ejemplo. 👆</p>
+
+      <div class="flips" style="margin-top:24px">
+
+        <div class="flip rv up" style="--d:0" tabindex="0" role="button"><div class="flip-in">
+
+          <div class="face front"><div class="n">1</div><h3>Acto inseguro</h3><div class="hint">Toca para ver ↺</div></div>
+
+          <div class="face back"><h4>Acto inseguro</h4><p>Acción inapropiada de un trabajador que se ejecuta de manera insegura, desobedeciendo la forma estandarizada y segura.</p><div class="ej"><b>Ejemplo:</b> usar el celular mientras se operan equipos o se camina en la operación.</div></div>
+
+        </div></div>
+
+        <div class="flip rv up" style="--d:1" tabindex="0" role="button"><div class="flip-in">
+
+          <div class="face front"><div class="n">2</div><h3>Condición insegura</h3><div class="hint">Toca para ver ↺</div></div>
+
+          <div class="face back"><h4>Condición insegura</h4><p>Situación inapropiada en el lugar de trabajo, con presencia de condiciones peligrosas no gestionadas.</p><div class="ej"><b>Ejemplo:</b> barreras físicas inapropiadas.</div></div>
+
+        </div></div>
+
+        <div class="flip rv up" style="--d:2" tabindex="0" role="button"><div class="flip-in">
+
+          <div class="face front"><div class="n">3</div><h3>Incidente de trabajo</h3><div class="hint">Toca para ver ↺</div></div>
+
+          <div class="face back"><h4>Incidente de trabajo</h4><p>Suceso con el potencial de ser un accidente, en el que hubo personas involucradas sin lesiones ni daños.</p><div class="ej"><b>Ejemplo:</b> un trabajador casi se cae de una plataforma elevadora.</div></div>
+
+        </div></div>
+
+        <div class="flip rv up" style="--d:3" tabindex="0" role="button"><div class="flip-in">
+
+          <div class="face front"><div class="n">4</div><h3>Accidente de trabajo</h3><div class="hint">Toca para ver ↺</div></div>
+
+          <div class="face back"><h4>Accidente de trabajo</h4><p>Suceso repentino por causa u ocasión del trabajo que produce lesión, perturbación funcional, invalidez o muerte.</p><div class="ej"><b>Ejemplo:</b> caída de alturas al realizar labores en la cubierta.</div></div>
+
+        </div></div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- 8 ECUACIÓN -->
+
+  <section class="slide dark">
+
+    <div class="wrap">
+
+      <div class="eyebrow rv up">Un mismo caso</div>
+
+      <h2 class="rv up" style="--d:1">La ecuación de la seguridad</h2>
+
+      <p class="lead rv up" style="--d:2">Así se combinan los conceptos en un mismo caso:</p>
+
+      <div class="eq" style="margin-top:32px">
+
+        <div class="eq-box a rv left"><div class="lbl">Suma</div><div class="big">Condición insegura</div><div class="ex">Carro con rueda dañada</div></div>
+
+        <div class="eq-op rv scale" style="--d:1">+</div>
+
+        <div class="eq-box b rv up" style="--d:2"><div class="lbl">Suma</div><div class="big">Acto inseguro</div><div class="ex">Empujarlo distraído</div></div>
+
+        <div class="eq-op rv scale" style="--d:3">=</div>
+
+        <div class="eq-box c rv right" style="--d:4"><div class="lbl">Resultado</div><div class="big">Incidente o accidente</div><div class="ex">El carro se vuelca y hay lesión</div></div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- 9 PELIGRO vs RIESGO -->
+
+  <section class="slide light">
+
+    <div class="wrap">
+
+      <div class="eyebrow rv up">Conceptos clave</div>
+
+      <h2 class="rv up" style="--d:1">¿Cómo diferencias el peligro del riesgo?</h2>
+
+      <div class="pr rv up" style="--d:2;margin-top:22px">
+
+        <div class="col pel">
+
+          <div class="head"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3l9 16H3z"/><path d="M12 9v5M12 17h0"/></svg></div><h3>Peligro</h3></div>
+
+          <div class="def">Fuente, situación o acto que <b>puede</b> ocasionar daños.</div>
+
+          <div class="row"><b>Situación:</b> piso resbaloso.</div>
+
+          <div class="row"><b>Situación:</b> proyección de partículas calientes.</div>
+
+          <div class="row"><b>Acto:</b> manipular un tablero eléctrico con manos húmedas.</div>
+
+        </div>
+
+        <div class="col rie">
+
+          <div class="head"><div class="ic"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 18 0 9 9 0 1 0-18 0M12 8v4M12 15h0"/></svg></div><h3>Riesgo</h3></div>
+
+          <div class="def">La forma en que ese peligro <b>me causa daño</b> al exponerme.</div>
+
+          <div class="row">Riesgo de caída al mismo nivel.</div>
+
+          <div class="row">Riesgo de contacto con partículas calientes.</div>
+
+          <div class="row">Riesgo de contacto eléctrico.</div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- 10 QUIZ -->
+
+  <section class="slide dark">
+
+    <div class="wrap">
+
+      <div class="eyebrow rv up">Ponte a prueba</div>
+
+      <h2 class="rv up" style="--d:1">¿Cuál escenario tiene mayor riesgo?</h2>
+
+      <p class="lead rv up" style="--d:2">Un colaborador debe pintar una pared. Elige y descubre por qué.</p>
+
+      <div class="quiz rv up" style="--d:3;margin-top:22px" id="quiz">
+
+        <div class="opt" data-correct="1"><div class="tg">A</div><p>Sube y baja <b>10 veces al día</b> con una <b>escalera</b>.</p><div class="mark">✓</div></div>
+
+        <div class="opt" data-correct="0"><div class="tg">B</div><p>Sube y baja <b>2 veces al día</b> con un <b>andamio</b>.</p><div class="mark">✕</div></div>
+
+      </div>
+
+      <div class="verdict" id="verdict">Hay <b>mayor riesgo en el escenario A</b>: subir con mayor frecuencia y mediante una escalera implica mayor exposición y mayor daño al caerse a distinto nivel.</div>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- 11 EJEMPLO TIBURÓN -->
+
+  <section class="slide light">
+
+    <div class="wrap">
+
+      <div class="eyebrow rv up">Ejemplo</div>
+
+      <h2 class="rv up" style="--d:1">Peligro → Riesgo → Accidente</h2>
+
+      <div class="steps3" style="margin-top:28px">
+
+        <div class="s3 pel rv left"><span class="k">Peligro</span><div class="art" id="a_shark1"></div><p><b>Tiburón</b> en la playa de un hotel.</p></div>
+
+        <div class="arrow rv scale" style="--d:1"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+
+        <div class="s3 rie rv up" style="--d:2"><span class="k">Riesgo</span><div class="art" id="a_shark2"></div><p>Probabilidad de ser <b>mordido</b> al nadar en aguas infestadas.</p></div>
+
+        <div class="arrow rv scale" style="--d:3"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+
+        <div class="s3 accid rv right" style="--d:4"><span class="k">Accidente</span><div class="art" id="a_shark3"></div><p>La persona <b>muere</b> al ser mordida mientras nadaba.</p></div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- 12 CLASIFICACIÓN DE PELIGROS -->
+
+  <section class="slide light">
+
+    <div class="wrap">
+
+      <div class="eyebrow rv up">Generalidades / Conceptos básicos</div>
+
+      <h2 class="rv up" style="--d:1">Clasificación de peligros</h2>
+
+      <p class="lead rv up" style="--d:2">La taxonomía clasifica los riesgos por su naturaleza. ¡Conócelos!</p>
+
+      <div class="cats" style="margin-top:24px">
+
+        <div class="cat rv up" style="--d:0"><div class="top" id="c_bio"></div><div class="bd d"><h3>Biológicos</h3><p>Por exposición a virus y bacterias, entre otros.</p></div></div>
+
+        <div class="cat rv up" style="--d:1"><div class="top" id="c_fis"></div><div class="bd c"><h3>Físicos</h3><p>Por iluminación (exceso o defecto), confort térmico y ruido.</p></div></div>
+
+        <div class="cat rv up" style="--d:2"><div class="top" id="c_qui"></div><div class="bd d"><h3>Químicos</h3><p>Por gases, vapores, líquidos, material particulado, humos metálicos y no metálicos.</p></div></div>
+
+        <div class="cat rv up" style="--d:3"><div class="top" id="c_psi"></div><div class="bd d"><h3>Psicosociales</h3><p>Por características de la organización, la tarea o el grupo de trabajo.</p></div></div>
+
+        <div class="cat rv up" style="--d:4"><div class="top" id="c_biom"></div><div class="bd c"><h3>Biomecánicos</h3><p>Por posturas prolongadas y movimientos repetitivos.</p></div></div>
+
+        <div class="cat rv up" style="--d:5"><div class="top" id="c_nat"></div><div class="bd d"><h3>Fenómenos naturales</h3><p>Por desastres naturales como sismos y terremotos.</p></div></div>
+
+      </div>
+
+      <div class="banner rv up" style="--d:2">También existen las <b>condiciones de seguridad</b> (equipos, instalaciones y señalización) → las vemos a continuación.</div>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- CONDICIONES DE SEGURIDAD (acordeón interactivo, incluye espacios confinados) -->
+
+  <section class="slide dark">
+
+    <div class="wrap">
+
+      <div class="eyebrow rv up">Generalidades / Conceptos básicos</div>
+
+      <h2 class="rv up" style="--d:1">Condiciones de seguridad</h2>
+
+      <p class="lead rv up" style="--d:2">Toca cada tarjeta para <b>ampliar</b> su información. 👆</p>
+
+      <div class="accgrid" style="margin-top:22px">
+
+
+
+        <div class="acc rv up" style="--d:0" tabindex="0" role="button" aria-expanded="false">
+
+          <div class="acc-head"><span class="tri" id="t_elec"></span><h4>Eléctrico</h4><span class="chev">+</span></div>
+
+          <div class="acc-body"><p>Por contacto con energía de <b>alta, media y baja tensión</b> y electricidad <b>estática</b>.</p></div>
+
+        </div>
+
+
+
+        <div class="acc rv up" style="--d:1" tabindex="0" role="button" aria-expanded="false">
+
+          <div class="acc-head"><span class="tri" id="t_loc"></span><h4>Locativo</h4><span class="chev">+</span></div>
+
+          <div class="acc-body"><p>Por <b>almacenamiento</b>, superficies de trabajo (irregularidades, deslizantes o con diferencia de nivel), condiciones de <b>orden y aseo</b> y <b>caída de objetos</b>.</p></div>
+
+        </div>
+
+
+
+        <div class="acc rv up" style="--d:2" tabindex="0" role="button" aria-expanded="false">
+
+          <div class="acc-head"><span class="tri" id="t_tra"></span><h4>Tránsito</h4><span class="chev">+</span></div>
+
+          <div class="acc-body"><p>Por <b>accidentes de tránsito</b> con vehículos, motocicletas, bicicletas, etc.</p></div>
+
+        </div>
+
+
+
+        <div class="acc rv up" style="--d:3" tabindex="0" role="button" aria-expanded="false">
+
+          <div class="acc-head"><span class="tri" id="t_alt"></span><h4>Alturas</h4><span class="chev">+</span></div>
+
+          <div class="acc-body"><p>Por trabajos a una <b>altura mayor o igual a 1,8 metros</b> desde un plano horizontal.</p></div>
+
+        </div>
+
+
+
+        <div class="acc rv up" style="--d:4" tabindex="0" role="button" aria-expanded="false">
+
+          <div class="acc-head"><span class="tri" id="t_pub"></span><h4>Público</h4><span class="chev">+</span></div>
+
+          <div class="acc-body"><p>Por <b>robos, atracos, asaltos, atentados</b>, desorden público, etc.</p></div>
+
+        </div>
+
+
+
+        <div class="acc rv up" style="--d:5" tabindex="0" role="button" aria-expanded="false">
+
+          <div class="acc-head"><span class="tri" id="t_mec"></span><h4>Mecánico</h4><span class="chev">+</span></div>
+
+          <div class="acc-body"><p>Por elementos de <b>máquinas, herramientas</b>, piezas a trabajar y <b>materiales proyectados</b>, sólidos o fluidos.</p></div>
+
+        </div>
+
+
+
+        <div class="acc rv up" style="--d:6" tabindex="0" role="button" aria-expanded="false">
+
+          <div class="acc-head"><span class="tri" id="t_tec"></span><h4>Tecnológico</h4><span class="chev">+</span></div>
+
+          <div class="acc-body"><p>Por <b>explosión, fuga, derrame</b> o <b>incendio</b>.</p></div>
+
+        </div>
+
+
+
+        <div class="acc rv up" style="--d:7" tabindex="0" role="button" aria-expanded="false">
+
+          <div class="acc-head"><span class="tri" id="t_conf"></span><h4>Espacios confinados</h4><span class="chev">+</span></div>
+
+          <div class="acc-body">
+
+            <span class="tag">Por espacios que:</span>
+
+            <div class="li"><span class="b"></span>No están diseñados para ocupación continua.</div>
+
+            <div class="li"><span class="b"></span>Tienen medios de entrada y salida restringidos (dimensión y forma) o limitados (cantidad).</div>
+
+            <div class="li"><span class="b"></span>Son suficientemente grandes y configurados para que un trabajador pueda entrar.</div>
+
+          </div>
+
+        </div>
+
+
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- CIERRE -->
+
+  <section class="slide dark">
+
+    <div class="wrap" style="text-align:center">
+
+      <div class="done-badge rv scale" style="margin-inline:auto"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg></div>
+
+      <div class="eyebrow rv up" style="--d:1">Módulo 1 completado</div>
+
+      <h2 class="rv up" style="--d:2">¡Bien hecho! La seguridad es de todos.</h2>
+
+      <p class="lead rv up" style="--d:3;max-width:52ch;margin:14px auto 0">Terminaste el Módulo 1. Continúa con el <b>Módulo 2: Planeación estratégica H&amp;S</b> usando el botón <b>Siguiente →</b>.</p>
+
+      <div class="recap rv up" style="--d:4;justify-content:center">
+
+        <span class="chip">Emergencias</span><span class="chip">EPP obligatorio</span>
+
+        <span class="chip">Peligro ≠ Riesgo</span><span class="chip">Clasificación de peligros</span>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+
+
+
+
+  <!-- ===================== MÓDULO 2 ===================== -->
+
+
+
+<section class="slide dark" data-mod="2">
+
+    <div class="blob b1"></div><div class="blob b2"></div>
+
+    <div class="wrap">
+
+      <div class="eyebrow rv up">Salud &amp; Seguridad · 2026 · Módulo 2</div>
+
+      <div class="hero-code rv up" style="--d:1">HSE-001</div>
+
+      <div class="hero-title rv up" style="--d:2">Planeación estratégica H&amp;S<br>SG-SST Holcim Colombia</div>
+
+      <div class="gline rv up" style="--d:3"></div>
+
+      <div class="tag rv up" style="--d:4">
+
+        <span class="pill">Modelo operativo H&amp;S</span>
+
+        <span class="pill">Reglas HSE</span>
+
+        <span class="pill">Liderazgo visible</span>
+
+      </div>
+
+      <p class="lead rv up" style="--d:5">Usa <b>Atrás</b> y <b>Siguiente</b> para avanzar. Podrás salir solo al completar todo el módulo.</p>
+
+    </div>
+
+  </section>
+
+
+
+<section class="slide dark" data-mod="2">
+
+    <div class="wrap">
+
+      <div class="eyebrow rv up">Planeación estratégica H&amp;S</div>
+
+      <h2 class="rv up" style="--d:1">SG-SST Holcim Colombia</h2>
+
+      <p class="lead rv up" style="--d:2">Pasa el cursor (o toca) los puntos titilantes para descubrir la información. 👆</p>
+
+      <div class="wheelwrap">
+
+        <div class="wheel rv scale" style="--d:1">
+
+          <div class="ring"></div>
+
+          <div class="core">
+
+            <div class="half"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 0 1 16 0"/><path d="M3 12h18"/><path d="M8 12v2a4 4 0 0 0 8 0v-2"/></svg><b>SG-SST</b></div>
+
+            <div class="half"><svg viewBox="0 0 24 24"><path d="M4 11a8 8 0 0 1 16 0"/><path d="M3 11h18"/><path d="M12 15c1.6-1.6 3-2.4 3-4a1.6 1.6 0 0 0-3-.6 1.6 1.6 0 0 0-3 .6c0 1.6 1.4 2.4 3 4z"/></svg><b>MODELO OPERATIVO DE H&amp;S</b></div>
+
+          </div>
+
+        </div>
+
+        <div class="winfo rv right" id="winfo">
+
+          <span class="wp">Selecciona un punto</span>
+
+          <div class="wt">6 componentes del SG-SST</div>
+
+          <div class="wd">Cada punto del anillo representa un pilar de la planeación estratégica de Salud y Seguridad. Pasa el cursor o toca cada uno para ver su descripción.</div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+<section class="slide light" data-mod="2">
+
+    <div class="wrap">
+
+      <div class="eyebrow rv up">Lineamientos organizacionales</div>
+
+      <h2 class="rv up" style="--d:1">Políticas y declaraciones</h2>
+
+      <div class="infobanner rv up" style="--d:2">Establecen nuestro enfoque en la seguridad de los empleados y la protección del medio ambiente, buscando prevenir riesgos y cumplir con las normativas locales.</div>
+
+      <p class="lead rv up" style="--d:3">Lee estos tres documentos importantes. Haz clic en <b>“Ver más”</b> para abrirlos aquí mismo.</p>
+
+      <div class="pdfcards">
+
+        <div class="pdfcard rv up" style="--d:0">
+
+          <div class="pic"><svg viewBox="0 0 24 24"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M10 12h6M10 16h6"/></svg></div>
+
+          <h3>Política de Salud, Seguridad y Medio Ambiente</h3>
+
+          <button class="pdfbtn" data-pdf="politica" data-title="Política de Salud, Seguridad y Medio Ambiente">Ver más</button>
+
+        </div>
+
+        <div class="pdfcard rv up" style="--d:1">
+
+          <div class="pic"><svg viewBox="0 0 24 24"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M10 12h6M10 16h6"/></svg></div>
+
+          <h3>Declaración Local H&amp;S</h3>
+
+          <button class="pdfbtn" data-pdf="declaracion" data-title="Declaración Local H&amp;S">Ver más</button>
+
+        </div>
+
+        <div class="pdfcard rv up" style="--d:2">
+
+          <div class="pic"><svg viewBox="0 0 24 24"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M10 12h6M10 16h6"/></svg></div>
+
+          <h3>Política de Seguridad Vial</h3>
+
+          <button class="pdfbtn" data-pdf="vial" data-title="Política de Seguridad Vial">Ver más</button>
+
+        </div>
+
+      </div>
+
+      <div class="authbanner rv up" style="--d:2">Reflejan el compromiso con la Salud y Seguridad de nuestros trabajadores en todos los niveles y <b>otorgan autoridad para detener trabajos inseguros</b>.</div>
+
+    </div>
+
+  </section>
+
+
+
+<section class="slide dark" data-mod="2">
+
+    <div class="wrap">
+
+      <div class="eyebrow rv up">Modelo operativo de H&amp;S</div>
+
+      <h2 class="rv up" style="--d:1">Reglas HSE</h2>
+
+      <p class="lead rv up" style="--d:2">Da clic sobre cada regla para conocer su detalle. 👆</p>
+
+      <div class="accgrid" id="reglas" style="margin-top:22px"></div>
+
+    </div>
+
+  </section>
+
+
+
+<section class="slide light" data-mod="2">
+
+    <div class="wrap">
+
+      <div class="eyebrow rv up">Política HSE</div>
+
+      <h2 class="rv up" style="--d:1">Objetivo principal</h2>
+
+      <div class="objhero rv up" style="--d:2"><div class="t">Desarrollar nuestros negocios con <span style="color:#8fd6f2">cero daños</span>.</div><div class="s">Cada objetivo tiene sus puntos a cumplir. Toca para desplegarlos.</div></div>
+
+      <div class="accgrid" id="objetivos" style="margin-top:18px"></div>
+
+    </div>
+
+  </section>
+
+
+
+<section class="slide dark" data-mod="2">
+
+    <div class="wrap">
+
+      <div class="eyebrow rv up">B.O.G</div>
+
+      <h2 class="rv up" style="--d:1">Indicadores de liderazgo visible</h2>
+
+      <p class="lead rv up" style="--d:2">Herramientas para prevenir incidentes desde el liderazgo en campo.</p>
+
+      <div class="lead4">
+
+        <div class="lcard b rv left" style="--d:0"><div class="lic"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="12" rx="2"/><path d="M9 20h6M12 16v4"/></svg></div><div><h3>Tiempo en campo</h3><div class="en">Time In the Field · T.I.F</div><p>Tiempo en campo para supervisar la operación.</p></div></div>
+
+        <div class="lcard a rv right" style="--d:1"><div class="lic"><svg viewBox="0 0 24 24"><circle cx="8" cy="8" r="3"/><circle cx="16" cy="9" r="2.4"/><path d="M3 19c0-3 2.5-5 5-5s5 2 5 5M14 19c0-2.2 1.4-3.8 3-3.8"/></svg></div><div><h3>Compromiso personal visible</h3><div class="en">Visible Personal Commitment · V.P.C</div><p>Interacción y abordaje a trabajadores que ejecutan labores en Holcim Colombia.</p></div></div>
+
+        <div class="lcard a rv left" style="--d:2"><div class="lic"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 0 1 16 0v6H4z"/><path d="M12 12v6M8 18l4-6 4 6"/></svg></div><div><h3>C-VPC de Controles Críticos</h3><div class="en">Critical Visible Personal Commitment · C-V.P.C</div><p>Abordaje a trabajadores en labores relacionadas con los Controles Críticos.</p></div></div>
+
+        <div class="lcard b rv right" style="--d:3"><div class="lic"><svg viewBox="0 0 24 24"><path d="M12 3l9 16H3z"/><path d="M12 9v5M12 17h0"/></svg></div><div><h3>Identificación de peligros</h3><div class="en">Hazard Identification · HAZ-ID</div><p>Condición insegura presente en las operaciones de Holcim Colombia.</p></div></div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+<section class="slide dark" data-mod="2">
+
+    <div class="wrap" style="text-align:center">
+
+      <div class="done-badge rv scale"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg></div>
+
+      <div class="eyebrow rv up" style="--d:1">Módulo 2 completado</div>
+
+      <h2 class="rv up" style="--d:2">¡Excelente! Módulo 2 completado.</h2>
+
+      <p class="lead rv up" style="--d:3;max-width:52ch;margin:14px auto 0">Continúa con el <b>Módulo 3: Control operacional</b> usando el botón <b>Siguiente →</b>.</p>
+
+      <div class="recap rv up" style="--d:4">
+
+        <span class="chip">SG-SST</span><span class="chip">Políticas</span>
+
+        <span class="chip">Reglas HSE</span><span class="chip">Liderazgo visible</span>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+
+
+
+
+  <!-- ===================== MÓDULO 3 ===================== -->
+
+
+
+<section class="slide dark" data-mod="3">
+
+  <div class="blob b1"></div><div class="blob b2"></div>
+
+  <div class="wrap">
+
+    <div class="eyebrow rv up">Salud &amp; Seguridad · 2026 · Módulo 3</div>
+
+    <div class="hero-code rv up" style="--d:1">HSE-001</div>
+
+    <div class="hero-title rv up" style="--d:2">Control operacional<br>Identificación de peligros y requisitos legales</div>
+
+    <div class="gline rv up" style="--d:3"></div>
+
+    <div class="tag rv up" style="--d:4"><span class="pill">ATS · ITS · IPVR</span><span class="pill">Gestión del cambio</span><span class="pill">Estándares HSE</span></div>
+
+    <p class="lead rv up" style="--d:5">Explora cada actividad interactiva para poder avanzar. Salir se habilita al terminar todo.</p>
+
+  </div>
+
+</section>
+
+
+
+<section class="slide light" data-mod="3">
+
+  <div class="wrap">
+
+    <div class="eyebrow rv up">Control operacional</div>
+
+    <h2 class="rv up" style="--d:1">Principales controles operacionales</h2>
+
+    <p class="lead rv up" style="--d:2">Las <b>tareas</b> se dividen en <b>No estándar</b> y <b>Estándar</b>. Toca cada control para conocerlo. 👆</p>
+
+    <div class="accgrid" style="margin-top:20px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#0e2c56"></span><h4>ATS · Análisis de Trabajo Seguro</h4><span class="chev">+</span></div><div class="acc-body"><p>Control para <b>tareas No estándar</b> (no planificadas, impredecibles o por primera vez).</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Permiso de trabajo</h4><span class="chev">+</span></div><div class="acc-body"><p>Autorización para actividades de alto riesgo antes de ejecutarlas. Control transversal.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1bb4e4"></span><h4>Inspecciones / Check list</h4><span class="chev">+</span></div><div class="acc-body"><p>Verificación del estado seguro de equipos, áreas y condiciones. Control transversal.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>Reporte de interacciones y peligros</h4><span class="chev">+</span></div><div class="acc-body"><p>Identificación y reporte oportuno de condiciones y actos inseguros. Control transversal.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#17868a"></span><h4>Matriz IPVR</h4><span class="chev">+</span></div><div class="acc-body"><p>Control para <b>tareas Estándar</b> (rutinarias que se repiten): identificación de peligros y valoración de riesgos.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#ef7d00"></span><h4>ITS · Instructivo de Trabajo Seguro</h4><span class="chev">+</span></div><div class="acc-body"><p>Control para <b>tareas Estándar</b> (rutinarias): secuencia estandarizada y segura de pasos.</p></div></div></div>
+
+  </div>
+
+</section>
+
+
+
+<section class="slide nogate dark" data-mod="3">
+
+  <div class="wrap">
+
+    <div class="eyebrow rv up">Control operacional</div>
+
+    <h2 class="rv up" style="--d:1">Actividades que requieren permiso de trabajo</h2>
+
+    <p class="lead rv up" style="--d:2">Toca cada actividad para reconocerlas todas. 👆</p>
+
+    <div class="acts"><div class="act gclick rv scale" style="background:#0e2c56" tabindex="0" role="button"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 20V6l6 3M12 9v11M6 12h6"/></svg><span>Trabajo en Alturas</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#1bb4e4" tabindex="0" role="button"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="5" width="12" height="14" rx="2"/><circle cx="12" cy="11" r="2"/><path d="M9 19l3-4 3 4"/></svg><span>Trabajo en Espacios Confinados</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#97d13b" tabindex="0" role="button"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c3 3 4 7 2 10 3-1 4-4 3-7 3 3 4 9 0 13-4 3-11 1-11-5 0-4 3-7 6-11z"/></svg><span>Trabajo en Caliente</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#e6007e" tabindex="0" role="button"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16M6 20l4-9 3 2 2-5 3 3"/></svg><span>Excavaciones</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#e23b32" tabindex="0" role="button"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3l-7 11h5l-2 7 8-11h-5z"/></svg><span>Alta y Media Tensión</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#97d13b" tabindex="0" role="button"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="11" width="12" height="9" rx="2"/><path d="M9 11V8a3 3 0 0 1 6 0v3"/></svg><span>Aislamiento de Energías (LOTOTO)</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#1bb4e4" tabindex="0" role="button"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 20h12M8 20V9a4 4 0 0 1 8 0v11M10 5c0 1 2 1 2 0M14 5c0 1-2 1-2 0"/></svg><span>Trabajos con Harina Caliente</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#0e2c56" tabindex="0" role="button"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h12l4 4M8 5v14M5 19h6M12 9v3M10 15h4v4h-4z"/></svg><span>Izaje de Cargas</span><span class="tick">✓</span></div></div>
+
+  </div>
+
+</section>
+
+
+
+<section class="slide light" data-mod="3">
+
+  <div class="wrap">
+
+    <div class="eyebrow rv up">Control operacional</div>
+
+    <h2 class="rv up" style="--d:1">ATS · Análisis de Trabajo Seguro</h2>
+
+    <div class="infobanner rv up" style="--d:2">Técnicas sistemáticas para identificar los pasos básicos de una tarea <b>no estándar</b>, sus peligros y controles mínimos para ejecutar la labor (válido solo por un turno de trabajo).</div>
+
+    <div class="accgrid" style="margin-top:18px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>Definir el paso de la tarea</h4><span class="chev">+</span></div><div class="acc-body"><p class="tdd"><b>Definición:</b> Divida la tarea en diferentes pasos.</p><p class="tdd"><b>Deber:</b> Debe ser conocido y firmado por todo el equipo de trabajo que desarrolla la actividad.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#17868a"></span><h4>Identificar peligros, riesgos y consecuencias</h4><span class="chev">+</span></div><div class="acc-body"><p class="tdd"><b>Definición:</b> Identifique los peligros y riesgos existentes para cada paso.</p><p class="tdd"><b>Deber:</b> Debe ser autorizado y firmado por el supervisor / interventor de la actividad.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#ef7d00"></span><h4>Formular y cumplir controles</h4><span class="chev">+</span></div><div class="acc-body"><p class="tdd"><b>Definición:</b> Formule los controles aplicables a los peligros y riesgos de cada paso identificado.</p><p class="tdd"><b>Deber:</b> <b>Acciones para Salvar Vidas.</b> Se deben identificar los cambios durante el desarrollo de la actividad. Firmado por todo el personal.</p></div></div></div>
+
+  </div>
+
+</section>
+
+
+
+<section class="slide dark" data-mod="3">
+
+  <div class="wrap">
+
+    <div class="eyebrow rv up">Control operacional</div>
+
+    <h2 class="rv up" style="--d:1">ITS · Instructivo de Trabajo Seguro</h2>
+
+    <div class="infobanner rv up" style="--d:2">Secuencia de pasos para realizar una tarea <b>estándar</b> de manera segura.</div>
+
+    <div class="accgrid" style="margin-top:18px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#17868a"></span><h4>Estandarizar pasos de la tarea</h4><span class="chev">+</span></div><div class="acc-body"><p class="tdd"><b>Definición:</b> Defina la forma estandarizada y segura de ejecutar la tarea.</p><p class="tdd"><b>Deber:</b> <b>Actualización periódica.</b> Para trabajos muy rutinarios los ITS se revisan mensualmente; se actualizan cuando se identifiquen pasos, peligros o controles adicionales.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#e23b32"></span><h4>Peligros y controles</h4><span class="chev">+</span></div><div class="acc-body"><p class="tdd"><b>Definición:</b> Según los pasos estandarizados, se definen los peligros y controles mínimos, los controles críticos y procedimientos LOTOTO aplicables.</p><p class="tdd"><b>Deber:</b> Debe ser conocido, revisado y entendido por todo el equipo de trabajo antes de realizar la tarea.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#0e2c56"></span><h4>Análisis de Riesgo Personal</h4><span class="chev">+</span></div><div class="acc-body"><p class="tdd"><b>Definición:</b> Se identifican los peligros y controles que no se contemplaron ni documentaron en los ITS.</p><p class="tdd"><b>Deber:</b> Garantice el Análisis de Riesgo Personal antes de ejecutar la tarea; identifique y reporte cualquier incumplimiento con su supervisor.</p></div></div></div>
+
+  </div>
+
+</section>
+
+
+
+<section class="slide light" data-mod="3">
+
+  <div class="wrap">
+
+    <div class="eyebrow rv up">Control operacional</div>
+
+    <h2 class="rv up" style="--d:1">IPVR · Identificación de Peligros y Valoración de Riesgos</h2>
+
+    <div class="infobanner rv up" style="--d:2">Metodología sistemática para identificar peligros, evaluar los riesgos SST y establecer controles.</div>
+
+    <div class="accgrid" style="margin-top:18px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>Caracterizar las actividades</h4><span class="chev">+</span></div><div class="acc-body"><p class="tdd"><b>Definición:</b> ¿Qué actividades hacemos? ¿Dónde y quiénes las hacemos?</p><p class="tdd"><b>Deber:</b> Se debe construir y documentar por todas las áreas; dar alcance a procesos, actividades, máquinas, equipos, centros de trabajo y trabajadores.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1bb4e4"></span><h4>Identificar peligros y evaluar riesgos</h4><span class="chev">+</span></div><div class="acc-body"><p class="tdd"><b>Definición:</b> ¿A qué peligros nos exponemos? ¿Cómo nos podemos causar daño? ¿Qué tipo de daño?</p><p class="tdd"><b>Deber:</b> Se actualiza cada año o cuando ocurra un accidente mortal, un evento catastrófico o cambios en procesos, instalaciones, maquinaria o equipos.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#e6007e"></span><h4>Determinar controles</h4><span class="chev">+</span></div><div class="acc-body"><p class="tdd"><b>Definición:</b> ¿Qué debo hacer para gestionar los peligros, riesgos y daños?</p><p class="tdd"><b>Deber:</b> Permite definir las medidas para controlar el riesgo y aislar el peligro de manera priorizada.</p></div></div></div>
+
+    <div class="pdfrow rv up" style="--d:2">
+
+      <div class="pdfmini"><span>Conoce los <b>cargos, roles, responsabilidades y autoridades</b>.</span><button class="pdfbtn" data-pdf="cargos" data-title="Cargos, roles, responsabilidades y autoridades">Ver más</button></div>
+
+      <div class="pdfmini"><span>Conoce los <b>Niveles de riesgo</b>.</span><button class="pdfbtn" data-pdf="niveles" data-title="Niveles de riesgo">Ver más</button></div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<section class="slide nogate dark" data-mod="3">
+
+  <div class="wrap">
+
+    <div class="eyebrow rv up">Control operacional · Gestión del cambio</div>
+
+    <h2 class="rv up" style="--d:1">Gestión del Cambio</h2>
+
+    <p class="lead rv up" style="--d:2">Se entiende por <b>cambio</b> (toca cada uno). 👆</p>
+
+    <div class="chipgrid" style="grid-template-columns:repeat(2,1fr)"><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:var(--cyan)">1</span><span class="nm">Las ubicaciones de los lugares de trabajo y sus alrededores.</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:var(--cyan)">2</span><span class="nm">La organización del trabajo.</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:var(--cyan)">3</span><span class="nm">Las condiciones de trabajo.</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:var(--cyan)">4</span><span class="nm">Los equipos.</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:var(--cyan)">5</span><span class="nm">La fuerza de trabajo.</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:var(--cyan)">6</span><span class="nm">Cambios en el conocimiento o información sobre los peligros y riesgos para la SST.</span><span class="tick">✓</span></div></div>
+
+    <p class="lead rv up" style="margin-top:22px">Así lo hacemos en Holcim — <b>8 pasos</b> (toca cada uno):</p>
+
+    <div class="accgrid" style="margin-top:12px"><div class="acc rv up"><div class="acc-head"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><text x="12" y="16" font-size="12" fill="#fff" text-anchor="middle" stroke="none">1</text></svg></span><h4>Identificar el cambio</h4><span class="chev">+</span></div><div class="acc-body"><p>Detectar la necesidad de cambio y su impacto.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><text x="12" y="16" font-size="12" fill="#fff" text-anchor="middle" stroke="none">2</text></svg></span><h4>Evaluar riesgos</h4><span class="chev">+</span></div><div class="acc-body"><p>Analizar los riesgos asociados y definir controles necesarios.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><text x="12" y="16" font-size="12" fill="#fff" text-anchor="middle" stroke="none">3</text></svg></span><h4>Implementar controles</h4><span class="chev">+</span></div><div class="acc-body"><p>Ejecutar las medidas de control para mitigar riesgos.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><text x="12" y="16" font-size="12" fill="#fff" text-anchor="middle" stroke="none">4</text></svg></span><h4>Actualizar documentación</h4><span class="chev">+</span></div><div class="acc-body"><p>Revisar y ajustar documentos afectados por el cambio.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><text x="12" y="16" font-size="12" fill="#fff" text-anchor="middle" stroke="none">5</text></svg></span><h4>Comunicar y capacitar</h4><span class="chev">+</span></div><div class="acc-body"><p>Informar y entrenar al personal sobre los cambios.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><text x="12" y="16" font-size="12" fill="#fff" text-anchor="middle" stroke="none">6</text></svg></span><h4>Aprobar el cambio</h4><span class="chev">+</span></div><div class="acc-body"><p>Obtener la validación formal para proceder.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><text x="12" y="16" font-size="12" fill="#fff" text-anchor="middle" stroke="none">7</text></svg></span><h4>Ejecutar las acciones</h4><span class="chev">+</span></div><div class="acc-body"><p>Implementar el cambio planificado según lo aprobado.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><text x="12" y="16" font-size="12" fill="#fff" text-anchor="middle" stroke="none">8</text></svg></span><h4>Inspeccionar</h4><span class="chev">+</span></div><div class="acc-body"><p>Verificar que el cambio se haya realizado correctamente.</p></div></div></div>
+
+  </div>
+
+</section>
+
+
+
+<section class="slide light" data-mod="3">
+
+  <div class="wrap">
+
+    <div class="eyebrow rv up">Control operacional · Requisitos legales H&amp;S</div>
+
+    <h2 class="rv up" style="--d:1">Pirámide de Kelsen</h2>
+
+    <div class="infobanner rv up" style="--d:2">Colombia cuenta con un orden jerárquico en sus normas, que establece el orden de aplicabilidad entre ellas y ayuda a resolver contradicciones entre normas de distinto rango. Toca cada nivel. 👆</div>
+
+    <div class="pyr"><div class="plevel gclick rv up" style="background:#e23b32;width:92%" tabindex="0" role="button">CP · Constitución Política<span class="who">Emitida / interpretada por la Corte Constitucional</span></div><div class="plevel gclick rv up" style="background:#ef5522;width:80%" tabindex="0" role="button">Ley<span class="who">Congreso de la República</span></div><div class="plevel gclick rv up" style="background:#f5b700;width:68%" tabindex="0" role="button">Decreto<span class="who">Presidente de la República</span></div><div class="plevel gclick rv up" style="background:#8bbf3a;width:56%" tabindex="0" role="button">Resolución<span class="who">Ministerios</span></div><div class="plevel gclick rv up" style="background:#17a2a2;width:44%" tabindex="0" role="button">Ordenanza<span class="who">Asamblea Departamental</span></div><div class="plevel gclick rv up" style="background:#0e6e78;width:32%" tabindex="0" role="button">Acuerdo<span class="who">Concejo Municipal</span></div></div>
+
+  </div>
+
+</section>
+
+
+
+<section class="slide dark" data-mod="3">
+
+  <div class="wrap">
+
+    <div class="eyebrow rv up">Requisitos legales</div>
+
+    <h2 class="rv up" style="--d:1">Normas que aplican en Holcim</h2>
+
+    <p class="lead rv up" style="--d:2">Conoce cada norma que hace parte de los requisitos legales. Toca para ampliar. 👆</p>
+
+    <div class="accgrid" style="margin-top:20px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1bb4e4"></span><h4>Decreto 1072:2015 (SG-SST)</h4><span class="chev">+</span></div><div class="acc-body"><p><b>Art. 2.2.4.6.7</b> Objetivos de la política SST: cumplir la normatividad nacional vigente en riesgos laborales. <b>Art. 2.2.4.6.8</b> Obligaciones del empleador: garantizar que opera bajo el cumplimiento de la normatividad de seguridad y salud en el trabajo.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#0e2c56"></span><h4>Resolución 0312:2019 (Estándares)</h4><span class="chev">+</span></div><div class="acc-body"><p>Definir la matriz legal que contemple las normas actualizadas del Sistema General de Riesgos Laborales aplicables a la empresa.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#17868a"></span><h4>Guía PCOS (Organización saludable)</h4><span class="chev">+</span></div><div class="acc-body"><p>4.5 Determinación de los requisitos legales y otros reglamentarios.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>NTC ISO 45001:2018 (SG-SST)</h4><span class="chev">+</span></div><div class="acc-body"><p>6.1.3 Determinación de los requisitos legales y otros requisitos.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>Guía RUC (SG-SSTA)</h4><span class="chev">+</span></div><div class="acc-body"><p>4.5 Seguimiento a los Requisitos Legales.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#ef7d00"></span><h4>NTC 39001 (Seguridad vial)</h4><span class="chev">+</span></div><div class="acc-body"><p>Seguridad vial, numeral 4.2 Requisitos legales.</p></div></div></div>
+
+  </div>
+
+</section>
+
+
+
+<section class="slide nogate light" data-mod="3">
+
+  <div class="wrap">
+
+    <div class="eyebrow rv up">Requisitos legales</div>
+
+    <h2 class="rv up" style="--d:1">Evaluación del cumplimiento</h2>
+
+    <p class="lead rv up" style="--d:2">Así lo hacemos en Holcim — toca cada paso. 👆</p>
+
+    <div class="accgrid" style="margin-top:12px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Investigación y análisis</h4><span class="chev">+</span></div><div class="acc-body"><p>Consulta permanente de fuentes de normas jurídicas externas e internas y estudio de aplicabilidad y acciones a ejecutar.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Identificación</h4><span class="chev">+</span></div><div class="acc-body"><p>Alineación del requisito legal con los temas, peligros, aspectos o impactos según las actividades y procesos.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Revisión de aplicación normativa</h4><span class="chev">+</span></div><div class="acc-body"><p>Verificación por parte del responsable de la Compañía para determinar la aplicación del requisito.</p></div></div></div>
+
+    <p class="lead rv up" style="margin-top:20px">Calificación del requisito: determina el estado (toca cada uno):</p>
+
+    <div class="chipgrid" style="grid-template-columns:repeat(4,1fr)"><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:var(--teal)">1</span><span class="nm">Sí cumple</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:var(--teal)">2</span><span class="nm">No cumple</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:var(--teal)">3</span><span class="nm">No aplica</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:var(--teal)">4</span><span class="nm">Sin evaluar</span><span class="tick">✓</span></div></div>
+
+  </div>
+
+</section>
+
+
+
+<section class="slide nogate dark" data-mod="3"><div class="wrap"><div class="eyebrow rv up">Estándares de salud y seguridad</div><h2 class="rv up" style="--d:1">Estándares de Gestión</h2><p class="lead rv up" style="--d:2">Toca cada estándar para reconocerlos. 👆</p><div class="chipgrid"><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#17868a">HSE-001</span><span class="nm">Sistema de Gestión de Salud y Seguridad</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#97d13b">HSE-002</span><span class="nm">Notificación, clasificación e investigación de incidentes</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#f5b700">HSE-003</span><span class="nm">Equipo de protección personal</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#ef7d00">HSE-004</span><span class="nm">Construcción</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#6a3d9a">HSE-005</span><span class="nm">Gestión de seguridad de procesos</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#0e6e78">HSE-006</span><span class="nm">Bienestar y limpieza</span><span class="tick">✓</span></div></div></div></section>
+
+
+
+<section class="slide nogate light" data-mod="3"><div class="wrap"><div class="eyebrow rv up">Estándares de salud y seguridad</div><h2 class="rv up" style="--d:1">Estándares operativos (100)</h2><p class="lead rv up" style="--d:2">Toca cada estándar operativo. 👆</p><div class="chipgrid"><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#17868a">HSE-101</span><span class="nm">Equipo móvil y gestión del tráfico en instalaciones</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#97d13b">HSE-102</span><span class="nm">Trabajo en alturas</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#f5b700">HSE-103</span><span class="nm">Aislamiento de energías (LOTOTO)</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#ef7d00">HSE-104</span><span class="nm">Espacios confinados</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#6a3d9a">HSE-105</span><span class="nm">Seguridad eléctrica</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#0e6e78">HSE-106</span><span class="nm">Protecciones de equipos y guardas</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#1877c4">HSE-107</span><span class="nm">Trabajo en caliente</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#1bb4e4">HSE-108</span><span class="nm">Elevación y soporte de cargas</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#e6007e">HSE-110</span><span class="nm">Trabajo cerca al agua</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#e23b32">HSE-111</span><span class="nm">Seguridad vial</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#3fb559">HSE-112</span><span class="nm">Respuesta de emergencia</span><span class="tick">✓</span></div></div></div></section>
+
+
+
+<section class="slide nogate dark" data-mod="3"><div class="wrap"><div class="eyebrow rv up">Estándares de salud y seguridad</div><h2 class="rv up" style="--d:1">Estándares de Salud (200)</h2><p class="lead rv up" style="--d:2">Toca cada estándar de salud. 👆</p><div class="chipgrid"><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#17868a">HSE-201</span><span class="nm">Asbestos</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#97d13b">HSE-202</span><span class="nm">Sustancias químicas peligrosas</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#f5b700">HSE-203</span><span class="nm">Conservación de la audición</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#ef7d00">HSE-204</span><span class="nm">Ergonomía</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#6a3d9a">HSE-205</span><span class="nm">Vibración</span><span class="tick">✓</span></div></div></div></section>
+
+
+
+<section class="slide dark" data-mod="3">
+
+  <div class="wrap" style="text-align:center">
+
+    <div class="done-badge rv scale"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg></div>
+
+    <div class="eyebrow rv up" style="--d:1">Reinducción completada</div>
+
+    <h2 class="rv up" style="--d:2">¡Felicitaciones! Módulo 3 completado.</h2>
+
+    <p class="lead rv up" style="--d:3;max-width:56ch;margin:14px auto 0">Continúa con el <b>Módulo 4: Controles operacionales complementarios</b> usando el botón <b>Siguiente →</b>.</p>
+
+    <div class="recap rv up" style="--d:4"><span class="chip">Módulo 1</span><span class="chip">Módulo 2</span><span class="chip">Módulo 3</span><span class="chip">¡Cero daños!</span></div>
+
+  </div>
+
+</section>
+
+
+
+
+
+
+
+  <!-- ===================== MÓDULO 4 · PARTE 1 ===================== -->
+
+
+
+<section class="slide dark" data-mod="4">
+
+  <div class="blob b1"></div><div class="blob b2"></div>
+
+  <div class="wrap">
+
+    <div class="eyebrow rv up">Salud &amp; Seguridad · 2026 · Módulo 4 · Parte 1</div>
+
+    <div class="hero-code rv up" style="--d:1">HSE-001</div>
+
+    <div class="hero-title rv up" style="--d:2">Controles operacionales complementarios<br>Estándares HSE en detalle</div>
+
+    <div class="gline rv up" style="--d:3"></div>
+
+    <div class="tag rv up" style="--d:4"><span class="pill">Sistema de gestión</span><span class="pill">EPP · PSM</span><span class="pill">Equipos móviles · Alturas</span></div>
+
+    <p class="lead rv up" style="--d:5">Explora las actividades interactivas para avanzar. Salir se habilita al terminar.</p>
+
+  </div>
+
+</section>
+
+
+
+<section class="slide dark" data-mod="4">
+
+<div class="wrap"><div class="eyebrow rv up">HSE-001 · Sistema de gestión</div><h2 class="rv up" style="--d:1">Liderazgo, compromiso y planificación</h2><p class="lead rv up" style="--d:2">Toca cada punto. 👆</p><div class="accgrid" style="margin-top:16px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>Normas HSE no negociables</h4><span class="chev">+</span></div><div class="acc-body"><p>Las reglas de salud, seguridad y ambiente aplican a todos los niveles y su cumplimiento es obligatorio para mantener la relación contractual.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1bb4e4"></span><h4>Reconocimiento</h4><span class="chev">+</span></div><div class="acc-body"><p>Refuerza los comportamientos positivos y las aportaciones de los equipos.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#0e2c56"></span><h4>Medidas correctivas</h4><span class="chev">+</span></div><div class="acc-body"><p>Aborda los incumplimientos con medidas correctivas y orientación.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Estrategia y mejora (HSE-IP)</h4><span class="chev">+</span></div><div class="acc-body"><p>Todas las acciones deben alinearse con el Plan de Mejora de Salud, Seguridad y Medio Ambiente definido por la unidad.</p></div></div></div></div>
+
+</section>
+
+
+
+<section class="slide light" data-mod="4">
+
+<div class="wrap"><div class="eyebrow rv up">HSE-001 · Sistema de gestión</div><h2 class="rv up" style="--d:1">Personas y capacitación</h2><p class="lead rv up" style="--d:2">Toca cada punto. 👆</p><div class="accgrid" style="margin-top:16px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>Verificación de competencias para roles clave</h4><span class="chev">+</span></div><div class="acc-body"><p>Los contratistas en roles críticos deben presentar calificaciones y certificaciones válidas, con verificación anual.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#17868a"></span><h4>Ciclo de inducción e incorporación</h4><span class="chev">+</span></div><div class="acc-body"><p>Inducción inicial con evaluación de conocimientos, y proceso de <b>onboarding</b> con acompañamiento (coaching) para trabajadores nuevos o transferidos.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Programa de capacitación HSE</h4><span class="chev">+</span></div><div class="acc-body"><p>Es obligatorio seguir la matriz y el plan anual de capacitación, que incluye evaluaciones para asegurar que el contenido sea comprendido por los niveles operativos.</p></div></div></div></div>
+
+</section>
+
+
+
+<section class="slide dark" data-mod="4">
+
+<div class="wrap"><div class="eyebrow rv up">HSE-001 · Sistema de gestión</div><h2 class="rv up" style="--d:1">Gestión de riesgos en el terreno</h2><p class="lead rv up" style="--d:2">Toca cada punto. 👆</p><div class="accgrid" style="margin-top:16px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>Trabajos rutinarios</h4><span class="chev">+</span></div><div class="acc-body"><p>Se controlan con <b>Instrucciones de Trabajo Seguro (ITS)</b>.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#ef7d00"></span><h4>No planificados o emergencias</h4><span class="chev">+</span></div><div class="acc-body"><p>Se controlan con <b>Análisis de Trabajo Seguro (ATS)</b>.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Fases de ejecución del trabajo</h4><span class="chev">+</span></div><div class="acc-body"><p>Revisión de ITS/LOTOTO · Aprobación del permiso de trabajo y verificación de controles críticos · Análisis de Riesgo Personal en el sitio.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#0e2c56"></span><h4>Autoridad para detener trabajos</h4><span class="chev">+</span></div><div class="acc-body"><p>Todo trabajador está empoderado y tiene la obligación de detener cualquier tarea que considere insegura (<b>Stop Work Authority</b>).</p></div></div></div><div class="infobanner rv up" style="margin-top:16px">Incluye el control de eventos críticos (PUE) y programas de higiene industrial para reducir la exposición a sustancias peligrosas según límites internacionales (ACGIH).</div></div>
+
+</section>
+
+
+
+<section class="slide light" data-mod="4">
+
+<div class="wrap"><div class="eyebrow rv up">HSE-001 · Sistema de gestión</div><h2 class="rv up" style="--d:1">Soporte, emergencias y desempeño</h2><p class="lead rv up" style="--d:2">Voltea cada tarjeta para conocer la información. 👆</p><div class="flips" style="margin-top:16px"><div class="flip rv up" tabindex="0" role="button"><div class="flip-in"><div class="face front"><div class="n">1</div><h3>Preparación para emergencias y respuesta</h3><div class="hint">Toca para ver ↺</div></div><div class="face back"><h4>Preparación para emergencias y respuesta</h4><p>Las unidades deben garantizar planes de respuesta para proteger a las personas, los activos y la reputación en caso de incidentes.</p></div></div></div><div class="flip rv up" tabindex="0" role="button"><div class="flip-in"><div class="face front"><div class="n">2</div><h3>Control y conservación de documentos</h3><div class="hint">Toca para ver ↺</div></div><div class="face back"><h4>Control y conservación de documentos</h4><p>Los registros de cumplimiento deben conservarse por un mínimo de 5 años y estar disponibles para inspecciones regulatorias.</p></div></div></div><div class="flip rv up" tabindex="0" role="button"><div class="flip-in"><div class="face front"><div class="n">3</div><h3>Evaluación de brechas y auditorías</h3><div class="hint">Toca para ver ↺</div></div><div class="face back"><h4>Evaluación de brechas y auditorías</h4><p>Se realizan evaluaciones internas anuales y auditorías de grupo para verificar el cumplimiento del estándar HSEMS.</p></div></div></div><div class="flip rv up" tabindex="0" role="button"><div class="flip-in"><div class="face front"><div class="n">4</div><h3>Comité de HSE multifuncional</h3><div class="hint">Toca para ver ↺</div></div><div class="face back"><h4>Comité de HSE multifuncional</h4><p>Reuniones mensuales entre gerencia y trabajadores para revisar indicadores, investigar incidentes y gestionar cambios.</p></div></div></div></div></div>
+
+</section>
+
+
+
+<section class="slide dark" data-mod="4">
+
+<div class="wrap"><div class="eyebrow rv up">HSE-002 · Reporte y gestión de eventos</div><h2 class="rv up" style="--d:1">Reporte e investigación de accidentes</h2><div class="infobanner rv up" style="--d:2">El reporte inmediato garantiza el registro oportuno en iCare.</div><p class="lead rv up">Toca cada paso. 👆</p><div class="accgrid" style="margin-top:14px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Paso 1</h4><span class="chev">+</span></div><div class="acc-body"><p>El trabajador accidentado reporta inmediatamente lo ocurrido a su jefe directo.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Paso 2</h4><span class="chev">+</span></div><div class="acc-body"><p>Si requiere atención de primeros auxilios se presta de inmediato; tan pronto como sea posible se diligencia el formato de “Descripción del Evento”.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Paso 3</h4><span class="chev">+</span></div><div class="acc-body"><p>Se reporta el evento a la ARL del trabajador, en el software que la compañía ha dispuesto.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Paso 4</h4><span class="chev">+</span></div><div class="acc-body"><p>Luego del reporte se recopilan fotografías, declaraciones y demás evidencia.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Paso 5</h4><span class="chev">+</span></div><div class="acc-body"><p>Se cita al trabajador accidentado, al jefe directo, a un representante del COPASST, analista de H&amp;S y demás personas del análisis causal.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Paso 6</h4><span class="chev">+</span></div><div class="acc-body"><p>Se realiza la investigación para encontrar las causas inmediatas y raíces del evento y generar planes de acción para que no vuelva a ocurrir.</p></div></div></div></div>
+
+</section>
+
+
+
+<section class="slide light" data-mod="4">
+
+<div class="wrap"><div class="eyebrow rv up">HSE-002 · Reporte y gestión de eventos</div><h2 class="rv up" style="--d:1">Reporte oportuno</h2><p class="lead rv up" style="--d:2">Modelo de causas (referencia):</p><div class="chipgrid" style="grid-template-columns:repeat(4,1fr);margin-top:6px"><div class="chip3"><span class="code" style="background:#97d13b">1</span><span class="nm">Organización</span></div><div class="chip3"><span class="code" style="background:#0e2c56">2</span><span class="nm">Supervisión</span></div><div class="chip3"><span class="code" style="background:#e6007e">3</span><span class="nm">Acto inseguro</span></div><div class="chip3"><span class="code" style="background:#ef7d00">4</span><span class="nm">Precondición</span></div></div><p class="lead rv up" style="margin-top:16px">Beneficios — toca cada uno. 👆</p><div class="accgrid" style="margin-top:12px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>Protege a las personas de forma inmediata</h4><span class="chev">+</span></div><div class="acc-body"><p>Permite activar oportunamente la atención médica, el acompañamiento y las medidas de control, reduciendo riesgos de complicaciones y facilitando la recuperación.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1bb4e4"></span><h4>Evita la repetición de eventos</h4><span class="chev">+</span></div><div class="acc-body"><p>Facilita la identificación de causas y la implementación de acciones correctivas, evitando que otros se expongan a riesgos ya identificados.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Fortalece la cultura de Seguridad y Salud</h4><span class="chev">+</span></div><div class="acc-body"><p>Promueve la confianza, el aprendizaje organizacional y la mejora continua.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>Permite una gestión legal adecuada</h4><span class="chev">+</span></div><div class="acc-body"><p>Garantiza el cumplimiento de las obligaciones ante la ARL y las autoridades, evitando reprocesos y pérdida de credibilidad.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#ef7d00"></span><h4>Enfoque proactivo de recursos</h4><span class="chev">+</span></div><div class="acc-body"><p>Evita desvíos innecesarios de tiempo y presupuesto, enfocando los recursos en capacitación, prevención y mejores condiciones de trabajo.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#e6007e"></span><h4>Genera beneficios reales para todos</h4><span class="chev">+</span></div><div class="acc-body"><p>El reporte oportuno no es una carga ni una sanción: es una acción de corresponsabilidad que protege a las personas y fortalece la organización.</p></div></div></div></div>
+
+</section>
+
+
+
+<section class="slide dark" data-mod="4">
+
+<div class="wrap"><div class="eyebrow rv up">HSE-003 · Elementos de protección personal</div><h2 class="rv up" style="--d:1">¿Qué son los EPP?</h2><div class="infobanner rv up" style="--d:2">Cualquier equipo o elemento usado por el trabajador como barrera para protegerlo de los posibles daños de los riesgos presentes en sus labores.</div><p class="lead rv up">Los EPP deben cumplir — toca cada requisito. 👆</p><div class="chipgrid" style="grid-template-columns:repeat(2,1fr);margin-top:16px"><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#17868a">1</span><span class="nm">Ser gratuitos</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#1877c4">2</span><span class="nm">Estar fácilmente disponibles</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#97d13b">3</span><span class="nm">Cumplir estándares internacionales (ISO, EN, ANSI, AS)</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#ef7d00">4</span><span class="nm">Ser idóneos y tener un ajuste adecuado</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#e6007e">5</span><span class="nm">Ser compatibles con otros EPP</span><span class="tick">✓</span></div></div><div class="pdfrow rv up" style="grid-template-columns:1fr"><div class="pdfmini"><span>Consulta la <b>guía visual de EPP</b>.</span><button class="pdfbtn" data-pdf="epp_guia" data-title="Guía visual de EPP">Ver más</button></div></div></div>
+
+</section>
+
+
+
+<section class="slide light" data-mod="4">
+
+<div class="wrap"><div class="eyebrow rv up">HSE-003 · Elementos de protección personal</div><h2 class="rv up" style="--d:1">Generalidades de los EPP</h2><p class="lead rv up" style="--d:2">Toca cada buena práctica. 👆</p><div class="acts"><div class="act gclick rv scale" style="background:#0e2c56" tabindex="0" role="button"><span style="font-size:22px">1</span><span>Capacitar sobre cómo elegir, usar, ajustar, cuidar, mantener y solicitar reposición del EPP.</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#1bb4e4" tabindex="0" role="button"><span style="font-size:22px">2</span><span>Inspeccionar el EPP antes de cada uso, verificando su estado y fecha de vencimiento.</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#97d13b" tabindex="0" role="button"><span style="font-size:22px">3</span><span>Conocer y entender la forma adecuada de colocar, ajustar y retirar el EPP.</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#1877c4" tabindex="0" role="button"><span style="font-size:22px">4</span><span>Establecer y señalizar los EPP requeridos en las áreas de trabajo.</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#e6007e" tabindex="0" role="button"><span style="font-size:22px">5</span><span>No compartir equipos de protección personal (como protección auditiva).</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#ef7d00" tabindex="0" role="button"><span style="font-size:22px">6</span><span>No utilizar pintura ni pegatinas para cubrir EPP dañado.</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#17868a" tabindex="0" role="button"><span style="font-size:22px">7</span><span>Reportar el equipo defectuoso y reemplazarlo.</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#6a3d9a" tabindex="0" role="button"><span style="font-size:22px">8</span><span>Almacenar el EPP correctamente y separar el EPP dañado del resto.</span><span class="tick">✓</span></div></div><div class="pdfrow rv up" style="grid-template-columns:1fr"><div class="pdfmini"><span>Da clic para conocer la <b>guía visual</b>.</span><button class="pdfbtn" data-pdf="epp_guia" data-title="Guía visual de EPP">Ver más</button></div></div></div>
+
+</section>
+
+
+
+<section class="slide dark" data-mod="4">
+
+<div class="wrap"><div class="eyebrow rv up">HSE-004 · Construcción</div><h2 class="rv up" style="--d:1">Generalidades de construcción</h2><p class="lead rv up" style="--d:2">Toca cada punto. 👆</p><div class="accgrid" style="margin-top:16px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1bb4e4"></span><h4>Propósito</h4><span class="chev">+</span></div><div class="acc-body"><p>Comunicar los requisitos mínimos de salud y seguridad de Holcim para la gestión de los riesgos asociados con las actividades de construcción: diseño e ingeniería, montaje e instalación, puesta en servicio, suspensión de actividad, desmantelamiento, desmontaje y demolición.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#0e2c56"></span><h4>Alcance</h4><span class="chev">+</span></div><div class="acc-body"><p>Esta norma se aplica a todos los proyectos de construcción y demolición que se realizan bajo control y gestión de Holcim.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>Programa de gestión</h4><span class="chev">+</span></div><div class="acc-body"><p>El país debe documentar un programa que tenga como mínimo: roles y responsabilidades, adquisición de equipos, puesta en servicio, gestión de cambios, procedimientos, auditorías y desviaciones de los requisitos.</p></div></div></div></div>
+
+</section>
+
+
+
+<section class="slide light" data-mod="4">
+
+<div class="wrap"><div class="eyebrow rv up">HSE-005 · Gestión de seguridad de procesos (PSM)</div><h2 class="rv up" style="--d:1">El propósito del PSM: evitar la severidad catastrófica</h2><div class="infobanner rv up" style="--d:2">El HSE-005 no trata sobre incidentes menores; es un sistema de supervivencia corporativa diseñado para prevenir fallas que resultan en:</div><p class="lead rv up">Toca cada consecuencia y cada pregunta. 👆</p><div class="chipgrid" style="grid-template-columns:repeat(2,1fr);margin-top:14px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#0e2c56"></span><h4>Fatalidades</h4><span class="chev">+</span></div><div class="acc-body"><p>Múltiples fatalidades o diagnósticos terminales relacionados con el trabajo.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1bb4e4"></span><h4>Impacto ambiental</h4><span class="chev">+</span></div><div class="acc-body"><p>Efectos perjudiciales a largo plazo (>6 meses) en el medio ambiente.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#0e2c56"></span><h4>Interrupción operativa</h4><span class="chev">+</span></div><div class="acc-body"><p>Incendios que resulten en más de 1 mes de interrupción del negocio.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1bb4e4"></span><h4>Daño reputacional y pérdidas</h4><span class="chev">+</span></div><div class="acc-body"><p>Cobertura mediática internacional o pérdidas materiales superiores a 10 millones CHF.</p></div></div></div><div class="accgrid" style="margin-top:16px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#17868a"></span><h4>Riesgo</h4><span class="chev">+</span></div><div class="acc-body"><p>¿Qué puede salir mal? ¿Qué tan grave puede ser?</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#17868a"></span><h4>Controles</h4><span class="chev">+</span></div><div class="acc-body"><p>¿Qué sistemas están implementados para prevenirlo?</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#17868a"></span><h4>Aseguramiento</h4><span class="chev">+</span></div><div class="acc-body"><p>¿Estás seguro de que están funcionando de manera efectiva?</p></div></div></div></div>
+
+</section>
+
+
+
+<section class="slide light nogate-no" data-mod="4">
+
+  <div class="wrap">
+
+    <div class="eyebrow rv up">HSE-005 · Gestión de seguridad de procesos</div>
+
+    <h2 class="rv up" style="--d:1">Enfoque de seguridad de procesos</h2>
+
+    <p class="lead rv up" style="--d:2">Pasa el cursor (o toca) los puntos titilantes del plano para descubrir la información. 👆</p>
+
+    <div class="plano rv up" id="plano"><div class="plano-ph" id="planoPh">Sube tu PNG del plano aquí (configura <b>PLANO_IMG</b> en el script)</div></div>
+
+  </div>
+
+</section>
+
+
+
+<section class="slide dark" data-mod="4">
+
+<div class="wrap"><div class="eyebrow rv up">HSE-006 · Bienestar y limpieza</div><h2 class="rv up" style="--d:1">Cuatro comportamientos clave</h2><p class="lead rv up" style="--d:2">Toca cada comportamiento. 👆</p><div class="accgrid" style="margin-top:16px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1bb4e4"></span><h4>1 · Ojos en el camino</h4><span class="chev">+</span></div><div class="acc-body"><p>Presta atención a dónde caminas: concéntrate con firmeza y seguridad, evita distracciones (no uses el teléfono al caminar) y está atento a tu entorno.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>2 · Mantener 3 puntos de contacto</h4><span class="chev">+</span></div><div class="acc-body"><p>En escaleras y vehículos mantén siempre 3 puntos de contacto (2 manos + 1 pie o 2 pies + 1 mano); asegura una base estable, usa bolsas o cuerdas para transportar objetos, agárrate del pasamanos y usa calzado antideslizante.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#0e2c56"></span><h4>3 · Identificar y alertar</h4><span class="chev">+</span></div><div class="acc-body"><p>Si ves algo mal (obstáculos, derrames, suelos resbaladizos): informa de inmediato a tu supervisor, coloca señales de advertencia visibles y restringe el acceso con cinta de acordonamiento.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>4 · Mantener el lugar de trabajo limpio y seguro</h4><span class="chev">+</span></div><div class="acc-body"><p>¡Actúa! Mantén pasillos limpios y sin obstáculos, asegura cables y herramientas sueltas, y mejora el entorno (5S): repara suelos o plataformas, mejora accesos, pasamanos e iluminación.</p></div></div></div></div>
+
+</section>
+
+
+
+<section class="slide light" data-mod="4">
+
+<div class="wrap"><div class="eyebrow rv up">HSE-101 · Equipos móviles y tráfico en sitio</div><h2 class="rv up" style="--d:1">Peligros y plan de tránsito</h2><p class="lead rv up" style="--d:2">Toca cada punto. 👆</p><div class="accgrid" style="margin-top:16px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>Identificación de peligros</h4><span class="chev">+</span></div><div class="acc-body"><p>Designe a una persona competente para identificar peligros y evaluar riesgos, de forma que puedan ser eliminados.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Plan de gestión de tránsito</h4><span class="chev">+</span></div><div class="acc-body"><p>Cada localidad debe contar con un plan específico, visible y comunicado a todo el personal. Revíselo al menos una vez al año, mejorando la segregación de peatones y la separación entre vehículos ligeros y equipos móviles; con señalización grande y fácil de comprender.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#0e2c56"></span><h4>Mapa de la localidad</h4><span class="chev">+</span></div><div class="acc-body"><p>Debe incluir dirección y restricciones de tránsito, peligros (p. ej. líneas eléctricas aéreas), rutas peatonales y zonas sin EPP.</p></div></div></div></div>
+
+</section>
+
+
+
+<section class="slide dark" data-mod="4">
+
+<div class="wrap"><div class="eyebrow rv up">HSE-101 · Equipos móviles y tráfico en sitio</div><h2 class="rv up" style="--d:1">Operación e inspecciones</h2><p class="lead rv up" style="--d:2">Los operadores deben — toca cada punto. 👆</p><div class="acts" style="grid-template-columns:repeat(2,1fr)"><div class="act gclick rv scale" style="background:#0e2c56" tabindex="0" role="button"><span style="font-size:22px">1</span><span>Seleccionar el equipo móvil adecuado para la tarea.</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#1bb4e4" tabindex="0" role="button"><span style="font-size:22px">2</span><span>Reportar si no hay disponibilidad de un equipo móvil adecuado.</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#97d13b" tabindex="0" role="button"><span style="font-size:22px">3</span><span>Estacionar el equipo en un lugar seguro y estable, y retirar la llave (resguardarla para evitar uso no autorizado).</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#1877c4" tabindex="0" role="button"><span style="font-size:22px">4</span><span>Si el motor debe permanecer en marcha, mantenerse cerca pero fuera del área de peligro y asegurar la visibilidad.</span><span class="tick">✓</span></div></div><div class="accgrid" style="margin-top:16px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Inspecciones pre-operativas</h4><span class="chev">+</span></div><div class="acc-body"><p>Realiza inspecciones antes de cada turno y lleva un registro. Si un técnico de taller realiza la inspección, el operador aún debe hacer una inspección visual y revisar los frenos; asegura una evaluación de puntos ciegos e instala espejos adicionales donde sea necesario.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#ef7d00"></span><h4>Regla del hombre caído</h4><span class="chev">+</span></div><div class="acc-body"><p>Cuando un peatón ingresa al área de operación de un equipo móvil, el operador debe detenerse y no continuar hasta que el peatón se retire del área de riesgo.</p></div></div></div><div class="pdfrow rv up" style="grid-template-columns:1fr"><div class="pdfmini"><span>Consulta la <b>guía visual</b> de inspecciones.</span><button class="pdfbtn" data-pdf="moviles_guia" data-title="Guía visual · equipos móviles">Ver más</button></div></div></div>
+
+</section>
+
+
+
+<section class="slide light" data-mod="4">
+
+  <div class="wrap">
+
+    <div class="eyebrow rv up">HSE-102 · Trabajo en alturas</div>
+
+    <h2 class="rv up" style="--d:1">Jerarquía de controles para trabajo en alturas</h2>
+
+    <div class="infobanner rv up" style="--d:2">Aplica la jerarquía de controles al planear una tarea en alturas y seleccionar los controles a utilizar. Da clic sobre los números de manera secuencial para descubrir cada nivel. 👆</div>
+
+    <div class="seqdots rv up" style="--d:2" id="seqdots"><button class="seqdot" data-i="0">1</button><button class="seqdot" data-i="1">2</button><button class="seqdot" data-i="2">3</button><button class="seqdot" data-i="3">4</button><button class="seqdot" data-i="4">5</button></div>
+
+    <div class="seqpanel rv up" id="seqpanel">Toca el número <b>1</b> para comenzar.</div>
+
+  </div>
+
+</section>
+
+
+
+<section class="slide dark" data-mod="4">
+
+  <div class="wrap" style="text-align:center">
+
+    <div class="done-badge rv scale"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg></div>
+
+    <div class="eyebrow rv up" style="--d:1">Módulo 4 · Parte 1 completada</div>
+
+    <h2 class="rv up" style="--d:2">¡Excelente trabajo!</h2>
+
+    <p class="lead rv up" style="--d:3;max-width:56ch;margin:14px auto 0">Completaste la primera parte del Módulo 4 (Controles operacionales complementarios). Ya puedes cerrar con el botón <b>Salir</b>. La parte 2 se habilitará pronto.</p>
+
+    <div class="recap rv up" style="--d:4"><span class="chip">HSE-001 a 006</span><span class="chip">HSE-101</span><span class="chip">HSE-102 alturas</span><span class="chip">¡Cero daños!</span></div>
+
+  </div>
+
+</section>
+
+
+
+</div>
+
+
+
+<footer class="nav">
+
+  <button class="nbtn" id="prev" disabled>← Atrás</button>
+
+  <div id="pips"></div>
+
+  <button class="nbtn" id="next">Siguiente →</button>
+
+</footer>
+
+
+
+<!-- MODAL PDF -->
+
+<div class="modal" id="pdfmodal">
+
+  <div class="modal-box">
+
+    <div class="modal-head"><span id="pdfTitle"></span><button id="pdfClose" aria-label="Cerrar">✕</button></div>
+
+    <iframe id="pdfFrame" title="Documento PDF" allow="autoplay"></iframe>
+
+    <div class="nopdf" id="pdfMissing"></div>
+
+  </div>
+
+</div>
+
+
+
+<!-- POP-UP GUÍA -->
+
+<div id="welcome">
+
+  <div class="wbox">
+
+    <h3>Guía para navegar el curso</h3>
+
+    <p><span class="wn">1.</span> Asegúrate de revisar todo el contenido para avanzar de forma correcta y completar el curso satisfactoriamente.</p>
+
+    <p>◆ Realiza las <b>actividades interactivas</b> que se presentan a lo largo del contenido. Son necesarias para avanzar.</p>
+
+    <p><span class="wn">2.</span> Utiliza los botones de navegación para moverte entre los temas: <b>“Siguiente”</b> o <b>“Anterior”</b>.</p>
+
+    <div class="wdemo"><span class="a">← Anterior</span><span class="s">Siguiente →</span></div>
+
+    <p>Ahora da clic en el botón <b>“Iniciar”</b>.</p>
+
+    <button class="wstart" id="startBtn">Iniciar</button>
+
+    <div class="wfoot"><span class="wlogo" id="wlogo"></span><b>HOLCIM</b></div>
+
+  </div>
+
+</div>
+
+
+
+<div id="toast"></div>
+
+
+
+<script>
+
+/* ====== CONFIGURACIÓN ====== */
+
+var EXIGIR_VIDEO_COMPLETO = true;   // pon false para no obligar a ver el video completo
+
+var URL_PORTAL = "";                // opcional: URL /exec del portal para el botón Salir
+
+
+
+/* ===== PDFs Módulo 2 (pega los ID de Drive) ===== */
+
+var PDFS = {
+
+  politica    : "1oANFGDzC4aV3DgqxJZHGcggIfBD59UHv",
+
+  declaracion : "1hcT0sKn57HdzsS08jwS0ioVnWoV4Gkdw",
+
+  vial        : "1hy7mPNMKVIuGdGrjFpCkodMmVmbVG4da",
+
+  cargos      : "1O2Wzk8tA_MHawWvW93guHnw7JH57_G6_",
+
+  niveles     : "1o-xNgHLYGBi_Uc_vkUvcjxTL-QCGOgYJ",
+
+  epp_guia    : "1a0qISZ53Hs0627UEZc94w_959lT_C86w",
+
+  moviles_guia: "18dPSVRD4ncQU7TheU__eMl4vEPH3dG14"
+
+};
+
+
+
+/* ====== Logo Holcim ====== */
+
+var logoSVG = '<svg viewBox="0 0 40 40" width="100%" height="100%"><defs><linearGradient id="hg" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#97d13b"/><stop offset=".55" stop-color="#1bb4e4"/><stop offset="1" stop-color="#1877c4"/></linearGradient></defs><path d="M14 6c-5 0-9 4-9 9 0 3 2 5 5 5h4v-5H11c-1 0-1-1-1-1 0-2 2-3 4-3h5V6z" fill="url(#hg)"/><path d="M26 34c5 0 9-4 9-9 0-3-2-5-5-5h-4v5h3c1 0 1 1 1 1 0 2-2 3-4 3h-5v5z" fill="url(#hg)"/><rect x="17" y="17" width="6" height="6" rx="1" fill="url(#hg)"/></svg>';
+
+document.getElementById('brandlogo').innerHTML = logoSVG;
+
+document.getElementById('wlogo').innerHTML=logoSVG;
+
+document.getElementById('startBtn').addEventListener('click',function(){ document.getElementById('welcome').classList.add('hide'); });
+
+
+
+
+
+/* ====== Señales de prohibición ====== */
+
+function sign(inner, banned){
+
+  banned = (banned !== false);
+
+  var bar = banned ? '<line x1="18" y1="18" x2="46" y2="46" stroke="#e23b32" stroke-width="4"/>' : '';
+
+  return '<svg viewBox="0 0 64 64" width="100%" height="100%"><circle cx="32" cy="32" r="26" fill="#fff" stroke="'+(banned?'#e23b32':'#1877c4')+'" stroke-width="4"/><g stroke="#0b2545" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round">'+inner+'</g>'+bar+'</svg>';
+
+}
+
+document.getElementById('s_instr').innerHTML = sign('<rect x="24" y="20" width="16" height="22" rx="2"/><path d="M27 27h10M27 32h10M27 37h6"/>', false);
+
+document.getElementById('s_area').innerHTML  = sign('<circle cx="27" cy="24" r="3"/><circle cx="38" cy="24" r="3"/><path d="M27 27v9M38 27v9M24 33h6M35 33h6"/>');
+
+document.getElementById('s_run').innerHTML   = sign('<circle cx="34" cy="21" r="3"/><path d="M34 24l-4 7 6 4-2 8M30 31l-6 2M36 35l6-2"/>');
+
+document.getElementById('s_phone').innerHTML = sign('<rect x="26" y="20" width="12" height="24" rx="2"/><path d="M30 40h4"/>');
+
+document.getElementById('s_ring').innerHTML  = sign('<circle cx="32" cy="36" r="7"/><path d="M28 30l4-8 4 8"/>');
+
+document.getElementById('s_gun').innerHTML   = sign('<path d="M22 28h18v6h-6l-4 6-2-6h-6z"/>');
+
+document.getElementById('s_beard').innerHTML = sign('<path d="M24 24a8 8 0 0 1 16 0v4c0 8-4 14-8 14s-8-6-8-14z"/><path d="M28 24h8"/>');
+
+
+
+/* ====== Tiburón ====== */
+
+function shark(c){return '<svg viewBox="0 0 64 64" width="100%" height="100%"><g fill="'+c+'"><path d="M6 40c8-2 14-2 20 0 6-10 16-16 30-16-4 6-6 10-6 14 4 2 8 4 8 4-6 2-14 2-20 0-4 6-12 8-20 6l-2 6-4-8c-4 0-8-2-6-6z"/><circle cx="46" cy="30" r="1.8" fill="#0b2545"/></g><path d="M4 46c6 3 10 3 16 0 6 3 10 3 16 0 6 3 10 3 16 0" fill="none" stroke="#1bb4e4" stroke-width="2.5" stroke-linecap="round"/></svg>';}
+
+document.getElementById('a_shark1').innerHTML = shark('#5aa9d6');
+
+document.getElementById('a_shark2').innerHTML = shark('#2f7fb8');
+
+document.getElementById('a_shark3').innerHTML = shark('#e23b32');
+
+
+
+/* ====== Iconos categorías de peligro ====== */
+
+function catIcon(inner,color){return '<svg viewBox="0 0 48 48"><g fill="none" stroke="'+color+'" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">'+inner+'</g></svg>';}
+
+document.getElementById('c_bio').innerHTML  = catIcon('<circle cx="24" cy="24" r="8"/><path d="M24 8v6M24 34v6M8 24h6M34 24h6M12 12l4 4M32 32l4 4M36 12l-4 4M16 32l-4 4"/><circle cx="24" cy="24" r="2.5" fill="#c14b8a" stroke="none"/>', '#c14b8a');
+
+document.getElementById('c_fis').innerHTML  = catIcon('<path d="M10 20v8h6l8 6V14l-8 6z"/><path d="M30 18a8 8 0 0 1 0 12"/><path d="M34 14a13 13 0 0 1 0 20"/>', '#1877c4');
+
+document.getElementById('c_qui').innerHTML  = catIcon('<path d="M24 6l16 30H8z"/><circle cx="24" cy="21" r="2"/><circle cx="19" cy="30" r="2"/><circle cx="29" cy="30" r="2"/>', '#e0a500');
+
+document.getElementById('c_psi').innerHTML  = catIcon('<path d="M16 30c-4-2-5-8-2-12 2-3 6-4 10-4s8 1 10 4c3 4 2 10-2 12"/><path d="M18 34l-2 4M24 35v5M30 34l2 4"/><circle cx="20" cy="20" r="1.5" fill="#5b6b82" stroke="none"/><circle cx="28" cy="20" r="1.5" fill="#5b6b82" stroke="none"/>', '#5b6b82');
+
+document.getElementById('c_biom').innerHTML = catIcon('<rect x="9" y="27" width="11" height="9" rx="1" fill="#e0a500" stroke="none"/><circle cx="30" cy="11" r="3"/><path d="M30 15c-3 3-7 6-7 10l5 3 3 8"/>', '#3fb559');
+
+document.getElementById('c_nat').innerHTML  = catIcon('<path d="M5 34l8-13 6 9 5-8 9 12z"/><path d="M5 40h38"/><circle cx="35" cy="12" r="4"/>', '#1481c4');
+
+
+
+/* ====== Triángulos condiciones ====== */
+
+function tri(inner){return '<svg viewBox="0 0 48 48"><path d="M24 5l19 34H5z" fill="#f5c400" stroke="#0b2545" stroke-width="2"/><g fill="#0b2545" stroke="#0b2545" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'+inner+'</g></svg>';}
+
+document.getElementById('t_elec').innerHTML = tri('<path d="M26 15l-7 12h6l-2 8 8-13h-6z" fill="#0b2545" stroke="none"/>');
+
+document.getElementById('t_loc').innerHTML  = tri('<rect x="17" y="24" width="7" height="7" fill="none"/><rect x="24" y="24" width="7" height="7" fill="none"/><rect x="20.5" y="17" width="7" height="7" fill="none"/>');
+
+document.getElementById('t_tra').innerHTML  = tri('<path d="M18 30h12l-2-6H20z" fill="none"/><circle cx="21" cy="31" r="1.6"/><circle cx="27" cy="31" r="1.6"/>');
+
+document.getElementById('t_alt').innerHTML  = tri('<path d="M20 16v16M20 16l8 3-8 3" fill="none"/><path d="M16 34h10" fill="none"/>');
+
+document.getElementById('t_pub').innerHTML  = tri('<circle cx="20" cy="23" r="2.2"/><circle cx="28" cy="23" r="2.2"/><path d="M16 32c0-3 2-5 4-5s4 2 4 5M24 32c0-3 2-5 4-5s4 2 4 5" fill="none"/>');
+
+document.getElementById('t_mec').innerHTML  = tri('<circle cx="24" cy="26" r="4" fill="none"/><path d="M24 19v3M24 30v3M17 26h3M28 26h3M19 21l2 2M29 31l-2-2M29 21l-2 2M19 31l2-2" fill="none"/>');
+
+document.getElementById('t_tec').innerHTML = tri('<path d="M24 17c3 3 4 7 2 10 3-1 4-4 3-7 3 3 4 8 1 11-3 3-9 3-12 0-3-3-1-10 6-14z" fill="#0b2545" stroke="none"/>');
+
+document.getElementById('t_conf').innerHTML = tri('<ellipse cx="24" cy="34" rx="8" ry="2.5" fill="none"/><circle cx="24" cy="20" r="2.5"/><path d="M20 33l4-9 4 9" fill="none"/><path d="M19 28h10" fill="none"/>');
+
+
+
+/* ====== NAVEGACIÓN ====== */
+
+var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+
+var N = slides.length, idx = 0, maxUnlocked = 0, videoEnded = false, completed = false;
+
+var elCur = document.getElementById('cur'), elTot = document.getElementById('tot'), fill = document.getElementById('hudfill');
+
+var prevBtn = document.getElementById('prev'), nextBtn = document.getElementById('next'), pips = document.getElementById('pips');
+
+var exitBtn = document.getElementById('exit');
+
+elTot.textContent = N;
+
+
+
+/* posición inicial de cada slide */
+
+slides.forEach(function(s,i){ s.style.transform = i===0 ? 'translateX(0)' : 'translateX(100%)'; });
+
+
+
+/* pips */
+
+for(var i=0;i<N;i++){ (function(i){ var p=document.createElement('i'); p.addEventListener('click',function(){ if(i<=maxUnlocked) goTo(i, i>idx?1:-1); }); pips.appendChild(p); })(i); }
+
+var pipEls = Array.prototype.slice.call(pips.children);
+
+
+
+function reveal(s){ s.querySelectorAll('.rv').forEach(function(el){ el.classList.remove('in'); void el.offsetWidth; el.classList.add('in'); }); }
+
+function clearReveal(s){ s.querySelectorAll('.rv').forEach(function(el){ el.classList.remove('in'); }); }
+
+
+
+/* ====== BARRERA DE INTERACCIÓN ====== */
+
+function reqStats(s){ if(s.classList.contains('nogate')) return {total:0,done:0}; return { total:s.querySelectorAll('.req').length, done:s.querySelectorAll('.req.done').length }; }
+
+function refreshNext(){
+
+  var s=slides[idx];
+
+  if(idx===N-1){ nextBtn.disabled=true; nextBtn.textContent='✓ Completado'; return; }
+
+  var gate=s.getAttribute('data-gate');
+
+  if(gate==='video' && EXIGIR_VIDEO_COMPLETO && !videoEnded){ nextBtn.disabled=true; nextBtn.textContent='Ve el video para continuar'; return; }
+
+  var r=reqStats(s);
+
+  if(r.total>0 && r.done<r.total){ nextBtn.disabled=true; nextBtn.textContent='Explora todo ('+r.done+'/'+r.total+')'; return; }
+
+  nextBtn.disabled=false; nextBtn.textContent='Siguiente →';
+
+}
+
+function markDone(el){ if(!el.classList.contains('req')||el.classList.contains('done'))return; el.classList.add('done'); refreshNext(); }
+
+
+
+function chrome(){
+
+  elCur.textContent = idx+1; var ml=document.getElementById('modlabel'); if(ml){var mm=slides[idx].getAttribute('data-mod'); ml.textContent=(mm==='4')?'Módulo 4 · Controles complementarios':(mm==='3')?'Módulo 3 · Control operacional':(mm==='2')?'Módulo 2 · Planeación':'Módulo 1';}
+
+  fill.style.width = ((idx+1)/N*100)+'%';
+
+  prevBtn.disabled = (idx===0);
+
+  var gate = slides[idx].getAttribute('data-gate');
+
+  refreshNext();
+
+  pipEls.forEach(function(p,k){ p.className = ''; if(k===idx) p.classList.add('on'); if(k>maxUnlocked) p.classList.add('lock'); });
+
+  if(idx===N-1) marcarCompletado();
+
+  // pausar video si salgo de su slide
+
+  if(gate!=='video' && vplayer){ try{ vplayer.pause(); }catch(e){} }
+
+}
+
+
+
+function goTo(i, dir){
+
+  if(i<0||i>=N||i>maxUnlocked||i===idx) return;
+
+  clearReveal(slides[idx]);
+
+  slides[idx].classList.remove('active');
+
+  slides[idx].style.transform = dir>0 ? 'translateX(-100%)' : 'translateX(100%)';
+
+  idx = i;
+
+  slides[idx].style.transform = 'translateX(0)';
+
+  slides[idx].classList.add('active');
+
+  slides[idx].scrollTop = 0;
+
+  reveal(slides[idx]);
+
+  chrome();
+
+}
+
+
+
+function next(){
+
+  var gate = slides[idx].getAttribute('data-gate');
+
+  if(gate==='video' && EXIGIR_VIDEO_COMPLETO && !videoEnded){ toast('Observa el video completo para continuar'); return; }
+
+  var r=reqStats(slides[idx]);
+
+  if(r.total>0 && r.done<r.total){ toast('Explora todas las tarjetas para continuar ('+r.done+'/'+r.total+')'); return; }
+
+  if(idx>=N-1) return;
+
+  maxUnlocked = Math.max(maxUnlocked, idx+1);
+
+  goTo(idx+1, 1);
+
+}
+
+function prev(){ if(idx>0) goTo(idx-1, -1); }
+
+nextBtn.addEventListener('click', next);
+
+prevBtn.addEventListener('click', prev);
+
+document.addEventListener('keydown', function(e){ var md=document.getElementById('pdfmodal'); if(md&&md.classList.contains('show'))return; var wc=document.getElementById('welcome'); if(wc&&!wc.classList.contains('hide'))return; if(e.key==='ArrowRight') next(); if(e.key==='ArrowLeft') prev(); });
+
+
+
+/* reveal de la primera slide */
+
+reveal(slides[0]); chrome();
+
+
+
+/* ====== VIDEO VIMEO ====== */
+
+var vplayer = null, vhint = document.getElementById('vhint'), vhintTxt = document.getElementById('vhintTxt'), vskip = document.getElementById('vskip');
+
+function videoListo(){
+
+  videoEnded = true;
+
+  vhint.classList.add('done');
+
+  vhintTxt.textContent = '¡Video completado! Ya puedes continuar.';
+
+  vhint.querySelector('svg').innerHTML = '<path d="M5 13l4 4L19 7"/>';
+
+  if(vskip) vskip.style.display='none';
+
+  chrome();
+
+}
+
+try{
+
+  vplayer = new Vimeo.Player(document.getElementById('vimeo1'));
+
+  vplayer.on('ended', videoListo);
+
+}catch(e){}
+
+/* red de seguridad: si el SDK no carga (red corporativa), muestra opción manual a los 12 s */
+
+setTimeout(function(){ if(!videoEnded && EXIGIR_VIDEO_COMPLETO && vskip) vskip.style.display='inline-block'; }, 12000);
+
+if(vskip) vskip.addEventListener('click', videoListo);
+
+
+
+/* ====== FLIP ====== */
+
+document.querySelectorAll('.flip').forEach(function(f){
+
+  f.classList.add('req');
+
+  function t(){ f.classList.toggle('flipped'); markDone(f); }
+
+  f.addEventListener('click', t);
+
+  f.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); t(); } });
+
+});
+
+
+
+
+
+/* ===== Generadores Módulo 2 (antes de enlazar acordeones) ===== */
+
+/* ====== WHEEL ====== */
+
+var WICON={
+
+  doc:'<path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M10 12h6M10 16h4"/>',
+
+  risk:'<path d="M12 3l9 16H3z"/><path d="M12 9v5M12 17h0"/>',
+
+  people:'<circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.2"/><path d="M4 20c0-3 2.5-5 5-5s5 2 5 5M15 20c0-2.2 1.3-3.6 3-3.6"/>',
+
+  improve:'<path d="M4 18l5-6 4 4 7-9"/><path d="M20 7v5h-5"/>',
+
+  rules:'<rect x="6" y="4" width="12" height="16" rx="2"/><path d="M9 9h6M9 13h6M9 17h4"/>',
+
+  legal:'<path d="M12 4v16M6 8h12M6 8l-2 6a4 4 0 0 0 4 0zM18 8l-2 6a4 4 0 0 0 4 0z"/>'
+
+};
+
+var WHEEL=[
+
+ {a:330,c:'#17a2a2',t:'Política HSE',d:'Política HSE, Declaración Local HS y Objetivos.',icon:'doc'},
+
+ {a:30 ,c:'#e23b32',t:'Gestión de riesgos críticos',d:'Eliminar lesiones graves y controlar riesgos ambientales críticos.',icon:'risk'},
+
+ {a:90 ,c:'#f5b700',t:'Compromiso',d:'Empoderar a todos nuestros trabajadores e impulsar tiempo de calidad en el campo.',icon:'people'},
+
+ {a:150,c:'#3fb559',t:'Mejora continua',d:'Lograr la excelencia en HSE mediante la implementación de acciones priorizadas.',icon:'improve'},
+
+ {a:210,c:'#17868a',t:'Reglas HSE',d:'Reglas HSE, Programas y Planes HS.',icon:'rules'},
+
+ {a:270,c:'#ef7d00',t:'Requisitos legales',d:'Requisitos Legales, estándares Holcim y de Cliente.',icon:'legal'}
+
+];
+
+var wheelEl=document.querySelector('.wheel'), winfo=document.getElementById('winfo');
+
+function showInfo(p){
+
+  winfo.style.borderLeftColor=p.c;
+
+  winfo.innerHTML='<span class="wp" style="color:'+p.c+'">Componente SG-SST</span><div class="wt">'+p.t+'</div><div class="wd">'+p.d+'</div>';
+
+}
+
+WHEEL.forEach(function(p){
+
+  var rad=p.a*Math.PI/180, x=50+48*Math.sin(rad), y=50-48*Math.cos(rad);
+
+  var b=document.createElement('button');
+
+  b.className='wpoint'; b.style.left=x+'%'; b.style.top=y+'%'; b.style.background=p.c;
+
+  b.innerHTML='<svg viewBox="0 0 24 24">'+WICON[p.icon]+'</svg>';
+
+  b.setAttribute('aria-label',p.t);
+
+  b.classList.add('req');
+
+  function act(){ document.querySelectorAll('.wpoint').forEach(function(w){w.classList.remove('active');}); b.classList.add('active'); showInfo(p); markDone(b); }
+
+  b.addEventListener('mouseenter',act);
+
+  b.addEventListener('focus',act);
+
+  b.addEventListener('click',act);
+
+  wheelEl.appendChild(b);
+
+});
+
+
+
+
+
+/* ====== REGLAS HSE (acordeón) ====== */
+
+var RICON={
+
+  reportar:'<path d="M4 6h13l3 3v6H4z"/><path d="M8 15v4M16 15v3M11 10h4"/>',
+
+  epp:'<path d="M4 11a8 8 0 0 1 16 0M3 11h18M12 5V3"/>',
+
+  permiso:'<rect x="6" y="4" width="12" height="16" rx="2"/><path d="M9 3h6v3H9zM9 11l1.5 1.5L14 9M9 16h5"/>',
+
+  cumpl:'<rect x="6" y="4" width="12" height="16" rx="2"/><circle cx="12" cy="12" r="3"/><path d="M12 15v4"/>',
+
+  control:'<path d="M12 3l7 3v5c0 4-3 7-7 9-4-2-7-5-7-9V6z"/><path d="M9 12l2 2 4-4"/>',
+
+  fuego:'<path d="M12 3l9 16H3z"/><path d="M12 9v5M12 17h0"/>',
+
+  conduc:'<path d="M5 13l1.5-4h11L19 13M4 13h16v4H4zM7 17v2M17 17v2"/><circle cx="8" cy="15" r="0"/>',
+
+  alcohol:'<circle cx="12" cy="12" r="9"/><path d="M5 5l14 14M10 4h4v3l1 4v7h-6v-7l1-4z"/>'
+
+};
+
+var REGLAS=[
+
+ {i:'reportar',t:'Reportar',d:'Reporta todos los incidentes en un plazo no mayor a 24 horas.'},
+
+ {i:'epp',t:'EPP',d:'Utiliza siempre el equipo de protección personal (EPP) básico y específico para cada tarea.'},
+
+ {i:'permiso',t:'Permisos de trabajo',d:'Obtén y haz seguimiento de los permisos para trabajos en altura, en caliente, en espacios confinados, de aislamiento y bloqueo, y de elevación y soporte de cargas. Aísla, bloquea, etiqueta y prueba siempre.'},
+
+ {i:'cumpl',t:'Cumplimiento de permisos',d:'Cumple con todos los permisos medioambientales y operacionales.'},
+
+ {i:'control',t:'Controles críticos',d:'No te saltes ni deshabilites ningún dispositivo de seguridad o control crítico.'},
+
+ {i:'fuego',t:'Línea de fuego',d:'No trabajes sin las protecciones de la maquinaria, ni te sitúes o camines bajo una carga suspendida o en zonas de exclusión.'},
+
+ {i:'conduc',t:'Conducción segura',d:'No conduzcas sin cinturón ni usando el teléfono celular, y no superes los límites de velocidad ni las horas de servicio.'},
+
+ {i:'alcohol',t:'No alcohol ni drogas',d:'No trabajes ni conduzcas bajo la influencia del alcohol o las drogas.'}
+
+];
+
+var reglasEl=document.getElementById('reglas');
+
+REGLAS.forEach(function(r,k){
+
+  var el=document.createElement('div'); el.className='acc rv up'; el.style.setProperty('--d',k%2);
+
+  el.setAttribute('tabindex','0'); el.setAttribute('role','button');
+
+  el.innerHTML='<div class="acc-head"><span class="ico"><svg viewBox="0 0 24 24">'+RICON[r.i]+'</svg></span><h4>'+r.t+'</h4><span class="chev">+</span></div><div class="acc-body"><p>'+r.d+'</p></div>';
+
+  reglasEl.appendChild(el);
+
+});
+
+
+
+
+
+/* ====== OBJETIVO PRINCIPAL (acordeón) ====== */
+
+var OBJ=[
+
+ {c:'#17868a',t:'Estilos de vida y entornos saludables',d:'Promocionar estilos de vida, condiciones y entornos de trabajo más saludables y seguros.',p:['Implementar y mantener los Controles Críticos.','Reportar y gestionar Peligros, VPCs y CVPCs.','Registrar Tiempo en campo de calidad.']},
+
+ {c:'#ef7d00',t:'Mejora continua y certificación',d:'Mejorar continuamente y certificar el sistema de gestión de SST, cumpliendo estándares técnicos y legales aplicables.',p:['Cumplir el Plan de trabajo y mejora (HSE-IP).','Mantener certificación R.U.C.','Mantener certificación ISO 45001:2018.','Mantener certificación Organización Saludable.','Mantener certificación ISO 39001:2014.','Identificar y cumplir Requisitos Legales HS aplicables.']},
+
+ {c:'#e6007e',t:'Prevención de incidentes y enfermedades',d:'Prevenir y minimizar la ocurrencia de incidentes, accidentes de trabajo y enfermedades laborales.',p:['Gestionar frecuencia de accidentalidad y enfermedad de origen laboral.','Gestionar severidad de accidentes y enfermedades de origen laboral.','Gestionar el ausentismo laboral.']},
+
+ {c:'#17868a',t:'Programas de Seguridad Vial',d:'Generar programas de capacitación, promoción y prevención en Seguridad Vial que mejoren el comportamiento y la gestión de conductores y actores en la vía.',p:['Conductores aprobados en manejo defensivo.','Campañas de Seguridad Vial.']},
+
+ {c:'#ef7d00',t:'Controles operacionales en rutas',d:'Gestionar los controles operacionales que mitiguen los riesgos en las rutas donde transitamos (factores logísticos, humanos, emergencias del entorno y desplazamientos in itínere).',p:['IVMS.','Feedback.']},
+
+ {c:'#e6007e',t:'Mantenimiento de vehículos e infraestructura',d:'Gestionar los planes de mantenimiento a vehículos e infraestructura vial para garantizar una operación segura.',p:['Inspecciones de infraestructura vial.','Auditoría de cumplimiento a planes de mantenimiento vehicular.']}
+
+];
+
+var objEl=document.getElementById('objetivos');
+
+OBJ.forEach(function(o,k){
+
+  var el=document.createElement('div'); el.className='acc rv up'; el.style.setProperty('--d',k%2);
+
+  el.setAttribute('tabindex','0'); el.setAttribute('role','button');
+
+  var pts=o.p.map(function(x){return '<div class="pt"><span class="d"></span>'+x+'</div>';}).join('');
+
+  el.innerHTML='<div class="acc-head"><span class="stripe" style="background:'+o.c+'"></span><h4>'+o.t+'</h4><span class="chev">+</span></div><div class="acc-body"><p>'+o.d+'</p><span class="ptitle" style="margin-top:12px">Puntos a cumplir</span>'+pts+'</div>';
+
+  objEl.appendChild(el);
+
+});
+
+
+
+
+
+
+
+/* ====== ACORDEÓN (condiciones + reglas + objetivos) ====== */
+
+document.querySelectorAll('.acc').forEach(function(a){
+
+  a.classList.add('req');
+
+  function t(){ a.classList.toggle('open'); a.setAttribute('aria-expanded', a.classList.contains('open')?'true':'false'); markDone(a); }
+
+  a.addEventListener('click', t);
+
+  a.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); t(); } });
+
+});
+
+
+
+
+
+
+
+/* ====== PLANO isométrico (Módulo 4) — sube tu PNG y ajusta puntos ====== */
+
+// 1) Sube el PNG a Drive, hazlo público, y pon aquí un enlace directo, ej:
+
+//    "https://drive.google.com/file/d/1xXSxI48TlKACBcvuxA48ZUze2UOP8kAH/view?usp=sharing"
+
+var PLANO_IMG = "https://drive.google.com/thumbnail?id=1xXSxI48TlKACBcvuxA48ZUze2UOP8kAH&sz=w1000";
+
+// 2) Ajusta x/y (en %) de cada punto según tu imagen. Los textos 3 y 5 edítalos si aplica.
+
+var PLANO = [
+
+ {x:18, y:55, t:'Combustibles tradicionales (sólidos, líquidos, gas)'},
+
+ {x:40, y:60, t:'Manejo de material caliente'},
+
+ {x:57, y:40, t:'Horno y precalentador'},
+
+ {x:72, y:48, t:'Taludes y canteras'},
+
+ {x:62, y:62, t:'Molienda'},
+
+ {x:82, y:63, t:'Seguridad eléctrica'},
+
+ {x:60, y:82, t:'Gestión de fuego por combustibles'},
+
+ {x:22, y:78, t:'Sistemas de presión'},
+
+ {x:33, y:35, t:'Equipos críticos'}
+
+];
+
+(function(){
+
+  var cont=document.getElementById('plano'); if(!cont) return;
+
+  var ph=document.getElementById('planoPh');
+
+  if(PLANO_IMG){ var img=document.createElement('img'); img.src=PLANO_IMG; img.alt='Plano de planta'; cont.insertBefore(img,ph); ph.style.display='none'; }
+
+  PLANO.forEach(function(p,i){
+
+    var b=document.createElement('button');
+
+    b.className='hot gclick'; b.style.left=p.x+'%'; b.style.top=p.y+'%'; b.textContent=(i+1);
+
+    b.innerHTML=(i+1)+'<span class="hlabel">'+(i+1)+'. '+p.t+'</span>';
+
+    b.setAttribute('aria-label',p.t);
+
+    cont.appendChild(b);
+
+  });
+
+})();
+
+
+
+/* ====== SECUENCIAL alturas (Módulo 4) ====== */
+
+(function(){
+
+  var wrap=document.getElementById('seqdots'); if(!wrap) return;
+
+  var panel=document.getElementById('seqpanel');
+
+  var Q=["¿La tarea se puede realizar a nivel de suelo para eliminar el riesgo de caída?", "¿Se puede colocar una barrera física para que los trabajadores no alcancen el peligro de caída?", "¿La tarea puede realizarse desde una plataforma de trabajo con ingeniería adecuada (Plataforma de Trabajo Móvil Elevada [MEWP], andamio)?", "¿Se puede usar un dispositivo de restricción de caídas que evite caer por un borde?", "¿Se puede usar un sistema anticaídas como un arnés para detenerse en caso de caer?"];
+
+  var dots=Array.prototype.slice.call(wrap.querySelectorAll('.seqdot'));
+
+  dots.forEach(function(d){
+
+    d.classList.add('req');
+
+    function act(){ var i=+d.getAttribute('data-i'); dots.forEach(function(x){x.classList.remove('cur')}); d.classList.add('cur'); panel.innerHTML='<b>Nivel '+(i+1)+'.</b> '+Q[i]; markDone(d); }
+
+    d.addEventListener('click',act);
+
+    d.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){e.preventDefault();act();} });
+
+  });
+
+})();
+
+
+
+/* ====== CLICS GATEADOS (chips, actividades, pirámide, calificación) ====== */
+
+document.querySelectorAll('.gclick').forEach(function(el){
+
+  el.classList.add('req');
+
+  function t(){ el.classList.toggle('sel'); markDone(el); }
+
+  el.addEventListener('click', t);
+
+  el.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); t(); } });
+
+});
+
+
+
+/* ====== QUIZ ====== */
+
+var quiz = document.getElementById('quiz');
+
+quiz.classList.add('req');
+
+quiz.querySelectorAll('.opt').forEach(function(opt){
+
+  opt.addEventListener('click', function(){
+
+    if(quiz.classList.contains('answered')) return;
+
+    quiz.classList.add('answered'); markDone(quiz);
+
+    quiz.querySelectorAll('.opt').forEach(function(o){ o.classList.add(o.getAttribute('data-correct')==='1'?'correct':'wrong'); });
+
+    document.getElementById('verdict').classList.add('show');
+
+  });
+
+});
+
+
+
+/* ====== SALIR (bloqueado hasta completar) ====== */
+
+function marcarCompletado(){
+
+  if(completed) return;
+
+  completed = true;
+
+  exitBtn.classList.remove('locked');
+
+  exitBtn.title = 'Salir de la capacitación';
+
+  document.getElementById('exitIcon').innerHTML = '<path d="M6 6l12 12M18 6L6 18"/>';
+
+  toast('✓ Capacitación completada. Ya puedes salir.');
+
+}
+
+exitBtn.addEventListener('click', function(){
+
+  if(!completed){ toast('Completa todo el módulo para poder salir'); return; }
+
+  try{ window.close(); }catch(e){}
+
+  setTimeout(function(){
+
+    if(URL_PORTAL && URL_PORTAL.indexOf('http')===0) window.open(URL_PORTAL,'_top');
+
+    else { try{ history.back(); }catch(e){} }
+
+  }, 150);
+
+});
+
+
+
+/* ====== MODAL PDF ====== */
+
+var modal=document.getElementById('pdfmodal'), pdfFrame=document.getElementById('pdfFrame'),
+
+    pdfTitle=document.getElementById('pdfTitle'), pdfMissing=document.getElementById('pdfMissing');
+
+function openPdf(key,title){
+
+  pdfTitle.innerHTML=title;
+
+  var id=PDFS[key];
+
+  if(!id || id.indexOf('PON_AQUI')===0){
+
+    pdfFrame.style.display='none'; pdfMissing.style.display='grid';
+
+    pdfMissing.innerHTML='Aún no has configurado el ID de este PDF.<br>Súbelo a Drive, cópialo en la variable <b>PDFS.'+key+'</b> del script y vuelve a implementar.';
+
+  }else{
+
+    pdfMissing.style.display='none'; pdfFrame.style.display='block';
+
+    pdfFrame.src='https://drive.google.com/file/d/'+id+'/preview';
+
+  }
+
+  modal.classList.add('show');
+
+}
+
+function closePdf(){ modal.classList.remove('show'); pdfFrame.src=''; }
+
+document.querySelectorAll('.pdfbtn').forEach(function(b){
+
+  b.addEventListener('click',function(){ openPdf(b.getAttribute('data-pdf'), b.getAttribute('data-title')); });
+
+});
+
+document.getElementById('pdfClose').addEventListener('click',closePdf);
+
+modal.addEventListener('click',function(e){ if(e.target===modal) closePdf(); });
+
+document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&modal.classList.contains('show')) closePdf(); });
+
+
+
+
+
+/* ====== TOAST ====== */
+
+var toastEl = document.getElementById('toast'), toastT;
+
+function toast(msg){ toastEl.textContent = msg; toastEl.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(function(){ toastEl.classList.remove('show'); }, 2600); }
+
+</script>
+
+</body>
+
+</html>
