@@ -1506,7 +1506,17 @@ function toast(msg){ toastEl.textContent = msg; toastEl.classList.add('show'); c
       fecha: new Date().toLocaleString()
     };
 
-    // Opción A: enviar al Google Apps Script (correo automático)
+    // Opción A: servido POR Apps Script → llamada nativa (sin URLs ni CORS)
+    if(typeof google!=='undefined' && google.script && google.script.run){
+      rSend.disabled=true;
+      google.script.run
+        .withSuccessHandler(function(){ hecho(); })
+        .withFailureHandler(function(){ hecho(); })
+        .enviarReporte(datos);
+      return;
+    }
+
+    // Opción B: enviar al Google Apps Script por POST (curso en GitHub Pages)
     if(REPORTE_URL && REPORTE_URL.indexOf('http')===0){
       rSend.disabled=true;
       try{
