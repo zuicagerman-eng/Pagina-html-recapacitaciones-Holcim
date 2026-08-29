@@ -434,6 +434,35 @@
     .slide{transition:none}
     .blob{display:none}
   }
+
+  /* 7) Botón flotante "Reportar un problema" + su ventana */
+  #reportBtn{position:fixed;right:18px;bottom:calc(var(--footer) + 16px);z-index:90;
+    width:50px;height:50px;border-radius:50%;border:none;cursor:pointer;
+    background:linear-gradient(160deg,#f5b700,#ef7d00);color:#fff;
+    display:grid;place-items:center;box-shadow:0 10px 24px -8px rgba(239,125,0,.75);
+    transition:transform .2s, box-shadow .2s}
+  #reportBtn:hover{transform:translateY(-2px) scale(1.05)}
+  #reportBtn svg{width:26px;height:26px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+  #reportBtn::after{content:"";position:absolute;inset:0;border-radius:50%;animation:pulse 2.2s infinite}
+  @media(max-width:640px){#reportBtn{width:46px;height:46px;bottom:calc(var(--footer) + 12px)}}
+
+  .report-box{width:min(480px,100%);height:auto;max-height:90vh}
+  .report-body{padding:20px 22px 22px;display:flex;flex-direction:column;gap:6px;overflow:auto}
+  .report-loc{background:#eef3f9;color:var(--ink);border-radius:10px;padding:9px 13px;font-size:13.5px;
+    font-weight:600;margin-bottom:8px;border-left:4px solid var(--orange)}
+  .report-loc b{color:var(--orange)}
+  .report-lbl{font-size:12.5px;font-weight:700;color:var(--muted);margin-top:8px}
+  .report-in{width:100%;border:2px solid #d9e2ee;border-radius:10px;padding:11px 13px;font-family:var(--font);
+    font-size:14px;color:var(--ink);background:#fff;transition:border-color .2s;resize:vertical}
+  .report-in:focus{outline:none;border-color:var(--cyan)}
+  .report-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:16px}
+  .report-cancel,.report-send{border:none;border-radius:10px;padding:11px 22px;font-family:var(--font);
+    font-weight:700;font-size:14px;cursor:pointer;transition:.2s}
+  .report-cancel{background:#e7edf5;color:var(--ink)}
+  .report-cancel:hover{background:#d7e0ec}
+  .report-send{background:var(--grad);color:#062038;box-shadow:0 8px 20px -10px rgba(27,180,228,.9)}
+  .report-send:hover{transform:translateY(-1px)}
+  .report-send:disabled{opacity:.55;cursor:progress}
 </style>
 </head>
 <body>
@@ -1035,11 +1064,41 @@
     <div class="wfoot"><span class="wlogo" id="wlogo"></span><b>HOLCIM</b></div>
   </div>
 </div>
+<!-- BOTÓN FLOTANTE: reportar problema -->
+<button id="reportBtn" title="Reportar un problema en esta diapositiva" aria-label="Reportar un problema">
+  <svg viewBox="0 0 24 24"><path d="M12 3l9 16H3z"/><path d="M12 9v5M12 17h0"/></svg>
+</button>
+
+<!-- MODAL: reportar problema -->
+<div class="modal" id="reportModal">
+  <div class="modal-box report-box">
+    <div class="modal-head"><span>Reportar un problema</span><button id="reportClose" aria-label="Cerrar">✕</button></div>
+    <div class="report-body">
+      <div class="report-loc">Diapositiva <b id="reportSlide">—</b> · <span id="reportMod">—</span></div>
+      <label class="report-lbl" for="reportName">Tu nombre (opcional)</label>
+      <input id="reportName" class="report-in" type="text" placeholder="Ej: Germán Zúñiga" autocomplete="name">
+      <label class="report-lbl" for="reportMsg">¿Qué problema encontraste?</label>
+      <textarea id="reportMsg" class="report-in" rows="4" placeholder="Describe brevemente el error…"></textarea>
+      <div class="report-actions">
+        <button class="report-cancel" id="reportCancel">Cancelar</button>
+        <button class="report-send" id="reportSend">Enviar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div id="toast"></div>
 <script>
 /* ====== CONFIGURACIÓN ====== */
 var EXIGIR_VIDEO_COMPLETO = true;   // pon false para no obligar a ver el video completo
 var URL_PORTAL = "";                // opcional: URL /exec del portal para el botón Salir
+
+/* ====== REPORTE DE PROBLEMAS ======
+   Pega aquí la URL /exec de tu Google Apps Script (el mismo que sirve el curso
+   sirve para recibir los reportes). El script envía el correo automáticamente.
+   Si lo dejas vacío "", el botón abrirá el correo del usuario como respaldo. */
+var REPORTE_URL   = "";                       // ej: "https://script.google.com/macros/s/XXXX/exec"
+var REPORTE_EMAIL = "zuica.german@gmail.com"; // correo de respaldo (modo "abrir correo")
 
 /* ====== BODEGA DE ARCHIVOS (imágenes, audio, etc.) ======
    IMPORTANTE: cuando este HTML se sirve dentro de Google Apps Script / el
@@ -1405,6 +1464,88 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&modal.clas
 /* ====== TOAST ====== */
 var toastEl = document.getElementById('toast'), toastT;
 function toast(msg){ toastEl.textContent = msg; toastEl.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(function(){ toastEl.classList.remove('show'); }, 2600); }
+
+/* ====== REPORTAR UN PROBLEMA ====== */
+(function(){
+  var rBtn=document.getElementById('reportBtn'),
+      rModal=document.getElementById('reportModal'),
+      rClose=document.getElementById('reportClose'),
+      rCancel=document.getElementById('reportCancel'),
+      rSend=document.getElementById('reportSend'),
+      rMsg=document.getElementById('reportMsg'),
+      rName=document.getElementById('reportName'),
+      rSlide=document.getElementById('reportSlide'),
+      rMod=document.getElementById('reportMod');
+  if(!rBtn) return;
+
+  function moduloActual(){ var el=document.getElementById('modlabel'); return el?el.textContent:''; }
+
+  function abrir(){
+    rSlide.textContent = (idx+1) + ' / ' + N;
+    rMod.textContent = moduloActual();
+    rModal.classList.add('show');
+    setTimeout(function(){ rMsg.focus(); }, 60);
+  }
+  function cerrar(){ rModal.classList.remove('show'); }
+
+  function enviar(){
+    var slide = idx+1;
+    var mensaje = (rMsg.value||'').trim();
+    if(!mensaje){ toast('Escribe brevemente el problema'); rMsg.focus(); return; }
+    hechoYa=false;
+    var asunto = 'Problema en la diapositiva ' + slide;
+    var datos = {
+      asunto: asunto,
+      diapositiva: slide,
+      total: N,
+      modulo: moduloActual(),
+      nombre: (rName.value||'').trim(),
+      mensaje: mensaje,
+      url: location.href,
+      navegador: navigator.userAgent,
+      fecha: new Date().toLocaleString()
+    };
+
+    // Opción A: enviar al Google Apps Script (correo automático)
+    if(REPORTE_URL && REPORTE_URL.indexOf('http')===0){
+      rSend.disabled=true;
+      try{
+        fetch(REPORTE_URL, {
+          method:'POST',
+          mode:'no-cors',
+          headers:{'Content-Type':'text/plain;charset=utf-8'},
+          body: JSON.stringify(datos)
+        }).then(function(){ hecho(); }).catch(function(){ hecho(); });
+      }catch(e){ hecho(); }
+      // no-cors no deja leer la respuesta: confirmamos de forma optimista
+      setTimeout(hecho, 1200);
+      return;
+    }
+
+    // Opción B (respaldo): abrir el correo del usuario ya diligenciado
+    var cuerpo = 'Diapositiva: '+slide+' / '+N+'\n'+
+                 'Módulo: '+datos.modulo+'\n'+
+                 (datos.nombre?('Reporta: '+datos.nombre+'\n'):'')+
+                 '\nProblema:\n'+mensaje+'\n\n'+
+                 '— Enviado desde: '+datos.url;
+    window.location.href = 'mailto:'+encodeURIComponent(REPORTE_EMAIL)+
+      '?subject='+encodeURIComponent(asunto)+'&body='+encodeURIComponent(cuerpo);
+    cerrar();
+  }
+  var hechoYa=false;
+  function hecho(){
+    if(hechoYa) return; hechoYa=true;
+    rSend.disabled=false; cerrar(); rMsg.value='';
+    toast('✔ Reporte enviado. ¡Gracias!');
+  }
+
+  rBtn.addEventListener('click', abrir);
+  rClose.addEventListener('click', cerrar);
+  rCancel.addEventListener('click', cerrar);
+  rSend.addEventListener('click', enviar);
+  rModal.addEventListener('click', function(e){ if(e.target===rModal) cerrar(); });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape' && rModal.classList.contains('show')) cerrar(); });
+})();
 </script>
 </body>
 </html>

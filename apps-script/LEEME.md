@@ -28,3 +28,19 @@ En el portal interno, inserta un iframe con esa URL:
 - Requisito: **GitHub Pages activado** y la variable **BASE** del index.html
   igual a la URL de tu GitHub Pages.
 - Si cambias el HTML de sitio, actualiza `URL_CURSO` aquí.
+
+## 4. Reporte de problemas por correo (recomendado)
+El curso tiene un botón flotante ⚠️ "Reportar un problema". Para que los
+reportes te lleguen por correo automáticamente:
+
+1. En **Code.gs**, revisa `CORREO_REPORTES` (por defecto tu correo).
+2. Copia la **URL /exec** de tu implementación (paso 2).
+3. En `index.html` (GitHub), pega esa URL en la variable **`REPORTE_URL`**.
+4. La primera vez que se use, Google pedirá **autorizar** el envío de correo
+   (MailApp). Acepta.
+
+Si dejas `REPORTE_URL = ""`, el botón abrirá el correo del usuario ya
+diligenciado (modo respaldo), sin envío automático.
+
+> Tras editar Code.gs, crea una **Nueva implementación** (o "Administrar
+> implementaciones → editar → Nueva versión") para que los cambios apliquen.
