@@ -435,16 +435,32 @@
     .blob{display:none}
   }
 
-  /* 7) Botón flotante "Reportar un problema" + su ventana */
-  #reportBtn{position:fixed;right:18px;bottom:calc(var(--footer) + 16px);z-index:90;
-    width:50px;height:50px;border-radius:50%;border:none;cursor:pointer;
-    background:linear-gradient(160deg,#f5b700,#ef7d00);color:#fff;
-    display:grid;place-items:center;box-shadow:0 10px 24px -8px rgba(239,125,0,.75);
-    transition:transform .2s, box-shadow .2s}
-  #reportBtn:hover{transform:translateY(-2px) scale(1.05)}
-  #reportBtn svg{width:26px;height:26px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
-  #reportBtn::after{content:"";position:absolute;inset:0;border-radius:50%;animation:pulse 2.2s infinite}
-  @media(max-width:640px){#reportBtn{width:46px;height:46px;bottom:calc(var(--footer) + 12px)}}
+  /* 7) Botones flotantes (ayuda / reportar) con etiqueta permanente + su ventana */
+  .fab-wrap{position:fixed;bottom:calc(var(--footer) + 16px);z-index:90;display:flex;align-items:center;gap:10px}
+  .fab-help{left:18px}
+  .fab-report{right:18px;flex-direction:row-reverse}
+  .fab{position:relative;width:50px;height:50px;flex:none;border-radius:50%;border:none;cursor:pointer;
+    color:#fff;display:grid;place-items:center;transition:transform .2s, box-shadow .2s}
+  .fab:hover{transform:translateY(-2px) scale(1.05)}
+  .fab svg{width:26px;height:26px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+  .fab::after{content:"";position:absolute;inset:0;border-radius:50%;animation:pulse 2.2s infinite}
+  #helpBtn{background:linear-gradient(160deg,#1bb4e4,#1877c4);box-shadow:0 10px 24px -8px rgba(24,119,196,.7)}
+  #reportBtn{background:linear-gradient(160deg,#f5b700,#ef7d00);box-shadow:0 10px 24px -8px rgba(239,125,0,.75)}
+  .fab-tip{background:#0b2549;color:#fff;font-size:12.5px;font-weight:600;padding:7px 12px;border-radius:999px;
+    box-shadow:var(--shadow);white-space:nowrap;border:1px solid rgba(255,255,255,.14);pointer-events:none}
+  @media(max-width:760px){.fab-tip{display:none}}
+  @media(max-width:640px){.fab-wrap{bottom:calc(var(--footer) + 12px)}.fab{width:46px;height:46px}}
+
+  /* Resaltado en rojo de lo que le falta al usuario (botón de ayuda) */
+  .falta{animation:faltaPulse 1s ease-in-out 4;position:relative;z-index:6;
+    outline:3px solid var(--danger);outline-offset:3px;border-radius:14px}
+  @keyframes faltaPulse{0%,100%{box-shadow:0 0 0 0 rgba(226,59,50,0)}50%{box-shadow:0 0 0 10px rgba(226,59,50,.35)}}
+  /* Resaltado del botón Siguiente cuando ya puede avanzar */
+  #next.hintme{animation:nextPulse 1s ease-in-out 4}
+  @keyframes nextPulse{0%,100%{box-shadow:0 0 0 0 rgba(151,209,59,0)}50%{box-shadow:0 0 0 10px rgba(151,209,59,.5)}}
+  .report-tip{background:#fff7e6;border:1px solid #ffe0a3;color:#7a5200;border-radius:10px;
+    padding:10px 13px;font-size:13px;line-height:1.45;margin-bottom:6px}
+  .report-tip b{color:#7a5200}
 
   .report-box{width:min(480px,100%);height:auto;max-height:90vh}
   .report-body{padding:20px 22px 22px;display:flex;flex-direction:column;gap:6px;overflow:auto}
@@ -1064,10 +1080,21 @@
     <div class="wfoot"><span class="wlogo" id="wlogo"></span><b>HOLCIM</b></div>
   </div>
 </div>
-<!-- BOTÓN FLOTANTE: reportar problema -->
-<button id="reportBtn" title="Reportar un problema en esta diapositiva" aria-label="Reportar un problema">
-  <svg viewBox="0 0 24 24"><path d="M12 3l9 16H3z"/><path d="M12 9v5M12 17h0"/></svg>
-</button>
+<!-- BOTÓN FLOTANTE: ayuda (izquierda) -->
+<div class="fab-wrap fab-help">
+  <button class="fab" id="helpBtn" title="Ayuda" aria-label="Ayuda">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.2 9a2.8 2.8 0 0 1 5.4 1c0 1.8-2.6 2-2.6 4"/><path d="M12 17h0"/></svg>
+  </button>
+  <span class="fab-tip">Oprímeme para más ayuda</span>
+</div>
+
+<!-- BOTÓN FLOTANTE: reportar problema (derecha) -->
+<div class="fab-wrap fab-report">
+  <button class="fab" id="reportBtn" title="Reportar un problema en esta diapositiva" aria-label="Reportar un problema">
+    <svg viewBox="0 0 24 24"><path d="M12 3l9 16H3z"/><path d="M12 9v5M12 17h0"/></svg>
+  </button>
+  <span class="fab-tip">Oprímeme para reportar un problema</span>
+</div>
 
 <!-- MODAL: reportar problema -->
 <div class="modal" id="reportModal">
@@ -1075,8 +1102,9 @@
     <div class="modal-head"><span>Reportar un problema</span><button id="reportClose" aria-label="Cerrar">✕</button></div>
     <div class="report-body">
       <div class="report-loc">Diapositiva <b id="reportSlide">—</b> · <span id="reportMod">—</span></div>
+      <div class="report-tip">💡 Antes de reportar, prueba el botón de <b>ayuda&nbsp;ⓘ</b> (abajo a la izquierda): puede indicarte qué te falta en la diapositiva.</div>
       <label class="report-lbl" for="reportName">Tu nombre (opcional)</label>
-      <input id="reportName" class="report-in" type="text" placeholder="Ej: Germán Zúñiga" autocomplete="name">
+      <input id="reportName" class="report-in" type="text" placeholder="Ej: David Restrepo" autocomplete="name">
       <label class="report-lbl" for="reportMsg">¿Qué problema encontraste?</label>
       <textarea id="reportMsg" class="report-in" rows="4" placeholder="Describe brevemente el error…"></textarea>
       <div class="report-actions">
@@ -1555,6 +1583,45 @@ function toast(msg){ toastEl.textContent = msg; toastEl.classList.add('show'); c
   rSend.addEventListener('click', enviar);
   rModal.addEventListener('click', function(e){ if(e.target===rModal) cerrar(); });
   document.addEventListener('keydown', function(e){ if(e.key==='Escape' && rModal.classList.contains('show')) cerrar(); });
+})();
+
+/* ====== BOTÓN DE AYUDA (resalta lo que falta) ====== */
+(function(){
+  var hBtn=document.getElementById('helpBtn'); if(!hBtn) return;
+  var limpiaT;
+  function limpiar(){
+    document.querySelectorAll('.falta').forEach(function(e){ e.classList.remove('falta'); });
+    nextBtn.classList.remove('hintme');
+  }
+  function ayuda(){
+    limpiar();
+    var s=slides[idx];
+    if(idx===N-1){ toast('🎉 Llegaste al final. Usa el botón “Salir” de arriba.'); return; }
+
+    if(nextBtn.disabled){
+      // Algo falta en esta diapositiva
+      var faltan=Array.prototype.slice.call(s.querySelectorAll('.req:not(.done)'));
+      if(faltan.length){
+        faltan.forEach(function(e){ e.classList.add('falta'); });
+        try{ faltan[0].scrollIntoView({block:'center',behavior:'smooth'}); }catch(e){}
+        var total=s.querySelectorAll('.req').length;
+        toast('Te falta explorar '+faltan.length+' de '+total+' (resaltado en rojo 🔴)');
+      } else if(s.getAttribute('data-gate')==='video'){
+        var vb=s.querySelector('.videobox');
+        if(vb){ vb.classList.add('falta'); try{ vb.scrollIntoView({block:'center',behavior:'smooth'}); }catch(e){} }
+        toast('Observa el video completo para continuar ▶');
+      } else {
+        toast('Explora el contenido de esta diapositiva para continuar.');
+      }
+    } else {
+      // Ya puede avanzar
+      nextBtn.classList.add('hintme');
+      try{ nextBtn.scrollIntoView({block:'center'}); }catch(e){}
+      toast('¡Muy bien! Ya puedes presionar “Siguiente →”');
+    }
+    clearTimeout(limpiaT); limpiaT=setTimeout(limpiar, 4200);
+  }
+  hBtn.addEventListener('click', ayuda);
 })();
 </script>
 </body>
