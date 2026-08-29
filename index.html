@@ -1304,19 +1304,33 @@ var PLANO = [
 (function(){
   var cont=document.getElementById('plano'); if(!cont) return;
   var ph=document.getElementById('planoPh');
-  if(PLANO_IMG){
-    var img=document.createElement('img'); img.loading='lazy'; img.decoding='async'; img.alt='Plano de planta';
-    img.onload=function(){ ph.style.display='none'; };           // se muestra solo si carga bien
-    img.onerror=function(){ img.remove(); ph.style.display=''; }; // si falta la imagen, deja el aviso (sin ícono roto)
-    img.src=PLANO_IMG; cont.insertBefore(img,ph);
+
+  // Crea los puntos interactivos SOLO cuando ya existe la imagen del plano.
+  // (Si no hay imagen, no se muestran puntos flotando ni se bloquea el avance.)
+  function addHotspots(){
+    if(cont.querySelector('.hot')) return; // evita duplicados
+    PLANO.forEach(function(p,i){
+      var b=document.createElement('button');
+      b.className='hot gclick req'; b.style.left=p.x+'%'; b.style.top=p.y+'%';
+      b.innerHTML=(i+1)+'<span class="hlabel">'+(i+1)+'. '+p.t+'</span>';
+      b.setAttribute('aria-label',p.t);
+      function t(){ b.classList.toggle('sel'); markDone(b); }
+      b.addEventListener('click',t);
+      b.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){e.preventDefault();t();} });
+      cont.appendChild(b);
+    });
+    refreshNext();
   }
-  PLANO.forEach(function(p,i){
-    var b=document.createElement('button');
-    b.className='hot gclick'; b.style.left=p.x+'%'; b.style.top=p.y+'%'; b.textContent=(i+1);
-    b.innerHTML=(i+1)+'<span class="hlabel">'+(i+1)+'. '+p.t+'</span>';
-    b.setAttribute('aria-label',p.t);
-    cont.appendChild(b);
-  });
+
+  if(!PLANO_IMG){ return; }
+  var img=document.createElement('img'); img.loading='lazy'; img.decoding='async'; img.alt='Plano de planta';
+  var intentoLocal=false;
+  img.onload=function(){ ph.style.display='none'; addHotspots(); };
+  img.onerror=function(){
+    if(!intentoLocal){ intentoLocal=true; img.src='imagenes/plano.png'; return; } // respaldo: ruta local
+    img.remove(); ph.style.display=''; // sin imagen: deja el aviso y no crea puntos
+  };
+  img.src=PLANO_IMG; cont.insertBefore(img,ph);
 })();
 /* ====== SECUENCIAL alturas (Módulo 4) ====== */
 (function(){
