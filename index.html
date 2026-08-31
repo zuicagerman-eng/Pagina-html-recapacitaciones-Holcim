@@ -719,6 +719,10 @@
   .slide.light.mint .beh,.slide.light.mint .eppcard,.slide.light.mint .cat,
   .slide.light.mint .pdfcard,.slide.light.mint .s3,.slide.light.mint .opt{background:#fff}
 
+  /* 23) Lista sin numerar: viñeta discreta en lugar de círculos */
+  .steplist-dot li:before{content:"";flex:none;width:8px;height:8px;border-radius:50%;
+    background:rgba(255,255,255,.75);margin-top:7px}
+
   /* Logo de la esquina superior izquierda (acepta imagen o SVG de respaldo) */
   header.hud{width:100%}
   .brand .logo{width:auto;height:32px;display:inline-flex;align-items:center;flex:none}
@@ -813,6 +817,7 @@
   <!-- 4 QUÉ HACER -->
   <section class="slide light">
     <div class="wrap">
+      <figure class="mediaBox plain rv up" data-media="imagenes/emergencia(D3).gif" style="--maxw:420px;margin:0 auto 16px"></figure>
       <div class="eyebrow rv up">Gestión de emergencias</div>
       <h2 class="rv up" style="--d:1">¿Qué hacer en caso de emergencia?</h2>
       <div class="two" style="margin-top:24px">
@@ -825,12 +830,12 @@
           </ul>
         </div>
         <div class="panel cyan rv right"><h3>¿Qué debo informar?</h3>
-          <ul class="steplist">
-            <li><span class="num">?</span> ¿Qué ocurrió?</li>
-            <li><span class="num">?</span> ¿Dónde ocurrió?</li>
-            <li><span class="num">?</span> ¿Número de personas afectadas?</li>
-            <li><span class="num">?</span> ¿Qué tipo de ayuda se requiere?</li>
-            <li><span class="num">?</span> ¿Hay algún riesgo importante en el sitio?</li>
+          <ul class="steplist steplist-dot">
+            <li>¿Qué ocurrió?</li>
+            <li>¿Dónde ocurrió?</li>
+            <li>¿Número de personas afectadas?</li>
+            <li>¿Qué tipo de ayuda se requiere?</li>
+            <li>¿Hay algún riesgo importante en el sitio?</li>
           </ul>
         </div>
       </div>
