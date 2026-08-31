@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HSE-001 · Reinducción H&S · Módulos 1 a 4</title>
+<title>HSE-001 · Reinducción H&S · Módulos 1 a 5</title>
 <script src="https://player.vimeo.com/api/player.js"></script>
 <style>
   :root{
@@ -570,6 +570,40 @@
   .evscore{font-size:15px;font-weight:800;padding:11px 22px;border-radius:999px;display:none;
     background:var(--panel);color:#fff}
   .evscore.show{display:block}
+
+  /* 13) MÓDULO 5 · Controles críticos: botones numerados + panel */
+  .puenums{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+  .puenum{position:relative;width:42px;height:42px;border-radius:50%;border:none;cursor:pointer;
+    font-family:var(--font);font-weight:800;font-size:15px;background:var(--panel);color:#fff;
+    transition:transform .2s,background .25s;box-shadow:0 6px 16px -8px rgba(0,0,0,.6)}
+  .puenum:hover{transform:translateY(-2px)}
+  .puenum.on{background:var(--green);color:#062038;transform:translateY(-2px) scale(1.08)}
+  .puenum.vis::after{content:"";position:absolute;right:-2px;top:-2px;width:12px;height:12px;
+    border-radius:50%;background:var(--ok);border:2px solid #fff}
+  .puepanel{margin-top:16px;border:2px dashed var(--green);border-radius:var(--radius);
+    padding:20px 22px;text-align:center;background:rgba(255,255,255,.05);transition:opacity .35s,transform .35s}
+  .slide.light .puepanel{background:#fff;box-shadow:var(--shadow)}
+  .puepanel h3{font-size:19px;font-weight:800;color:var(--blue);margin-bottom:8px;line-height:1.25}
+  .slide.dark .puepanel h3{color:#8fd6f2}
+  .puepanel p{font-size:14.5px;line-height:1.55;color:var(--muted);max-width:62ch;margin:0 auto}
+  .slide.dark .puepanel p{color:#c2d0e6}
+  .puehint{text-align:center;font-size:12.5px;font-weight:600;opacity:.8;margin-top:10px}
+
+  /* 14) MÓDULO 5 · Examen de emparejar */
+  .mrow{background:#fff;border-radius:var(--radius-sm);box-shadow:var(--shadow);padding:14px 16px;
+    display:flex;align-items:center;gap:14px;border:2px solid transparent;transition:border-color .3s}
+  .slide.dark .mrow{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.09)}
+  .mlist{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+  .mq{flex:1;font-size:13.5px;line-height:1.45;font-weight:600;color:var(--ink)}
+  .slide.dark .mq{color:#eaf1fb}
+  .msel{flex:none;min-width:min(280px,52vw);border:2px solid #d9e2ee;border-radius:10px;padding:9px 12px;
+    font-family:var(--font);font-size:13.5px;font-weight:700;color:var(--ink);background:#fff;cursor:pointer}
+  .msel:focus{outline:none;border-color:var(--cyan)}
+  .mrow.ok,.slide.dark .mrow.ok{border-color:var(--ok)}
+  .mrow.bad,.slide.dark .mrow.bad{border-color:var(--danger)}
+  .mmark{flex:none;width:26px;height:26px;border-radius:50%;display:none;place-items:center;color:#fff;font-weight:800;font-size:13px}
+  .mrow.ok .mmark{display:grid;background:var(--ok)} .mrow.bad .mmark{display:grid;background:var(--danger)}
+  @media(max-width:700px){.mrow{flex-wrap:wrap}.msel{min-width:100%}}
 
   /* Logo de la esquina superior izquierda (acepta imagen o SVG de respaldo) */
   header.hud{width:100%}
@@ -1450,10 +1484,117 @@
 <section class="slide dark" data-mod="4">
   <div class="wrap" style="text-align:center">
     <div class="done-badge rv scale"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg></div>
+    <div class="eyebrow rv up" style="--d:1">Módulo 4 completado</div>
+    <h2 class="rv up" style="--d:2">¡Felicitaciones! Terminaste el Módulo 4.</h2>
+    <p class="lead rv up" style="--d:3;max-width:58ch;margin:14px auto 0">Continúa con el <b>Módulo 5: Gestión de Controles Críticos</b> usando el botón <b>Siguiente →</b>.</p>
+    <div class="recap rv up" style="--d:4"><span class="chip">Módulo 1</span><span class="chip">Módulo 2</span><span class="chip">Módulo 3</span><span class="chip">Módulo 4 · P1, P2 y P3</span></div>
+  </div>
+</section>
+<section class="slide dark" data-mod="5">
+  <div class="blob b1"></div><div class="blob b2"></div>
+  <div class="wrap">
+    <div class="eyebrow rv up">Salud &amp; Seguridad · 2026 · Módulo 5</div>
+    <div class="hero-code rv up" style="--d:1">HSE-001</div>
+    <div class="hero-title rv up" style="--d:2">Gestión de Controles Críticos<br>PUE y CCM</div>
+    <div class="gline rv up" style="--d:3"></div>
+    <div class="tag rv up" style="--d:4"><span class="pill">12 eventos prioritarios</span><span class="pill">Controles críticos</span><span class="pill">Examen final</span></div>
+    <p class="lead rv up" style="--d:5">Explora los controles críticos de cada PUE para avanzar. Al final encontrarás el examen.</p>
+  </div>
+</section>
+<section class="slide light" data-mod="5">
+<div class="wrap"><div class="eyebrow rv up">Gestión de Controles Críticos</div>
+<h2 class="rv up" style="--d:1">PUE y CCM</h2>
+<div class="infobanner rv up" style="--d:2"><b>PUE · Evento Prioritario no Deseado.</b> En Holcim, a nivel mundial, aproximadamente el <b>85% de los incidentes críticos y fatalidades</b> están relacionados con los controles críticos. Para evitar los PUE se formulan <b>Controles Críticos</b>.</div>
+<p class="lead rv up">Estos son los <b>12 eventos prioritarios no deseados</b> — toca cada uno. 👆</p>
+<div class="chipgrid"><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#0e2c56">1</span><span class="nm">Caída de Alturas</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#1bb4e4">2</span><span class="nm">Contacto con Energías Peligrosas</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#17868a">3</span><span class="nm">Sepultamiento por Material</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#1877c4">4</span><span class="nm">Fallo de Respuesta a Emergencias</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#e23b32">5</span><span class="nm">Fuego por Combustible Líquido</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#ef7d00">6</span><span class="nm">Colapso Estructural</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#f5b700">7</span><span class="nm">Incidente con Equipo Móvil</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#6a3d9a">8</span><span class="nm">Accidente Fatal de Tráfico</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#97d13b">9</span><span class="nm">Enfermedad Respiratoria</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#e6007e">10</span><span class="nm">Explosión de Molino de Carbón</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#0e6e78">11</span><span class="nm">Contaminación</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#5b7fb5">12</span><span class="nm">Contacto con Harina Caliente</span><span class="tick">✓</span></div></div>
+<div class="banner rv up" style="--d:2"><b>Gestión de Controles Críticos (CCM):</b> método práctico para mejorar la gestión sobre nuestros riesgos más altos, enfocándose en los controles de los mismos.</div>
+</div></section>
+<section class="slide dark" data-mod="5">
+<div class="wrap"><div class="eyebrow rv up">Gestión de Controles Críticos</div>
+<h2 class="rv up" style="--d:1">PUE · Caída de Alturas</h2>
+<p class="lead rv up" style="--d:2">Cuatro controles críticos. Presiona los números para conocer cada control crítico. 👆</p>
+<div class="pueBox rv up" data-pue="caida"></div>
+</div></section>
+<section class="slide light" data-mod="5">
+<div class="wrap"><div class="eyebrow rv up">Gestión de Controles Críticos</div>
+<h2 class="rv up" style="--d:1">PUE · Contacto con energías peligrosas</h2>
+<p class="lead rv up" style="--d:2">Tres controles críticos. Presiona los números para conocer cada control crítico. 👆</p>
+<div class="pueBox rv up" data-pue="energias"></div>
+</div></section>
+<section class="slide dark" data-mod="5">
+<div class="wrap"><div class="eyebrow rv up">Gestión de Controles Críticos</div>
+<h2 class="rv up" style="--d:1">PUE · Sepultamiento por material</h2>
+<p class="lead rv up" style="--d:2">Cuatro controles críticos. Presiona los números para conocer cada control crítico. 👆</p>
+<div class="pueBox rv up" data-pue="sepultamiento"></div>
+</div></section>
+<section class="slide light" data-mod="5">
+<div class="wrap"><div class="eyebrow rv up">Gestión de Controles Críticos</div>
+<h2 class="rv up" style="--d:1">PUE · Fallo en respuesta de emergencias</h2>
+<p class="lead rv up" style="--d:2">Tres controles críticos. Presiona los números para conocer cada control crítico. 👆</p>
+<div class="pueBox rv up" data-pue="emergencias"></div>
+</div></section>
+<section class="slide dark" data-mod="5">
+<div class="wrap"><div class="eyebrow rv up">Gestión de Controles Críticos</div>
+<h2 class="rv up" style="--d:1">PUE · Incendio por Combustible Líquido</h2>
+<p class="lead rv up" style="--d:2">Cinco controles críticos. Presiona los números para conocer cada control crítico. 👆</p>
+<div class="pueBox rv up" data-pue="incendio"></div>
+</div></section>
+<section class="slide light" data-mod="5">
+<div class="wrap"><div class="eyebrow rv up">Gestión de Controles Críticos</div>
+<h2 class="rv up" style="--d:1">PUE · Colapso estructural</h2>
+<p class="lead rv up" style="--d:2">Cinco controles críticos. Presiona los números para conocer cada control crítico. 👆</p>
+<div class="pueBox rv up" data-pue="colapso"></div>
+</div></section>
+<section class="slide dark" data-mod="5">
+<div class="wrap"><div class="eyebrow rv up">Gestión de Controles Críticos</div>
+<h2 class="rv up" style="--d:1">PUE · Accidente Fatal de Tráfico</h2>
+<p class="lead rv up" style="--d:2">Cinco controles críticos. Presiona los números para conocer cada control crítico. 👆</p>
+<div class="pueBox rv up" data-pue="trafico"></div>
+</div></section>
+<section class="slide light" data-mod="5">
+<div class="wrap"><div class="eyebrow rv up">Gestión de Controles Críticos</div>
+<h2 class="rv up" style="--d:1">PUE · Incidente con equipo móvil</h2>
+<p class="lead rv up" style="--d:2">Cinco controles críticos. Presiona los números para conocer cada control crítico. 👆</p>
+<div class="pueBox rv up" data-pue="movil"></div>
+</div></section>
+<section class="slide dark" data-mod="5">
+<div class="wrap"><div class="eyebrow rv up">Gestión de Controles Críticos</div>
+<h2 class="rv up" style="--d:1">PUE · Enfermedad respiratoria</h2>
+<p class="lead rv up" style="--d:2">Dos controles críticos. Presiona los números para conocer cada control crítico. 👆</p>
+<div class="pueBox rv up" data-pue="respiratoria"></div>
+</div></section>
+<section class="slide light" data-mod="5">
+<div class="wrap"><div class="eyebrow rv up">Gestión de Controles Críticos</div>
+<h2 class="rv up" style="--d:1">PUE · Explosión en Molino de Carbón</h2>
+<p class="lead rv up" style="--d:2">Cuatro controles críticos. Presiona los números para conocer cada control crítico. 👆</p>
+<div class="pueBox rv up" data-pue="carbon"></div>
+</div></section>
+<section class="slide dark" data-mod="5">
+<div class="wrap"><div class="eyebrow rv up">Gestión de Controles Críticos</div>
+<h2 class="rv up" style="--d:1">PUE · Contacto con Harina Caliente</h2>
+<p class="lead rv up" style="--d:2">Cinco controles críticos. Presiona los números para conocer cada control crítico. 👆</p>
+<div class="pueBox rv up" data-pue="harina"></div>
+</div></section>
+<section class="slide light" data-mod="5">
+<div class="wrap"><div class="eyebrow rv up">Gestión de Controles Críticos</div>
+<h2 class="rv up" style="--d:1">PUE · Contaminación</h2>
+<p class="lead rv up" style="--d:2">Cinco controles críticos. Presiona los números para conocer cada control crítico. 👆</p>
+<div class="pueBox rv up" data-pue="contaminacion"></div>
+</div></section>
+<section class="slide dark" data-mod="5">
+<div class="wrap"><div class="eyebrow rv up">Actividad de entrenamiento</div>
+<h2 class="rv up" style="--d:1">Examen · Controles Críticos</h2>
+<p class="lead rv up" style="--d:2">Empareja cada <b>control crítico</b> con su respectivo <b>PUE</b>. Al terminar, presiona <b>Calificar</b>.</p>
+<div class="mlist" id="mlist"></div>
+<div class="evfoot"><button class="evbtn-go" id="mGo">Calificar</button><div class="evscore" id="mScore"></div></div>
+</div></section>
+<section class="slide dark" data-mod="5">
+  <div class="wrap" style="text-align:center">
+    <div class="done-badge rv scale"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg></div>
     <div class="eyebrow rv up" style="--d:1">Reinducción H&amp;S completada</div>
     <h2 class="rv up" style="--d:2">¡Felicitaciones! Terminaste la reinducción.</h2>
-    <p class="lead rv up" style="--d:3;max-width:58ch;margin:14px auto 0">Completaste los <b>Módulos 1 a 4</b> de la Reinducción en Salud y Seguridad, incluida la evaluación final. Ya puedes cerrar con el botón <b>Salir</b>.</p>
-    <div class="recap rv up" style="--d:4"><span class="chip">Módulo 1</span><span class="chip">Módulo 2</span><span class="chip">Módulo 3</span><span class="chip">Módulo 4 · P1, P2 y P3</span><span class="chip">¡Cero daños!</span></div>
+    <p class="lead rv up" style="--d:3;max-width:58ch;margin:14px auto 0">Completaste los <b>Módulos 1 a 5</b> de la Reinducción en Salud y Seguridad, incluidas las evaluaciones. Ya puedes cerrar con el botón <b>Salir</b>.</p>
+    <div class="recap rv up" style="--d:4"><span class="chip">Módulo 1</span><span class="chip">Módulo 2</span><span class="chip">Módulo 3</span><span class="chip">Módulo 4</span><span class="chip">Módulo 5</span><span class="chip">¡Cero daños!</span></div>
   </div>
 </section>
 <div id="scrollhint"><svg viewBox="0 0 24 24"><path d="M12 5v14M6 13l6 6 6-6"/></svg><span>Desliza para ver más contenido</span></div>
@@ -1658,7 +1799,7 @@ function refreshNext(){
 }
 function markDone(el){ if(!el.classList.contains('req')||el.classList.contains('done'))return; el.classList.add('done'); refreshNext(); }
 function chrome(){
-  elCur.textContent = idx+1; var ml=document.getElementById('modlabel'); if(ml){var mm=slides[idx].getAttribute('data-mod'); ml.textContent=(mm==='4')?'Módulo 4 · Controles complementarios':(mm==='3')?'Módulo 3 · Control operacional':(mm==='2')?'Módulo 2 · Planeación':'Módulo 1';}
+  elCur.textContent = idx+1; var ml=document.getElementById('modlabel'); if(ml){var mm=slides[idx].getAttribute('data-mod'); ml.textContent=(mm==='5')?'Módulo 5 · Controles críticos':(mm==='4')?'Módulo 4 · Controles complementarios':(mm==='3')?'Módulo 3 · Control operacional':(mm==='2')?'Módulo 2 · Planeación':'Módulo 1';}
   fill.style.width = ((idx+1)/N*100)+'%';
   prevBtn.disabled = (idx===0);
   var gate = slides[idx].getAttribute('data-gate');
@@ -2137,6 +2278,149 @@ function toast(msg){ toastEl.textContent = msg; toastEl.classList.add('show'); c
     go.style.opacity='.6'; go.style.cursor='default';
     markDone(cont);
     toast(ok>=Math.ceil(Q.length*0.7) ? '¡Muy bien! '+ok+' de '+Q.length+' correctas' : 'Obtuviste '+ok+' de '+Q.length+'. Repasa lo marcado en rojo.');
+  });
+})();
+
+/* ====== MÓDULO 5 · Controles críticos por PUE ====== */
+var PUES = {
+ caida:{n:'Caída de Alturas', c:[
+  ['Barreras, barandas, cubiertas en aperturas y bordes de caída','Las barreras físicas como pasamanos y barandas o cubiertas y señales de advertencia deben estar en su lugar para prevenir riesgos de caídas.'],
+  ['Plan previo al trabajo','Compruebe si hay formas más seguras de realizar la tarea ANTES de comenzar. Realice una evaluación específica de los riesgos, los controles necesarios y autorice el trabajo a través de permisos de trabajo.'],
+  ['Equipos certificados para realizar el trabajo','Las estructuras, plataformas y equipos de acceso a alturas (permanentes, temporales o móviles) deben estar certificados y diseñados, instalados, inspeccionados y aprobados para su uso por una persona autorizada y competente.'],
+  ['Sistema de protección personal contra caídas','Cualquier persona que trabaje a menos de 2 metros de aberturas o bordes desprotegidos (a 1,8 metros o más de altura) debe utilizar un sistema de protección personal contra caídas (restricción/suspensión) sujeto a un punto de anclaje autorizado.']]},
+ energias:{n:'Contacto con Energías Peligrosas', c:[
+  ['Barreras físicas','Las barreras físicas evitan que cualquier persona entre en contacto con los peligros de la energía en movimiento.'],
+  ['Aislamiento de energía','Todas las fuentes de energía deben ser controladas a través del bloqueo, etiquetado y prueba.'],
+  ['Paradas de emergencia','Parada de emergencia del movimiento de la maquinaria mediante una sola acción manual.']]},
+ sepultamiento:{n:'Sepultamiento por Material', c:[
+  ['Sistemas de detección temprana, prevención y mantenimiento','Inspección, mantenimiento y limpieza periódica para evitar el ingreso de personas.'],
+  ['Control y aislamiento de las fuentes de energía','Aislamiento de todas las fuentes de energía relacionadas con el espacio al que se ingresa: de procesos anteriores y posteriores.'],
+  ['Trabajar arriba del nivel del material','Si es absolutamente necesario ingresar al espacio, quienes ingresen deben permanecer siempre por encima del nivel del material.'],
+  ['Siempre anclado a una línea de vida','Todo el que ingresa al espacio debe estar conectado a una línea de vida certificada y debe ser monitoreado continuamente por un vigía.']]},
+ emergencias:{n:'Fallo de Respuesta a Emergencias', c:[
+  ['Respuesta médica de emergencia oportuna','La respuesta médica oportuna a las lesiones graves aumenta las posibilidades de supervivencia. La respuesta tarda menos de 5 minutos para los brigadistas y menos de 15 minutos para una atención médica competente.'],
+  ['Plan de respuesta a emergencias','Los planes de respuesta de emergencia se desarrollan y ejecutan para garantizar una atención médica competente a los heridos para preservar la vida.'],
+  ['Simulacros de emergencias y revisión posterior a la acción','Los equipos de respuesta a emergencia y los apoyos externos realizan simulacros y revisiones posteriores a la acción.']]},
+ incendio:{n:'Fuego por Combustible Líquido', c:[
+  ['Sistemas libres de fuga','Evite la corrosión, erosión y fugas, seleccionando el material compatible para tuberías, válvulas, mangueras, bombas, recipientes y bridas / juntas / uniones que minimicen la probabilidad de falla.'],
+  ['Gestión de áreas peligrosas','Clasifique las zonas peligrosas y disponga equipos certificados con el nivel de protección correspondiente, con evaluación de riesgos, precalificación y control de cambios.'],
+  ['Alarma, interlocks y disparo','Sensores de nivel, presión y flujo conectados al sistema de control que activan alarmas, enclavamientos y el disparo automático ante desviaciones.'],
+  ['Detección temprana de fallas progresivas','Detecte de forma proactiva las causas tempranas de fallas progresivas, mediante inspecciones, pruebas y mantenimientos regulares.'],
+  ['Mitigación de explosión y extinción de incendios','Disponga de un sistema de prevención y mitigación de explosiones con capacidad de extinción de incendios para evitar que se propague más el fuego y genere más daños.']]},
+ colapso:{n:'Colapso Estructural', c:[
+  ['Control y aseguramiento de la calidad','Las estructuras nuevas o modificadas deben seguir los procesos de diseño y calidad, incluyendo revisiones y verificación.'],
+  ['Protección estructural','Proteja las estructuras de la degradación acelerada o del impacto accidental y refuerce las estructuras debilitadas.'],
+  ['Límites de operación segura','Las instalaciones deben funcionar de acuerdo con los límites de carga, vibración y temperatura.'],
+  ['Inspección y mantenimiento preventivo','Detectar y abordar la degradación de elementos estructurales y derrames de materiales que pueden afectarlos.'],
+  ['Zonas de exclusión','Evite el acceso a estructuras con riesgo de colapso.']]},
+ trafico:{n:'Accidente Fatal de Tráfico', c:[
+  ['Inspecciones preoperativas y mantenimiento','El vehículo se debe inspeccionar y mantener en condiciones seguras.'],
+  ['Velocidad y distancia de seguimiento seguro','Se debe mantener una distancia segura de seguimiento entre los vehículos, así como una velocidad de giro segura en función de las condiciones de conducción.'],
+  ['Gestión de fatiga','Los conductores no deben exceder los límites de horas de conducción segura.'],
+  ['Gestión de distracciones','Eliminar la distracción durante la conducción por el uso de teléfonos móviles o dispositivos electrónicos mientras los vehículos se encuentran en movimiento.'],
+  ['Protección de los ocupantes','Todos los ocupantes deben usar el cinturón de seguridad, y el vehículo debe contar con los sistemas que los protejan en caso de un accidente.']]},
+ movil:{n:'Incidente con Equipo Móvil', c:[
+  ['Segregación y barreras','Los caminos deben permitir un flujo de tráfico seguro para todos los usuarios.'],
+  ['Sistemas de advertencia','Todos los vehículos en el sitio deben ser claramente visibles entre sí.'],
+  ['Sistema de inspección y mantenimiento','La inspección diaria y el proceso de mantenimiento regular deben estar implementados y funcionando para todos los equipos móviles.'],
+  ['Protección de los ocupantes','La cabina del equipo móvil debe proteger a los ocupantes en caso de un accidente.'],
+  ['Control de acceso a zonas','Los vehículos que ingresen en áreas de equipos móviles pesados deben comunicarse para solicitar acceso y sólo ingresarán cuando sean identificados y autorizados por los operadores de los equipos móviles pesados.']]},
+ respiratoria:{n:'Enfermedad Respiratoria', c:[
+  ['Proyectos de mejora y contención de polvo','Se deben mapear las fuentes de polvo y reducir las emisiones a través de proyectos de mantenimiento y mejoras, que controlen que el polvo no exceda los límites de exposición.'],
+  ['Implementar programa de protección respiratoria','Monitorear la exposición de los trabajadores, el uso adecuado de EPP y la vigilancia médica para prevenir el desarrollo de enfermedades respiratorias graves.']]},
+ carbon:{n:'Explosión de Molino de Carbón', c:[
+  ['Gestión de áreas peligrosas','Minimizar la fuente de ignición disponiendo de equipos certificados con el nivel de protección correspondiente en las zonas peligrosas clasificadas.'],
+  ['Inertización','Inicio automático de la secuencia de inertización en el sistema del molino de carbón al detectar límites de disparo en la temperatura y/o el nivel de CO.'],
+  ['Respiraderos contra explosiones y extinción de incendios','Prevenir una explosión primaria o secundaria; limitar la extensión del daño y la propagación posterior en caso de que se inicie un incendio.'],
+  ['Disparo del sistema de compuerta, ventilación y molino','La detección temprana de cambios previene la formación de una atmósfera explosiva al detener los ventiladores y el molino de carbón, así como al activar y aislar la cámara de filtros cerrando de golpe las compuertas.']]},
+ harina:{n:'Contacto con Harina Caliente', c:[
+  ['Detección temprana','Detecte la exposición a la harina caliente activando ajustes del proceso con lazos de control, incluyendo el apagado automático de emergencia del horno.'],
+  ['Preparación de emergencias','Prepárese para posibles emergencias que involucren el contacto con harina caliente.'],
+  ['Control de acceso','Minimice la exposición de personas a las áreas peligrosas de harina caliente.'],
+  ['Contención primaria y secundaria de harinas calientes','Garantice la integridad del dique o barreras de contención de la harina caliente para evitar fugas, salpicaduras y derrames.'],
+  ['Eliminación de contacto','Asegure que los operadores sigan las mejores prácticas cuando estén expuestos directamente a harina caliente.']]},
+ contaminacion:{n:'Contaminación', c:[
+  ['Contención','Garantizar que existan sistemas de contención primaria y secundaria eficientes para evitar la contaminación de las aguas y los suelos.'],
+  ['Monitoreo de descarga de aguas','Implementar procedimientos para muestrear y monitorear las descargas de agua para garantizar el cumplimiento de los límites reglamentarios y de casa matriz.'],
+  ['Respuesta a emergencias por contaminación','Establecer planes de emergencia eficaces para prevenir la contaminación del suelo y del agua.'],
+  ['Sistema de tratamiento','Diseñar y gestionar sistemas de tratamiento para evitar excedencias y descargas de aguas contaminadas.'],
+  ['Reducción y control de emisiones atmosféricas','Prevenir que se excedan los límites de contaminación del aire mediante la planificación de la producción, la inspección regular, las operaciones del sistema de reducción y la respuesta rápida.']]}
+};
+
+document.querySelectorAll('.pueBox').forEach(function(box){
+  var datos = PUES[box.getAttribute('data-pue')]; if(!datos) return;
+  var lista = datos.c, vistos = {};
+  var nums = document.createElement('div'); nums.className = 'puenums';
+  var panel = document.createElement('div'); panel.className = 'puepanel';
+  var hint = document.createElement('div'); hint.className = 'puehint';
+  box.appendChild(nums); box.appendChild(panel); box.appendChild(hint);
+  box.classList.add('req');                    // barrera: recorrer todos los controles
+
+  function mostrar(i){
+    var b = nums.children;
+    for(var k=0;k<b.length;k++) b[k].classList.toggle('on', k===i);
+    panel.style.opacity = 0; panel.style.transform = 'translateY(8px)';
+    panel.innerHTML = '<h3>' + lista[i][0] + '</h3><p>' + lista[i][1] + '</p>';
+    setTimeout(function(){ panel.style.opacity=1; panel.style.transform='none'; }, 20);
+    vistos[i] = true; nums.children[i].classList.add('vis');
+    var n = Object.keys(vistos).length;
+    hint.textContent = 'Control ' + (i+1) + ' de ' + lista.length + ' · explorados ' + n + '/' + lista.length;
+    if(n === lista.length) markDone(box);
+  }
+  lista.forEach(function(_,i){
+    var b = document.createElement('button');
+    b.className='puenum'; b.textContent=(i+1); b.setAttribute('aria-label','Control '+(i+1));
+    b.addEventListener('click', function(){ mostrar(i); });
+    nums.appendChild(b);
+  });
+  mostrar(0);
+});
+
+/* ====== MÓDULO 5 · Examen de emparejar ====== */
+(function(){
+  var cont=document.getElementById('mlist'); if(!cont) return;
+  var OPC=['Caída de Alturas','Contacto con Energías Peligrosas','Incidente con Equipo Móvil','Accidente Fatal de Tráfico','Sepultamiento por Material'];
+  var Q=[
+   ['Barreras, barandas, cubiertas en aperturas y bordes de caída.','Caída de Alturas'],
+   ['Aislamiento de energías.','Contacto con Energías Peligrosas'],
+   ['Control de acceso a zonas.','Incidente con Equipo Móvil'],
+   ['Velocidad y distancia de seguimiento seguro.','Accidente Fatal de Tráfico'],
+   ['Siempre anclado a una línea de vida.','Sepultamiento por Material']
+  ];
+  var calificado=false;
+  Q.forEach(function(q,i){
+    var row=document.createElement('div'); row.className='mrow rv up';
+    var ops='<option value="">— Elige el PUE —</option>'+OPC.map(function(o){return '<option>'+o+'</option>';}).join('');
+    row.innerHTML='<span class="mq">'+(i+1)+'. '+q[0]+'</span><select class="msel" aria-label="PUE para '+q[0]+'">'+ops+'</select><span class="mmark"></span>';
+    cont.appendChild(row);
+  });
+  var filas=Array.prototype.slice.call(cont.children);
+  var go=document.getElementById('mGo'), score=document.getElementById('mScore');
+  cont.classList.add('req');                   // barrera: hay que calificar
+  go.addEventListener('click', function(){
+    if(calificado) return;
+    var faltan=filas.filter(function(r){ return !r.querySelector('.msel').value; });
+    if(faltan.length){
+      toast('Empareja las '+Q.length+' opciones antes de calificar');
+      faltan.forEach(function(r){ r.classList.add('falta'); });
+      setTimeout(function(){ faltan.forEach(function(r){ r.classList.remove('falta'); }); }, 3000);
+      try{ faltan[0].scrollIntoView({block:'center',behavior:'smooth'}); }catch(e){}
+      return;
+    }
+    calificado=true; var ok=0;
+    filas.forEach(function(r,i){
+      var sel=r.querySelector('.msel'), bien=(sel.value===Q[i][1]);
+      if(bien) ok++;
+      r.classList.add(bien?'ok':'bad');
+      r.querySelector('.mmark').textContent = bien?'✓':'✕';
+      sel.disabled=true;
+    });
+    score.textContent='Resultado: '+ok+' / '+Q.length;
+    score.classList.add('show');
+    score.style.background=(ok>=Math.ceil(Q.length*0.7))?'var(--ok)':'var(--danger)';
+    go.textContent='Calificado'; go.style.opacity='.6'; go.style.cursor='default';
+    markDone(cont);
+    toast(ok>=Math.ceil(Q.length*0.7)?'¡Muy bien! '+ok+' de '+Q.length+' correctas':'Obtuviste '+ok+' de '+Q.length+'. Repasa lo marcado en rojo.');
   });
 })();
 
