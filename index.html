@@ -689,6 +689,16 @@
     .card-center .ic svg{width:29px;height:29px}
   }
 
+  /* 21) Variante SIN marco: muestra la imagen completa y nunca la agranda
+         más allá de su tamaño real (evita que se vea pixelada). */
+  .mediaBox.plain{padding:0;background:none;box-shadow:none;border-radius:0}
+  .mediaBox.plain img,.mediaBox.plain video{
+    width:auto;max-width:min(100%,var(--maxw,320px));height:auto;
+    aspect-ratio:auto;object-fit:contain;border-radius:0;background:transparent;margin:0 auto}
+  /* Cuando la imagen es pequeña, su columna ocupa solo lo necesario */
+  .split2-auto{grid-template-columns:1fr auto;justify-items:center}
+  @media(max-width:900px){.split2-auto{grid-template-columns:1fr}}
+
   /* Logo de la esquina superior izquierda (acepta imagen o SVG de respaldo) */
   header.hud{width:100%}
   .brand .logo{width:auto;height:32px;display:inline-flex;align-items:center;flex:none}
@@ -765,13 +775,13 @@
   <!-- 3 PLAN DE EMERGENCIAS -->
   <section class="slide dark">
     <div class="wrap">
-     <div class="split2">
+     <div class="split2 split2-auto">
       <div>
       <div class="eyebrow rv up">Emergencias y prevención de incidentes</div>
       <h2 class="rv up" style="--d:1">Emergencias: ¿qué hacer?</h2>
       <p class="lead rv up" style="--d:2">Todos nuestros sitios de trabajo cuentan con un <b>Plan de Emergencias</b> con diferentes recursos:</p>
       </div>
-      <figure class="mediaBox rv right" data-media="imagenes/emergencias(D2).png" style="--d:2"></figure>
+      <figure class="mediaBox plain rv right" data-media="imagenes/emergencias.png" style="--d:2;--maxw:300px"></figure>
      </div>
       <div class="grid3 grid3-center" style="margin-top:26px">
         <div class="card card-center rv up" style="--d:0"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 21s-7-6.3-7-11a7 7 0 0 1 14 0c0 4.7-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></div><h3>Señalización</h3><p>Rutas de evacuación, punto de encuentro, etc.</p></div>
