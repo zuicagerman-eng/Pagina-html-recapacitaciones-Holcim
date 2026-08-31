@@ -650,6 +650,22 @@
   .pill-go.locked{opacity:.55}
   .pill-go.locked::after{content:" 🔒";font-size:10px}
 
+  /* 18) Guía de inicio: explicación de los botones de apoyo y logo del pie */
+  .wbox{max-height:92vh;overflow-y:auto}
+  .wtools{display:flex;flex-direction:column;gap:10px;margin:14px 0 6px;text-align:left}
+  .wtool{display:flex;align-items:center;gap:12px;background:#fff;border-radius:13px;
+    padding:11px 14px;box-shadow:0 8px 20px -14px rgba(8,25,55,.6)}
+  .wtool-ic{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center}
+  .wtool-help{background:linear-gradient(160deg,#1bb4e4,#1877c4)}
+  .wtool-rep{background:linear-gradient(160deg,#f5b700,#ef7d00)}
+  .wtool-ic svg{width:20px;height:20px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+  .wtool-tx{font-size:12.5px;line-height:1.45;color:var(--ink)}
+  .wtool-tx b{color:var(--blue)}
+  .wfoot .wlogo{width:auto;height:32px;display:inline-flex;align-items:center}
+  .wfoot .wlogo img{height:32px;width:auto;display:block}
+  .wfoot .wlogo svg{width:28px;height:28px}
+  .wfoot .wlogo .barlogo-txt{font-size:19px;font-weight:800;letter-spacing:1px;color:var(--ink)}
+
   /* Logo de la esquina superior izquierda (acepta imagen o SVG de respaldo) */
   header.hud{width:100%}
   .brand .logo{width:auto;height:32px;display:inline-flex;align-items:center;flex:none}
@@ -1768,9 +1784,20 @@
     <p>◆ Realiza las <b>actividades interactivas</b> que se presentan a lo largo del contenido. Son necesarias para avanzar.</p>
     <p><span class="wn">2.</span> Utiliza los botones de navegación para moverte entre los temas: <b>“Siguiente”</b> o <b>“Anterior”</b>.</p>
     <div class="wdemo"><span class="a">← Anterior</span><span class="s">Siguiente →</span></div>
-    <p>Ahora da clic en el botón <b>“Iniciar”</b>.</p>
+    <p><span class="wn">3.</span> En la barra inferior tienes dos botones de apoyo:</p>
+    <div class="wtools">
+      <div class="wtool">
+        <span class="wtool-ic wtool-help"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.2 9a2.8 2.8 0 0 1 5.4 1c0 1.8-2.6 2-2.6 4"/><path d="M12 17h0"/></svg></span>
+        <span class="wtool-tx"><b>Ayuda</b> · a la izquierda. Si el botón <b>Siguiente</b> no se activa, presiónalo y te <b>resaltará en rojo</b> lo que falta por explorar en esa diapositiva.</span>
+      </div>
+      <div class="wtool">
+        <span class="wtool-ic wtool-rep"><svg viewBox="0 0 24 24"><path d="M12 3l9 16H3z"/><path d="M12 9v5M12 17h0"/></svg></span>
+        <span class="wtool-tx"><b>Reportar un problema</b> · a la derecha. Si encuentras un error, presiónalo y cuéntanos. Se envía junto con el <b>número de la diapositiva</b>.</span>
+      </div>
+    </div>
+    <p>Ahora da clic en el botón <b>“Iniciar”</b> para comenzar la reinducción.</p>
     <button class="wstart" id="startBtn">Iniciar</button>
-    <div class="wfoot"><span class="wlogo" id="wlogo"></span><b>HOLCIM</b></div>
+    <div class="wfoot"><span class="wlogo" id="wlogo"></span></div>
   </div>
 </div>
 <!-- BARRA INTERMEDIA: separa las interacciones · logo Holcim al centro -->
@@ -1899,7 +1926,7 @@ function ponerLogo(el, src, rutaLocal, respaldoHTML){
   el.src = GIF_PORTADA;
 })();
 ponerLogo(document.getElementById('brandlogo'), LOGO_ESQUINA, 'imagenes/logo-esquina.png', logoSVG);
-ponerLogo(document.getElementById('wlogo'),     LOGO_ESQUINA, 'imagenes/logo-esquina.png', logoSVG);
+ponerLogo(document.getElementById('wlogo'),     LOGO_BARRA,   'imagenes/logo-barra.png',   '<span class="barlogo-txt">HOLCIM</span>');
 ponerLogo(document.getElementById('barLogo'),   LOGO_BARRA,   'imagenes/logo-barra.png',   '<span class="barlogo-txt">HOLCIM</span>');
 document.getElementById('startBtn').addEventListener('click',function(){ document.getElementById('welcome').classList.add('hide'); });
 /* ====== Señales de prohibición ====== */
