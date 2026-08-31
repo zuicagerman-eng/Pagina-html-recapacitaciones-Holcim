@@ -695,6 +695,8 @@
   .mediaBox.plain img,.mediaBox.plain video{
     width:auto;max-width:min(100%,var(--maxw,320px));height:auto;
     aspect-ratio:auto;object-fit:contain;border-radius:0;background:transparent;margin:0 auto}
+  /* .soft = esquinas redondeadas, para GIF/PNG con fondo blanco propio */
+  .mediaBox.plain.soft img,.mediaBox.plain.soft video{border-radius:14px}
   /* Cuando la imagen es pequeña, su columna ocupa solo lo necesario */
   .split2-auto{grid-template-columns:1fr auto;justify-items:center}
   @media(max-width:900px){.split2-auto{grid-template-columns:1fr}}
@@ -817,7 +819,7 @@
   <!-- 4 QUÉ HACER -->
   <section class="slide light">
     <div class="wrap">
-      <figure class="mediaBox plain rv up" data-media="imagenes/emergencia(D3).gif" style="--maxw:420px;margin:0 auto 16px"></figure>
+      <figure class="mediaBox plain soft rv up" data-media="imagenes/emergencia(D3).gif" style="--maxw:180px;margin:0 auto 10px"></figure>
       <div class="eyebrow rv up">Gestión de emergencias</div>
       <h2 class="rv up" style="--d:1">¿Qué hacer en caso de emergencia?</h2>
       <div class="two" style="margin-top:24px">
