@@ -666,6 +666,29 @@
   .wfoot .wlogo svg{width:28px;height:28px}
   .wfoot .wlogo .barlogo-txt{font-size:19px;font-weight:800;letter-spacing:1px;color:var(--ink)}
 
+  /* 19) Diapositiva partida con imagen a la derecha (reutilizable) */
+  .split2{display:grid;grid-template-columns:1.05fr .95fr;gap:30px;align-items:center;position:relative;z-index:2}
+  @media(max-width:900px){.split2{grid-template-columns:1fr;gap:18px}}
+  .mediaBox{margin:0;position:relative;border-radius:18px;padding:4px;background:var(--grad);
+    box-shadow:0 20px 50px -22px rgba(0,0,0,.8);display:none}
+  .mediaBox.ready{display:block}
+  .mediaBox img,.mediaBox video{display:block;width:100%;height:auto;border-radius:14px;
+    background:#0b2549;object-fit:cover;aspect-ratio:16/10}
+  @media(max-height:820px) and (max-width:900px){.mediaBox{display:none!important}}
+
+  /* 20) Tarjetas centradas y con texto más legible en cualquier pantalla */
+  .card-center{text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
+    padding:24px 20px}
+  .card-center .ic{width:60px;height:60px;border-radius:16px;margin:0 auto 14px}
+  .card-center .ic svg{width:32px;height:32px}
+  .card-center h3{font-size:clamp(17px,1.5vw,19px);margin-bottom:8px;line-height:1.25}
+  .card-center p{font-size:clamp(14px,1.25vw,15.5px);line-height:1.55}
+  @media(max-width:640px){
+    .card-center{padding:20px 16px}
+    .card-center .ic{width:54px;height:54px}
+    .card-center .ic svg{width:29px;height:29px}
+  }
+
   /* Logo de la esquina superior izquierda (acepta imagen o SVG de respaldo) */
   header.hud{width:100%}
   .brand .logo{width:auto;height:32px;display:inline-flex;align-items:center;flex:none}
@@ -742,13 +765,18 @@
   <!-- 3 PLAN DE EMERGENCIAS -->
   <section class="slide dark">
     <div class="wrap">
+     <div class="split2">
+      <div>
       <div class="eyebrow rv up">Emergencias y prevención de incidentes</div>
       <h2 class="rv up" style="--d:1">Emergencias: ¿qué hacer?</h2>
       <p class="lead rv up" style="--d:2">Todos nuestros sitios de trabajo cuentan con un <b>Plan de Emergencias</b> con diferentes recursos:</p>
-      <div class="grid3" style="margin-top:28px">
-        <div class="card rv up" style="--d:0"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 21s-7-6.3-7-11a7 7 0 0 1 14 0c0 4.7-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></div><h3>Señalización</h3><p>Rutas de evacuación, punto de encuentro, etc.</p></div>
-        <div class="card rv up" style="--d:1"><div class="ic"><svg viewBox="0 0 24 24"><path d="M9 3h6v4H9zM7 7h10v14H7zM10 11v6M14 11v6"/></svg></div><h3>Recursos técnicos</h3><p>Extintores, botiquines, camillas, DEA, alarma, línea de emergencia, radios, etc.</p></div>
-        <div class="card rv up" style="--d:2"><div class="ic"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.2"/><path d="M4 20c0-3 2.5-5 5-5s5 2 5 5M15 20c0-2.2 1.3-3.6 3-3.6"/></svg></div><h3>Recursos humanos</h3><p>Brigadistas y evacuadores presentes en cada sede.</p></div>
+      </div>
+      <figure class="mediaBox rv right" data-media="imagenes/emergencias.png" style="--d:2"></figure>
+     </div>
+      <div class="grid3 grid3-center" style="margin-top:26px">
+        <div class="card card-center rv up" style="--d:0"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 21s-7-6.3-7-11a7 7 0 0 1 14 0c0 4.7-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></div><h3>Señalización</h3><p>Rutas de evacuación, punto de encuentro, etc.</p></div>
+        <div class="card card-center rv up" style="--d:1"><div class="ic"><svg viewBox="0 0 24 24"><path d="M9 3h6v4H9zM7 7h10v14H7zM10 11v6M14 11v6"/></svg></div><h3>Recursos técnicos</h3><p>Extintores, botiquines, camillas, DEA, alarma, línea de emergencia, radios, etc.</p></div>
+        <div class="card card-center rv up" style="--d:2"><div class="ic"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.2"/><path d="M4 20c0-3 2.5-5 5-5s5 2 5 5M15 20c0-2.2 1.3-3.6 3-3.6"/></svg></div><h3>Recursos humanos</h3><p>Brigadistas y evacuadores presentes en cada sede.</p></div>
       </div>
     </div>
   </section>
@@ -2645,6 +2673,22 @@ document.querySelectorAll('.pueBox').forEach(function(box){
   window.revisarScroll = revisar;   // lo llama chrome() al cambiar de diapositiva
   setTimeout(revisar, 300);
 })();
+
+/* ====== IMÁGENES DE DIAPOSITIVA (marco reutilizable) ======
+   Uso en el HTML:  <figure class="mediaBox" data-media="imagenes/archivo.png"></figure>
+   Prueba la URL absoluta y luego la ruta local; si el archivo no existe,
+   el marco no se muestra y no deja espacio vacío. */
+document.querySelectorAll('.mediaBox[data-media]').forEach(function(caja){
+  var ruta=caja.getAttribute('data-media'); if(!ruta) return;
+  var yaLocal=false, esVideo=/\.(mp4|webm)(\?|$)/i.test(ruta);
+  var el=document.createElement(esVideo?'video':'img');
+  if(esVideo){ el.autoplay=true; el.muted=true; el.loop=true; el.playsInline=true; el.setAttribute('playsinline',''); }
+  else { el.alt=''; el.loading='eager'; el.decoding='async'; }   // eager: la diapositiva está fuera de pantalla
+  function ok(){ caja.innerHTML=''; caja.appendChild(el); caja.classList.add('ready'); }
+  if(esVideo) el.addEventListener('loadeddata', ok); else el.onload = ok;
+  el.onerror=function(){ if(!yaLocal){ yaLocal=true; el.src=ruta; } };   // respaldo local
+  el.src=asset(ruta);
+});
 
 /* ====== ATAJOS DE LA PORTADA ======
    Llevan a las diapositivas clave del módulo. Respetan la barrera del curso:
