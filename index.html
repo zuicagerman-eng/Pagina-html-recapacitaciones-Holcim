@@ -510,6 +510,67 @@
     .recap{margin-top:18px}
   }
 
+  /* 11) WELLBEING: rueda de pilares con barra deslizante */
+  .wbwrap{display:grid;grid-template-columns:minmax(0,330px) 1fr;gap:26px;align-items:center;margin-top:16px}
+  @media(max-width:820px){.wbwrap{grid-template-columns:1fr;justify-items:center}}
+  .wbring{position:relative;width:min(320px,80vw);aspect-ratio:1;flex:none}
+  .wbdisc{position:absolute;inset:0;border-radius:50%;box-shadow:var(--shadow);transition:background .45s ease}
+  .wbcenter{position:absolute;inset:29%;border-radius:50%;display:grid;place-items:center;text-align:center;
+    background:#fff;color:var(--ink);box-shadow:0 0 0 5px rgba(255,255,255,.9),0 6px 18px -6px rgba(0,0,0,.5);
+    font-size:10.5px;font-weight:800;line-height:1.15;letter-spacing:.3px;padding:8px;transition:background .4s,color .4s}
+  .wbcenter.on{background:var(--teal);color:#fff}
+  .wblabel{position:absolute;transform:translate(-50%,-50%);font-size:11.5px;font-weight:800;color:#fff;
+    text-align:center;line-height:1.15;text-shadow:0 1px 3px rgba(0,0,0,.55);pointer-events:none;
+    width:74px;transition:transform .35s,opacity .35s;opacity:.85}
+  .wblabel.on{transform:translate(-50%,-50%) scale(1.16);opacity:1}
+  .wbinfo{border-radius:var(--radius);padding:20px 22px;min-height:160px;width:100%;
+    border:2px solid;transition:border-color .4s,background .4s;background:rgba(255,255,255,.06)}
+  .slide.light .wbinfo{background:#fff}
+  .wbinfo h3{font-size:20px;font-weight:800;margin-bottom:10px}
+  .wbinfo ul{list-style:none;display:flex;flex-direction:column;gap:6px}
+  .wbinfo li{font-size:14px;line-height:1.45;display:flex;gap:9px}
+  .wbinfo li:before{content:"";flex:none;width:7px;height:7px;border-radius:50%;background:currentColor;margin-top:7px;opacity:.65}
+  .wbslider{width:min(340px,86%);margin:18px auto 0;display:block;-webkit-appearance:none;appearance:none;
+    height:8px;border-radius:99px;background:linear-gradient(90deg,var(--cyan),var(--blue));outline:none;cursor:grab}
+  .wbslider:active{cursor:grabbing}
+  .wbslider::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;border-radius:50%;
+    background:var(--cyan);border:3px solid #fff;box-shadow:0 4px 12px -3px rgba(0,0,0,.5);cursor:grab;transition:transform .2s}
+  .wbslider::-webkit-slider-thumb:hover{transform:scale(1.15)}
+  .wbslider::-moz-range-thumb{width:26px;height:26px;border-radius:50%;background:var(--cyan);
+    border:3px solid #fff;box-shadow:0 4px 12px -3px rgba(0,0,0,.5);cursor:grab}
+  .wbhint{text-align:center;font-size:12.5px;font-weight:600;margin-top:8px;opacity:.8}
+  .wbdots{display:flex;gap:7px;justify-content:center;margin-top:10px}
+  .wbdots i{width:9px;height:9px;border-radius:50%;background:rgba(140,160,190,.45);transition:.25s}
+  .wbdots i.on{background:var(--cyan);transform:scale(1.35)}
+
+  /* 12) EVALUACIÓN Verdadero / Falso */
+  .evrow{background:#fff;border-radius:var(--radius-sm);box-shadow:var(--shadow);padding:14px 16px;
+    display:flex;align-items:center;gap:14px;border:2px solid transparent;transition:border-color .3s}
+  .slide.dark .evrow{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.09)}
+  .evlist{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+  .evq{flex:1;font-size:13.5px;line-height:1.45;color:var(--ink);font-weight:600}
+  .slide.dark .evq{color:#eaf1fb}
+  .evopts{display:flex;gap:8px;flex:none}
+  .evbtn{border:2px solid #d9e2ee;background:#fff;color:var(--muted);border-radius:999px;
+    padding:7px 15px;font-family:var(--font);font-weight:800;font-size:12.5px;cursor:pointer;transition:.2s}
+  .evbtn:hover{border-color:var(--cyan);color:var(--blue)}
+  .evbtn.sel{background:var(--blue);border-color:var(--blue);color:#fff}
+  .evrow.ok,.slide.dark .evrow.ok{border-color:var(--ok)}
+  .evrow.bad,.slide.dark .evrow.bad{border-color:var(--danger)}
+  .evrow.ok .evbtn.sel{background:var(--ok);border-color:var(--ok)}
+  .evrow.bad .evbtn.sel{background:var(--danger);border-color:var(--danger)}
+  .evmark{flex:none;width:26px;height:26px;border-radius:50%;display:none;place-items:center;
+    color:#fff;font-weight:800;font-size:13px}
+  .evrow.ok .evmark{display:grid;background:var(--ok)}
+  .evrow.bad .evmark{display:grid;background:var(--danger)}
+  .evfoot{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:18px;flex-wrap:wrap}
+  .evbtn-go{background:var(--grad);color:#062038;border:none;border-radius:999px;padding:12px 32px;
+    font-family:var(--font);font-weight:800;font-size:15px;cursor:pointer;transition:.2s}
+  .evbtn-go:hover{transform:translateY(-1px)}
+  .evscore{font-size:15px;font-weight:800;padding:11px 22px;border-radius:999px;display:none;
+    background:var(--panel);color:#fff}
+  .evscore.show{display:block}
+
   /* Logo de la esquina superior izquierda (acepta imagen o SVG de respaldo) */
   header.hud{width:100%}
   .brand .logo{width:auto;height:32px;display:inline-flex;align-items:center;flex:none}
@@ -1266,12 +1327,133 @@
 </div>
 </section>
 <section class="slide dark" data-mod="4">
+  <div class="blob b1"></div><div class="blob b2"></div>
+  <div class="wrap">
+    <div class="eyebrow rv up">Salud &amp; Seguridad · 2026 · Módulo 4 · Parte 3</div>
+    <div class="hero-code rv up" style="--d:1">HSE-001</div>
+    <div class="hero-title rv up" style="--d:2">Controles operacionales complementarios<br>Estándares de salud y bienestar</div>
+    <div class="gline rv up" style="--d:3"></div>
+    <div class="tag rv up" style="--d:4"><span class="pill">Asbestos · Sustancias</span><span class="pill">Audición · Ergonomía</span><span class="pill">Wellbeing · Evaluación</span></div>
+    <p class="lead rv up" style="--d:5">Última parte del curso. Al terminar podrás presentar la evaluación final.</p>
+  </div>
+</section>
+<section class="slide light" data-mod="4">
+<div class="wrap"><div class="eyebrow rv up">HSE-201 · Asbestos</div>
+<h2 class="rv up" style="--d:1">Asbestos</h2>
+<div class="infobanner rv up" style="--d:2">Es el nombre asignado a un grupo de <b>seis materiales fibrosos</b> (amosita, crisotila, crocidolita y las formas fibrosas de tremolita, actinolita y antofilita) que ocurren de forma natural. Sus fibras son <b>largas, resistentes y flexibles</b>, y resisten altas temperaturas.</div>
+<p class="lead rv up">Se ha usado en muchos productos — toca cada uno. 👆</p>
+<div class="accgrid" style="margin-top:12px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#17868a"></span><h4>Materiales de construcción</h4><span class="chev">+</span></div><div class="acc-body"><p>Tejas para techado, baldosas y azulejos, productos de papel y productos de <b>cemento con asbesto</b>.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Productos de fricción</h4><span class="chev">+</span></div><div class="acc-body"><p>Embrague de automóviles, <b>frenos</b> y componentes de la transmisión.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#ef7d00"></span><h4>Materias textiles</h4><span class="chev">+</span></div><div class="acc-body"><p>Textiles <b>termo resistentes</b>, envases, empaquetaduras y revestimientos.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>Vermiculita y talco</h4><span class="chev">+</span></div><div class="acc-body"><p>Algunos productos de <b>vermiculita</b> o de <b>talco</b> pueden contener asbesto.</p></div></div></div>
+<p class="lead rv up" style="margin-top:18px">Ejemplos frecuentes — toca cada uno. 👆</p>
+<div class="chipgrid"><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#0e2c56">1</span><span class="nm">Aislamiento de tuberías</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#1bb4e4">2</span><span class="nm">Tejas onduladas de fibrocemento</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#ef7d00">3</span><span class="nm">Pastillas de freno</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#6a3d9a">4</span><span class="nm">Baldosas de vinilo para suelos</span><span class="tick">✓</span></div></div>
+</div></section>
+<section class="slide dark" data-mod="4">
+<div class="wrap"><div class="eyebrow rv up">HSE-202 · Sustancias peligrosas</div>
+<h2 class="rv up" style="--d:1">Conceptos básicos</h2>
+<p class="lead rv up" style="--d:2">Voltea cada tarjeta para conocer su definición. 👆</p>
+<div class="flips" style="margin-top:14px"><div class="flip rv up" tabindex="0" role="button"><div class="flip-in"><div class="face front"><div class="n">1</div><h3>Sustancias peligrosas</h3><div class="hint">Toca para ver ↺</div></div><div class="face back"><h4>Sustancias peligrosas</h4><p>Amplio rango de sustancias <b>químicas, minerales, biológicas y microbiológicas</b> con potencial de causar efectos sobre la salud cuando se está expuesto.</p></div></div></div><div class="flip rv up" tabindex="0" role="button"><div class="flip-in"><div class="face front"><div class="n">2</div><h3>Riesgo químico</h3><div class="hint">Toca para ver ↺</div></div><div class="face back"><h4>Riesgo químico</h4><p>El que se genera por la <b>exposición no controlada</b> a sustancias químicas o residuos potencialmente peligrosos, denominados agentes químicos.</p></div></div></div><div class="flip rv up" tabindex="0" role="button"><div class="flip-in"><div class="face front"><div class="n">3</div><h3>Fichas de datos de seguridad</h3><div class="hint">Toca para ver ↺</div></div><div class="face back"><h4>FDS</h4><p>Antes conocidas como Hojas de Datos de Seguridad. Informan las <b>propiedades</b> de las sustancias y señalan los <b>peligros potenciales</b> para quien las manipula y para quien esté expuesto.</p></div></div></div><div class="flip rv up" tabindex="0" role="button"><div class="flip-in"><div class="face front"><div class="n">4</div><h3>Sistema globalmente armonizado</h3><div class="hint">Toca para ver ↺</div></div><div class="face back"><h4>SGA</h4><p>Sistema integral de comunicación de riesgos de alcance internacional reconocido por la <b>ONU</b>. Implica etiquetado claro y uniforme y fichas de datos de seguridad estandarizadas en nuestro idioma.</p></div></div></div><div class="flip rv up" tabindex="0" role="button"><div class="flip-in"><div class="face front"><div class="n">5</div><h3>Pictograma</h3><div class="hint">Toca para ver ↺</div></div><div class="face back"><h4>Pictograma</h4><p>Composición gráfica que contiene un <b>símbolo</b> y otros elementos (borde rojo, motivo negro y fondo blanco) que sirve para comunicar informaciones específicas.</p></div></div></div></div>
+</div></section>
+<section class="slide light" data-mod="4">
+<div class="wrap"><div class="eyebrow rv up">HSE-202 · Sustancias peligrosas</div>
+<h2 class="rv up" style="--d:1">Pictogramas</h2>
+<div class="infobanner rv up" style="--d:2">Las sustancias peligrosas presentan riesgo para la salud, la seguridad o el medio ambiente. Al adquirirlas e ingresarlas a los sitios de trabajo <b>deben estar identificadas con la etiqueta del Sistema Globalmente Armonizado</b>.</div>
+<p class="lead rv up">Toca cada grupo de peligros. 👆</p>
+<div class="accgrid" style="margin-top:12px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#17868a"></span><h4>Peligros físicos · 16 clases</h4><span class="chev">+</span></div><div class="acc-body"><div class="li"><span class="b"></span><b>Explosivos</b></div><div class="li"><span class="b"></span><b>Gases comprimidos</b></div><div class="li"><span class="b"></span><b>Inflamable</b></div><div class="li"><span class="b"></span><b>Comburente</b></div><div class="li"><span class="b"></span><b>Corrosivo</b></div></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#0e6e78"></span><h4>Peligros para la salud · 10 clases</h4><span class="chev">+</span></div><div class="acc-body"><div class="li"><span class="b"></span><b>Tóxico</b></div><div class="li"><span class="b"></span><b>Cancerígeno</b></div><div class="li"><span class="b"></span><b>Corrosivo</b></div><div class="li"><span class="b"></span><b>Irritante</b></div></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#3fb559"></span><h4>Peligros para el medio ambiente · 2 clases</h4><span class="chev">+</span></div><div class="acc-body"><div class="li"><span class="b"></span><b>Dañino para el ambiente</b></div><div class="li"><span class="b"></span><b>Irritante</b></div></div></div></div>
+</div></section>
+<section class="slide dark" data-mod="4">
+<div class="wrap"><div class="eyebrow rv up">HSE-202 · Sustancias peligrosas</div>
+<h2 class="rv up" style="--d:1">Etiqueta de seguridad</h2>
+<div class="infobanner rv up" style="--d:2">Estos son los <b>6 requisitos mínimos</b> que debe contener una etiqueta que cumple SGA.</div>
+<p class="lead rv up">Toca cada requisito. 👆</p>
+<div class="acts"><div class="act gclick rv scale" style="background:#0e2c56" tabindex="0" role="button"><span style="font-size:22px">1</span><span>Identificación del producto químico</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#1877c4" tabindex="0" role="button"><span style="font-size:22px">2</span><span>Indicaciones de peligro (Frases H)</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#1bb4e4" tabindex="0" role="button"><span style="font-size:22px">3</span><span>Consejos de prudencia (Frases P)</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#17868a" tabindex="0" role="button"><span style="font-size:22px">4</span><span>Datos del fabricante y contacto de emergencia</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#97d13b" tabindex="0" role="button"><span style="font-size:22px">5</span><span>Pictogramas</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#ef7d00" tabindex="0" role="button"><span style="font-size:22px">6</span><span>Palabra de advertencia</span><span class="tick">✓</span></div></div>
+<div class="pdfrow rv up" style="grid-template-columns:1fr"><div class="pdfmini"><span>Conoce cómo <b>almacenar de acuerdo a la compatibilidad</b>.</span><button class="pdfbtn" data-pdf="etiqueta_guia" data-title="Almacenamiento por compatibilidad">Ver más</button></div></div>
+</div></section>
+<section class="slide light" data-mod="4">
+<div class="wrap"><div class="eyebrow rv up">HSE-203 · Conservación de la audición</div>
+<h2 class="rv up" style="--d:1">La audición y sus señales de alerta</h2>
+<p class="lead rv up" style="--d:2">Sobre nuestra audición — toca cada dato. 👆</p>
+<div class="acts"><div class="act gclick rv scale" style="background:#97d13b" tabindex="0" role="button"><span style="font-size:22px">●</span><span>Se encuentra en funcionamiento durante las 24 horas del día.</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#5b7fb5" tabindex="0" role="button"><span style="font-size:22px">●</span><span>Potencializa las capacidades de atención y percepción.</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#17868a" tabindex="0" role="button"><span style="font-size:22px">●</span><span>Los daños producidos en el oído son irreversibles, nunca se recuperan.</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#1bb4e4" tabindex="0" role="button"><span style="font-size:22px">●</span><span>Deterioro con los años · Presbiacusia.</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#0e2c56" tabindex="0" role="button"><span style="font-size:22px">●</span><span>La alteración auditiva por ruido es completamente prevenible.</span><span class="tick">✓</span></div></div>
+<p class="lead rv up" style="margin-top:18px">Señales que ayudan a identificar a tiempo una alteración auditiva. 👆</p>
+<div class="accgrid" style="margin-top:12px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1bb4e4"></span><h4>Dificultad para seguir conversaciones</h4><span class="chev">+</span></div><div class="acc-body"><p>Especialmente en <b>ambientes ruidosos</b>.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Pedir que repitan</h4><span class="chev">+</span></div><div class="acc-body"><p>Pedir constantemente que repitan lo que dicen o <b>malinterpretar palabras</b>.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#17868a"></span><h4>Subir el volumen</h4><span class="chev">+</span></div><div class="acc-body"><p>Subir el volumen de la televisión o la música <b>más de lo habitual</b>.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#ef7d00"></span><h4>Zumbido o pitido</h4><span class="chev">+</span></div><div class="acc-body"><p>Sensación de zumbido o pitido en los oídos (<b>tinitus o acúfenos</b>).</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#e6007e"></span><h4>Fatiga tras reuniones</h4><span class="chev">+</span></div><div class="acc-body"><p>Fatiga después de reuniones sociales por el <b>esfuerzo para escuchar</b>.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#6a3d9a"></span><h4>Sonidos agudos</h4><span class="chev">+</span></div><div class="acc-body"><p>Problemas para distinguir sonidos agudos, como <b>voces de niños o timbres</b>.</p></div></div></div>
+</div></section>
+<section class="slide dark" data-mod="4">
+<div class="wrap"><div class="eyebrow rv up">HSE-203 · Conservación de la audición</div>
+<h2 class="rv up" style="--d:1">Control de hábitos y comportamientos</h2>
+<p class="lead rv up" style="--d:2">Toca cada recomendación. 👆</p>
+<div class="chipgrid"><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#1bb4e4">1</span><span class="nm">Controle el volumen de audífonos, parlantes, TV y reproductores.</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#e23b32">2</span><span class="nm">Evite introducir elementos con punta dentro del oído (copitos, palillos, ganchos, esferos).</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#ef7d00">3</span><span class="nm">Evite compartir los audífonos o auriculares y limite su uso.</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#17868a">4</span><span class="nm">Evite nadar en aguas sucias y muy profundas.</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#6a3d9a">5</span><span class="nm">Controle la asistencia a conciertos, bares o discotecas.</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#0e2c56">6</span><span class="nm">Controle actividades extralaborales: tejo, polígono, deportes de contacto y motocicleta.</span><span class="tick">✓</span></div></div>
+</div></section>
+<section class="slide light" data-mod="4">
+<div class="wrap"><div class="eyebrow rv up">HSE-204 · Ergonomía</div>
+<h2 class="rv up" style="--d:1">Ergonomía</h2>
+<div class="infobanner rv up" style="--d:2">Disciplina científica que adapta el trabajo, las herramientas y el entorno a las <b>capacidades y limitaciones</b> físicas y mentales del ser humano. Busca mejorar la seguridad, eficiencia y bienestar, previniendo lesiones y fatiga (OMS, OIT).</div>
+<p class="lead rv up">Toca cada programa. 👆</p>
+<div class="accgrid" style="margin-top:12px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>SVE · Sistema de Vigilancia Epidemiológico</h4><span class="chev">+</span></div><div class="acc-body"><p>Prevención de <b>desórdenes musculoesqueléticos (SVE DME)</b>.</p><p class="tdd">Evaluación de factores de riesgo y definición de <b>planes de mejora</b>.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#17868a"></span><h4>Programa de rehabilitación y reincorporación laboral</h4><span class="chev">+</span></div><div class="acc-body"><p>Rehabilitación y <b>reintegro integral</b> de trabajadores según clasificación epidemiológica.</p><p class="tdd"><b>Adaptación al trabajo.</b></p></div></div></div>
+</div></section>
+<section class="slide dark" data-mod="4">
+<div class="wrap"><div class="eyebrow rv up">HSE-205 · Vibración</div>
+<h2 class="rv up" style="--d:1">Vibración</h2>
+<div class="infobanner rv up" style="--d:2">Fenómeno mecánico <b>rápido, oscilatorio o repetitivo</b> de un objeto alrededor de una posición de equilibrio. Hay exposición cuando el movimiento oscilante de una estructura (el suelo, una empuñadura o un asiento) se transmite a alguna parte del cuerpo.</div>
+<p class="lead rv up">Toca cada tipo de vibración. 👆</p>
+<div class="accgrid" style="margin-top:12px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Vibraciones de cuerpo completo</h4><span class="chev">+</span></div><div class="acc-body"><p>Se producen cuando <b>gran parte del peso del cuerpo</b> descansa sobre una superficie vibrante.</p><p class="tdd">Se transmiten generalmente a través de los <b>asientos o los pies</b>.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1bb4e4"></span><h4>Vibraciones mano-brazo</h4><span class="chev">+</span></div><div class="acc-body"><p>Se transmiten por las <b>manos</b> del trabajador, generalmente a través del agarre de <b>herramientas mecánicas</b>.</p></div></div></div>
+</div></section>
+<section class="slide light" data-mod="4">
+<div class="wrap"><div class="eyebrow rv up">Otros controles de salud</div>
+<h2 class="rv up" style="--d:1">Componentes de la Gestión de Salud en el Trabajo</h2>
+<p class="lead rv up" style="--d:2">Toca cada componente para ver su detalle. 👆</p>
+<div class="accgrid" style="margin-top:14px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>1 · Higiene Industrial</h4><span class="chev">+</span></div><div class="acc-body"><div class="li"><span class="b"></span>Diseño y estandarización del Programa de Higiene Industrial.</div><div class="li"><span class="b"></span>Diagnóstico de riesgos higiénicos prioritarios.</div><div class="li"><span class="b"></span>Planes de acción resultantes (jerarquía de controles).</div></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1bb4e4"></span><h4>2 · Exámenes Médicos Ocupacionales</h4><span class="chev">+</span></div><div class="acc-body"><div class="li"><span class="b"></span>Definición de la matriz de exámenes médicos por cargo.</div><div class="li"><span class="b"></span>Tipos de exámenes médicos ocupacionales.</div><div class="li"><span class="b"></span>Condiciones médico-laborales y aptitud médica.</div><div class="li"><span class="b"></span>Diagnóstico de condiciones de salud · análisis epidemiológico.</div></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#5b7fb5"></span><h4>3 · Medicina Preventiva</h4><span class="chev">+</span></div><div class="acc-body"><div class="li"><span class="b"></span>Análisis de ausentismo.</div><div class="li"><span class="b"></span>Sistemas de Vigilancia Médica: osteomuscular, auditivo, respiratorio, psicosocial, visual y cardiovascular.</div><div class="li"><span class="b"></span>Campañas de promoción y prevención.</div><div class="li"><span class="b"></span>Certificación empresa saludable (Fundación Colombiana del Corazón).</div></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#0e2c56"></span><h4>4 · Rehabilitación y Reincorporación Laboral</h4><span class="chev">+</span></div><div class="acc-body"><div class="li"><span class="b"></span>Identificación de casos médicos: exámenes, ausentismo y reportes.</div><div class="li"><span class="b"></span>Implementación del programa y seguimiento.</div></div></div></div>
+</div></section>
+<section class="slide dark" data-mod="4">
+<div class="wrap"><div class="eyebrow rv up">Otros controles de salud</div>
+<h2 class="rv up" style="--d:1">Higiene Industrial y Medicina Preventiva</h2>
+<div class="infobanner rv up" style="--d:2">La higiene industrial busca <b>reconocer las condiciones ambientales peligrosas</b>, evaluarlas y proponer medidas de control para que estén en los <b>menores niveles posibles</b> y conservar la salud de todos los trabajadores.</div>
+<p class="lead rv up">Peligros higiénicos en Holcim — toca cada uno. 👆</p>
+<div class="chipgrid"><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#17868a">1</span><span class="nm">Material particulado</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#1bb4e4">2</span><span class="nm">Vibraciones</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#e6007e">3</span><span class="nm">Biomecánico</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#6a3d9a">4</span><span class="nm">Psicosocial</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#ef7d00">5</span><span class="nm">Ruido</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#f5b700">6</span><span class="nm">Radiaciones ionizantes</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#e23b32">7</span><span class="nm">Cardiovascular</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#97d13b">8</span><span class="nm">Iluminación</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#1877c4">9</span><span class="nm">Altas temperaturas</span><span class="tick">✓</span></div></div>
+<div class="pdfrow rv up" style="grid-template-columns:1fr"><div class="pdfmini"><span>Conoce más sobre los <b>peligros higiénicos</b>.</span><button class="pdfbtn" data-pdf="higiene_guia" data-title="Higiene y medicina preventiva">Ver más</button></div></div>
+</div></section>
+<section class="slide light" data-mod="4">
+<div class="wrap"><div class="eyebrow rv up">Otros controles de salud</div>
+<h2 class="rv up" style="--d:1">Evaluaciones médicas ocupacionales</h2>
+<p class="lead rv up" style="--d:2">Toca cada tipo de evaluación. 👆</p>
+<div class="accgrid" style="margin-top:14px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>Pre-ingreso</h4><span class="chev">+</span></div><div class="acc-body"><p>Determinar, <b>antes de la contratación</b>, la condición de salud física, mental y social del trabajador para desempeñar las labores sin perjuicio de su salud o la de terceros; establecer restricciones e identificar condiciones que puedan agravarse con el trabajo.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1bb4e4"></span><h4>Periódicas · A. Programadas</h4><span class="chev">+</span></div><div class="acc-body"><p>Monitorear la exposición a factores de riesgo e identificar de forma <b>precoz</b> posibles alteraciones temporales, permanentes o agravadas del estado de salud ocasionadas por la labor.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Periódicas · B. Cambios de ocupación</h4><span class="chev">+</span></div><div class="acc-body"><p>Garantizar que el trabajador se mantenga en condiciones acordes con los requerimientos de las <b>nuevas tareas</b>. Se realizan cada vez que cambie de ocupación e implique cambio de ambiente laboral, funciones o exposición a nuevos o mayores factores de riesgo.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#0e2c56"></span><h4>Egreso</h4><span class="chev">+</span></div><div class="acc-body"><p>Valorar y registrar las condiciones de salud con las que el trabajador <b>se retira</b> de las tareas asignadas. Se realizan al terminar la relación laboral.</p></div></div></div>
+</div></section>
+<section class="slide dark" data-mod="4">
+<div class="wrap"><div class="eyebrow rv up">Otros controles de salud</div>
+<h2 class="rv up" style="--d:1">Wellbeing (Pilares)</h2>
+<div class="infobanner rv up" style="--d:2">En la Salud Ocupacional, la gestión de <b>primeros auxilios</b>, enfermedades laborales y monitoreo de riesgos como sílice, materiales peligrosos y ruido es clave para proteger la salud. Las evaluaciones de salud ocupacional y las condiciones ergonómicas adecuadas son esenciales para prevenir lesiones.</div>
+<p class="lead rv up">Desliza el botón por la línea horizontal para conocer cada pilar. 👆</p>
+<div class="wbwrap" id="wbwrap">
+  <div>
+    <div class="wbring rv scale" id="wbring">
+      <div class="wbdisc" id="wbdisc"></div>
+      <div class="wbcenter" id="wbcenter">SALUD<br>OCUPACIONAL</div>
+    </div>
+    <input type="range" class="wbslider" id="wbslider" min="0" max="5" step="1" value="0" aria-label="Pilares de Wellbeing">
+    <div class="wbdots" id="wbdots"></div>
+  </div>
+  <div class="wbinfo rv right" id="wbinfo"></div>
+</div>
+</div></section>
+<section class="slide light" data-mod="4">
+<div class="wrap"><div class="eyebrow rv up">Otros controles de salud</div>
+<h2 class="rv up" style="--d:1">ESCALAR</h2>
+<div class="infobanner rv up" style="--d:2"><b>¿Sabías qué?</b> Los músculos trabajan en conjunto y de forma coordinada para distribuir las fuerzas y mantener la postura de nuestro cuerpo. <b>ESCALAR</b> son las Escuelas de Acondicionamiento Lumbar y Articular.</div>
+<p class="lead rv up">Objetivos de ESCALAR — toca cada uno. 👆</p>
+<div class="accgrid" style="margin-top:12px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#e6007e"></span><h4>Objetivo general</h4><span class="chev">+</span></div><div class="acc-body"><p>Mejorar la <b>condición osteomuscular</b> de los trabajadores de Holcim, a través del aprendizaje de técnicas de acondicionamiento físico <b>para el trabajo y para la vida</b>.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1bb4e4"></span><h4>Conocimientos y estrategias</h4><span class="chev">+</span></div><div class="acc-body"><p>Brindar a los participantes los conocimientos, habilidades y estrategias que les permitan alcanzar y mantener una <b>buena condición física</b> para el trabajo y para la vida.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>Autocuidado</h4><span class="chev">+</span></div><div class="acc-body"><p>Promover la <b>participación</b> de los trabajadores dentro del autocuidado de su salud.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#17868a"></span><h4>Multiplicadores</h4><span class="chev">+</span></div><div class="acc-body"><p>Lograr que los trabajadores sean <b>proactivos y multiplicadores</b> de las buenas prácticas en su ambiente laboral y en su hogar.</p></div></div></div>
+<div class="banner rv up" style="--d:2">Recuerda que fortalecer tus <b>músculos abdominales</b> puede prevenir y aliviar dolores de espalda.</div>
+</div></section>
+<section class="slide dark" data-mod="4">
+<div class="wrap"><div class="eyebrow rv up">Actividad de entrenamiento</div>
+<h2 class="rv up" style="--d:1">Evaluación · Controles Operacionales Complementarios</h2>
+<p class="lead rv up" style="--d:2">Selecciona <b>Verdadero</b> o <b>Falso</b> en cada enunciado y presiona <b>Calificar</b> para conocer tu resultado.</p>
+<div class="evlist" id="evlist"></div>
+<div class="evfoot"><button class="evbtn-go" id="evGo">Calificar</button><div class="evscore" id="evScore"></div></div>
+</div></section>
+<section class="slide dark" data-mod="4">
   <div class="wrap" style="text-align:center">
     <div class="done-badge rv scale"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg></div>
     <div class="eyebrow rv up" style="--d:1">Reinducción H&amp;S completada</div>
     <h2 class="rv up" style="--d:2">¡Felicitaciones! Terminaste la reinducción.</h2>
-    <p class="lead rv up" style="--d:3;max-width:58ch;margin:14px auto 0">Completaste los <b>Módulos 1 a 4</b> de la Reinducción en Salud y Seguridad. Ya puedes cerrar con el botón <b>Salir</b>.</p>
-    <div class="recap rv up" style="--d:4"><span class="chip">Módulo 1</span><span class="chip">Módulo 2</span><span class="chip">Módulo 3</span><span class="chip">Módulo 4 · P1 y P2</span><span class="chip">¡Cero daños!</span></div>
+    <p class="lead rv up" style="--d:3;max-width:58ch;margin:14px auto 0">Completaste los <b>Módulos 1 a 4</b> de la Reinducción en Salud y Seguridad, incluida la evaluación final. Ya puedes cerrar con el botón <b>Salir</b>.</p>
+    <div class="recap rv up" style="--d:4"><span class="chip">Módulo 1</span><span class="chip">Módulo 2</span><span class="chip">Módulo 3</span><span class="chip">Módulo 4 · P1, P2 y P3</span><span class="chip">¡Cero daños!</span></div>
   </div>
 </section>
 <div id="scrollhint"><svg viewBox="0 0 24 24"><path d="M12 5v14M6 13l6 6 6-6"/></svg><span>Desliza para ver más contenido</span></div>
@@ -1389,7 +1571,10 @@ var PDFS = {
   alturas_guia    : "1E6wGTm7t1cJui2G6Vcs4DceZHlA_2UXA",   // Guía visual · Trabajo en alturas (andamios)
   lototo_guia     : "1ItH29Rdh3-0Ll6aCnyGf0uxn8wo-ngsH",   // Aislamiento de energía: bloqueo, etiquetado y pruebas
   maquinaria_guia : "1_alv-0yuH2-ppF4WOZTa-gsHa1MJbIQe",   // Guía visual · Protección en maquinaria
-  cargas_guia     : "17KOp0jBcxzfJ5R96YoidYmjsaaVceiBm"    // Guía visual · Elevación y soporte de cargas
+  cargas_guia     : "17KOp0jBcxzfJ5R96YoidYmjsaaVceiBm",   // Guía visual · Elevación y soporte de cargas
+  /* ===== Módulo 4 · Parte 3 ===== */
+  etiqueta_guia   : "",   // Etiqueta de seguridad / almacenamiento por compatibilidad
+  higiene_guia    : ""    // Higiene industrial y medicina preventiva
 };
 /* ====== Logo Holcim ====== */
 var logoSVG = '<svg viewBox="0 0 40 40" width="100%" height="100%"><defs><linearGradient id="hg" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#97d13b"/><stop offset=".55" stop-color="#1bb4e4"/><stop offset="1" stop-color="#1877c4"/></linearGradient></defs><path d="M14 6c-5 0-9 4-9 9 0 3 2 5 5 5h4v-5H11c-1 0-1-1-1-1 0-2 2-3 4-3h5V6z" fill="url(#hg)"/><path d="M26 34c5 0 9-4 9-9 0-3-2-5-5-5h-4v5h3c1 0 1 1 1 1 0 2-2 3-4 3h-5v5z" fill="url(#hg)"/><rect x="17" y="17" width="6" height="6" rx="1" fill="url(#hg)"/></svg>';
@@ -1836,6 +2021,123 @@ function toast(msg){ toastEl.textContent = msg; toastEl.classList.add('show'); c
   rSend.addEventListener('click', enviar);
   rModal.addEventListener('click', function(e){ if(e.target===rModal) cerrar(); });
   document.addEventListener('keydown', function(e){ if(e.key==='Escape' && rModal.classList.contains('show')) cerrar(); });
+})();
+
+/* ====== WELLBEING · rueda con barra deslizante ====== */
+(function(){
+  var ring=document.getElementById('wbring'); if(!ring) return;
+  var disc=document.getElementById('wbdisc'), centro=document.getElementById('wbcenter'),
+      info=document.getElementById('wbinfo'), slider=document.getElementById('wbslider'),
+      dots=document.getElementById('wbdots');
+
+  /* 5 sectores alrededor + el centro (Salud ocupacional) */
+  var P=[
+   {t:'Cuerpo',    c:'#8bbf3a', p:['Sueño y fatiga.','Movimiento y capacidad física.','Nutrición.','Enfermedad.']},
+   {t:'Comunidad', c:'#1bb4e4', p:['Servicios familiares.','Conectando con los colegas.','Voluntariado y servicio.','Comunidades comprometidas.','Celebrando éxitos laborales.']},
+   {t:'Finanzas',  c:'#4aa3df', p:['Presupuesto personal.','Plan de jubilación.','Acontecimientos importantes de la vida.','Invertir en felicidad.','Ahorros e inversiones.']},
+   {t:'Espacios',  c:'#5b7fb5', p:['Estilos de vida.','Espacios recreativos.','Recursos para el cuidado de la niñez.','Modalidades de trabajo flexible.','Desplazamientos: transporte público y carro compartido.','Oficinas verdes.']},
+   {t:'Mente',     c:'#97d13b', p:['Primer auxilio psicológico.','Programa de asistencia al empleado.','Encuestas y recursos de liderazgo.','Recuperación de adicciones.']},
+   {t:'Salud ocupacional', c:'#17868a', centro:true, p:['Primeros auxilios y respuesta a emergencias médicas.','Gestión de enfermedades laborales.','Monitoreo de exposición a la higiene industrial.','Exposición al polvo respirable (cemento).','Materiales peligrosos.','Ruido.','Ergonomía.','Evaluaciones de salud ocupacional.']}
+  ];
+  var vistos={}, GRIS='#9aa4b2';
+
+  /* Etiquetas alrededor del anillo */
+  P.forEach(function(x,i){
+    if(x.centro) return;
+    var rad=(i*72)*Math.PI/180;
+    var el=document.createElement('span');
+    el.className='wblabel'; el.textContent=x.t;
+    el.style.left=(50+34*Math.sin(rad))+'%'; el.style.top=(50-34*Math.cos(rad))+'%';
+    ring.appendChild(el);
+  });
+  var labels=Array.prototype.slice.call(ring.querySelectorAll('.wblabel'));
+
+  /* Puntos indicadores */
+  P.forEach(function(){ dots.appendChild(document.createElement('i')); });
+  var dotEls=Array.prototype.slice.call(dots.children);
+
+  function pintar(n){
+    var partes=[];
+    for(var i=0;i<5;i++) partes.push((i===n?P[i].c:GRIS)+' '+(i*72)+'deg '+((i+1)*72)+'deg');
+    disc.style.background='conic-gradient(from -36deg,'+partes.join(',')+')';
+    centro.classList.toggle('on', n===5);
+    labels.forEach(function(l,i){ l.classList.toggle('on', i===n); });
+    dotEls.forEach(function(d,i){ d.classList.toggle('on', i===n); });
+
+    var x=P[n];
+    info.style.borderColor=x.c;
+    info.innerHTML='<h3 style="color:'+x.c+'">'+x.t+'</h3><ul>'+
+      x.p.map(function(t){return '<li>'+t+'</li>';}).join('')+'</ul>';
+    info.style.opacity=0; info.style.transform='translateX(10px)';
+    setTimeout(function(){ info.style.transition='opacity .35s,transform .35s';
+      info.style.opacity=1; info.style.transform='none'; },20);
+
+    vistos[n]=true;
+    if(Object.keys(vistos).length===P.length) markDone(ring);
+  }
+  ring.classList.add('req');           // barrera: hay que recorrer los 6 pilares
+  slider.addEventListener('input', function(){ pintar(+slider.value); });
+  pintar(0);
+})();
+
+/* ====== EVALUACIÓN FINAL (Verdadero / Falso) ====== */
+(function(){
+  var cont=document.getElementById('evlist'); if(!cont) return;
+  var Q=[
+   ['La regla del hombre caído busca proteger al peatón cuando se encuentra en el área de riesgo, obligando la detención inmediata del equipo móvil.', true],
+   ['No es necesario garantizar el almacenamiento de sustancias peligrosas según la matriz de compatibilidad.', false],
+   ['El análisis de causas adecuado y el cumplimiento del plan de acción ayudará en la prevención de eventos similares.', true],
+   ['No hacer uso del candado personal de bloqueo es un comportamiento prohibido en la ejecución del procedimiento de aislamiento de energía.', true],
+   ['¿Mejorar la condición osteomuscular de los trabajadores en Holcim a través de prácticas de acondicionamiento físico es el objetivo de ESCALAR?', true],
+   ['Dentro de la protección de máquinas, todos los puntos críticos de atrapamiento deben ser asegurados con guardas.', true],
+   ['Durante las inspecciones, el trabajador debe notificar y reportar las condiciones y actos subestándar, participar y colaborar con la ejecución de inspecciones y acatar las recomendaciones.', true],
+   ['Un trabajador puede detener una actividad ante un riesgo grave inminente.', true],
+   ['¿El cuerpo, la mente, la comunidad, los espacios, las finanzas y la Salud Ocupacional hacen parte de los pilares Wellbeing?', true]
+  ];
+  var resp={}, calificado=false;
+  Q.forEach(function(q,i){
+    var row=document.createElement('div');
+    row.className='evrow rv up';
+    row.innerHTML='<span class="evq">'+(i+1)+'. '+q[0]+'</span>'+
+      '<span class="evopts"><button class="evbtn" data-v="1">Verdadero</button>'+
+      '<button class="evbtn" data-v="0">Falso</button></span><span class="evmark"></span>';
+    row.querySelectorAll('.evbtn').forEach(function(b){
+      b.addEventListener('click', function(){
+        if(calificado) return;
+        row.querySelectorAll('.evbtn').forEach(function(o){o.classList.remove('sel');});
+        b.classList.add('sel'); resp[i]=(b.getAttribute('data-v')==='1');
+      });
+    });
+    cont.appendChild(row);
+  });
+
+  var go=document.getElementById('evGo'), score=document.getElementById('evScore');
+  var lista=Array.prototype.slice.call(cont.children);
+  cont.classList.add('req');           // barrera: hay que calificar para avanzar
+  go.addEventListener('click', function(){
+    if(calificado) return;
+    if(Object.keys(resp).length < Q.length){
+      toast('Responde las '+Q.length+' preguntas antes de calificar');
+      var falta=lista.filter(function(r,i){ return resp[i]===undefined; });
+      falta.forEach(function(r){ r.classList.add('falta'); });
+      setTimeout(function(){ falta.forEach(function(r){ r.classList.remove('falta'); }); }, 3000);
+      try{ falta[0].scrollIntoView({block:'center',behavior:'smooth'}); }catch(e){}
+      return;
+    }
+    calificado=true; var ok=0;
+    Q.forEach(function(q,i){
+      var bien = resp[i]===q[1]; if(bien) ok++;
+      lista[i].classList.add(bien?'ok':'bad');
+      lista[i].querySelector('.evmark').textContent = bien?'✓':'✕';
+    });
+    score.textContent='Resultado: '+ok+' / '+Q.length;
+    score.classList.add('show');
+    score.style.background = (ok>=Math.ceil(Q.length*0.7)) ? 'var(--ok)' : 'var(--danger)';
+    go.textContent='Calificado';
+    go.style.opacity='.6'; go.style.cursor='default';
+    markDone(cont);
+    toast(ok>=Math.ceil(Q.length*0.7) ? '¡Muy bien! '+ok+' de '+Q.length+' correctas' : 'Obtuviste '+ok+' de '+Q.length+'. Repasa lo marcado en rojo.');
+  });
 })();
 
 /* ====== INDICADOR "hay más contenido abajo" ======
