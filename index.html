@@ -699,6 +699,26 @@
   .split2-auto{grid-template-columns:1fr auto;justify-items:center}
   @media(max-width:900px){.split2-auto{grid-template-columns:1fr}}
 
+  /* 22) DOS FONDOS ADICIONALES (paleta Holcim, muy sutiles)
+         Se usan como modificadores junto a dark/light, de modo que todo el
+         estilo de tarjetas y textos sigue funcionando exactamente igual:
+           <section class="slide dark teal">   ·   <section class="slide light mint">   */
+
+  /* Oscuro alterno · azul petróleo (teal Holcim) */
+  .slide.dark.teal{background:
+    radial-gradient(900px 520px at 82% 6%,rgba(23,134,138,.26),transparent 62%),
+    radial-gradient(760px 520px at 4% 96%,rgba(27,180,228,.12),transparent 55%),
+    linear-gradient(155deg,#05242c 0%,#06203a 58%,#071a38 100%)}
+
+  /* Claro alterno · blanco con matiz verde-cian */
+  .slide.light.mint{background:
+    radial-gradient(880px 500px at 86% 4%,rgba(151,209,59,.13),transparent 60%),
+    radial-gradient(720px 480px at 0% 100%,rgba(27,180,228,.11),transparent 55%),
+    #f1f7f3}
+  .slide.light.mint .card,.slide.light.mint .acc,.slide.light.mint .chip3,
+  .slide.light.mint .beh,.slide.light.mint .eppcard,.slide.light.mint .cat,
+  .slide.light.mint .pdfcard,.slide.light.mint .s3,.slide.light.mint .opt{background:#fff}
+
   /* Logo de la esquina superior izquierda (acepta imagen o SVG de respaldo) */
   header.hud{width:100%}
   .brand .logo{width:auto;height:32px;display:inline-flex;align-items:center;flex:none}
@@ -773,7 +793,7 @@
     </div>
   </section>
   <!-- 3 PLAN DE EMERGENCIAS -->
-  <section class="slide dark">
+  <section class="slide dark teal">
     <div class="wrap">
      <div class="split2 split2-auto">
       <div>
@@ -834,7 +854,7 @@
     </div>
   </section>
   <!-- 6 EPP -->
-  <section class="slide dark">
+  <section class="slide dark teal">
     <div class="wrap">
       <div class="redline rv up"><span class="dot"></span><b>Línea roja</b><span class="rl"></span></div>
       <h2 class="rv up" style="--d:1">Inicia el área industrial</h2>
@@ -851,7 +871,7 @@
     </div>
   </section>
   <!-- 6 VIDEO (después de Línea roja) -->
-  <section class="slide light" data-gate="video">
+  <section class="slide light mint" data-gate="video">
     <div class="wrap">
       <div class="eyebrow rv up">Introducción</div>
       <h2 class="rv up" style="--d:1">Video de bienvenida</h2>
@@ -911,7 +931,7 @@
     </div>
   </section>
   <!-- 9 PELIGRO vs RIESGO -->
-  <section class="slide light">
+  <section class="slide light mint">
     <div class="wrap">
       <div class="eyebrow rv up">Conceptos clave</div>
       <h2 class="rv up" style="--d:1">¿Cómo diferencias el peligro del riesgo?</h2>
@@ -934,7 +954,7 @@
     </div>
   </section>
   <!-- 10 QUIZ -->
-  <section class="slide dark">
+  <section class="slide dark teal">
     <div class="wrap">
       <div class="eyebrow rv up">Ponte a prueba</div>
       <h2 class="rv up" style="--d:1">¿Cuál escenario tiene mayor riesgo?</h2>
@@ -961,7 +981,7 @@
     </div>
   </section>
   <!-- 12 CLASIFICACIÓN DE PELIGROS -->
-  <section class="slide light">
+  <section class="slide light mint">
     <div class="wrap">
       <div class="eyebrow rv up">Generalidades / Conceptos básicos</div>
       <h2 class="rv up" style="--d:1">Clasificación de peligros</h2>
@@ -1025,7 +1045,7 @@
     </div>
   </section>
   <!-- CIERRE -->
-  <section class="slide dark">
+  <section class="slide dark teal">
     <div class="wrap" style="text-align:center">
       <div class="done-badge rv scale" style="margin-inline:auto"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg></div>
       <div class="eyebrow rv up" style="--d:1">Módulo 1 completado</div>
@@ -1053,7 +1073,7 @@
       <p class="lead rv up" style="--d:5">Usa <b>Atrás</b> y <b>Siguiente</b> para avanzar. Podrás salir solo al completar todo el módulo.</p>
     </div>
   </section>
-<section class="slide dark" data-mod="2">
+<section class="slide dark teal" data-mod="2">
     <div class="wrap">
       <div class="eyebrow rv up">Planeación estratégica H&amp;S</div>
       <h2 class="rv up" style="--d:1">SG-SST Holcim Colombia</h2>
@@ -1108,7 +1128,7 @@
       <div class="accgrid" id="reglas" style="margin-top:22px"></div>
     </div>
   </section>
-<section class="slide light" data-mod="2">
+<section class="slide light mint" data-mod="2">
     <div class="wrap">
       <div class="eyebrow rv up">Política HSE</div>
       <h2 class="rv up" style="--d:1">Objetivo principal</h2>
@@ -1116,7 +1136,7 @@
       <div class="accgrid" id="objetivos" style="margin-top:18px"></div>
     </div>
   </section>
-<section class="slide dark" data-mod="2">
+<section class="slide dark teal" data-mod="2">
     <div class="wrap">
       <div class="eyebrow rv up">B.O.G</div>
       <h2 class="rv up" style="--d:1">Indicadores de liderazgo visible</h2>
@@ -1142,7 +1162,7 @@
     </div>
   </section>
   <!-- ===================== MÓDULO 3 ===================== -->
-<section class="slide dark" data-mod="3">
+<section class="slide dark teal" data-mod="3">
   <div class="blob b1"></div><div class="blob b2"></div>
   <div class="wrap">
     <div class="eyebrow rv up">Salud &amp; Seguridad · 2026 · Módulo 3</div>
@@ -1169,7 +1189,7 @@
     <div class="acts"><div class="act gclick rv scale" style="background:#0e2c56" tabindex="0" role="button"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 20V6l6 3M12 9v11M6 12h6"/></svg><span>Trabajo en Alturas</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#1bb4e4" tabindex="0" role="button"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="5" width="12" height="14" rx="2"/><circle cx="12" cy="11" r="2"/><path d="M9 19l3-4 3 4"/></svg><span>Trabajo en Espacios Confinados</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#97d13b" tabindex="0" role="button"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c3 3 4 7 2 10 3-1 4-4 3-7 3 3 4 9 0 13-4 3-11 1-11-5 0-4 3-7 6-11z"/></svg><span>Trabajo en Caliente</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#e6007e" tabindex="0" role="button"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16M6 20l4-9 3 2 2-5 3 3"/></svg><span>Excavaciones</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#e23b32" tabindex="0" role="button"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3l-7 11h5l-2 7 8-11h-5z"/></svg><span>Alta y Media Tensión</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#97d13b" tabindex="0" role="button"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="11" width="12" height="9" rx="2"/><path d="M9 11V8a3 3 0 0 1 6 0v3"/></svg><span>Aislamiento de Energías (LOTOTO)</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#1bb4e4" tabindex="0" role="button"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 20h12M8 20V9a4 4 0 0 1 8 0v11M10 5c0 1 2 1 2 0M14 5c0 1-2 1-2 0"/></svg><span>Trabajos con Harina Caliente</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#0e2c56" tabindex="0" role="button"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h12l4 4M8 5v14M5 19h6M12 9v3M10 15h4v4h-4z"/></svg><span>Izaje de Cargas</span><span class="tick">✓</span></div></div>
   </div>
 </section>
-<section class="slide light" data-mod="3">
+<section class="slide light mint" data-mod="3">
   <div class="wrap">
     <div class="eyebrow rv up">Control operacional</div>
     <h2 class="rv up" style="--d:1">ATS · Análisis de Trabajo Seguro</h2>
@@ -1177,7 +1197,7 @@
     <div class="accgrid" style="margin-top:18px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>Definir el paso de la tarea</h4><span class="chev">+</span></div><div class="acc-body"><p class="tdd"><b>Definición:</b> Divida la tarea en diferentes pasos.</p><p class="tdd"><b>Deber:</b> Debe ser conocido y firmado por todo el equipo de trabajo que desarrolla la actividad.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#17868a"></span><h4>Identificar peligros, riesgos y consecuencias</h4><span class="chev">+</span></div><div class="acc-body"><p class="tdd"><b>Definición:</b> Identifique los peligros y riesgos existentes para cada paso.</p><p class="tdd"><b>Deber:</b> Debe ser autorizado y firmado por el supervisor / interventor de la actividad.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#ef7d00"></span><h4>Formular y cumplir controles</h4><span class="chev">+</span></div><div class="acc-body"><p class="tdd"><b>Definición:</b> Formule los controles aplicables a los peligros y riesgos de cada paso identificado.</p><p class="tdd"><b>Deber:</b> <b>Acciones para Salvar Vidas.</b> Se deben identificar los cambios durante el desarrollo de la actividad. Firmado por todo el personal.</p></div></div></div>
   </div>
 </section>
-<section class="slide dark" data-mod="3">
+<section class="slide dark teal" data-mod="3">
   <div class="wrap">
     <div class="eyebrow rv up">Control operacional</div>
     <h2 class="rv up" style="--d:1">ITS · Instructivo de Trabajo Seguro</h2>
@@ -1207,7 +1227,7 @@
     <div class="accgrid" style="margin-top:12px"><div class="acc rv up"><div class="acc-head"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><text x="12" y="16" font-size="12" fill="#fff" text-anchor="middle" stroke="none">1</text></svg></span><h4>Identificar el cambio</h4><span class="chev">+</span></div><div class="acc-body"><p>Detectar la necesidad de cambio y su impacto.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><text x="12" y="16" font-size="12" fill="#fff" text-anchor="middle" stroke="none">2</text></svg></span><h4>Evaluar riesgos</h4><span class="chev">+</span></div><div class="acc-body"><p>Analizar los riesgos asociados y definir controles necesarios.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><text x="12" y="16" font-size="12" fill="#fff" text-anchor="middle" stroke="none">3</text></svg></span><h4>Implementar controles</h4><span class="chev">+</span></div><div class="acc-body"><p>Ejecutar las medidas de control para mitigar riesgos.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><text x="12" y="16" font-size="12" fill="#fff" text-anchor="middle" stroke="none">4</text></svg></span><h4>Actualizar documentación</h4><span class="chev">+</span></div><div class="acc-body"><p>Revisar y ajustar documentos afectados por el cambio.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><text x="12" y="16" font-size="12" fill="#fff" text-anchor="middle" stroke="none">5</text></svg></span><h4>Comunicar y capacitar</h4><span class="chev">+</span></div><div class="acc-body"><p>Informar y entrenar al personal sobre los cambios.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><text x="12" y="16" font-size="12" fill="#fff" text-anchor="middle" stroke="none">6</text></svg></span><h4>Aprobar el cambio</h4><span class="chev">+</span></div><div class="acc-body"><p>Obtener la validación formal para proceder.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><text x="12" y="16" font-size="12" fill="#fff" text-anchor="middle" stroke="none">7</text></svg></span><h4>Ejecutar las acciones</h4><span class="chev">+</span></div><div class="acc-body"><p>Implementar el cambio planificado según lo aprobado.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><text x="12" y="16" font-size="12" fill="#fff" text-anchor="middle" stroke="none">8</text></svg></span><h4>Inspeccionar</h4><span class="chev">+</span></div><div class="acc-body"><p>Verificar que el cambio se haya realizado correctamente.</p></div></div></div>
   </div>
 </section>
-<section class="slide light" data-mod="3">
+<section class="slide light mint" data-mod="3">
   <div class="wrap">
     <div class="eyebrow rv up">Control operacional · Requisitos legales H&amp;S</div>
     <h2 class="rv up" style="--d:1">Pirámide de Kelsen</h2>
@@ -1215,7 +1235,7 @@
     <div class="pyr"><div class="plevel gclick rv up" style="background:#e23b32;width:92%" tabindex="0" role="button">CP · Constitución Política<span class="who">Emitida / interpretada por la Corte Constitucional</span></div><div class="plevel gclick rv up" style="background:#ef5522;width:80%" tabindex="0" role="button">Ley<span class="who">Congreso de la República</span></div><div class="plevel gclick rv up" style="background:#f5b700;width:68%" tabindex="0" role="button">Decreto<span class="who">Presidente de la República</span></div><div class="plevel gclick rv up" style="background:#8bbf3a;width:56%" tabindex="0" role="button">Resolución<span class="who">Ministerios</span></div><div class="plevel gclick rv up" style="background:#17a2a2;width:44%" tabindex="0" role="button">Ordenanza<span class="who">Asamblea Departamental</span></div><div class="plevel gclick rv up" style="background:#0e6e78;width:32%" tabindex="0" role="button">Acuerdo<span class="who">Concejo Municipal</span></div></div>
   </div>
 </section>
-<section class="slide dark" data-mod="3">
+<section class="slide dark teal" data-mod="3">
   <div class="wrap">
     <div class="eyebrow rv up">Requisitos legales</div>
     <h2 class="rv up" style="--d:1">Normas que aplican en Holcim</h2>
@@ -1234,8 +1254,8 @@
   </div>
 </section>
 <section class="slide nogate dark" data-mod="3"><div class="wrap"><div class="eyebrow rv up">Estándares de salud y seguridad</div><h2 class="rv up" style="--d:1">Estándares de Gestión</h2><p class="lead rv up" style="--d:2">Toca cada estándar para reconocerlos. 👆</p><div class="chipgrid"><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#17868a">HSE-001</span><span class="nm">Sistema de Gestión de Salud y Seguridad</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#97d13b">HSE-002</span><span class="nm">Notificación, clasificación e investigación de incidentes</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#f5b700">HSE-003</span><span class="nm">Equipo de protección personal</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#ef7d00">HSE-004</span><span class="nm">Construcción</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#6a3d9a">HSE-005</span><span class="nm">Gestión de seguridad de procesos</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#0e6e78">HSE-006</span><span class="nm">Bienestar y limpieza</span><span class="tick">✓</span></div></div></div></section>
-<section class="slide nogate light" data-mod="3"><div class="wrap"><div class="eyebrow rv up">Estándares de salud y seguridad</div><h2 class="rv up" style="--d:1">Estándares operativos (100)</h2><p class="lead rv up" style="--d:2">Toca cada estándar operativo. 👆</p><div class="chipgrid"><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#17868a">HSE-101</span><span class="nm">Equipo móvil y gestión del tráfico en instalaciones</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#97d13b">HSE-102</span><span class="nm">Trabajo en alturas</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#f5b700">HSE-103</span><span class="nm">Aislamiento de energías (LOTOTO)</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#ef7d00">HSE-104</span><span class="nm">Espacios confinados</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#6a3d9a">HSE-105</span><span class="nm">Seguridad eléctrica</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#0e6e78">HSE-106</span><span class="nm">Protecciones de equipos y guardas</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#1877c4">HSE-107</span><span class="nm">Trabajo en caliente</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#1bb4e4">HSE-108</span><span class="nm">Elevación y soporte de cargas</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#e6007e">HSE-110</span><span class="nm">Trabajo cerca al agua</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#e23b32">HSE-111</span><span class="nm">Seguridad vial</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#3fb559">HSE-112</span><span class="nm">Respuesta de emergencia</span><span class="tick">✓</span></div></div></div></section>
-<section class="slide nogate dark" data-mod="3"><div class="wrap"><div class="eyebrow rv up">Estándares de salud y seguridad</div><h2 class="rv up" style="--d:1">Estándares de Salud (200)</h2><p class="lead rv up" style="--d:2">Toca cada estándar de salud. 👆</p><div class="chipgrid"><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#17868a">HSE-201</span><span class="nm">Asbestos</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#97d13b">HSE-202</span><span class="nm">Sustancias químicas peligrosas</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#f5b700">HSE-203</span><span class="nm">Conservación de la audición</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#ef7d00">HSE-204</span><span class="nm">Ergonomía</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#6a3d9a">HSE-205</span><span class="nm">Vibración</span><span class="tick">✓</span></div></div></div></section>
+<section class="slide nogate light mint" data-mod="3"><div class="wrap"><div class="eyebrow rv up">Estándares de salud y seguridad</div><h2 class="rv up" style="--d:1">Estándares operativos (100)</h2><p class="lead rv up" style="--d:2">Toca cada estándar operativo. 👆</p><div class="chipgrid"><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#17868a">HSE-101</span><span class="nm">Equipo móvil y gestión del tráfico en instalaciones</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#97d13b">HSE-102</span><span class="nm">Trabajo en alturas</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#f5b700">HSE-103</span><span class="nm">Aislamiento de energías (LOTOTO)</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#ef7d00">HSE-104</span><span class="nm">Espacios confinados</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#6a3d9a">HSE-105</span><span class="nm">Seguridad eléctrica</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#0e6e78">HSE-106</span><span class="nm">Protecciones de equipos y guardas</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#1877c4">HSE-107</span><span class="nm">Trabajo en caliente</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#1bb4e4">HSE-108</span><span class="nm">Elevación y soporte de cargas</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#e6007e">HSE-110</span><span class="nm">Trabajo cerca al agua</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#e23b32">HSE-111</span><span class="nm">Seguridad vial</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#3fb559">HSE-112</span><span class="nm">Respuesta de emergencia</span><span class="tick">✓</span></div></div></div></section>
+<section class="slide nogate dark teal" data-mod="3"><div class="wrap"><div class="eyebrow rv up">Estándares de salud y seguridad</div><h2 class="rv up" style="--d:1">Estándares de Salud (200)</h2><p class="lead rv up" style="--d:2">Toca cada estándar de salud. 👆</p><div class="chipgrid"><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#17868a">HSE-201</span><span class="nm">Asbestos</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#97d13b">HSE-202</span><span class="nm">Sustancias químicas peligrosas</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#f5b700">HSE-203</span><span class="nm">Conservación de la audición</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#ef7d00">HSE-204</span><span class="nm">Ergonomía</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#6a3d9a">HSE-205</span><span class="nm">Vibración</span><span class="tick">✓</span></div></div></div></section>
 <section class="slide dark" data-mod="3">
   <div class="wrap" style="text-align:center">
     <div class="done-badge rv scale"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg></div>
@@ -1246,7 +1266,7 @@
   </div>
 </section>
   <!-- ===================== MÓDULO 4 · PARTE 1 ===================== -->
-<section class="slide dark" data-mod="4">
+<section class="slide dark teal" data-mod="4">
   <div class="blob b1"></div><div class="blob b2"></div>
   <div class="wrap">
     <div class="eyebrow rv up">Salud &amp; Seguridad · 2026 · Módulo 4 · Parte 1</div>
@@ -1263,10 +1283,10 @@
 <section class="slide light" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">HSE-001 · Sistema de gestión</div><h2 class="rv up" style="--d:1">Personas y capacitación</h2><p class="lead rv up" style="--d:2">Toca cada punto. 👆</p><div class="accgrid" style="margin-top:16px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>Verificación de competencias para roles clave</h4><span class="chev">+</span></div><div class="acc-body"><p>Los contratistas en roles críticos deben presentar calificaciones y certificaciones válidas, con verificación anual.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#17868a"></span><h4>Ciclo de inducción e incorporación</h4><span class="chev">+</span></div><div class="acc-body"><p>Inducción inicial con evaluación de conocimientos, y proceso de <b>onboarding</b> con acompañamiento (coaching) para trabajadores nuevos o transferidos.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Programa de capacitación HSE</h4><span class="chev">+</span></div><div class="acc-body"><p>Es obligatorio seguir la matriz y el plan anual de capacitación, que incluye evaluaciones para asegurar que el contenido sea comprendido por los niveles operativos.</p></div></div></div></div>
 </section>
-<section class="slide dark" data-mod="4">
+<section class="slide dark teal" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">HSE-001 · Sistema de gestión</div><h2 class="rv up" style="--d:1">Gestión de riesgos en el terreno</h2><p class="lead rv up" style="--d:2">Toca cada punto. 👆</p><div class="accgrid" style="margin-top:16px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>Trabajos rutinarios</h4><span class="chev">+</span></div><div class="acc-body"><p>Se controlan con <b>Instrucciones de Trabajo Seguro (ITS)</b>.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#ef7d00"></span><h4>No planificados o emergencias</h4><span class="chev">+</span></div><div class="acc-body"><p>Se controlan con <b>Análisis de Trabajo Seguro (ATS)</b>.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Fases de ejecución del trabajo</h4><span class="chev">+</span></div><div class="acc-body"><p>Revisión de ITS/LOTOTO · Aprobación del permiso de trabajo y verificación de controles críticos · Análisis de Riesgo Personal en el sitio.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#0e2c56"></span><h4>Autoridad para detener trabajos</h4><span class="chev">+</span></div><div class="acc-body"><p>Todo trabajador está empoderado y tiene la obligación de detener cualquier tarea que considere insegura (<b>Stop Work Authority</b>).</p></div></div></div><div class="infobanner rv up" style="margin-top:16px">Incluye el control de eventos críticos (PUE) y programas de higiene industrial para reducir la exposición a sustancias peligrosas según límites internacionales (ACGIH).</div></div>
 </section>
-<section class="slide light" data-mod="4">
+<section class="slide light mint" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">HSE-001 · Sistema de gestión</div><h2 class="rv up" style="--d:1">Soporte, emergencias y desempeño</h2><p class="lead rv up" style="--d:2">Voltea cada tarjeta para conocer la información. 👆</p><div class="flips" style="margin-top:16px"><div class="flip rv up" tabindex="0" role="button"><div class="flip-in"><div class="face front"><div class="n">1</div><h3>Preparación para emergencias y respuesta</h3><div class="hint">Toca para ver ↺</div></div><div class="face back"><h4>Preparación para emergencias y respuesta</h4><p>Las unidades deben garantizar planes de respuesta para proteger a las personas, los activos y la reputación en caso de incidentes.</p></div></div></div><div class="flip rv up" tabindex="0" role="button"><div class="flip-in"><div class="face front"><div class="n">2</div><h3>Control y conservación de documentos</h3><div class="hint">Toca para ver ↺</div></div><div class="face back"><h4>Control y conservación de documentos</h4><p>Los registros de cumplimiento deben conservarse por un mínimo de 5 años y estar disponibles para inspecciones regulatorias.</p></div></div></div><div class="flip rv up" tabindex="0" role="button"><div class="flip-in"><div class="face front"><div class="n">3</div><h3>Evaluación de brechas y auditorías</h3><div class="hint">Toca para ver ↺</div></div><div class="face back"><h4>Evaluación de brechas y auditorías</h4><p>Se realizan evaluaciones internas anuales y auditorías de grupo para verificar el cumplimiento del estándar HSEMS.</p></div></div></div><div class="flip rv up" tabindex="0" role="button"><div class="flip-in"><div class="face front"><div class="n">4</div><h3>Comité de HSE multifuncional</h3><div class="hint">Toca para ver ↺</div></div><div class="face back"><h4>Comité de HSE multifuncional</h4><p>Reuniones mensuales entre gerencia y trabajadores para revisar indicadores, investigar incidentes y gestionar cambios.</p></div></div></div></div></div>
 </section>
 <section class="slide dark" data-mod="4">
@@ -1275,10 +1295,10 @@
 <section class="slide light" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">HSE-002 · Reporte y gestión de eventos</div><h2 class="rv up" style="--d:1">Reporte oportuno</h2><p class="lead rv up" style="--d:2">Modelo de causas (referencia):</p><div class="chipgrid" style="grid-template-columns:repeat(4,1fr);margin-top:6px"><div class="chip3"><span class="code" style="background:#97d13b">1</span><span class="nm">Organización</span></div><div class="chip3"><span class="code" style="background:#0e2c56">2</span><span class="nm">Supervisión</span></div><div class="chip3"><span class="code" style="background:#e6007e">3</span><span class="nm">Acto inseguro</span></div><div class="chip3"><span class="code" style="background:#ef7d00">4</span><span class="nm">Precondición</span></div></div><p class="lead rv up" style="margin-top:16px">Beneficios — toca cada uno. 👆</p><div class="accgrid" style="margin-top:12px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>Protege a las personas de forma inmediata</h4><span class="chev">+</span></div><div class="acc-body"><p>Permite activar oportunamente la atención médica, el acompañamiento y las medidas de control, reduciendo riesgos de complicaciones y facilitando la recuperación.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1bb4e4"></span><h4>Evita la repetición de eventos</h4><span class="chev">+</span></div><div class="acc-body"><p>Facilita la identificación de causas y la implementación de acciones correctivas, evitando que otros se expongan a riesgos ya identificados.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Fortalece la cultura de Seguridad y Salud</h4><span class="chev">+</span></div><div class="acc-body"><p>Promueve la confianza, el aprendizaje organizacional y la mejora continua.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>Permite una gestión legal adecuada</h4><span class="chev">+</span></div><div class="acc-body"><p>Garantiza el cumplimiento de las obligaciones ante la ARL y las autoridades, evitando reprocesos y pérdida de credibilidad.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#ef7d00"></span><h4>Enfoque proactivo de recursos</h4><span class="chev">+</span></div><div class="acc-body"><p>Evita desvíos innecesarios de tiempo y presupuesto, enfocando los recursos en capacitación, prevención y mejores condiciones de trabajo.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#e6007e"></span><h4>Genera beneficios reales para todos</h4><span class="chev">+</span></div><div class="acc-body"><p>El reporte oportuno no es una carga ni una sanción: es una acción de corresponsabilidad que protege a las personas y fortalece la organización.</p></div></div></div></div>
 </section>
-<section class="slide dark" data-mod="4">
+<section class="slide dark teal" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">HSE-003 · Elementos de protección personal</div><h2 class="rv up" style="--d:1">¿Qué son los EPP?</h2><div class="infobanner rv up" style="--d:2">Cualquier equipo o elemento usado por el trabajador como barrera para protegerlo de los posibles daños de los riesgos presentes en sus labores.</div><p class="lead rv up">Los EPP deben cumplir — toca cada requisito. 👆</p><div class="chipgrid" style="grid-template-columns:repeat(2,1fr);margin-top:16px"><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#17868a">1</span><span class="nm">Ser gratuitos</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#1877c4">2</span><span class="nm">Estar fácilmente disponibles</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#97d13b">3</span><span class="nm">Cumplir estándares internacionales (ISO, EN, ANSI, AS)</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#ef7d00">4</span><span class="nm">Ser idóneos y tener un ajuste adecuado</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#e6007e">5</span><span class="nm">Ser compatibles con otros EPP</span><span class="tick">✓</span></div></div><div class="pdfrow rv up" style="grid-template-columns:1fr"><div class="pdfmini"><span>Consulta la <b>guía visual de EPP</b>.</span><button class="pdfbtn" data-pdf="epp_guia" data-title="Guía visual de EPP">Ver más</button></div></div></div>
 </section>
-<section class="slide light" data-mod="4">
+<section class="slide light mint" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">HSE-003 · Elementos de protección personal</div><h2 class="rv up" style="--d:1">Generalidades de los EPP</h2><p class="lead rv up" style="--d:2">Toca cada buena práctica. 👆</p><div class="acts"><div class="act gclick rv scale" style="background:#0e2c56" tabindex="0" role="button"><span style="font-size:22px">1</span><span>Capacitar sobre cómo elegir, usar, ajustar, cuidar, mantener y solicitar reposición del EPP.</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#1bb4e4" tabindex="0" role="button"><span style="font-size:22px">2</span><span>Inspeccionar el EPP antes de cada uso, verificando su estado y fecha de vencimiento.</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#97d13b" tabindex="0" role="button"><span style="font-size:22px">3</span><span>Conocer y entender la forma adecuada de colocar, ajustar y retirar el EPP.</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#1877c4" tabindex="0" role="button"><span style="font-size:22px">4</span><span>Establecer y señalizar los EPP requeridos en las áreas de trabajo.</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#e6007e" tabindex="0" role="button"><span style="font-size:22px">5</span><span>No compartir equipos de protección personal (como protección auditiva).</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#ef7d00" tabindex="0" role="button"><span style="font-size:22px">6</span><span>No utilizar pintura ni pegatinas para cubrir EPP dañado.</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#17868a" tabindex="0" role="button"><span style="font-size:22px">7</span><span>Reportar el equipo defectuoso y reemplazarlo.</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#6a3d9a" tabindex="0" role="button"><span style="font-size:22px">8</span><span>Almacenar el EPP correctamente y separar el EPP dañado del resto.</span><span class="tick">✓</span></div></div><div class="pdfrow rv up" style="grid-template-columns:1fr"><div class="pdfmini"><span>Da clic para conocer la <b>guía visual</b>.</span><button class="pdfbtn" data-pdf="epp_guia" data-title="Guía visual de EPP">Ver más</button></div></div></div>
 </section>
 <section class="slide dark" data-mod="4">
@@ -1287,7 +1307,7 @@
 <section class="slide light" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">HSE-005 · Gestión de seguridad de procesos (PSM)</div><h2 class="rv up" style="--d:1">El propósito del PSM: evitar la severidad catastrófica</h2><div class="infobanner rv up" style="--d:2">El HSE-005 no trata sobre incidentes menores; es un sistema de supervivencia corporativa diseñado para prevenir fallas que resultan en:</div><p class="lead rv up">Toca cada consecuencia y cada pregunta. 👆</p><div class="chipgrid" style="grid-template-columns:repeat(2,1fr);margin-top:14px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#0e2c56"></span><h4>Fatalidades</h4><span class="chev">+</span></div><div class="acc-body"><p>Múltiples fatalidades o diagnósticos terminales relacionados con el trabajo.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1bb4e4"></span><h4>Impacto ambiental</h4><span class="chev">+</span></div><div class="acc-body"><p>Efectos perjudiciales a largo plazo (>6 meses) en el medio ambiente.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#0e2c56"></span><h4>Interrupción operativa</h4><span class="chev">+</span></div><div class="acc-body"><p>Incendios que resulten en más de 1 mes de interrupción del negocio.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1bb4e4"></span><h4>Daño reputacional y pérdidas</h4><span class="chev">+</span></div><div class="acc-body"><p>Cobertura mediática internacional o pérdidas materiales superiores a 10 millones CHF.</p></div></div></div><div class="accgrid" style="margin-top:16px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#17868a"></span><h4>Riesgo</h4><span class="chev">+</span></div><div class="acc-body"><p>¿Qué puede salir mal? ¿Qué tan grave puede ser?</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#17868a"></span><h4>Controles</h4><span class="chev">+</span></div><div class="acc-body"><p>¿Qué sistemas están implementados para prevenirlo?</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#17868a"></span><h4>Aseguramiento</h4><span class="chev">+</span></div><div class="acc-body"><p>¿Estás seguro de que están funcionando de manera efectiva?</p></div></div></div></div>
 </section>
-<section class="slide light nogate-no" data-mod="4">
+<section class="slide light nogate-no mint" data-mod="4">
   <div class="wrap">
     <div class="eyebrow rv up">HSE-005 · Gestión de seguridad de procesos</div>
     <h2 class="rv up" style="--d:1">Enfoque de seguridad de procesos</h2>
@@ -1295,7 +1315,7 @@
     <div class="plano rv up" id="plano"><div class="plano-ph" id="planoPh">Sube la imagen del plano al repositorio como <b>imagenes/plano.png</b></div></div>
   </div>
 </section>
-<section class="slide dark" data-mod="4">
+<section class="slide dark teal" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">HSE-006 · Bienestar y limpieza</div><h2 class="rv up" style="--d:1">Cuatro comportamientos clave</h2><p class="lead rv up" style="--d:2">Toca cada comportamiento. 👆</p><div class="accgrid" style="margin-top:16px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1bb4e4"></span><h4>1 · Ojos en el camino</h4><span class="chev">+</span></div><div class="acc-body"><p>Presta atención a dónde caminas: concéntrate con firmeza y seguridad, evita distracciones (no uses el teléfono al caminar) y está atento a tu entorno.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>2 · Mantener 3 puntos de contacto</h4><span class="chev">+</span></div><div class="acc-body"><p>En escaleras y vehículos mantén siempre 3 puntos de contacto (2 manos + 1 pie o 2 pies + 1 mano); asegura una base estable, usa bolsas o cuerdas para transportar objetos, agárrate del pasamanos y usa calzado antideslizante.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#0e2c56"></span><h4>3 · Identificar y alertar</h4><span class="chev">+</span></div><div class="acc-body"><p>Si ves algo mal (obstáculos, derrames, suelos resbaladizos): informa de inmediato a tu supervisor, coloca señales de advertencia visibles y restringe el acceso con cinta de acordonamiento.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>4 · Mantener el lugar de trabajo limpio y seguro</h4><span class="chev">+</span></div><div class="acc-body"><p>¡Actúa! Mantén pasillos limpios y sin obstáculos, asegura cables y herramientas sueltas, y mejora el entorno (5S): repara suelos o plataformas, mejora accesos, pasamanos e iluminación.</p></div></div></div></div>
 </section>
 <section class="slide light" data-mod="4">
@@ -1304,7 +1324,7 @@
 <section class="slide dark" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">HSE-101 · Equipos móviles y tráfico en sitio</div><h2 class="rv up" style="--d:1">Operación e inspecciones</h2><p class="lead rv up" style="--d:2">Los operadores deben — toca cada punto. 👆</p><div class="acts" style="grid-template-columns:repeat(2,1fr)"><div class="act gclick rv scale" style="background:#0e2c56" tabindex="0" role="button"><span style="font-size:22px">1</span><span>Seleccionar el equipo móvil adecuado para la tarea.</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#1bb4e4" tabindex="0" role="button"><span style="font-size:22px">2</span><span>Reportar si no hay disponibilidad de un equipo móvil adecuado.</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#97d13b" tabindex="0" role="button"><span style="font-size:22px">3</span><span>Estacionar el equipo en un lugar seguro y estable, y retirar la llave (resguardarla para evitar uso no autorizado).</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#1877c4" tabindex="0" role="button"><span style="font-size:22px">4</span><span>Si el motor debe permanecer en marcha, mantenerse cerca pero fuera del área de peligro y asegurar la visibilidad.</span><span class="tick">✓</span></div></div><div class="accgrid" style="margin-top:16px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Inspecciones pre-operativas</h4><span class="chev">+</span></div><div class="acc-body"><p>Realiza inspecciones antes de cada turno y lleva un registro. Si un técnico de taller realiza la inspección, el operador aún debe hacer una inspección visual y revisar los frenos; asegura una evaluación de puntos ciegos e instala espejos adicionales donde sea necesario.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#ef7d00"></span><h4>Regla del hombre caído</h4><span class="chev">+</span></div><div class="acc-body"><p>Cuando un peatón ingresa al área de operación de un equipo móvil, el operador debe detenerse y no continuar hasta que el peatón se retire del área de riesgo.</p></div></div></div><div class="pdfrow rv up" style="grid-template-columns:1fr"><div class="pdfmini"><span>Consulta la <b>guía visual</b> de inspecciones.</span><button class="pdfbtn" data-pdf="moviles_guia" data-title="Guía visual · equipos móviles">Ver más</button></div></div></div>
 </section>
-<section class="slide light" data-mod="4">
+<section class="slide light mint" data-mod="4">
   <div class="wrap">
     <div class="eyebrow rv up">HSE-102 · Trabajo en alturas</div>
     <h2 class="rv up" style="--d:1">Jerarquía de controles para trabajo en alturas</h2>
@@ -1313,7 +1333,7 @@
     <div class="seqpanel rv up" id="seqpanel">Toca el número <b>1</b> para comenzar.</div>
   </div>
 </section>
-<section class="slide dark" data-mod="4">
+<section class="slide dark teal" data-mod="4">
   <div class="wrap" style="text-align:center">
     <div class="done-badge rv scale"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg></div>
     <div class="eyebrow rv up" style="--d:1">Módulo 4 · Parte 1 completada</div>
@@ -1346,7 +1366,7 @@
 <div class="pdfrow rv up" style="grid-template-columns:1fr"><div class="pdfmini"><span>Consulta la <b>guía visual</b> de trabajo en alturas.</span><button class="pdfbtn" data-pdf="alturas_guia" data-title="Guía visual · Trabajo en alturas">Ver más</button></div></div>
 </div>
 </section>
-<section class="slide dark" data-mod="4">
+<section class="slide dark teal" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">HSE-103 · Aislamiento de energía</div>
 <h2 class="rv up" style="--d:1">Tipos de energía, bloqueo y pruebas</h2>
 <p class="lead rv up" style="--d:2">Algunos tipos de energía — toca cada uno. 👆</p>
@@ -1357,7 +1377,7 @@
 <div class="pdfrow rv up" style="grid-template-columns:1fr"><div class="pdfmini"><span>Profundiza en los tipos de <b>bloqueo, etiquetado y pruebas</b>.</span><button class="pdfbtn" data-pdf="lototo_guia" data-title="Bloqueo, etiquetado y pruebas (LOTOTO)">Ver más</button></div></div>
 </div>
 </section>
-<section class="slide light" data-mod="4">
+<section class="slide light mint" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">HSE-103 · Aislamiento de energía</div>
 <h2 class="rv up" style="--d:1">Elementos usados para el bloqueo y etiquetado</h2>
 <p class="lead rv up" style="--d:2">Candados según su color — toca cada uno. 👆</p>
@@ -1384,7 +1404,7 @@
 <div class="banner rv up" style="--d:2">No alterar <b>ninguna condición de seguridad</b> de los equipos.</div>
 </div>
 </section>
-<section class="slide light" data-mod="4">
+<section class="slide light mint" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">HSE-106 · Protección en maquinaria</div>
 <h2 class="rv up" style="--d:1">Comportamientos prohibidos</h2>
 <p class="lead rv up" style="--d:2">Toca cada comportamiento prohibido para reconocerlos. 👆</p>
@@ -1392,7 +1412,7 @@
 <div class="pdfrow rv up" style="grid-template-columns:1fr"><div class="pdfmini"><span>Consulta la <b>guía visual</b> de protección en maquinaria.</span><button class="pdfbtn" data-pdf="maquinaria_guia" data-title="Guía visual · Protección en maquinaria">Ver más</button></div></div>
 </div>
 </section>
-<section class="slide dark" data-mod="4">
+<section class="slide dark teal" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">HSE-107 · Trabajo en caliente</div>
 <h2 class="rv up" style="--d:1">Trabajo en Caliente</h2>
 <div class="infobanner rv up" style="--d:2">Son trabajos que pueden generar una <b>fuente de ignición</b> en el área: esmerilar, cortar, pulir y soldar.</div>
@@ -1420,7 +1440,7 @@
 <div class="pdfrow rv up" style="grid-template-columns:1fr"><div class="pdfmini"><span>Consulta la <b>guía visual</b> de elevación de cargas.</span><button class="pdfbtn" data-pdf="cargas_guia" data-title="Guía visual · Elevación y soporte de cargas">Ver más</button></div></div>
 </div>
 </section>
-<section class="slide light" data-mod="4">
+<section class="slide light mint" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">HSE-111 · Seguridad vial</div>
 <h2 class="rv up" style="--d:1">Contexto de seguridad vial Holcim</h2>
 <div class="infobanner rv up" style="--d:2">Transporte terrestre por carretera: desde las <b>materias primas</b> hasta la entrega al cliente, incluidos los <b>desplazamientos en misión</b>.</div>
@@ -1428,7 +1448,7 @@
 <div class="acts"><div class="act gclick rv scale" style="background:#97d13b" tabindex="0" role="button"><span style="font-size:22px">●</span><span>Materias primas</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#0e2c56" tabindex="0" role="button"><span style="font-size:22px">●</span><span>Cemento en saco → Clientes</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#1877c4" tabindex="0" role="button"><span style="font-size:22px">●</span><span>Cemento a granel → Clientes</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#1bb4e4" tabindex="0" role="button"><span style="font-size:22px">●</span><span>Agregados</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#17868a" tabindex="0" role="button"><span style="font-size:22px">●</span><span>Concreto</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#e6007e" tabindex="0" role="button"><span style="font-size:22px">●</span><span>Desplazamientos en misión</span><span class="tick">✓</span></div></div>
 </div>
 </section>
-<section class="slide dark" data-mod="4">
+<section class="slide dark teal" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">HSE-111 · Seguridad vial</div>
 <h2 class="rv up" style="--d:1">Alcance y requisitos</h2>
 <p class="lead rv up" style="--d:2">Este documento se aplica a — toca cada punto. 👆</p>
@@ -1455,14 +1475,14 @@
 <div class="banner rv up" style="--d:2">Algunos ejemplos: <b>geólogos</b> en exploración de yacimientos · <b>vigilancia de planta</b> en horas nocturnas sin operación.</div>
 </div>
 </section>
-<section class="slide light" data-mod="4">
+<section class="slide light mint" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">Otros controles de seguridad</div>
 <h2 class="rv up" style="--d:1">Actividades prohibidas para trabajo en solitario</h2>
 <p class="lead rv up" style="--d:2">Toca cada actividad para reconocerlas todas. 👆</p>
 <div class="chipgrid"><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#0e2c56">1</span><span class="nm">Trabajo en alturas.</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#1877c4">2</span><span class="nm">Trabajo en espacios confinados.</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#1bb4e4">3</span><span class="nm">Trabajos cerca del agua.</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#e23b32">4</span><span class="nm">Trabajos en caliente.</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#ef7d00">5</span><span class="nm">Trabajos con atmósferas explosivas.</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#17868a">6</span><span class="nm">Visitas, personal en inducción o entrenamiento.</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#f5b700">7</span><span class="nm">Trabajos de aislamiento y bloqueo LOTOTO múltiple.</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#97d13b">8</span><span class="nm">Trabajos en excavaciones.</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#6a3d9a">9</span><span class="nm">Trabajos en equipos energizados (pruebas, lubricaciones, entre otros).</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#e6007e">10</span><span class="nm">Trabajos de elevación o soporte de cargas.</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#0e6e78">11</span><span class="nm">Trabajos en subestación.</span><span class="tick">✓</span></div></div>
 </div>
 </section>
-<section class="slide dark" data-mod="4">
+<section class="slide dark teal" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">Otros controles de seguridad · Trabajo en solitario</div>
 <h2 class="rv up" style="--d:1">Comportamientos prohibidos</h2>
 <p class="lead rv up" style="--d:2">Voltea cada tarjeta: qué <b>no</b> hacer y qué hacer en su lugar. 👆</p>
@@ -1489,13 +1509,13 @@
 <p class="lead rv up" style="margin-top:18px">Ejemplos frecuentes — toca cada uno. 👆</p>
 <div class="chipgrid"><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#0e2c56">1</span><span class="nm">Aislamiento de tuberías</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#1bb4e4">2</span><span class="nm">Tejas onduladas de fibrocemento</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#ef7d00">3</span><span class="nm">Pastillas de freno</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#6a3d9a">4</span><span class="nm">Baldosas de vinilo para suelos</span><span class="tick">✓</span></div></div>
 </div></section>
-<section class="slide dark" data-mod="4">
+<section class="slide dark teal" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">HSE-202 · Sustancias peligrosas</div>
 <h2 class="rv up" style="--d:1">Conceptos básicos</h2>
 <p class="lead rv up" style="--d:2">Voltea cada tarjeta para conocer su definición. 👆</p>
 <div class="flips" style="margin-top:14px"><div class="flip rv up" tabindex="0" role="button"><div class="flip-in"><div class="face front"><div class="n">1</div><h3>Sustancias peligrosas</h3><div class="hint">Toca para ver ↺</div></div><div class="face back"><h4>Sustancias peligrosas</h4><p>Amplio rango de sustancias <b>químicas, minerales, biológicas y microbiológicas</b> con potencial de causar efectos sobre la salud cuando se está expuesto.</p></div></div></div><div class="flip rv up" tabindex="0" role="button"><div class="flip-in"><div class="face front"><div class="n">2</div><h3>Riesgo químico</h3><div class="hint">Toca para ver ↺</div></div><div class="face back"><h4>Riesgo químico</h4><p>El que se genera por la <b>exposición no controlada</b> a sustancias químicas o residuos potencialmente peligrosos, denominados agentes químicos.</p></div></div></div><div class="flip rv up" tabindex="0" role="button"><div class="flip-in"><div class="face front"><div class="n">3</div><h3>Fichas de datos de seguridad</h3><div class="hint">Toca para ver ↺</div></div><div class="face back"><h4>FDS</h4><p>Antes conocidas como Hojas de Datos de Seguridad. Informan las <b>propiedades</b> de las sustancias y señalan los <b>peligros potenciales</b> para quien las manipula y para quien esté expuesto.</p></div></div></div><div class="flip rv up" tabindex="0" role="button"><div class="flip-in"><div class="face front"><div class="n">4</div><h3>Sistema globalmente armonizado</h3><div class="hint">Toca para ver ↺</div></div><div class="face back"><h4>SGA</h4><p>Sistema integral de comunicación de riesgos de alcance internacional reconocido por la <b>ONU</b>. Implica etiquetado claro y uniforme y fichas de datos de seguridad estandarizadas en nuestro idioma.</p></div></div></div><div class="flip rv up" tabindex="0" role="button"><div class="flip-in"><div class="face front"><div class="n">5</div><h3>Pictograma</h3><div class="hint">Toca para ver ↺</div></div><div class="face back"><h4>Pictograma</h4><p>Composición gráfica que contiene un <b>símbolo</b> y otros elementos (borde rojo, motivo negro y fondo blanco) que sirve para comunicar informaciones específicas.</p></div></div></div></div>
 </div></section>
-<section class="slide light" data-mod="4">
+<section class="slide light mint" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">HSE-202 · Sustancias peligrosas</div>
 <h2 class="rv up" style="--d:1">Pictogramas</h2>
 <div class="infobanner rv up" style="--d:2">Las sustancias peligrosas presentan riesgo para la salud, la seguridad o el medio ambiente. Al adquirirlas e ingresarlas a los sitios de trabajo <b>deben estar identificadas con la etiqueta del Sistema Globalmente Armonizado</b>.</div>
@@ -1518,13 +1538,13 @@
 <p class="lead rv up" style="margin-top:18px">Señales que ayudan a identificar a tiempo una alteración auditiva. 👆</p>
 <div class="accgrid" style="margin-top:12px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1bb4e4"></span><h4>Dificultad para seguir conversaciones</h4><span class="chev">+</span></div><div class="acc-body"><p>Especialmente en <b>ambientes ruidosos</b>.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Pedir que repitan</h4><span class="chev">+</span></div><div class="acc-body"><p>Pedir constantemente que repitan lo que dicen o <b>malinterpretar palabras</b>.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#17868a"></span><h4>Subir el volumen</h4><span class="chev">+</span></div><div class="acc-body"><p>Subir el volumen de la televisión o la música <b>más de lo habitual</b>.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#ef7d00"></span><h4>Zumbido o pitido</h4><span class="chev">+</span></div><div class="acc-body"><p>Sensación de zumbido o pitido en los oídos (<b>tinitus o acúfenos</b>).</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#e6007e"></span><h4>Fatiga tras reuniones</h4><span class="chev">+</span></div><div class="acc-body"><p>Fatiga después de reuniones sociales por el <b>esfuerzo para escuchar</b>.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#6a3d9a"></span><h4>Sonidos agudos</h4><span class="chev">+</span></div><div class="acc-body"><p>Problemas para distinguir sonidos agudos, como <b>voces de niños o timbres</b>.</p></div></div></div>
 </div></section>
-<section class="slide dark" data-mod="4">
+<section class="slide dark teal" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">HSE-203 · Conservación de la audición</div>
 <h2 class="rv up" style="--d:1">Control de hábitos y comportamientos</h2>
 <p class="lead rv up" style="--d:2">Toca cada recomendación. 👆</p>
 <div class="chipgrid"><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#1bb4e4">1</span><span class="nm">Controle el volumen de audífonos, parlantes, TV y reproductores.</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#e23b32">2</span><span class="nm">Evite introducir elementos con punta dentro del oído (copitos, palillos, ganchos, esferos).</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#ef7d00">3</span><span class="nm">Evite compartir los audífonos o auriculares y limite su uso.</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#17868a">4</span><span class="nm">Evite nadar en aguas sucias y muy profundas.</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#6a3d9a">5</span><span class="nm">Controle la asistencia a conciertos, bares o discotecas.</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#0e2c56">6</span><span class="nm">Controle actividades extralaborales: tejo, polígono, deportes de contacto y motocicleta.</span><span class="tick">✓</span></div></div>
 </div></section>
-<section class="slide light" data-mod="4">
+<section class="slide light mint" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">HSE-204 · Ergonomía</div>
 <h2 class="rv up" style="--d:1">Ergonomía</h2>
 <div class="infobanner rv up" style="--d:2">Disciplina científica que adapta el trabajo, las herramientas y el entorno a las <b>capacidades y limitaciones</b> físicas y mentales del ser humano. Busca mejorar la seguridad, eficiencia y bienestar, previniendo lesiones y fatiga (OMS, OIT).</div>
@@ -1544,7 +1564,7 @@
 <p class="lead rv up" style="--d:2">Toca cada componente para ver su detalle. 👆</p>
 <div class="accgrid" style="margin-top:14px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>1 · Higiene Industrial</h4><span class="chev">+</span></div><div class="acc-body"><div class="li"><span class="b"></span>Diseño y estandarización del Programa de Higiene Industrial.</div><div class="li"><span class="b"></span>Diagnóstico de riesgos higiénicos prioritarios.</div><div class="li"><span class="b"></span>Planes de acción resultantes (jerarquía de controles).</div></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1bb4e4"></span><h4>2 · Exámenes Médicos Ocupacionales</h4><span class="chev">+</span></div><div class="acc-body"><div class="li"><span class="b"></span>Definición de la matriz de exámenes médicos por cargo.</div><div class="li"><span class="b"></span>Tipos de exámenes médicos ocupacionales.</div><div class="li"><span class="b"></span>Condiciones médico-laborales y aptitud médica.</div><div class="li"><span class="b"></span>Diagnóstico de condiciones de salud · análisis epidemiológico.</div></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#5b7fb5"></span><h4>3 · Medicina Preventiva</h4><span class="chev">+</span></div><div class="acc-body"><div class="li"><span class="b"></span>Análisis de ausentismo.</div><div class="li"><span class="b"></span>Sistemas de Vigilancia Médica: osteomuscular, auditivo, respiratorio, psicosocial, visual y cardiovascular.</div><div class="li"><span class="b"></span>Campañas de promoción y prevención.</div><div class="li"><span class="b"></span>Certificación empresa saludable (Fundación Colombiana del Corazón).</div></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#0e2c56"></span><h4>4 · Rehabilitación y Reincorporación Laboral</h4><span class="chev">+</span></div><div class="acc-body"><div class="li"><span class="b"></span>Identificación de casos médicos: exámenes, ausentismo y reportes.</div><div class="li"><span class="b"></span>Implementación del programa y seguimiento.</div></div></div></div>
 </div></section>
-<section class="slide dark" data-mod="4">
+<section class="slide dark teal" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">Otros controles de salud</div>
 <h2 class="rv up" style="--d:1">Higiene Industrial y Medicina Preventiva</h2>
 <div class="infobanner rv up" style="--d:2">La higiene industrial busca <b>reconocer las condiciones ambientales peligrosas</b>, evaluarlas y proponer medidas de control para que estén en los <b>menores niveles posibles</b> y conservar la salud de todos los trabajadores.</div>
@@ -1552,7 +1572,7 @@
 <div class="chipgrid"><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#17868a">1</span><span class="nm">Material particulado</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#1bb4e4">2</span><span class="nm">Vibraciones</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#e6007e">3</span><span class="nm">Biomecánico</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#6a3d9a">4</span><span class="nm">Psicosocial</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#ef7d00">5</span><span class="nm">Ruido</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#f5b700">6</span><span class="nm">Radiaciones ionizantes</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#e23b32">7</span><span class="nm">Cardiovascular</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#97d13b">8</span><span class="nm">Iluminación</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#1877c4">9</span><span class="nm">Altas temperaturas</span><span class="tick">✓</span></div></div>
 <div class="pdfrow rv up" style="grid-template-columns:1fr"><div class="pdfmini"><span>Conoce más sobre los <b>peligros higiénicos</b>.</span><button class="pdfbtn" data-pdf="higiene_guia" data-title="Higiene y medicina preventiva">Ver más</button></div></div>
 </div></section>
-<section class="slide light" data-mod="4">
+<section class="slide light mint" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">Otros controles de salud</div>
 <h2 class="rv up" style="--d:1">Evaluaciones médicas ocupacionales</h2>
 <p class="lead rv up" style="--d:2">Toca cada tipo de evaluación. 👆</p>
@@ -1583,7 +1603,7 @@
 <div class="accgrid" style="margin-top:12px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#e6007e"></span><h4>Objetivo general</h4><span class="chev">+</span></div><div class="acc-body"><p>Mejorar la <b>condición osteomuscular</b> de los trabajadores de Holcim, a través del aprendizaje de técnicas de acondicionamiento físico <b>para el trabajo y para la vida</b>.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1bb4e4"></span><h4>Conocimientos y estrategias</h4><span class="chev">+</span></div><div class="acc-body"><p>Brindar a los participantes los conocimientos, habilidades y estrategias que les permitan alcanzar y mantener una <b>buena condición física</b> para el trabajo y para la vida.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>Autocuidado</h4><span class="chev">+</span></div><div class="acc-body"><p>Promover la <b>participación</b> de los trabajadores dentro del autocuidado de su salud.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#17868a"></span><h4>Multiplicadores</h4><span class="chev">+</span></div><div class="acc-body"><p>Lograr que los trabajadores sean <b>proactivos y multiplicadores</b> de las buenas prácticas en su ambiente laboral y en su hogar.</p></div></div></div>
 <div class="banner rv up" style="--d:2">Recuerda que fortalecer tus <b>músculos abdominales</b> puede prevenir y aliviar dolores de espalda.</div>
 </div></section>
-<section class="slide dark" data-mod="4">
+<section class="slide dark teal" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">Actividad de entrenamiento</div>
 <h2 class="rv up" style="--d:1">Evaluación · Controles Operacionales Complementarios</h2>
 <p class="lead rv up" style="--d:2">Selecciona <b>Verdadero</b> o <b>Falso</b> en cada enunciado y presiona <b>Calificar</b> para conocer tu resultado.</p>
@@ -1599,7 +1619,7 @@
     <div class="recap rv up" style="--d:4"><span class="chip">Módulo 1</span><span class="chip">Módulo 2</span><span class="chip">Módulo 3</span><span class="chip">Módulo 4 · P1, P2 y P3</span></div>
   </div>
 </section>
-<section class="slide dark" data-mod="5">
+<section class="slide dark teal" data-mod="5">
   <div class="blob b1"></div><div class="blob b2"></div>
   <div class="wrap">
     <div class="eyebrow rv up">Salud &amp; Seguridad · 2026 · Módulo 5</div>
@@ -1610,7 +1630,7 @@
     <p class="lead rv up" style="--d:5">Explora los controles críticos de cada PUE para avanzar. Al final encontrarás el examen.</p>
   </div>
 </section>
-<section class="slide light" data-mod="5">
+<section class="slide light mint" data-mod="5">
 <div class="wrap"><div class="eyebrow rv up">Gestión de Controles Críticos</div>
 <h2 class="rv up" style="--d:1">PUE y CCM</h2>
 <div class="infobanner rv up" style="--d:2"><b>PUE · Evento Prioritario no Deseado.</b> En Holcim, a nivel mundial, aproximadamente el <b>85% de los incidentes críticos y fatalidades</b> están relacionados con los controles críticos. Para evitar los PUE se formulan <b>Controles Críticos</b>.</div>
@@ -1630,13 +1650,13 @@
 <p class="lead rv up" style="--d:2">Tres controles críticos. Presiona los números para conocer cada control crítico. 👆</p>
 <div class="pueBox rv up" data-pue="energias"></div>
 </div></section>
-<section class="slide dark" data-mod="5">
+<section class="slide dark teal" data-mod="5">
 <div class="wrap"><div class="eyebrow rv up">Gestión de Controles Críticos</div>
 <h2 class="rv up" style="--d:1">PUE · Sepultamiento por material</h2>
 <p class="lead rv up" style="--d:2">Cuatro controles críticos. Presiona los números para conocer cada control crítico. 👆</p>
 <div class="pueBox rv up" data-pue="sepultamiento"></div>
 </div></section>
-<section class="slide light" data-mod="5">
+<section class="slide light mint" data-mod="5">
 <div class="wrap"><div class="eyebrow rv up">Gestión de Controles Críticos</div>
 <h2 class="rv up" style="--d:1">PUE · Fallo en respuesta de emergencias</h2>
 <p class="lead rv up" style="--d:2">Tres controles críticos. Presiona los números para conocer cada control crítico. 👆</p>
@@ -1654,13 +1674,13 @@
 <p class="lead rv up" style="--d:2">Cinco controles críticos. Presiona los números para conocer cada control crítico. 👆</p>
 <div class="pueBox rv up" data-pue="colapso"></div>
 </div></section>
-<section class="slide dark" data-mod="5">
+<section class="slide dark teal" data-mod="5">
 <div class="wrap"><div class="eyebrow rv up">Gestión de Controles Críticos</div>
 <h2 class="rv up" style="--d:1">PUE · Accidente Fatal de Tráfico</h2>
 <p class="lead rv up" style="--d:2">Cinco controles críticos. Presiona los números para conocer cada control crítico. 👆</p>
 <div class="pueBox rv up" data-pue="trafico"></div>
 </div></section>
-<section class="slide light" data-mod="5">
+<section class="slide light mint" data-mod="5">
 <div class="wrap"><div class="eyebrow rv up">Gestión de Controles Críticos</div>
 <h2 class="rv up" style="--d:1">PUE · Incidente con equipo móvil</h2>
 <p class="lead rv up" style="--d:2">Cinco controles críticos. Presiona los números para conocer cada control crítico. 👆</p>
@@ -1678,13 +1698,13 @@
 <p class="lead rv up" style="--d:2">Cuatro controles críticos. Presiona los números para conocer cada control crítico. 👆</p>
 <div class="pueBox rv up" data-pue="carbon"></div>
 </div></section>
-<section class="slide dark" data-mod="5">
+<section class="slide dark teal" data-mod="5">
 <div class="wrap"><div class="eyebrow rv up">Gestión de Controles Críticos</div>
 <h2 class="rv up" style="--d:1">PUE · Contacto con Harina Caliente</h2>
 <p class="lead rv up" style="--d:2">Cinco controles críticos. Presiona los números para conocer cada control crítico. 👆</p>
 <div class="pueBox rv up" data-pue="harina"></div>
 </div></section>
-<section class="slide light" data-mod="5">
+<section class="slide light mint" data-mod="5">
 <div class="wrap"><div class="eyebrow rv up">Gestión de Controles Críticos</div>
 <h2 class="rv up" style="--d:1">PUE · Contaminación</h2>
 <p class="lead rv up" style="--d:2">Cinco controles críticos. Presiona los números para conocer cada control crítico. 👆</p>
@@ -1697,7 +1717,7 @@
 <div class="mlist" id="mlist"></div>
 <div class="evfoot"><button class="evbtn-go" id="mGo">Calificar</button><div class="evscore" id="mScore"></div></div>
 </div></section>
-<section class="slide dark" data-mod="5">
+<section class="slide dark teal" data-mod="5">
   <div class="wrap" style="text-align:center">
     <div class="done-badge rv scale"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg></div>
     <div class="eyebrow rv up" style="--d:1">Módulo 5 completado</div>
@@ -1724,7 +1744,7 @@
 <p class="lead rv up">Toca cada mecanismo. 👆</p>
 <div class="accgrid" style="margin-top:12px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>¿Qué comunicar?</h4><span class="chev">+</span></div><div class="acc-body"><div class="li"><span class="b"></span>Implementación SG-SST</div><div class="li"><span class="b"></span>Política y Objetivos H&amp;S</div><div class="li"><span class="b"></span>Peligros, riesgos y controles</div><div class="li"><span class="b"></span>Requisitos legales</div><div class="li"><span class="b"></span>Roles y responsabilidades</div><div class="li"><span class="b"></span>Rendición de cuentas</div><div class="li"><span class="b"></span>Plan de capacitación</div><div class="li"><span class="b"></span>Planes y acciones de mejora</div><div class="li"><span class="b"></span>Plan y Brigada de Emergencias</div><div class="li"><span class="b"></span>Gestión del cambio</div><div class="li"><span class="b"></span>Lecciones aprendidas</div><div class="li"><span class="b"></span>COPASST</div><div class="li"><span class="b"></span>COCOLAB</div><div class="li"><span class="b"></span>SVE</div><div class="li"><span class="b"></span>Otros aspectos de Higiene, Salud y Seguridad</div></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1bb4e4"></span><h4>¿Cómo comunicar?</h4><span class="chev">+</span></div><div class="acc-body"><p><b>Medio virtual:</b> correos electrónicos, encuestas, redes sociales, WhatsApp, Connect intranet Holcim, herramientas colaborativas Gsuite, capacitaciones y reuniones por Zoom o Meet.</p><p class="tdd"><b>Medio físico:</b> publicaciones, cartas, quejas y reclamos, formatos de reporte de interacciones y condiciones de seguridad, salud y ambiente.</p><p class="tdd"><b>Speak up.</b></p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>¿Cómo participar y consultar?</h4><span class="chev">+</span></div><div class="acc-body"><div class="li"><span class="b"></span>COPASST o Vigía SST</div><div class="li"><span class="b"></span>Comité de Convivencia Laboral</div><div class="li"><span class="b"></span>Brigada de Emergencias</div><div class="li"><span class="b"></span>Capacitaciones</div><div class="li"><span class="b"></span>Entrenamientos</div><div class="li"><span class="b"></span>(Re)Inducciones</div><div class="li"><span class="b"></span>Actividades que promueven la Salud y Seguridad en el Trabajo</div><div class="li"><span class="b"></span>Reporte de Peligros, VPCs y C.PVCs</div><div class="li"><span class="b"></span>Repositorio documental</div><div class="li"><span class="b"></span>Investigación de eventos</div></div></div></div>
 </div></section>
-<section class="slide dark" data-mod="6">
+<section class="slide dark teal" data-mod="6">
 <div class="wrap"><div class="eyebrow rv up">COPASST / Vigía SST</div>
 <h2 class="rv up" style="--d:1">COPASST / Vigía SST</h2>
 <div class="two" style="margin-top:16px">
@@ -1739,7 +1759,7 @@
 <tr><td>Desde 1000 trabajadores</td><td>Cuatro (4) por cada una de las partes</td></tr>
 </table></div>
 </div></section>
-<section class="slide light" data-mod="6">
+<section class="slide light mint" data-mod="6">
 <div class="wrap"><div class="eyebrow rv up">COPASST / Vigía SST</div>
 <h2 class="rv up" style="--d:1">Conoce más sobre el COPASST</h2>
 <p class="lead rv up" style="--d:2">Voltea cada tarjeta para ver la respuesta. 👆</p>
@@ -1764,14 +1784,14 @@
 <p class="lead rv up" style="--d:2">Presiona los números para conocer cada respuesta. 👆</p>
 <div class="pueBox rv up" data-pue="convivencia"></div>
 </div></section>
-<section class="slide dark" data-mod="6">
+<section class="slide dark teal" data-mod="6">
 <div class="wrap"><div class="eyebrow rv up">Brigada de emergencias</div>
 <h2 class="rv up" style="--d:1">Brigada de emergencias</h2>
 <div class="infobanner rv up" style="--d:2">Grupo de empleados que, de acuerdo con las actividades económicas de la empresa y según sus capacidades, tienen la responsabilidad de realizar <b>actividades preventivas y de control de emergencias</b> ante eventualidades de riesgo, siniestro o desastre. Su objetivo primordial es <b>salvaguardar la vida, los bienes y el entorno</b>, actuando como <b>primeros respondedores</b>.</div>
 <p class="lead rv up">Toca cada clase de brigada. 👆</p>
 <div class="accgrid" style="margin-top:12px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>Básica o clase I</h4><span class="chev">+</span></div><div class="acc-body"><p>Formadas, capacitadas y entrenadas para la <b>prevención y atención inicial</b> de emergencias que puedan suscitarse al interior o exterior de la empresa y que estén relacionadas con la misma.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#f5b700"></span><h4>Intermedia o clase II</h4><span class="chev">+</span></div><div class="acc-body"><p>Además de la prevención y atención inicial, están <b>dotadas de todos los elementos, herramientas, equipos y accesorios</b> necesarios para la atención de las emergencias en las primeras etapas de su desarrollo, de acuerdo al riesgo existente.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#e23b32"></span><h4>Especializada o clase III</h4><span class="chev">+</span></div><div class="acc-body"><p>Formadas para la prevención y atención de emergencias en sectores de <b>alto riesgo</b> (petrolero, minero, portuario, químico, eléctrico, hidroeléctrico y otros), dotadas de los elementos y equipos necesarios para el tipo de riesgo específico.</p></div></div></div>
 </div></section>
-<section class="slide light" data-mod="6">
+<section class="slide light mint" data-mod="6">
 <div class="wrap"><div class="eyebrow rv up">Responsabilidades legales</div>
 <h2 class="rv up" style="--d:1">Responsabilidades legales</h2>
 <p class="lead rv up" style="--d:2">Cada parte tiene responsabilidades definidas en el SG-SST.</p>
@@ -1790,7 +1810,7 @@
 <p class="lead rv up">Toca cada certificación y reconocimiento. 👆</p>
 <div class="chipgrid"><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#a01e28">ISO 9001</span><span class="nm">Sistema de Gestión de la Calidad</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#4b2a6b">ISO 14001</span><span class="nm">Sistema de Gestión Ambiental</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#17868a">ISO 45001</span><span class="nm">Sistema de Gestión de la Seguridad y Salud en el Trabajo</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#0e2c56">ISO 39001</span><span class="nm">Sistema de Gestión de la Seguridad Vial</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#e23b32">Saludable</span><span class="nm">Organización Saludable Certificada · Fundación Colombiana del Corazón</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#e6007e">HSE Gold</span><span class="nm">Country Gold · primero en recibir Oro en 2023 y repitió en 2024</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#17a2a2">Sostenibilidad</span><span class="nm">Distinciones Gold y Silver de sostenibilidad</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#ef7d00">CCS · RUC</span><span class="nm">Consejo Colombiano de Seguridad · Registro Uniforme para Contratistas</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#1bb4e4">GCCA</span><span class="nm">Asociación Global del Cemento y el Concreto</span><span class="tick">✓</span></div></div>
 </div></section>
-<section class="slide dark" data-mod="6">
+<section class="slide dark teal" data-mod="6">
   <div class="wrap" style="text-align:center">
     <div class="done-badge rv scale"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg></div>
     <div class="eyebrow rv up" style="--d:1">Reinducción H&amp;S completada</div>
