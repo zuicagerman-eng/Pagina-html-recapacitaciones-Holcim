@@ -621,6 +621,22 @@
   .slide.dark .rescol li{background:rgba(255,255,255,.06);color:#eaf1fb}
   .slide.dark .rescol li:nth-child(even){background:rgba(255,255,255,.1)}
 
+  /* 16) PORTADA con multimedia a la derecha (solo la primera diapositiva) */
+  .heroSplit{display:grid;grid-template-columns:1.05fr .95fr;gap:34px;align-items:center;
+    position:relative;z-index:2}
+  .heroTxt{min-width:0}
+  .heroMedia{margin:0;position:relative;border-radius:20px;padding:4px;
+    background:var(--grad);box-shadow:0 24px 60px -24px rgba(0,0,0,.85);
+    display:none}                      /* se muestra solo si el archivo carga */
+  .heroMedia.ready{display:block}
+  .heroMedia img,.heroMedia video{display:block;width:100%;height:auto;border-radius:16px;
+    background:#0b2549;object-fit:cover;aspect-ratio:16/10}
+  @media(max-width:900px){
+    .heroSplit{grid-template-columns:1fr;gap:22px}
+    .heroMedia{order:-1}               /* en pantallas angostas va arriba */
+  }
+  @media(max-height:900px) and (max-width:900px){.heroMedia{display:none!important}}
+
   /* Logo de la esquina superior izquierda (acepta imagen o SVG de respaldo) */
   header.hud{width:100%}
   .brand .logo{width:auto;height:32px;display:inline-flex;align-items:center;flex:none}
@@ -672,6 +688,8 @@
   <section class="slide dark active">
     <div class="blob b1"></div><div class="blob b2"></div>
     <div class="wrap">
+     <div class="heroSplit">
+      <div class="heroTxt">
       <div class="eyebrow rv up">Salud &amp; Seguridad · 2026 · Reinducción completa</div>
       <div class="hero-code rv up" style="--d:1">HSE-001</div>
       <div class="hero-title rv up" style="--d:2">Reinducción H&amp;S</div>
@@ -682,6 +700,9 @@
         <span class="pill">Clasificación de peligros</span>
       </div>
       <p class="lead rv up" style="--d:5">Usa los botones <b>Atrás</b> y <b>Siguiente</b> para avanzar. Podrás salir solo al completar todo el módulo.</p>
+      </div>
+      <figure class="heroMedia rv right" id="heroMedia" style="--d:3"></figure>
+     </div>
     </div>
   </section>
   <!-- 3 PLAN DE EMERGENCIAS -->
@@ -1798,6 +1819,9 @@ function asset(ruta){ return BASE + ruta; }   // helper: asset("imagenes/plano.p
    - logo-esquina.png : logo pequeño de la esquina superior izquierda
    - logo-barra.png   : logo de la barra intermedia (centro), separando los botones
    Mientras no existan, se muestra un logo de respaldo. */
+/* Multimedia de la portada (GIF, JPG, PNG, MP4 o WEBM). Si el archivo no
+   existe, la portada se muestra sin él, sin dejar espacios vacíos. */
+var GIF_PORTADA  = asset("imagenes/portada.gif");
 var LOGO_ESQUINA = asset("imagenes/logo-esquina.png");
 var LOGO_BARRA   = asset("imagenes/logo-barra.png");
 
@@ -1841,6 +1865,21 @@ function ponerLogo(el, src, rutaLocal, respaldoHTML){
   im.onerror = function(){ if(!yaLocal){ yaLocal = true; im.src = rutaLocal; } };
   im.src = src;
 }
+/* Multimedia de la portada: intenta la URL absoluta y luego la ruta local.
+   Acepta imagen (gif/png/jpg/webp) o video (mp4/webm). Si no existe, se oculta. */
+(function(){
+  var caja=document.getElementById('heroMedia'); if(!caja || !GIF_PORTADA) return;
+  var local='imagenes/'+GIF_PORTADA.split('/').pop(), yaLocal=false;
+  var esVideo=/\.(mp4|webm)(\?|$)/i.test(GIF_PORTADA);
+  var el=document.createElement(esVideo?'video':'img');
+  if(esVideo){ el.autoplay=true; el.muted=true; el.loop=true; el.playsInline=true; el.setAttribute('playsinline',''); }
+  else { el.alt='Reinducción en Salud y Seguridad Holcim'; el.loading='eager'; el.decoding='async'; }
+  function ok(){ caja.innerHTML=''; caja.appendChild(el); caja.classList.add('ready'); }
+  if(esVideo){ el.addEventListener('loadeddata', ok); }
+  else { el.onload = ok; }
+  el.onerror = function(){ if(!yaLocal){ yaLocal=true; el.src=local; } };
+  el.src = GIF_PORTADA;
+})();
 ponerLogo(document.getElementById('brandlogo'), LOGO_ESQUINA, 'imagenes/logo-esquina.png', logoSVG);
 ponerLogo(document.getElementById('wlogo'),     LOGO_ESQUINA, 'imagenes/logo-esquina.png', logoSVG);
 ponerLogo(document.getElementById('barLogo'),   LOGO_BARRA,   'imagenes/logo-barra.png',   '<span class="barlogo-txt">HOLCIM</span>');
