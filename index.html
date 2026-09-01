@@ -908,7 +908,7 @@
       <p class="lead rv up" style="--d:2">Observa el video completo para habilitar el botón <b>Siguiente</b>.</p>
       <div class="videobox rv up" style="--d:3">
         <iframe id="vimeo1" loading="lazy"
-          src="https://player.vimeo.com/video/1173318931?badge=0&amp;player_id=0&amp;app_id=58479&amp;title=0&amp;byline=0&amp;portrait=0"
+          src="https://player.vimeo.com/video/1173318931?badge=0&amp;player_id=0&amp;app_id=58479&amp;title=0&amp;byline=0&amp;portrait=0#t=9s"
           allow="autoplay; fullscreen; picture-in-picture; clipboard-write"
           title="Video Reinducción H&amp;S"></iframe>
       </div>
@@ -1930,6 +1930,9 @@
 <script>
 /* ====== CONFIGURACIÓN ====== */
 var EXIGIR_VIDEO_COMPLETO = true;   // pon false para no obligar a ver el video completo
+/* Segundo en el que arranca el video de bienvenida: se saltan los primeros 9 s.
+   Si algún día quieres el video completo, pon 0 (y quita el "#t=9s" del iframe). */
+var VIDEO_INICIO = 9;
 var URL_PORTAL = "";                // opcional: URL /exec del portal para el botón Salir
 
 /* ====== REPORTE DE PROBLEMAS ======
@@ -2159,6 +2162,18 @@ function videoListo(){
 try{
   vplayer = new Vimeo.Player(document.getElementById('vimeo1'));
   vplayer.on('ended', videoListo);
+  /* El "#t=9s" del iframe ya arranca en el segundo 9; esto lo asegura además por
+     API y evita que se pueda retroceder a los segundos recortados. */
+  if(VIDEO_INICIO > 0){
+    var yaUbicado = false;
+    vplayer.on('loaded', function(){
+      if(yaUbicado) return; yaUbicado = true;
+      vplayer.setCurrentTime(VIDEO_INICIO).catch(function(){});
+    });
+    vplayer.on('seeked', function(d){
+      if(d && d.seconds < VIDEO_INICIO - 0.5) vplayer.setCurrentTime(VIDEO_INICIO).catch(function(){});
+    });
+  }
 }catch(e){}
 /* red de seguridad: si el SDK no carga (red corporativa), muestra opción manual a los 12 s */
 setTimeout(function(){ if(!videoEnded && EXIGIR_VIDEO_COMPLETO && vskip) vskip.style.display='inline-block'; }, 12000);
