@@ -147,8 +147,8 @@
   /* Con imagen propia, el cuadro degradado del icono desaparece y deja ver la foto
      a tamaño mediano. Nunca se agranda más allá de su tamaño real. */
   .eppcard .ic.foto{background:none;box-shadow:none;padding:0;margin:0;flex:none;
-    width:64px;height:64px;border-radius:0;display:flex;align-items:center;justify-content:center}
-  .eppcard .ic.foto img{max-width:64px;max-height:64px;width:auto;height:auto;
+    width:96px;height:96px;border-radius:0;display:flex;align-items:center;justify-content:center}
+  .eppcard .ic.foto img{max-width:96px;max-height:96px;width:auto;height:auto;
     display:block;border-radius:10px;object-fit:contain}
   .eppcard span{font-weight:700;font-size:14.5px;color:var(--ink)}
   .redline{display:flex;align-items:center;gap:12px;margin:4px 0 22px}
@@ -531,7 +531,7 @@
     .pdfmini{padding:11px 15px}
     .pdfcard{padding:18px 16px;gap:10px}
     .eppcard{padding:14px}
-    .eppcard .ic.foto{width:52px;height:52px} .eppcard .ic.foto img{max-width:52px;max-height:52px}
+    .eppcard .ic.foto{width:78px;height:78px} .eppcard .ic.foto img{max-width:78px;max-height:78px}
     .beh{padding:14px 12px}
     .done-badge{width:72px;height:72px;margin-bottom:16px}
     .done-badge svg{width:38px;height:38px}
@@ -2054,7 +2054,7 @@ document.getElementById('s_beard').innerHTML = sign('<path d="M24 24a8 8 0 0 1 1
    Se prueba .png, .jpg, .jpeg, .gif y .webp, primero en GitHub Pages y luego
    junto al HTML. Si ninguna existe, la tarjeta conserva su señal dibujada, así
    que la diapositiva nunca queda con un hueco. */
-var EXT_FOTO = ['png','jpg','jpeg','gif','webp'];
+var EXT_FOTO = ['png','gif','jpg','jpeg','webp'];
 document.querySelectorAll('[data-foto]').forEach(function(slot){
   var nombre = slot.getAttribute('data-foto');
   var rutas = [];
