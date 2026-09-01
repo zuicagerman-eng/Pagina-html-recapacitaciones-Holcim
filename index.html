@@ -319,6 +319,10 @@
   .acc-head .chev{width:26px;height:26px;flex:none;border-radius:50%;background:var(--grad);color:#062038;
     display:grid;place-items:center;font-weight:800;font-size:18px;line-height:1;transition:transform .35s}
   .acc.open .acc-head .chev{transform:rotate(45deg)}
+  /* Rejillas que llegan desplegadas: no prometen un clic que ya no existe. */
+  .acc-auto .acc{cursor:default}
+  .acc-auto .acc:hover{transform:none}
+  .acc-auto .acc .chev{display:none}
   .acc-body{max-height:0;overflow:hidden;opacity:0;transition:max-height .4s ease,opacity .35s ease,padding .4s ease;padding:0 16px}
   .acc.open .acc-body{max-height:360px;opacity:1;padding:0 16px 16px 60px}
   .acc-body p{font-size:13.5px;color:var(--muted);line-height:1.5}
@@ -2090,7 +2094,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-01-b";
+var VERSION_CURSO = "2026-09-01-c";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
@@ -2424,8 +2428,8 @@ var pipEls = [], pipFlags = [];
     })(i,m);
   }
 })();
-function reveal(s){ s.querySelectorAll('.rv').forEach(function(el){ el.classList.remove('in'); void el.offsetWidth; el.classList.add('in'); }); }
-function clearReveal(s){ s.querySelectorAll('.rv').forEach(function(el){ el.classList.remove('in'); }); }
+function reveal(s){ s.querySelectorAll('.rv').forEach(function(el){ el.classList.remove('in'); void el.offsetWidth; el.classList.add('in'); }); if(window.despliegaAuto) despliegaAuto(s); }
+function clearReveal(s){ s.querySelectorAll('.rv').forEach(function(el){ el.classList.remove('in'); }); if(window.cierraAuto) cierraAuto(s); }
 /* ====== BARRERA DE INTERACCIÓN ====== */
 function reqStats(s){ if(s.classList.contains('nogate')) return {total:0,done:0}; return { total:s.querySelectorAll('.req').length, done:s.querySelectorAll('.req.done').length }; }
 function refreshNext(){
@@ -2622,36 +2626,58 @@ OBJ.forEach(function(o,k){
    columna izquierda y otro TODA la derecha, así la diapositiva se completa con
    2 clics en vez de 6 u 8. Con 4 tarjetas o menos, cada una funciona por su
    cuenta como siempre. */
-var ACC_MIN_GRUPO = 5;
+/* Rejillas de 6 o más tarjetas: llegan ya desplegadas y dejan de pedir clic.
+   Se abren en cascada al entrar a la diapositiva (ver despliegaAuto), así se ve
+   el movimiento sin obligar a nadie a tocar 8 tarjetas.
+   Con 5 o menos, cada tarjeta se abre y se cierra como siempre y sigue contando
+   para la barrera de avance. */
+var ACC_AUTO = 6;
 document.querySelectorAll('.accgrid').forEach(function(rejilla){
   var tarjetas = Array.prototype.filter.call(rejilla.children, function(c){ return c.classList.contains('acc'); });
-  if(tarjetas.length < ACC_MIN_GRUPO) return;
-  rejilla.classList.add('acc-columnas');
-  // columna izquierda = posiciones pares, derecha = impares (la rejilla llena por filas)
-  tarjetas.forEach(function(c,k){ c.setAttribute('data-col', k%2); });
-  var pista = rejilla.closest('.slide').querySelector('.lead');
-  if(pista) pista.innerHTML = 'Toca una tarjeta y se abre <b>todo su grupo</b>: con 2 toques ves toda la información. \uD83D\uDC46';
+  if(tarjetas.length < ACC_AUTO) return;
+  rejilla.classList.add('acc-auto');
+  var slide = rejilla.closest('.slide');
+  var pista = slide && slide.querySelector('.lead');
+  if(pista && /(toca|clic|click|explora|desplieg)/i.test(pista.textContent))
+    pista.innerHTML = 'Revisa cada condición y continúa con <b>Siguiente \u2192</b>.';
 });
+
 document.querySelectorAll('.acc').forEach(function(a){
   var rejilla = a.parentElement;
-  var agrupada = rejilla && rejilla.classList.contains('acc-columnas');
-  // Con agrupación solo exigimos 2 clics por rejilla: la primera tarjeta de cada columna.
-  if(!agrupada || a === rejilla.querySelector('.acc[data-col="'+a.getAttribute('data-col')+'"]')) a.classList.add('req');
-  function grupo(){
-    if(!agrupada) return [a];
-    return Array.prototype.slice.call(rejilla.querySelectorAll('.acc[data-col="'+a.getAttribute('data-col')+'"]'));
+  if(rejilla && rejilla.classList.contains('acc-auto')){
+    a.removeAttribute('tabindex'); a.removeAttribute('role');
+    a.setAttribute('aria-expanded','true');
+    return;   // sin clic y sin barrera: la tarjeta se despliega sola
   }
+  a.classList.add('req');
   function t(){
     var abrir = !a.classList.contains('open');
-    grupo().forEach(function(c){
-      c.classList.toggle('open', abrir);
-      c.setAttribute('aria-expanded', abrir?'true':'false');
-      markDone(c);
-    });
+    a.classList.toggle('open', abrir);
+    a.setAttribute('aria-expanded', abrir?'true':'false');
+    markDone(a);
   }
   a.addEventListener('click', t);
   a.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); t(); } });
 });
+
+/* Despliegue en cascada al entrar a la diapositiva. Se llama desde reveal(). */
+function despliegaAuto(s){
+  s.querySelectorAll('.accgrid.acc-auto').forEach(function(rejilla){
+    var tarjetas = rejilla.querySelectorAll('.acc');
+    Array.prototype.forEach.call(tarjetas, function(c, k){
+      c.classList.remove('open');
+      setTimeout(function(){
+        c.classList.add('open');
+        // la diapositiva crece al abrirse: hay que rehacer el aviso de "desliza"
+        if(k === tarjetas.length - 1 && window.revisarScroll) setTimeout(window.revisarScroll, 450);
+      }, 240 + k * 85);
+    });
+  });
+}
+function cierraAuto(s){
+  s.querySelectorAll('.accgrid.acc-auto .acc').forEach(function(c){ c.classList.remove('open'); });
+}
+
 /* ====== PLANO isométrico (Módulo 4) — sube tu PNG y ajusta puntos ====== */
 // 1) Sube tu imagen del plano al repositorio dentro de la carpeta "imagenes/"
 //    (por ejemplo imagenes/plano.png). Se carga con URL absoluta (variable BASE)
