@@ -122,6 +122,16 @@
   .beh{background:#fff;border-radius:15px;padding:18px 14px;text-align:center;box-shadow:var(--shadow);transition:.3s}
   .beh:hover{transform:translateY(-5px)}
   .beh .sign{width:56px;height:56px;margin:0 auto 12px}
+  /* Cuando la tarjeta tiene foto propia (diapositiva 4), el círculo dibujado se
+     reemplaza por la imagen a tamaño mediano. Nunca se agranda más allá de su
+     tamaño real, así que no se pixela, y "contain" evita deformarla. */
+  /* Con foto el contenido se ancla arriba: así la imagen y el texto arrancan a la
+     misma altura en todas las tarjetas de la fila, aunque el texto sea más largo. */
+  .beh.conFoto{justify-content:flex-start}
+  .beh .sign.foto{width:100%;height:104px;margin:0 auto 12px;display:flex;
+    align-items:center;justify-content:center}
+  .beh .sign.foto img{max-width:min(100%,150px);max-height:104px;width:auto;height:auto;
+    border-radius:10px;display:block;object-fit:contain}
   .beh p{font-size:13px;font-weight:600;line-height:1.35;color:var(--ink)}
   .beh.rec{background:linear-gradient(160deg,#0e2c56,#123a6e)} .beh.rec p{color:#fff}
   /* EPP */
@@ -242,6 +252,7 @@
     .eq-op{font-size:30px}
     .conf{padding:20px;gap:16px}.conf .tri{width:72px;height:72px}
     .beh .sign{width:50px;height:50px}
+    .beh .sign.foto{height:86px} .beh .sign.foto img{max-height:86px;max-width:min(100%,124px)}
     .slide{padding:28px 16px}
   }
   @media(max-width:400px){
@@ -420,6 +431,10 @@
   /* 4) Rejillas de mosaicos SIN espacios: última fila centrada y anchos iguales.
         Al usar flex, la fila incompleta se centra en vez de dejar un hueco a la derecha. */
   .behaviors,.acts,.chipgrid{display:flex;flex-wrap:wrap;gap:var(--gap);justify-content:center;align-items:stretch}
+  /* Estos contenedores son flex: con height:100% el navegador desactiva el
+     "stretch" y las tarjetas de una misma fila quedan de distinta altura.
+     Con height:auto vuelven a igualarse solas. */
+  .behaviors>.beh{height:auto}
   .behaviors>*,.acts>*{flex:1 1 210px;max-width:260px}
   .chipgrid>*{flex:1 1 230px;max-width:340px}
   /* Los acordeones dentro de un chipgrid se auto-alinean arriba para no estirarse
@@ -858,13 +873,13 @@
       <div class="eyebrow rv up">Prevención de incidentes</div>
       <h2 class="rv up" style="--d:1">Comportamientos para prevenir incidentes</h2>
       <div class="behaviors" style="margin-top:26px">
-        <div class="beh rv scale" style="--d:0"><div class="sign" id="s_instr"></div><p>Atender instrucciones de seguridad</p></div>
-        <div class="beh rv scale" style="--d:1"><div class="sign" id="s_area"></div><p>Transitar con su anfitrión por áreas delimitadas</p></div>
-        <div class="beh rv scale" style="--d:2"><div class="sign" id="s_run"></div><p>No correr ni hacer bromas en operación</p></div>
-        <div class="beh rv scale" style="--d:3"><div class="sign" id="s_phone"></div><p>No hablar por celular mientras se desplaza</p></div>
-        <div class="beh rv scale" style="--d:4"><div class="sign" id="s_ring"></div><p>No usar accesorios en áreas operativas</p></div>
-        <div class="beh rv scale" style="--d:5"><div class="sign" id="s_gun"></div><p>No ingresar o usar armas</p></div>
-        <div class="beh rec rv scale" style="--d:6"><div class="sign" id="s_beard"></div><p>Se recomienda NO usar vello facial (barba/bigote) para el sello de la protección respiratoria</p></div>
+        <div class="beh rv scale" style="--d:0"><div class="sign" id="s_instr" data-foto="instrucciones(D4)"></div><p>Atender instrucciones de seguridad</p></div>
+        <div class="beh rv scale" style="--d:1"><div class="sign" id="s_area" data-foto="areas(D4)"></div><p>Transitar con su anfitrión por áreas delimitadas</p></div>
+        <div class="beh rv scale" style="--d:2"><div class="sign" id="s_run" data-foto="correr(D4)"></div><p>No correr ni hacer bromas en operación</p></div>
+        <div class="beh rv scale" style="--d:3"><div class="sign" id="s_phone" data-foto="celular(D4)"></div><p>No hablar por celular mientras se desplaza</p></div>
+        <div class="beh rv scale" style="--d:4"><div class="sign" id="s_ring" data-foto="accesorios(D4)"></div><p>No usar accesorios en áreas operativas</p></div>
+        <div class="beh rv scale" style="--d:5"><div class="sign" id="s_gun" data-foto="armas(D4)"></div><p>No ingresar o usar armas</p></div>
+        <div class="beh rec rv scale" style="--d:6"><div class="sign" id="s_beard" data-foto="barba(D4)"></div><p>Se recomienda NO usar vello facial (barba/bigote) para el sello de la protección respiratoria</p></div>
       </div>
     </div>
   </section>
@@ -2015,6 +2030,33 @@ document.getElementById('s_phone').innerHTML = sign('<rect x="26" y="20" width="
 document.getElementById('s_ring').innerHTML  = sign('<circle cx="32" cy="36" r="7"/><path d="M28 30l4-8 4 8"/>');
 document.getElementById('s_gun').innerHTML   = sign('<path d="M22 28h18v6h-6l-4 6-2-6h-6z"/>');
 document.getElementById('s_beard').innerHTML = sign('<path d="M24 24a8 8 0 0 1 16 0v4c0 8-4 14-8 14s-8-6-8-14z"/><path d="M28 24h8"/>');
+/* ====== FOTOS DE LA DIAPOSITIVA 4 ======
+   Cada tarjeta trae en data-foto el nombre de su archivo, SIN extensión.
+   Sube las 7 a la carpeta "imagenes/" con estos nombres exactos:
+       instrucciones(D4)   areas(D4)   correr(D4)   celular(D4)
+       accesorios(D4)      armas(D4)   barba(D4)
+   Se prueba .png, .jpg, .jpeg, .gif y .webp, primero en GitHub Pages y luego
+   junto al HTML. Si ninguna existe, la tarjeta conserva su señal dibujada, así
+   que la diapositiva nunca queda con un hueco. */
+var EXT_FOTO = ['png','jpg','jpeg','gif','webp'];
+document.querySelectorAll('.beh .sign[data-foto]').forEach(function(slot){
+  var nombre = slot.getAttribute('data-foto');
+  var rutas = [];
+  EXT_FOTO.forEach(function(e){ rutas.push(asset('imagenes/' + nombre + '.' + e)); });
+  EXT_FOTO.forEach(function(e){ rutas.push('imagenes/' + nombre + '.' + e); });
+  var i = 0;
+  var img = new Image();
+  img.alt = '';
+  img.decoding = 'async';
+  img.onload = function(){
+    slot.innerHTML = '';
+    slot.appendChild(img);
+    slot.classList.add('foto');
+    var tarjeta = slot.closest('.beh'); if(tarjeta) tarjeta.classList.add('conFoto');
+  };
+  img.onerror = function(){ i++; if(i < rutas.length) img.src = rutas[i]; };
+  img.src = rutas[0];
+});
 /* ====== Tiburón ====== */
 function shark(c){return '<svg viewBox="0 0 64 64" width="100%" height="100%"><g fill="'+c+'"><path d="M6 40c8-2 14-2 20 0 6-10 16-16 30-16-4 6-6 10-6 14 4 2 8 4 8 4-6 2-14 2-20 0-4 6-12 8-20 6l-2 6-4-8c-4 0-8-2-6-6z"/><circle cx="46" cy="30" r="1.8" fill="#0b2545"/></g><path d="M4 46c6 3 10 3 16 0 6 3 10 3 16 0 6 3 10 3 16 0" fill="none" stroke="#1bb4e4" stroke-width="2.5" stroke-linecap="round"/></svg>';}
 document.getElementById('a_shark1').innerHTML = shark('#5aa9d6');
