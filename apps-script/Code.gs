@@ -2,18 +2,18 @@
  * Proyecto Apps Script "Reinducción HS Web".
  *
  * Sirve el curso HSE (pegado como archivo index.html en este mismo proyecto)
- * dentro del portal interno, y recibe los reportes de problemas del botón ⚠️
- * para enviarlos por correo automáticamente.
+ * dentro del portal interno, recibe los reportes del botón ⚠️ por correo y
+ * guarda los resultados del examen final en una hoja de cálculo.
  *
  * Archivos del proyecto:
  *   - Código.gs  → este archivo
  *   - index.html → pega aquí TODO el contenido del index.html de GitHub
  */
 
-// ►► CORREO donde quieres recibir los reportes de problemas ◄◄
-var CORREO_REPORTES = "zuica.german@gmail.com";
+// ►► CORREO donde quieres recibir los reportes ◄◄
+var CORREO_REPORTES = "german.zuica@holcim.com";
 
-/** Sirve el curso (archivo index.html del proyecto) y permite embeberlo en el portal. */
+// Sirve el curso (archivo index.html del proyecto) y permite embeberlo en el portal.
 function doGet() {
   return HtmlService.createHtmlOutputFromFile('index')
     .setTitle('HSE-001 Reinducción H&S 2026')
@@ -21,18 +21,21 @@ function doGet() {
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 }
 
+
 /* ═══════════════════════════════════════════════════════════════════════════
    EXAMEN FINAL → HOJA DE CÁLCULO
 
-   NO tienes que crear la hoja a mano: la primera vez que alguien presente el
-   examen, el script crea una hoja llamada "HSE-001 · Resultados examen" en tu
-   Google Drive y recuerda su identificador. En el correo de la cuenta que
-   despliega el script aparecerá en "Mi unidad".
+   NO tienes que crear la hoja a mano. La primera vez que alguien presente el
+   examen, el script crea en tu Drive una hoja llamada
+   "HSE-001 · Resultados examen" y recuerda su identificador.
 
-   Si prefieres usar una hoja que ya tengas, pega su ID aquí (el trozo largo de
-   la URL entre /d/ y /edit) y el script escribirá en esa:
+   ¿Dónde queda? En "Mi unidad" de la cuenta con la que despliegas el script.
+   Para ver el enlace directo, ejecuta una vez la función verHojaDeResultados().
+
+   Si prefieres usar una hoja que ya tengas, pega su ID abajo (el trozo largo
+   de la URL, entre /d/ y /edit) y el script escribirá en esa.
    ═══════════════════════════════════════════════════════════════════════════ */
-var ID_HOJA = "";   // opcional: déjalo vacío para que el script cree la hoja solo
+var ID_HOJA = "";   // opcional: déjalo vacío para que el script la cree solo
 
 var NOMBRE_HOJA     = "HSE-001 · Resultados examen";
 var PESTANA_RESUMEN = "Resultados";
@@ -43,7 +46,7 @@ function obtenerHoja_() {
   var props = PropertiesService.getScriptProperties();
   var id = ID_HOJA || props.getProperty('ID_HOJA');
   if (id) {
-    try { return SpreadsheetApp.openById(id); } catch (e) { /* se recrea abajo */ }
+    try { return SpreadsheetApp.openById(id); } catch (e) { /* si ya no existe, se recrea */ }
   }
   var ss = SpreadsheetApp.create(NOMBRE_HOJA);
   props.setProperty('ID_HOJA', ss.getId());
@@ -74,7 +77,9 @@ function pestana_(ss, nombre, encabezados) {
 
 /**
  * Llamado desde el curso con google.script.run al calificar el examen.
- * Escribe una fila de resumen y una fila por cada pregunta respondida.
+ * Escribe una fila de resumen del intento y una fila por pregunta respondida.
+ * La cédula se guarda con un apóstrofo delante para que la hoja no le quite
+ * los ceros de la izquierda.
  */
 function guardarExamen(d) {
   d = d || {};
@@ -102,19 +107,24 @@ function guardarExamen(d) {
   return { ok: true };
 }
 
-/** Ejecútala una vez desde el editor para ver la URL de la hoja de resultados. */
+/** Ejecútala UNA VEZ desde el editor para ver la URL de la hoja de resultados. */
 function verHojaDeResultados() {
-  var ss = obtenerHoja_();
-  Logger.log('Hoja de resultados: ' + ss.getUrl());
-  return ss.getUrl();
+  var url = obtenerHoja_().getUrl();
+  Logger.log('Hoja de resultados: ' + url);
+  return url;
 }
 
-/** Llamado por el curso con google.script.run (modo nativo, sin URLs ni CORS). */
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   REPORTE DE PROBLEMAS (botón ⚠️ del curso)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+// Llamado por el curso con google.script.run (nativo, sin URLs ni CORS).
 function enviarReporte(d) {
   return enviarCorreoReporte(d);
 }
 
-/** Llamado por POST (si el curso estuviera en GitHub Pages y usara fetch). */
+// Respaldo por POST (si el curso estuviera en GitHub Pages y usara fetch).
 function doPost(e) {
   try {
     var d = JSON.parse((e && e.postData && e.postData.contents) || "{}");
@@ -127,7 +137,6 @@ function doPost(e) {
   }
 }
 
-/** Arma y envía el correo con el reporte. */
 function enviarCorreoReporte(d) {
   d = d || {};
   var asunto = d.asunto || ("Problema en la diapositiva " + (d.diapositiva || "?"));
@@ -137,29 +146,8 @@ function enviarCorreoReporte(d) {
     "• Módulo: " + (d.modulo || "-") + "\n" +
     "• Reporta: " + (d.nombre || "(anónimo)") + "\n" +
     "• Fecha: " + (d.fecha || "-") + "\n\n" +
-    "Descripción del problema:\n" + (d.mensaje || "(sin descripción)") + "\n\n" +
-    "-----\n" +
-    "URL: " + (d.url || "-") + "\n" +
-    "Navegador: " + (d.navegador || "-");
+    "Descripción:\n" + (d.mensaje || "(sin descripción)") + "\n\n" +
+    "-----\nURL: " + (d.url || "-") + "\nNavegador: " + (d.navegador || "-");
   MailApp.sendEmail(CORREO_REPORTES, asunto, cuerpo);
   return { ok: true };
 }
-
-/* ─────────────────────────────────────────────────────────────────────────
-   ALTERNATIVA (opcional): en vez de pegar el HTML en index.html, puedes hacer
-   que este script LEA el index.html desde GitHub Pages (una sola fuente de
-   verdad). Para usarlo, reemplaza el doGet de arriba por este:
-
-   function doGet() {
-     var html = UrlFetchApp.fetch(
-       "https://zuicagerman-eng.github.io/Pagina-html-recapacitaciones-Holcim/index.html",
-       { muteHttpExceptions: true }
-     ).getContentText();
-     return HtmlService.createHtmlOutput(html)
-       .setTitle('HSE-001 Reinducción H&S 2026')
-       .addMetaTag('viewport', 'width=device-width, initial-scale=1')
-       .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
-   }
-   (Con esta variante, el reporte usa doPost; en index.html pon REPORTE_URL con
-    la URL /exec de este script.)
-   ───────────────────────────────────────────────────────────────────────── */
