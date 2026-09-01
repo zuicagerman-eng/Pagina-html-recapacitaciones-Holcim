@@ -144,6 +144,12 @@
   @media(max-width:480px){.epp{grid-template-columns:1fr}}
   .eppcard{background:#fff;border-radius:15px;padding:18px;display:flex;align-items:center;gap:14px;box-shadow:var(--shadow);transition:.3s}
   .eppcard:hover{transform:translateY(-4px)} .eppcard .ic{margin-bottom:0;width:46px;height:46px}
+  /* Con imagen propia, el cuadro degradado del icono desaparece y deja ver la foto
+     a tamaño mediano. Nunca se agranda más allá de su tamaño real. */
+  .eppcard .ic.foto{background:none;box-shadow:none;padding:0;margin:0;flex:none;
+    width:64px;height:64px;border-radius:0;display:flex;align-items:center;justify-content:center}
+  .eppcard .ic.foto img{max-width:64px;max-height:64px;width:auto;height:auto;
+    display:block;border-radius:10px;object-fit:contain}
   .eppcard span{font-weight:700;font-size:14.5px;color:var(--ink)}
   .redline{display:flex;align-items:center;gap:12px;margin:4px 0 22px}
   .redline .dot{width:11px;height:11px;border-radius:50%;background:var(--danger)}
@@ -525,6 +531,7 @@
     .pdfmini{padding:11px 15px}
     .pdfcard{padding:18px 16px;gap:10px}
     .eppcard{padding:14px}
+    .eppcard .ic.foto{width:52px;height:52px} .eppcard .ic.foto img{max-width:52px;max-height:52px}
     .beh{padding:14px 12px}
     .done-badge{width:72px;height:72px;margin-bottom:16px}
     .done-badge svg{width:38px;height:38px}
@@ -894,12 +901,12 @@
       <h2 class="rv up" style="--d:1">Inicia el área industrial</h2>
       <p class="lead rv up" style="--d:2">Es <b>obligatorio</b> usar el EPP establecido en la señalética del área:</p>
       <div class="epp" style="margin-top:26px">
-        <div class="eppcard rv up" style="--d:0"><div class="ic"><svg viewBox="0 0 24 24"><path d="M4 11h16M6 11c0 4 2 7 6 7s6-3 6-7M4 11c0-2 2-4 4-4h8c2 0 4 2 4 4"/></svg></div><span>Protección respiratoria</span></div>
-        <div class="eppcard rv up" style="--d:1"><div class="ic"><svg viewBox="0 0 24 24"><path d="M6 4v9l-2 4v3h16v-2c0-2-2-3-4-3l-4-2V4z"/></svg></div><span>Botas de seguridad</span></div>
-        <div class="eppcard rv up" style="--d:2"><div class="ic"><svg viewBox="0 0 24 24"><path d="M4 14a8 8 0 0 1 16 0M3 14h18M12 6v-2"/></svg></div><span>Casco</span></div>
-        <div class="eppcard rv up" style="--d:3"><div class="ic"><svg viewBox="0 0 24 24"><path d="M4 8a8 8 0 0 1 16 0M6 8v3a3 3 0 0 0 6 0M18 8v3a3 3 0 0 1-6 0"/></svg></div><span>Protección auditiva</span></div>
-        <div class="eppcard rv up" style="--d:4"><div class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="9" width="7" height="6" rx="3"/><rect x="14" y="9" width="7" height="6" rx="3"/><path d="M10 11h4"/></svg></div><span>Gafas</span></div>
-        <div class="eppcard rv up" style="--d:5"><div class="ic"><svg viewBox="0 0 24 24"><path d="M8 4l4 3 4-3 4 3v14H4V7zM12 7v13"/></svg></div><span>Alta visibilidad · manga larga</span></div>
+        <div class="eppcard rv up" style="--d:0"><div class="ic" data-foto="respiratoria(D5)"><svg viewBox="0 0 24 24"><path d="M4 11h16M6 11c0 4 2 7 6 7s6-3 6-7M4 11c0-2 2-4 4-4h8c2 0 4 2 4 4"/></svg></div><span>Protección respiratoria</span></div>
+        <div class="eppcard rv up" style="--d:1"><div class="ic" data-foto="botas(D5)"><svg viewBox="0 0 24 24"><path d="M6 4v9l-2 4v3h16v-2c0-2-2-3-4-3l-4-2V4z"/></svg></div><span>Botas de seguridad</span></div>
+        <div class="eppcard rv up" style="--d:2"><div class="ic" data-foto="casco(D5)"><svg viewBox="0 0 24 24"><path d="M4 14a8 8 0 0 1 16 0M3 14h18M12 6v-2"/></svg></div><span>Casco</span></div>
+        <div class="eppcard rv up" style="--d:3"><div class="ic" data-foto="auditiva(D5)"><svg viewBox="0 0 24 24"><path d="M4 8a8 8 0 0 1 16 0M6 8v3a3 3 0 0 0 6 0M18 8v3a3 3 0 0 1-6 0"/></svg></div><span>Protección auditiva</span></div>
+        <div class="eppcard rv up" style="--d:4"><div class="ic" data-foto="gafas(D5)"><svg viewBox="0 0 24 24"><rect x="3" y="9" width="7" height="6" rx="3"/><rect x="14" y="9" width="7" height="6" rx="3"/><path d="M10 11h4"/></svg></div><span>Gafas</span></div>
+        <div class="eppcard rv up" style="--d:5"><div class="ic" data-foto="altavisibilidad(D5)"><svg viewBox="0 0 24 24"><path d="M8 4l4 3 4-3 4 3v14H4V7zM12 7v13"/></svg></div><span>Alta visibilidad · manga larga</span></div>
       </div>
       <div class="warn rv up" style="--d:2"><svg viewBox="0 0 24 24"><path d="M12 3l9 16H3z"/><path d="M12 9v5M12 17h0"/></svg>No usar ropa holgada, para evitar atrapamientos con partes móviles de equipos.</div>
     </div>
@@ -2039,14 +2046,16 @@ document.getElementById('s_gun').innerHTML   = sign('<path d="M22 28h18v6h-6l-4 
 document.getElementById('s_beard').innerHTML = sign('<path d="M24 24a8 8 0 0 1 16 0v4c0 8-4 14-8 14s-8-6-8-14z"/><path d="M28 24h8"/>');
 /* ====== FOTOS DE LA DIAPOSITIVA 4 ======
    Cada tarjeta trae en data-foto el nombre de su archivo, SIN extensión.
-   Sube las 7 a la carpeta "imagenes/" con estos nombres exactos:
-       instrucciones(D4)   areas(D4)   correr(D4)   celular(D4)
-       accesorios(D4)      armas(D4)   barba(D4)
+   Sube las imágenes a la carpeta "imagenes/" con estos nombres exactos:
+     Diapositiva 4:  instrucciones(D4)  areas(D4)   correr(D4)  celular(D4)
+                     accesorios(D4)     armas(D4)   barba(D4)
+     Diapositiva 5:  respiratoria(D5)   botas(D5)   casco(D5)
+                     auditiva(D5)       gafas(D5)   altavisibilidad(D5)
    Se prueba .png, .jpg, .jpeg, .gif y .webp, primero en GitHub Pages y luego
    junto al HTML. Si ninguna existe, la tarjeta conserva su señal dibujada, así
    que la diapositiva nunca queda con un hueco. */
 var EXT_FOTO = ['png','jpg','jpeg','gif','webp'];
-document.querySelectorAll('.beh .sign[data-foto]').forEach(function(slot){
+document.querySelectorAll('[data-foto]').forEach(function(slot){
   var nombre = slot.getAttribute('data-foto');
   var rutas = [];
   EXT_FOTO.forEach(function(e){ rutas.push(asset('imagenes/' + nombre + '.' + e)); });
@@ -2059,7 +2068,7 @@ document.querySelectorAll('.beh .sign[data-foto]').forEach(function(slot){
     slot.innerHTML = '';
     slot.appendChild(img);
     slot.classList.add('foto');
-    var tarjeta = slot.closest('.beh'); if(tarjeta) tarjeta.classList.add('conFoto');
+    if(slot.parentElement) slot.parentElement.classList.add('conFoto');
   };
   img.onerror = function(){ i++; if(i < rutas.length) img.src = rutas[i]; };
   img.src = rutas[0];
