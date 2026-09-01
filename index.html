@@ -356,6 +356,9 @@
   @media(max-width:900px){.acts{grid-template-columns:repeat(2,1fr)}} @media(max-width:520px){.acts{grid-template-columns:1fr}}
   .act{border-radius:14px;padding:18px 12px;text-align:center;cursor:pointer;color:#fff;font-weight:800;font-size:13px;line-height:1.2;box-shadow:var(--shadow);border:3px solid transparent;transition:.2s;position:relative;min-height:96px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
   .act:hover{transform:translateY(-4px)} .act.sel{border-color:#fff}
+  /* El SVG de la ficha no traía medida y se estiraba hasta ~290px de alto: se fija
+     para que las 8 fichas quepan en pantalla sin scroll. */
+  .act svg{width:42px;height:42px;flex:none}
   .act .tick{position:absolute;top:7px;right:7px;width:21px;height:21px;border-radius:50%;background:#fff;color:var(--ok);display:none;place-items:center;font-size:12px;font-weight:800}
   .act.sel .tick{display:grid}
   .pyr{display:flex;flex-direction:column;align-items:center;gap:4px;margin-top:22px}
@@ -695,6 +698,11 @@
   .mediaBox.plain img,.mediaBox.plain video{
     width:auto;max-width:min(100%,var(--maxw,320px));height:auto;
     aspect-ratio:auto;object-fit:contain;border-radius:0;background:transparent;margin:0 auto}
+  /* 24) Fichas informativas que ya no piden clic: sin cursor de mano, sin ✓
+        y sin el rebote del hover, para no prometer una interacción que no existe. */
+  .gclick.noclick{cursor:default}
+  .gclick.noclick:hover{transform:none;filter:none}
+  .gclick.noclick .tick{display:none!important}
   /* .soft = esquinas redondeadas, para GIF/PNG con fondo blanco propio */
   .mediaBox.plain.soft img,.mediaBox.plain.soft video{border-radius:14px}
   /* Cuando la imagen es pequeña, su columna ocupa solo lo necesario */
@@ -2201,10 +2209,38 @@ OBJ.forEach(function(o,k){
   el.innerHTML='<div class="acc-head"><span class="stripe" style="background:'+o.c+'"></span><h4>'+o.t+'</h4><span class="chev">+</span></div><div class="acc-body"><p>'+o.d+'</p><span class="ptitle" style="margin-top:12px">Puntos a cumplir</span>'+pts+'</div>';
   objEl.appendChild(el);
 });
-/* ====== ACORDEÓN (condiciones + reglas + objetivos) ====== */
+/* ====== ACORDEÓN (condiciones + reglas + objetivos) ======
+   Rejillas de 5 o más tarjetas: se agrupan por columna. Un clic abre TODA la
+   columna izquierda y otro TODA la derecha, así la diapositiva se completa con
+   2 clics en vez de 6 u 8. Con 4 tarjetas o menos, cada una funciona por su
+   cuenta como siempre. */
+var ACC_MIN_GRUPO = 5;
+document.querySelectorAll('.accgrid').forEach(function(rejilla){
+  var tarjetas = Array.prototype.filter.call(rejilla.children, function(c){ return c.classList.contains('acc'); });
+  if(tarjetas.length < ACC_MIN_GRUPO) return;
+  rejilla.classList.add('acc-columnas');
+  // columna izquierda = posiciones pares, derecha = impares (la rejilla llena por filas)
+  tarjetas.forEach(function(c,k){ c.setAttribute('data-col', k%2); });
+  var pista = rejilla.closest('.slide').querySelector('.lead');
+  if(pista) pista.innerHTML = 'Toca una tarjeta y se abre <b>todo su grupo</b>: con 2 toques ves toda la información. \uD83D\uDC46';
+});
 document.querySelectorAll('.acc').forEach(function(a){
-  a.classList.add('req');
-  function t(){ a.classList.toggle('open'); a.setAttribute('aria-expanded', a.classList.contains('open')?'true':'false'); markDone(a); }
+  var rejilla = a.parentElement;
+  var agrupada = rejilla && rejilla.classList.contains('acc-columnas');
+  // Con agrupación solo exigimos 2 clics por rejilla: la primera tarjeta de cada columna.
+  if(!agrupada || a === rejilla.querySelector('.acc[data-col="'+a.getAttribute('data-col')+'"]')) a.classList.add('req');
+  function grupo(){
+    if(!agrupada) return [a];
+    return Array.prototype.slice.call(rejilla.querySelectorAll('.acc[data-col="'+a.getAttribute('data-col')+'"]'));
+  }
+  function t(){
+    var abrir = !a.classList.contains('open');
+    grupo().forEach(function(c){
+      c.classList.toggle('open', abrir);
+      c.setAttribute('aria-expanded', abrir?'true':'false');
+      markDone(c);
+    });
+  }
   a.addEventListener('click', t);
   a.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); t(); } });
 });
@@ -2269,12 +2305,30 @@ var PLANO = [
     d.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){e.preventDefault();act();} });
   });
 })();
-/* ====== CLICS GATEADOS (chips, actividades, pirámide, calificación) ====== */
+/* ====== CLICS GATEADOS ======
+   Solo se exige (y se permite) el clic donde el clic REVELA algo nuevo:
+   .plevel destapa el "quién" de cada nivel y .hot muestra su etiqueta.
+   Las fichas .act y .chip3 solo pintaban un ✓ sin aportar información, así que
+   dejan de ser obligatorias y dejan de ser clicables: son texto informativo. */
 document.querySelectorAll('.gclick').forEach(function(el){
+  var revela = el.classList.contains('plevel') || el.classList.contains('hot');
+  if(!revela){
+    el.classList.add('noclick');
+    el.removeAttribute('tabindex'); el.removeAttribute('role');
+    return;
+  }
   el.classList.add('req');
   function t(){ el.classList.toggle('sel'); markDone(el); }
   el.addEventListener('click', t);
   el.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); t(); } });
+});
+/* Si una diapositiva se quedó sin barrera, su instrucción ya no debe pedir clics. */
+document.querySelectorAll('.slide').forEach(function(s){
+  if(!s.querySelector('.gclick.noclick')) return;
+  if(s.querySelectorAll('.req').length) return;
+  var pista = s.querySelector('.lead');
+  if(pista && /(toca|clic|click|explora|selecciona)/i.test(pista.textContent))
+    pista.innerHTML = 'Revisa la información y continúa con <b>Siguiente \u2192</b>.';
 });
 /* ====== QUIZ ====== */
 var quiz = document.getElementById('quiz');
