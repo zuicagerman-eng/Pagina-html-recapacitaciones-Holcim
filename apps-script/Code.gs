@@ -13,9 +13,28 @@
 // ►► CORREO donde quieres recibir los reportes ◄◄
 var CORREO_REPORTES = "german.zuica@holcim.com";
 
-// Sirve el curso (archivo index.html del proyecto) y permite embeberlo en el portal.
+/* ═══════════════════════════════════════════════════════════════════════════
+   DÓNDE VIVE EL CURSO
+
+   El curso se reparte desde GitHub Pages, no desde aquí. Así lo abre cualquiera
+   sin cuenta de Google y sin depender de las políticas de la organización.
+
+   Este script ya solo hace dos cosas: enviar los correos del botón ⚠️ y guardar
+   los resultados del examen en la hoja de cálculo. Ambas llegan por doPost.
+
+   doGet se deja para que cualquier enlace /exec viejo que alguien tenga
+   guardado lleve al curso actualizado, en vez de mostrar una copia vieja.
+   ═══════════════════════════════════════════════════════════════════════════ */
+var URL_CURSO = "https://zuicagerman-eng.github.io/Pagina-html-recapacitaciones-Holcim/index.html";
+
 function doGet() {
-  return HtmlService.createHtmlOutputFromFile('index')
+  var destino = URL_CURSO.replace(/"/g, '');
+  return HtmlService.createHtmlOutput(
+      '<!DOCTYPE html><meta charset="utf-8">' +
+      '<title>HSE-001 Reinducción H&amp;S 2026</title>' +
+      '<p style="font:15px/1.5 system-ui;padding:24px">Abriendo la reinducción… ' +
+      'Si no avanza sola, <a id="ir" href="' + destino + '">entra aquí</a>.</p>' +
+      '<script>var u="' + destino + '";try{top.location.replace(u)}catch(e){location.replace(u)}<\/script>')
     .setTitle('HSE-001 Reinducción H&S 2026')
     .addMetaTag('viewport', 'width=device-width, initial-scale=1')
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
