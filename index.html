@@ -132,6 +132,10 @@
     align-items:center;justify-content:center}
   .beh .sign.foto img{max-width:min(100%,150px);max-height:104px;width:auto;height:auto;
     border-radius:10px;display:block;object-fit:contain}
+  /* Las fotos traen fondo blanco opaco: en las tarjetas blancas no se nota, pero en
+     la tarjeta azul oscura se veía un recuadro suelto. Se le da forma de placa
+     blanca redondeada para que se vea intencional. */
+  .beh.rec .sign.foto img{background:#fff;padding:7px;border-radius:14px}
   .beh p{font-size:13px;font-weight:600;line-height:1.35;color:var(--ink)}
   .beh.rec{background:linear-gradient(160deg,#0e2c56,#123a6e)} .beh.rec p{color:#fff}
   /* EPP */
