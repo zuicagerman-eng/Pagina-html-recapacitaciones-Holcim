@@ -222,9 +222,14 @@
   /* Las fotos traen fondo blanco opaco: en las tarjetas blancas no se nota, pero en
      la tarjeta azul oscura se veía un recuadro suelto. Se le da forma de placa
      blanca redondeada para que se vea intencional. */
-  .beh.rec .sign.foto img{background:#fff;padding:7px;border-radius:14px}
+  /* La tarjeta de "recomendación" iba en azul oscuro y rompía la uniformidad,
+     porque las 7 imágenes traen fondo blanco. Queda igual que las demás: el
+     propio texto ("Se recomienda…") ya la distingue, y así las 7 imágenes
+     quedan a la misma altura. */
+  .beh.rec{background:#fff}
+  .beh.rec p{color:var(--ink)}
   .beh p{font-size:13px;font-weight:600;line-height:1.35;color:var(--ink)}
-  .beh.rec{background:linear-gradient(160deg,#0e2c56,#123a6e)} .beh.rec p{color:#fff}
+
   /* EPP */
   .epp{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
   @media(max-width:820px){.epp{grid-template-columns:repeat(2,1fr)}}
@@ -1054,7 +1059,7 @@
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg>
         <span id="vhintTxt">Reproduce el video hasta el final para continuar.</span>
       </div>
-      <button class="vskip" id="vskip" style="display:none">El video ya terminó y el botón sigue bloqueado — habilitar manualmente</button>
+      <button class="vskip" id="vskip" style="display:none">Habilitar manualmente (solo administrador)</button>
     </div>
   </section>
   <!-- 7 CONCEPTOS CLAVE (flip) -->
@@ -2517,9 +2522,27 @@ try{
     });
   }
 }catch(e){}
-/* red de seguridad: si el SDK no carga (red corporativa), muestra opción manual a los 12 s */
-setTimeout(function(){ if(!videoEnded && EXIGIR_VIDEO_COMPLETO && vskip) vskip.style.display='inline-block'; }, 12000);
-if(vskip) vskip.addEventListener('click', videoListo);
+/* ====== ATAJO DEL VIDEO ======
+   El botón para desbloquear a mano ya no se le ofrece al participante: era una
+   invitación a saltarse el video. Queda solo para el modo administrador.
+
+   Excepción justificada: si el SDK de Vimeo no cargó (red corporativa que
+   bloquea player.vimeo.com), el video NO se puede ver ni verificar, así que
+   exigirlo dejaría a la persona atrapada sin salida. En ese caso se libera solo
+   y se explica por qué; no es un atajo, es que no hay video que ver. */
+setTimeout(function(){
+  if(videoEnded || !EXIGIR_VIDEO_COMPLETO) return;
+  if(typeof Vimeo === 'undefined' || !vplayer){
+    vhintTxt.textContent = 'No se pudo cargar el video en esta red. Puedes continuar; avisa con el botón “Reportar”.';
+    videoEnded = true; chrome();
+    return;
+  }
+  if(vskip && document.body.classList.contains('admin')) vskip.style.display = 'inline-block';
+}, 15000);
+if(vskip) vskip.addEventListener('click', function(){
+  if(!document.body.classList.contains('admin')) return;
+  videoListo();
+});
 /* ====== FLIP ====== */
 document.querySelectorAll('.flip').forEach(function(f){
   f.classList.add('req');
