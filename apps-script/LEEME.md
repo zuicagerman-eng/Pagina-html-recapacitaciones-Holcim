@@ -90,3 +90,66 @@ El script creará las pestañas y los encabezados dentro de esa hoja.
 Las 50 preguntas, con su respuesta correcta marcada, están en
 `EXAMEN-banco-de-preguntas.md`, en la raíz del repositorio. Para editarlas se
 cambia el bloque `var BANCO = [` dentro de `index.html`.
+
+
+## 7. "No se pudo abrir el archivo en este momento" (pantalla de Google Drive)
+
+Ese mensaje NO viene del curso: lo muestra Google cuando quien abre el enlace
+no tiene permiso para ejecutar la aplicación web. Revisa estas tres cosas, en
+este orden.
+
+### 7.1 Estás usando la URL equivocada (la causa más común)
+
+Una implementación tiene DOS direcciones y solo una sirve para los demás:
+
+| URL | Termina en | Quién puede abrirla |
+|-----|-----------|---------------------|
+| Prueba | `/dev` | **solo tú y los editores del proyecto** |
+| Producción | `/exec` | **quien indiques en "Quién tiene acceso"** |
+
+La `/dev` falla en el celular aunque a ti te funcione en el computador, porque
+en el teléfono normalmente hay otra cuenta de Google (o ninguna).
+
+Copia la de `/exec`: **Implementar → Administrar implementaciones →** la URL
+que aparece bajo *"Aplicación web"*.
+
+### 7.2 El acceso no está en "Cualquier usuario"
+
+**Implementar → Administrar implementaciones → ✏️ Editar:**
+
+- **Ejecutar como:** *Yo (tu-correo)* ← no lo cambies. Así el script escribe en
+  TU hoja de resultados aunque quien conteste sea otra persona.
+- **Quién tiene acceso:** *Cualquier usuario* ← esta es la que hay que cambiar.
+
+En el desplegable hay dos opciones parecidas:
+
+- **Cualquier usuario**: necesita haber iniciado sesión con una cuenta de Google.
+- **Cualquier usuario, incluso los anónimos**: entra cualquiera, sin sesión.
+  Es la que hay que elegir si el curso debe abrirse para todos, sean o no de
+  Holcim. (En el manifiesto `appsscript.json` corresponde a `ANYONE_ANONYMOUS`.)
+
+Después de cambiarlo, **Versión: Nueva versión → Implementar**. El cambio no
+aplica hasta publicar versión nueva.
+
+### 7.3 Tu organización bloquea el uso externo
+
+Si el desplegable NO ofrece "Cualquier usuario" (solo aparece *"Cualquier
+usuario de Holcim"* o *"Solo yo"*), no es un problema que se pueda resolver
+desde el código: el administrador de Google Workspace de Holcim tiene
+restringido publicar aplicaciones hacia fuera de la organización.
+
+Opciones en ese caso:
+
+1. Pedirle a TI que habilite la publicación externa de Apps Script para tu
+   cuenta o para el proyecto.
+2. Dejarlo en *"Cualquier usuario de Holcim"*, si todos los que van a
+   presentar la reinducción tienen correo corporativo.
+3. Desplegar el curso desde una cuenta de Google personal, que sí permite
+   "Cualquier usuario, incluso los anónimos". La hoja de resultados quedaría
+   en el Drive de esa cuenta.
+
+### 7.4 Comprobación
+
+Abre la URL `/exec` en una **ventana de incógnito y sin iniciar sesión**. Si
+carga el curso, cualquier persona podrá entrar. Si pide iniciar sesión, todavía
+está en "Cualquier usuario" y no en "incluso los anónimos".
