@@ -265,14 +265,6 @@
   .back h4{font-size:15px;margin-bottom:7px;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:800}
   .back p{font-size:13px;line-height:1.5;color:var(--muted)}
   .back .ej{margin-top:10px;padding:10px 12px;border-radius:9px;background:#f0f6d9;color:#4d6b16;font-size:12.5px;line-height:1.45}
-  /* equation */
-  .eq{display:flex;align-items:stretch;justify-content:center;gap:14px;flex-wrap:wrap}
-  .eq-box{flex:1;min-width:170px;max-width:270px;border-radius:16px;padding:22px 18px;text-align:center;color:#fff;box-shadow:var(--shadow)}
-  .eq-box.a{background:linear-gradient(160deg,#1877c4,#0e2c56)} .eq-box.b{background:linear-gradient(160deg,#1bb4e4,#1481c4)} .eq-box.c{background:linear-gradient(160deg,#e23b32,#b0261f)}
-  .eq-box .lbl{font-size:11px;text-transform:uppercase;letter-spacing:1.4px;opacity:.85;margin-bottom:8px}
-  .eq-box .big{font-size:18px;font-weight:800;line-height:1.2} .eq-box .ex{font-size:12px;margin-top:8px;opacity:.9;line-height:1.4}
-  .eq-op{display:grid;place-items:center;font-size:36px;font-weight:800;color:#8fd6f2;min-width:30px}
-  @media(max-width:760px){.eq{flex-direction:column;align-items:center}.eq-op{transform:rotate(90deg)}.eq-box{max-width:340px;width:100%}}
   /* peligro vs riesgo */
   .pr{display:grid;grid-template-columns:1fr 1fr;gap:2px;border-radius:16px;overflow:hidden;box-shadow:var(--shadow)}
   @media(max-width:760px){.pr{grid-template-columns:1fr}}
@@ -352,7 +344,6 @@
     .flip-in{min-height:230px}
     .videobox{margin-top:16px}
     .nbtn{font-size:13.5px}
-    .eq-op{font-size:30px}
     .conf{padding:20px;gap:16px}.conf .tri{width:72px;height:72px}
     .beh .sign{width:50px;height:50px}
     .beh .sign.foto{height:86px} .beh .sign.foto img{max-height:86px;max-width:min(100%,124px)}
@@ -1086,21 +1077,6 @@
           <div class="face front"><div class="n">4</div><h3>Accidente de trabajo</h3><div class="hint">Toca para ver ↺</div></div>
           <div class="face back"><h4>Accidente de trabajo</h4><p>Suceso repentino por causa u ocasión del trabajo que produce lesión, perturbación funcional, invalidez o muerte.</p><div class="ej"><b>Ejemplo:</b> caída de alturas al realizar labores en la cubierta.</div></div>
         </div></div>
-      </div>
-    </div>
-  </section>
-  <!-- 8 ECUACIÓN -->
-  <section class="slide dark">
-    <div class="wrap">
-      <div class="eyebrow rv up">Un mismo caso</div>
-      <h2 class="rv up" style="--d:1">La ecuación de la seguridad</h2>
-      <p class="lead rv up" style="--d:2">Así se combinan los conceptos en un mismo caso:</p>
-      <div class="eq" style="margin-top:32px">
-        <div class="eq-box a rv left"><div class="lbl">Suma</div><div class="big">Condición insegura</div><div class="ex">Carro con rueda dañada</div></div>
-        <div class="eq-op rv scale" style="--d:1">+</div>
-        <div class="eq-box b rv up" style="--d:2"><div class="lbl">Suma</div><div class="big">Acto inseguro</div><div class="ex">Empujarlo distraído</div></div>
-        <div class="eq-op rv scale" style="--d:3">=</div>
-        <div class="eq-box c rv right" style="--d:4"><div class="lbl">Resultado</div><div class="big">Incidente o accidente</div><div class="ex">El carro se vuelca y hay lesión</div></div>
       </div>
     </div>
   </section>
@@ -2114,7 +2090,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-01";
+var VERSION_CURSO = "2026-09-01-b";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
