@@ -142,6 +142,64 @@ function guardarExamen(d) {
   return { ok: true };
 }
 
+/**
+ * ═══════════════════════════════════════════════════════════════════════════
+ * FORMULARIOS NUEVOS (cualquier cosa que quieras guardar a futuro)
+ *
+ * No hace falta programar nada aquí para añadir un formulario. Desde el curso
+ * basta con llamar a enviarASheet('NombreDeLaPestana', { campo: valor, ... })
+ * y esta función se encarga del resto:
+ *
+ *   · Crea la pestaña con ese nombre si no existe.
+ *   · Toma los encabezados de los campos que le mandes.
+ *   · Si más adelante añades un campo nuevo, agrega la columna al final sin
+ *     dañar lo que ya estaba guardado.
+ *   · Siempre agrega una columna "Fecha" al inicio.
+ *
+ * Los campos que empiezan por "cedula" o "documento" se guardan como texto,
+ * para que la hoja no borre los ceros de la izquierda.
+ * ═══════════════════════════════════════════════════════════════════════════
+ */
+function guardarFormulario(d) {
+  d = d || {};
+  var ss = obtenerHoja_();
+  var nombre = String(d.tipo || 'Formulario').substring(0, 90);
+  var hoja = ss.getSheetByName(nombre);
+
+  // "tipo" es el nombre de la pestaña y "fecha" ya va en su propia columna
+  var campos = [];
+  for (var k in d) { if (d.hasOwnProperty(k) && k !== 'tipo' && k !== 'fecha') campos.push(k); }
+
+  if (!hoja) {
+    hoja = ss.insertSheet(nombre);
+    hoja.appendRow(['Fecha'].concat(campos));
+    hoja.setFrozenRows(1);
+  }
+
+  var encabezados = hoja.getRange(1, 1, 1, Math.max(1, hoja.getLastColumn()))
+                        .getValues()[0].map(String);
+
+  // campos nuevos → columnas nuevas al final, sin tocar lo ya guardado
+  campos.forEach(function (c) {
+    if (encabezados.indexOf(c) < 0) {
+      encabezados.push(c);
+      hoja.getRange(1, encabezados.length).setValue(c);
+    }
+  });
+
+  var fila = encabezados.map(function (c) {
+    if (c === 'Fecha') return d.fecha || new Date();
+    var v = d[c];
+    if (v === undefined || v === null) return '';
+    if (typeof v === 'object') return JSON.stringify(v);
+    if (/^(cedula|cédula|documento)/i.test(c)) return "'" + v;   // conserva ceros
+    return v;
+  });
+
+  hoja.appendRow(fila);
+  return { ok: true, pestana: nombre };
+}
+
 /** Ejecútala UNA VEZ desde el editor para ver la URL de la hoja de resultados. */
 function verHojaDeResultados() {
   var url = obtenerHoja_().getUrl();
@@ -167,7 +225,10 @@ function enviarReporte(d) {
 function doPost(e) {
   try {
     var d = JSON.parse((e && e.postData && e.postData.contents) || "{}");
-    var r = (d.tipo === 'examen') ? guardarExamen(d) : enviarCorreoReporte(d);
+    var r;
+    if (d.tipo === 'examen')                      r = guardarExamen(d);
+    else if (!d.tipo || d.tipo === 'reporte')     r = enviarCorreoReporte(d);
+    else                                          r = guardarFormulario(d);
     return ContentService.createTextOutput(JSON.stringify(r || { ok: true }))
       .setMimeType(ContentService.MimeType.JSON);
   } catch (err) {

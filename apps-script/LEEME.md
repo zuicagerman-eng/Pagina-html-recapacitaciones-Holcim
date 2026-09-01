@@ -194,3 +194,35 @@ el envío de datos, que va por una petición POST y no por una sesión de usuari
 Si la red corporativa también bloqueara `script.google.com`, el curso se vería
 igual pero la pantalla del examen avisaría que no pudo confirmar el registro,
 en vez de darlo por guardado.
+
+
+## 9. Conectar un formulario nuevo con la hoja de cálculo
+
+Aunque el curso se sirva desde GitHub Pages, sí puede escribir en Sheets: lo
+hace enviando los datos por POST a la URL `/exec`. Esa tubería ya está montada
+y es reutilizable, así que **para un formulario nuevo no hay que programar nada
+en Apps Script**.
+
+Desde cualquier parte del `index.html`:
+
+```js
+enviarASheet('Asistencia', {
+  nombre: 'Ana María Pérez',
+  cedula: '0102030405',
+  sede:   'Bogotá'
+})
+.then(function(){  /* llegó y quedó confirmado */ })
+.catch(function(e){ /* no se pudo confirmar: avísale a la persona */ });
+```
+
+El primer parámetro es el nombre de la pestaña. Lo que pasa del otro lado:
+
+- Si la pestaña no existe, se crea con esos campos como encabezados.
+- Se agrega siempre una columna **Fecha** al inicio.
+- Si más adelante mandas un campo nuevo, se añade la columna al final **sin
+  dañar** lo ya guardado.
+- Los campos que empiezan por `cedula` o `documento` se guardan como texto,
+  para que la hoja no borre los ceros de la izquierda.
+
+Requisito único: tener `REPORTE_URL` con la URL `/exec`. Si el curso corre
+dentro de Apps Script, funciona igual sin configurar nada.

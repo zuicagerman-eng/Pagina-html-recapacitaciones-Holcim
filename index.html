@@ -3312,6 +3312,52 @@ var BANCO = [
 {m:'6',p:'Es responsabilidad del trabajador procurar el cuidado integral de su salud e informar oportunamente los peligros del sitio de trabajo.',o:['Verdadero','Falso'],r:0}
 ];
 
+/* ====== ENVIAR CUALQUIER FORMULARIO A LA HOJA DE CÁLCULO ======
+   Para guardar algo nuevo en el Sheet no hay que tocar Apps Script: basta con
+   llamar a esta función desde cualquier parte del curso.
+
+     enviarASheet('Asistencia', { nombre:'Ana', cedula:'0102030405', sede:'Bogotá' })
+       .then(function(){ ... })      // llegó y se confirmó
+       .catch(function(err){ ... });  // no se pudo confirmar
+
+   El primer parámetro es el nombre de la pestaña: se crea sola la primera vez,
+   con los campos que le mandes como encabezados. Si luego agregas un campo, se
+   añade la columna sin dañar lo guardado.
+
+   Funciona igual si el curso se abre desde Apps Script (usa google.script.run)
+   o desde GitHub Pages / el portal (envía por POST a REPORTE_URL). */
+function enviarASheet(pestana, datos){
+  var d = {}; for(var k in datos) if(datos.hasOwnProperty(k)) d[k] = datos[k];
+  d.tipo  = pestana;
+  d.fecha = d.fecha || new Date().toLocaleString('es-CO');
+
+  return new Promise(function(resolver, rechazar){
+    if(window.google && google.script && google.script.run){
+      google.script.run
+        .withSuccessHandler(function(r){ resolver(r || {ok:true}); })
+        .withFailureHandler(function(e){ rechazar(e); })
+        .guardarFormulario(d);
+      return;
+    }
+    if(!(REPORTE_URL && REPORTE_URL.indexOf('http') === 0)){
+      rechazar(new Error('Falta configurar REPORTE_URL con la URL /exec de Apps Script.'));
+      return;
+    }
+    // Texto plano a propósito: evita la consulta previa de CORS, que Apps Script no responde.
+    fetch(REPORTE_URL, {
+      method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify(d)
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(r){ if(r && r.ok) resolver(r); else rechazar(new Error((r && r.error) || 'respuesta inesperada')); })
+    .catch(function(e){
+      // Reintento a ciegas: a veces el navegador deja enviar pero no leer la respuesta.
+      try{ fetch(REPORTE_URL, {method:'POST', mode:'no-cors',
+        headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify(d)}); }catch(x){}
+      rechazar(e);
+    });
+  });
+}
+
 /* ====== EXAMEN FINAL · lógica ====== */
 window.EXAMEN_APROBADO = false;
 document.addEventListener('DOMContentLoaded', function(){
