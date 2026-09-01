@@ -2125,6 +2125,10 @@ var VIDEO_INICIO = 9;
    Pega aquí la URL /exec de tu Google Apps Script (el mismo que sirve el curso
    sirve para recibir los reportes). El script envía el correo automáticamente.
    Si lo dejas vacío "", el botón abrirá el correo del usuario como respaldo. */
+/* URL /exec de tu implementación de Apps Script. Solo hace falta cuando el curso
+   NO se sirve desde el propio Apps Script (por ejemplo desde GitHub Pages o
+   pegado en el portal): por ahí viajan los reportes de problemas y los
+   resultados del examen. Si el curso corre dentro de Apps Script, déjala vacía. */
 var REPORTE_URL   = "";                       // ej: "https://script.google.com/macros/s/XXXX/exec"
 var REPORTE_EMAIL = "zuica.german@gmail.com"; // correo de respaldo (modo "abrir correo")
 
@@ -3469,7 +3473,7 @@ document.addEventListener('DOMContentLoaded', function(){
       nombre: persona.nombre, cedula: persona.cedula,
       fecha: new Date().toLocaleString('es-CO'),
       aciertos: aciertos, total: sorteadas.length, porcentaje: pct,
-      aprobado: aprobo ? 'SÍ' : 'NO', segundos: seg,
+      tipo: 'examen', aprobado: aprobo ? 'SÍ' : 'NO', segundos: seg,
       navegador: navigator.userAgent, respuestas: detalle
     });
   }
@@ -3495,9 +3499,43 @@ document.addEventListener('DOMContentLoaded', function(){
         .guardarExamen(datos);
       return;
     }
+    /* Camino 2: el curso se sirve desde otro sitio (GitHub Pages o el portal).
+       Se envía por POST a la URL /exec de Apps Script. Se manda como texto
+       plano a propósito: así el navegador no hace la consulta previa de CORS,
+       que Apps Script no responde. */
+    if(REPORTE_URL && REPORTE_URL.indexOf('http') === 0){
+      fetch(REPORTE_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(datos)
+      })
+      .then(function(r){ return r.json(); })
+      .then(function(r){
+        if(r && r.ok){
+          caja.className = 'exguardado ok';
+          caja.textContent = '✓ Resultado registrado a nombre de ' + datos.nombre + ' (C.C. ' + datos.cedula + ').';
+        } else {
+          throw new Error((r && r.error) || 'respuesta inesperada');
+        }
+      })
+      .catch(function(err){
+        // Segundo intento a ciegas: sirve cuando el navegador bloquea la lectura
+        // de la respuesta pero sí deja enviar. No podemos confirmar, y se dice.
+        try{
+          fetch(REPORTE_URL, { method:'POST', mode:'no-cors',
+            headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify(datos) });
+        }catch(e){}
+        caja.className = 'exguardado no';
+        caja.innerHTML = '⚠ <b>No se pudo confirmar el registro.</b> El resultado se envió, pero el navegador no ' +
+                         'permitió leer la respuesta. Toma una captura de esta pantalla por si acaso.';
+      });
+      return;
+    }
+
     caja.className = 'exguardado no';
-    caja.innerHTML = '⚠ <b>Este resultado NO quedó registrado.</b> El guardado automático solo funciona cuando el curso ' +
-                     'se abre desde el portal (Google Apps Script). Toma una captura de esta pantalla.';
+    caja.innerHTML = '⚠ <b>Este resultado NO quedó registrado.</b> Falta configurar la variable <b>REPORTE_URL</b> ' +
+                     'con la URL /exec de Apps Script, o abrir el curso desde el propio Apps Script. ' +
+                     'Toma una captura de esta pantalla.';
   }
 
   btnRep.addEventListener('click', function(){

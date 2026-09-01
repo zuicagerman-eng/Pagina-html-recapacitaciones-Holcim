@@ -140,12 +140,16 @@ function enviarReporte(d) {
   return enviarCorreoReporte(d);
 }
 
-// Respaldo por POST (si el curso estuviera en GitHub Pages y usara fetch).
+/**
+ * Entrada por POST. La usa el curso cuando NO se sirve desde Apps Script
+ * (por ejemplo desde GitHub Pages), donde google.script.run no existe.
+ * Distingue entre un reporte de problema y un examen por el campo "tipo".
+ */
 function doPost(e) {
   try {
     var d = JSON.parse((e && e.postData && e.postData.contents) || "{}");
-    enviarCorreoReporte(d);
-    return ContentService.createTextOutput(JSON.stringify({ ok: true }))
+    var r = (d.tipo === 'examen') ? guardarExamen(d) : enviarCorreoReporte(d);
+    return ContentService.createTextOutput(JSON.stringify(r || { ok: true }))
       .setMimeType(ContentService.MimeType.JSON);
   } catch (err) {
     return ContentService.createTextOutput(JSON.stringify({ ok: false, error: String(err) }))

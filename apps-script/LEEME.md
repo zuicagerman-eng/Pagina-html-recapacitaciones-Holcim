@@ -153,3 +153,44 @@ Opciones en ese caso:
 Abre la URL `/exec` en una **ventana de incógnito y sin iniciar sesión**. Si
 carga el curso, cualquier persona podrá entrar. Si pide iniciar sesión, todavía
 está en "Cualquier usuario" y no en "incluso los anónimos".
+
+
+## 8. Si la cuenta de Holcim no puede abrir la aplicación
+
+Puede pasar que el curso abra sin problema desde una cuenta personal pero
+muestre "No se pudo abrir el archivo en este momento" desde el perfil de
+Holcim, aun con la implementación en *Ejecutar como: Yo* y *Acceso:
+Cualquiera*. Eso ya no es configuración del despliegue: el Workspace de la
+organización tiene restringido abrir aplicaciones de Apps Script que son de
+fuera. No hay nada que se pueda cambiar en el código para saltarse eso.
+
+### Salida recomendada: servir el curso desde GitHub Pages
+
+El curso no necesita Apps Script para mostrarse; solo lo necesitaba para
+enviar los correos de reporte y guardar el examen. Esas dos cosas también
+funcionan por POST, así que se puede repartir la URL de Pages:
+
+```
+https://zuicagerman-eng.github.io/Pagina-html-recapacitaciones-Holcim/index.html
+```
+
+Configuración necesaria:
+
+1. En `index.html`, pon la URL **/exec** de tu implementación en la variable
+   `REPORTE_URL`:
+
+   ```js
+   var REPORTE_URL = "https://script.google.com/macros/s/AKfy.../exec";
+   ```
+
+2. Sube el cambio a GitHub. Con eso, el curso enviará por POST tanto los
+   reportes del botón ⚠️ como los resultados del examen, y estos seguirán
+   llegando a la misma hoja de cálculo.
+
+Ventajas: la página la abre cualquiera sin cuenta de Google y sin depender de
+las políticas de la organización. La única parte que sigue tocando Google es
+el envío de datos, que va por una petición POST y no por una sesión de usuario.
+
+Si la red corporativa también bloqueara `script.google.com`, el curso se vería
+igual pero la pantalla del examen avisaría que no pudo confirmar el registro,
+en vez de darlo por guardado.
