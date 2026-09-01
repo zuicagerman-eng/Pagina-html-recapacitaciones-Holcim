@@ -72,10 +72,55 @@
   #next{background:var(--grad);color:#062038;box-shadow:0 10px 24px -12px rgba(27,180,228,.9)}
   #next:hover:not(:disabled){transform:translateY(-1px)}
   .nbtn:disabled{opacity:.4;cursor:not-allowed}
-  #pips{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;max-width:50%}
+  #pips{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;align-content:center;max-width:58%}
   #pips i{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.25);cursor:pointer;transition:.25s}
   #pips i.on{background:var(--grad);transform:scale(1.3)}
   #pips i.lock{opacity:.28;cursor:not-allowed}
+  /* Banderita que abre cada módulo dentro de la fila de puntos */
+  #pips b.pipflag{display:inline-flex;align-items:center;height:13px;padding:0 5px;margin-right:1px;
+    border-radius:4px;font-size:9px;font-weight:800;letter-spacing:.3px;color:#04121f;
+    background:var(--cm,#97d13b);cursor:pointer;user-select:none;transition:.2s;line-height:1}
+  #pips b.pipflag:hover{filter:brightness(1.15);transform:translateY(-1px)}
+  #pips b.pipflag.lock{opacity:.32;cursor:not-allowed}
+  /* Los puntos toman el color de su módulo, apagado, para que agrupen sin hacer ruido */
+  #pips i{background:var(--cm,rgba(255,255,255,.25));opacity:.42}
+  #pips i.on{opacity:1}
+  #pips i.lock{opacity:.16;cursor:not-allowed}
+
+  /* ====== PANEL DE ADMINISTRADOR ====== */
+  #admbadge{position:fixed;left:50%;transform:translateX(-50%);top:8px;z-index:80;display:none;
+    background:#ef7d00;color:#04121f;font-weight:800;font-size:11.5px;letter-spacing:1px;
+    padding:5px 12px;border-radius:999px;box-shadow:0 8px 24px -10px rgba(0,0,0,.7)}
+  body.admin #admbadge{display:block}
+  #admpanel{position:fixed;inset:0;z-index:90;background:rgba(4,12,22,.82);
+    display:none;align-items:center;justify-content:center;padding:20px}
+  #admpanel.show{display:flex}
+  .admbox{background:#0b1b2e;border:1px solid rgba(255,255,255,.14);border-radius:16px;
+    width:min(920px,100%);max-height:88vh;display:flex;flex-direction:column;overflow:hidden;
+    box-shadow:0 30px 80px -30px #000}
+  .admhead{padding:16px 18px;border-bottom:1px solid rgba(255,255,255,.12);display:flex;
+    align-items:center;gap:12px;flex-wrap:wrap}
+  .admhead h3{font-size:17px;font-weight:800;color:#fff;flex:1;min-width:180px}
+  .admhead input{flex:1 1 200px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);
+    border-radius:9px;padding:8px 11px;color:#fff;font-size:13.5px;font-family:inherit}
+  .admhead input::placeholder{color:rgba(255,255,255,.5)}
+  .admhead button{background:rgba(255,255,255,.12);border:0;color:#fff;font-weight:700;font-size:13px;
+    padding:8px 13px;border-radius:9px;cursor:pointer;font-family:inherit}
+  .admhead button:hover{background:rgba(255,255,255,.2)}
+  .admlist{overflow:auto;padding:12px 18px 18px}
+  .admmod{margin-top:14px;font-size:11px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;
+    color:var(--cm,#97d13b);display:flex;align-items:center;gap:9px}
+  .admmod:after{content:"";flex:1;height:1px;background:rgba(255,255,255,.13)}
+  .admgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:7px;margin-top:9px}
+  .admgo{display:flex;gap:9px;align-items:flex-start;text-align:left;background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.09);border-radius:9px;padding:8px 10px;cursor:pointer;
+    color:#dce8f5;font-size:12.5px;line-height:1.3;font-family:inherit;transition:.15s}
+  .admgo:hover{background:rgba(255,255,255,.14)}
+  .admgo.cur{border-color:var(--cyan);background:rgba(27,180,228,.18)}
+  .admgo .nn{flex:none;font-weight:800;color:var(--cm,#97d13b);min-width:26px}
+  .admlist{flex:1}
+  .admnota{font-size:12px;color:rgba(255,255,255,.62);padding:11px 18px;margin:0;
+    background:#0b1b2e;border-top:1px solid rgba(255,255,255,.12)}
   @media(max-width:640px){#pips{display:none}.nbtn{padding:12px 18px}}
   /* ===== HERO ===== */
   .hero-code{font-weight:800;letter-spacing:3px;font-size:clamp(40px,8vw,84px);line-height:.98}
@@ -1940,6 +1985,11 @@
 <div id="toast"></div>
 <script>
 /* ====== CONFIGURACIÓN ====== */
+/* PIN del modo administrador (Ctrl+Shift+A). Sirve para revisar el curso sin
+   completar cada interacción. NO es seguridad real: el PIN viaja dentro del
+   HTML y quien sepa mirar el código puede verlo; solo evita que un participante
+   lo active por accidente o de oídas. Cámbialo por el que quieras. */
+var PIN_ADMIN = "2026";
 var EXIGIR_VIDEO_COMPLETO = true;   // pon false para no obligar a ver el video completo
 /* Segundo en el que arranca el video de bienvenida: se saltan los primeros 9 s.
    Si algún día quieres el video completo, pon 0 (y quita el "#t=9s" del iframe). */
@@ -2129,8 +2179,57 @@ elTot.textContent = N;
 /* posición inicial de cada slide */
 slides.forEach(function(s,i){ s.style.transform = i===0 ? 'translateX(0)' : 'translateX(100%)'; });
 /* pips */
-for(var i=0;i<N;i++){ (function(i){ var p=document.createElement('i'); p.addEventListener('click',function(){ if(i<=maxUnlocked) goTo(i, i>idx?1:-1); }); pips.appendChild(p); })(i); }
-var pipEls = Array.prototype.slice.call(pips.children);
+/* Módulos: color y nombre. Se usan en las banderitas de los puntos de abajo y
+   en el panel de administrador. */
+var MODULOS = {
+ '1':{c:'#97d13b', t:'Generalidades y conceptos básicos'},
+ '2':{c:'#1bb4e4', t:'Planeación estratégica H&S'},
+ '3':{c:'#1877c4', t:'Control operacional'},
+ '4':{c:'#17868a', t:'Controles complementarios'},
+ '5':{c:'#ef7d00', t:'Controles críticos'},
+ '6':{c:'#e6007e', t:'Comunicación y consulta'}
+};
+function modDe(i){ return slides[i].getAttribute('data-mod') || '1'; }
+function infoMod(m){ return MODULOS[m] || MODULOS['1']; }
+function tituloDe(i){
+  var h = slides[i].querySelector('h2, .hero-title');
+  if(!h) return 'Diapositiva ' + (i+1);
+  // Se cambia cada etiqueta por un espacio: si no, "Control operacional<br>Identificación"
+  // quedaba pegado como "operacionalIdentificación". Se pasa por un div para que
+  // los símbolos escritos como entidad (&amp; → &) queden bien.
+  var d = document.createElement('div');
+  d.innerHTML = h.innerHTML.replace(/<[^>]*>/g,' ');
+  var t = d.textContent.replace(/\s+/g,' ').trim();
+  return t || 'Diapositiva ' + (i+1);
+}
+/* Puntos de navegación: cada módulo abre con una banderita (M1…M6) y sus puntos
+   llevan el color del módulo, apagados, para que agrupen sin llenar de ruido. */
+var pipEls = [], pipFlags = [];
+(function(){
+  var anterior = null;
+  for(var i=0;i<N;i++){
+    var m = modDe(i);
+    if(m !== anterior){
+      anterior = m;
+      (function(m,i){
+        var f = document.createElement('b');
+        f.className = 'pipflag'; f.textContent = 'M'+m;
+        f.style.setProperty('--cm', infoMod(m).c);
+        f.title = 'Módulo '+m+' · '+infoMod(m).t+' (empieza en el paso '+(i+1)+')';
+        f.setAttribute('data-i', i);
+        f.addEventListener('click', function(){ if(i<=maxUnlocked) goTo(i, i>idx?1:-1); });
+        pips.appendChild(f); pipFlags.push(f);
+      })(m,i);
+    }
+    (function(i,m){
+      var p = document.createElement('i');
+      p.style.setProperty('--cm', infoMod(m).c);
+      p.title = 'Módulo '+m+' · Paso '+(i+1)+' de '+N;
+      p.addEventListener('click', function(){ if(i<=maxUnlocked) goTo(i, i>idx?1:-1); });
+      pips.appendChild(p); pipEls.push(p);
+    })(i,m);
+  }
+})();
 function reveal(s){ s.querySelectorAll('.rv').forEach(function(el){ el.classList.remove('in'); void el.offsetWidth; el.classList.add('in'); }); }
 function clearReveal(s){ s.querySelectorAll('.rv').forEach(function(el){ el.classList.remove('in'); }); }
 /* ====== BARRERA DE INTERACCIÓN ====== */
@@ -2138,6 +2237,7 @@ function reqStats(s){ if(s.classList.contains('nogate')) return {total:0,done:0}
 function refreshNext(){
   var s=slides[idx];
   if(idx===N-1){ nextBtn.disabled=true; nextBtn.textContent='✓ Completado'; return; }
+  if(window.ADMIN){ nextBtn.disabled=false; nextBtn.textContent='Siguiente →'; return; }
   var gate=s.getAttribute('data-gate');
   if(gate==='video' && EXIGIR_VIDEO_COMPLETO && !videoEnded){ nextBtn.disabled=true; nextBtn.textContent='Ve el video para continuar'; return; }
   var r=reqStats(s);
@@ -2153,6 +2253,7 @@ function chrome(){
   var gate = slides[idx].getAttribute('data-gate');
   refreshNext();
   pipEls.forEach(function(p,k){ p.className = ''; if(k===idx) p.classList.add('on'); if(k>maxUnlocked) p.classList.add('lock'); });
+  pipFlags.forEach(function(f){ f.classList.toggle('lock', (+f.getAttribute('data-i')) > maxUnlocked); });
   if(idx===N-1) marcarCompletado();
   if(window.revisarScroll) setTimeout(window.revisarScroll, 60);
   if(window.actualizarAtajos) window.actualizarAtajos();
@@ -2183,7 +2284,7 @@ function next(){
 function prev(){ if(idx>0) goTo(idx-1, -1); }
 nextBtn.addEventListener('click', next);
 prevBtn.addEventListener('click', prev);
-document.addEventListener('keydown', function(e){ var md=document.getElementById('pdfmodal'); if(md&&md.classList.contains('show'))return; var wc=document.getElementById('welcome'); if(wc&&!wc.classList.contains('hide'))return; if(e.key==='ArrowRight') next(); if(e.key==='ArrowLeft') prev(); });
+document.addEventListener('keydown', function(e){ var ap=document.getElementById('admpanel'); if(ap&&ap.classList.contains('show'))return; var md=document.getElementById('pdfmodal'); if(md&&md.classList.contains('show'))return; var wc=document.getElementById('welcome'); if(wc&&!wc.classList.contains('hide'))return; if(e.key==='ArrowRight') next(); if(e.key==='ArrowLeft') prev(); });
 /* reveal de la primera slide */
 reveal(slides[0]); chrome();
 /* ====== VIDEO VIMEO ====== */
@@ -2944,6 +3045,131 @@ cargarMediosCercanos();
   }
   hBtn.addEventListener('click', ayuda);
 })();
+
+/* ====== MODO ADMINISTRADOR ======
+   Pensado para revisar el curso sin completar interacción por interacción.
+   Se abre y se cierra con Ctrl+Shift+A y pide el PIN de la variable PIN_ADMIN.
+   Mientras está activo: todas las diapositivas quedan desbloqueadas, el botón
+   Siguiente nunca se bloquea y el video no es obligatorio.
+   Recuerda: el PIN va dentro del HTML, así que no es una protección real. */
+window.ADMIN = false;
+/* El marcado del panel va después de este script, así que se espera a que el
+   documento termine de leerse antes de engancharlo. */
+document.addEventListener('DOMContentLoaded', function(){
+  var panel  = document.getElementById('admpanel');
+  var lista  = document.getElementById('admlist');
+  var buscar = document.getElementById('admbuscar');
+  var cerrar = document.getElementById('admcerrar');
+  if(!panel || !lista) return;
+  var construido = false;
+
+  function construir(){
+    if(construido) return; construido = true;
+    var html = '', modActual = null;
+    for(var i=0;i<N;i++){
+      var m = modDe(i);
+      if(m !== modActual){
+        if(modActual !== null) html += '</div>';
+        modActual = m;
+        html += '<div class="admmod" style="--cm:'+infoMod(m).c+'">Módulo '+m+' · '+infoMod(m).t+'</div><div class="admgrid">';
+      }
+      html += '<button type="button" class="admgo" data-i="'+i+'" style="--cm:'+infoMod(m).c+'">' +
+              '<span class="nn">'+(i+1)+'</span><span class="tt">'+tituloDe(i).replace(/</g,'&lt;')+'</span></button>';
+    }
+    if(modActual !== null) html += '</div>';
+    lista.innerHTML = html;
+    lista.addEventListener('click', function(e){
+      var b = e.target.closest ? e.target.closest('.admgo') : null;
+      if(!b) return;
+      goTo(+b.getAttribute('data-i'), 1);
+      marcarActual();
+    });
+  }
+
+  function marcarActual(){
+    lista.querySelectorAll('.admgo').forEach(function(b){
+      b.classList.toggle('cur', (+b.getAttribute('data-i')) === idx);
+    });
+  }
+
+  function abrir(){
+    construir(); marcarActual();
+    panel.classList.add('show');
+    var act = lista.querySelector('.admgo.cur');
+    if(act){ try{ act.scrollIntoView({block:'center'}); }catch(e){} }
+    setTimeout(function(){ try{ buscar.focus(); }catch(e){} }, 30);
+  }
+
+  function activar(silencioso){
+    window.ADMIN = true;
+    document.body.classList.add('admin');
+    maxUnlocked = N-1; videoEnded = true;
+    try{ sessionStorage.setItem('hse_admin','1'); }catch(e){}
+    chrome();
+    if(!silencioso) abrir();
+  }
+
+  function desactivar(){
+    window.ADMIN = false;
+    document.body.classList.remove('admin');
+    try{ sessionStorage.removeItem('hse_admin'); }catch(e){}
+    panel.classList.remove('show');
+    chrome();
+  }
+
+  cerrar.addEventListener('click', function(){ panel.classList.remove('show'); });
+  panel.addEventListener('click', function(e){ if(e.target === panel) panel.classList.remove('show'); });
+
+  /* La búsqueda mira TODO el texto de cada diapositiva, no solo el título, para
+     poder encontrar un tema aunque no salga en el encabezado. Se calcula una
+     sola vez, la primera vez que se escribe. */
+  var TEXTOS = null;
+  function textos(){
+    if(TEXTOS) return TEXTOS;
+    TEXTOS = [];
+    for(var i=0;i<N;i++) TEXTOS.push(((i+1)+' '+slides[i].textContent).replace(/\s+/g,' ').toLowerCase());
+    return TEXTOS;
+  }
+  buscar.addEventListener('input', function(){
+    var q = buscar.value.trim().toLowerCase(), T = q ? textos() : null;
+    lista.querySelectorAll('.admgo').forEach(function(b){
+      var i = +b.getAttribute('data-i');
+      b.style.display = (!q || T[i].indexOf(q) >= 0) ? '' : 'none';
+    });
+    // oculta los encabezados de módulo que se quedaron sin resultados
+    lista.querySelectorAll('.admgrid').forEach(function(g){
+      var visibles = Array.prototype.some.call(g.children, function(b){ return b.style.display !== 'none'; });
+      g.style.display = visibles ? '' : 'none';
+      if(g.previousElementSibling) g.previousElementSibling.style.display = visibles ? '' : 'none';
+    });
+  });
+
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && panel.classList.contains('show')){ panel.classList.remove('show'); return; }
+    if(!(e.ctrlKey && e.shiftKey && (e.key === 'A' || e.key === 'a'))) return;
+    e.preventDefault();
+    if(window.ADMIN){ desactivar(); return; }
+    var pin = prompt('PIN de administrador:');
+    if(pin === null) return;
+    if(pin === PIN_ADMIN) activar(false);
+    else alert('PIN incorrecto.');
+  });
+
+  // si ya se activó en esta pestaña, se mantiene al recargar
+  try{ if(sessionStorage.getItem('hse_admin') === '1') activar(true); }catch(e){}
+});
 </script>
+<div id="admbadge">MODO ADMINISTRADOR · Ctrl+Shift+A para salir</div>
+<div id="admpanel" role="dialog" aria-modal="true" aria-label="Panel de administrador">
+  <div class="admbox">
+    <div class="admhead">
+      <h3>Panel de administrador</h3>
+      <input id="admbuscar" type="search" placeholder="Buscar diapositiva por texto o número…" aria-label="Buscar diapositiva">
+      <button id="admcerrar" type="button">Cerrar</button>
+    </div>
+    <div class="admlist" id="admlist"></div>
+    <p class="admnota">Con el modo activo se quitan las barreras: puedes ir a cualquier diapositiva sin completar las interacciones ni el video.</p>
+  </div>
+</div>
 </body>
 </html>
