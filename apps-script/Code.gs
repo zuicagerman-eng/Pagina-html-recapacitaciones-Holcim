@@ -48,7 +48,23 @@ function obtenerHoja_() {
   if (id) {
     try { return SpreadsheetApp.openById(id); } catch (e) { /* si ya no existe, se recrea */ }
   }
-  var ss = SpreadsheetApp.create(NOMBRE_HOJA);
+  var ss;
+  try {
+    ss = SpreadsheetApp.create(NOMBRE_HOJA);
+  } catch (e) {
+    // Suele pasar por una de dos razones, y el mensaje de Google no lo aclara:
+    //  1. La implementación se autorizó ANTES de añadir el código de Hojas, así
+    //     que sus permisos son los viejos → hay que volver a autorizar y crear
+    //     una NUEVA versión de la implementación.
+    //  2. La organización no permite que un script cree archivos en Drive → hay
+    //     que crear la hoja a mano y pegar su ID en la variable ID_HOJA.
+    throw new Error(
+      'No se pudo crear la hoja de resultados. Revisa dos cosas: (1) ejecuta ' +
+      'verHojaDeResultados() desde el editor y acepta los permisos de Hojas de ' +
+      'cálculo y Drive, y luego publica una NUEVA versión de la implementación; ' +
+      '(2) si tu organización no permite crear archivos desde un script, crea la ' +
+      'hoja a mano y pega su ID en la variable ID_HOJA. Detalle: ' + e.message);
+  }
   props.setProperty('ID_HOJA', ss.getId());
 
   var r = ss.getActiveSheet();

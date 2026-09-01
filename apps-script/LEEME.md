@@ -44,3 +44,49 @@ diligenciado (modo respaldo), sin envío automático.
 
 > Tras editar Code.gs, crea una **Nueva implementación** (o "Administrar
 > implementaciones → editar → Nueva versión") para que los cambios apliquen.
+
+
+## 5. Resultados del examen en una hoja de cálculo
+
+La hoja **NO hay que crearla a mano**: el script crea "HSE-001 · Resultados
+examen" en el Drive de la cuenta que despliega, con dos pestañas (`Resultados`
+y `Respuestas`). Para ver su enlace, ejecuta una vez `verHojaDeResultados()`
+desde el editor y mira el **Registro de ejecución**.
+
+### Error "No cuentas con el permiso para llamar a SpreadsheetApp.create"
+
+Es el fallo más común y **no es un error del código**: la implementación se
+autorizó antes de que el script tuviera código de Hojas de cálculo, así que
+sigue corriendo con los permisos viejos. Se arregla así:
+
+1. En el editor, elige la función **`verHojaDeResultados`** y presiona
+   **Ejecutar**.
+2. Google mostrará la pantalla de autorización. Acepta **Hojas de cálculo** y
+   **Drive** (antes solo habías aceptado el envío de correo).
+3. **Implementar → Administrar implementaciones → ✏️ Editar → Versión: Nueva
+   versión → Implementar.** Este paso es obligatorio: la versión anterior
+   conserva los permisos antiguos aunque ya hayas autorizado.
+4. Vuelve a presentar el examen: debe salir el aviso verde "Resultado
+   registrado".
+
+El archivo `appsscript.json` de esta carpeta ya declara los permisos necesarios.
+Para usarlo, en el editor entra a **Configuración del proyecto ⚙** y activa
+*"Mostrar el archivo de manifiesto appsscript.json en el editor"*, luego pega
+su contenido.
+
+### Si tu organización no permite que un script cree archivos en Drive
+
+Algunas cuentas corporativas lo bloquean. En ese caso:
+
+1. Crea tú una hoja de cálculo vacía en Drive.
+2. Copia su **ID** de la URL (el trozo entre `/d/` y `/edit`).
+3. Pégalo en `Code.gs`, en la variable `ID_HOJA`.
+4. Publica una nueva versión de la implementación.
+
+El script creará las pestañas y los encabezados dentro de esa hoja.
+
+## 6. Banco de preguntas del examen
+
+Las 50 preguntas, con su respuesta correcta marcada, están en
+`EXAMEN-banco-de-preguntas.md`, en la raíz del repositorio. Para editarlas se
+cambia el bloque `var BANCO = [` dentro de `index.html`.
