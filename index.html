@@ -28,10 +28,10 @@
   .brand .logo{width:30px;height:30px;flex:none}
   .brand b{font-size:13.5px;font-weight:700;line-height:1.1;display:block}
   .brand small{font-size:11px;color:#8fa9cc;letter-spacing:.4px}
-  .step{margin-left:auto;color:#c2d3ea;font-size:12.5px;font-weight:600;white-space:nowrap}
+  .step{color:#c2d3ea;font-size:12.5px;font-weight:600;white-space:nowrap}
   .hudbar{position:absolute;left:0;bottom:-1px;height:3px;width:100%;background:rgba(255,255,255,.08)}
   #hudfill{height:100%;width:0;background:var(--grad);transition:width .45s ease}
-  @media(max-width:560px){.brand small{display:none}.step{font-size:11.5px}}
+  @media(max-width:560px){.brand small{display:none}.brandlong{display:none}.step{font-size:11.5px}.brand .logo{width:26px;height:26px}}
   /* ===== Deck ===== */
   .deck{position:fixed;left:0;right:0;top:var(--hud);bottom:calc(var(--footer) + var(--bar2));overflow:hidden;background:var(--navy)}
   .slide{position:absolute;inset:0;overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch;transform:translateX(100%);
@@ -66,7 +66,10 @@
   #next{background:var(--grad);color:#062038;box-shadow:0 10px 24px -12px rgba(27,180,228,.9)}
   #next:hover:not(:disabled){transform:translateY(-1px)}
   .nbtn:disabled{opacity:.4;cursor:not-allowed}
-  #pips{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;align-content:center;max-width:58%}
+  /* Los puntos de navegación se reservan para el modo administrador: al
+     participante le sobran y le quitaban espacio al pie. */
+  #pips{display:none;gap:6px;flex-wrap:wrap;justify-content:center;align-content:center;max-width:58%}
+  body.admin #pips{display:flex}
   #pips i{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.25);cursor:pointer;transition:.25s}
   #pips i.on{background:var(--grad);transform:scale(1.3)}
   #pips i.lock{opacity:.28;cursor:not-allowed}
@@ -160,7 +163,7 @@
   .admlist{flex:1}
   .admnota{font-size:12px;color:rgba(255,255,255,.62);padding:11px 18px;margin:0;
     background:#0b1b2e;border-top:1px solid rgba(255,255,255,.12)}
-  @media(max-width:640px){#pips{display:none}.nbtn{padding:12px 18px}}
+  @media(max-width:640px){#pips,body.admin #pips{display:none}.nbtn{padding:12px 18px}}
   /* ===== HERO ===== */
   .hero-code{font-weight:800;letter-spacing:3px;font-size:clamp(40px,8vw,84px);line-height:.98}
   .hero-title{font-weight:800;font-size:clamp(22px,4.6vw,44px);margin-top:4px}
@@ -556,24 +559,21 @@
   .barlogo{display:flex;align-items:center;justify-content:center;flex:1;min-width:0;overflow:hidden}
   .barlogo img{height:34px;width:auto;max-width:100%;object-fit:contain}
   .barlogo .barlogo-txt{font-size:20px;font-weight:800;letter-spacing:2px;color:#fff;white-space:nowrap}
-  /* Los círculos de ayuda y reporte flotan POR ENCIMA de las barras inferiores,
-     en las esquinas, para que queden a la mano y no compitan con el logo. */
-  .fab-wrap{position:fixed;bottom:calc(var(--footer) + var(--bar2) + 14px);z-index:70;
-    display:flex;align-items:center;gap:10px}
-  .fab-help{left:18px}
-  .fab-report{right:18px;flex-direction:row-reverse}
-  .fab{position:relative;width:46px;height:46px;flex:none;border-radius:50%;border:none;cursor:pointer;
-    color:#fff;display:grid;place-items:center;transition:transform .2s, box-shadow .2s}
-  .fab:hover{transform:translateY(-2px) scale(1.05)}
-  .fab svg{width:24px;height:24px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
-  .fab::after{content:"";position:absolute;inset:0;border-radius:50%;animation:pulse 2.2s infinite}
+  /* Ayuda y reporte viven en la barra superior: pequeños, siempre visibles y
+     sin taparle nada al contenido de la diapositiva. */
+  .hudacc{margin-left:auto;display:flex;align-items:center;gap:8px;flex:none}
+  .fab{position:relative;height:32px;padding:0 12px 0 9px;border-radius:999px;border:none;cursor:pointer;
+    color:#fff;display:flex;align-items:center;gap:7px;font-family:var(--font);font-weight:700;
+    font-size:12px;white-space:nowrap;transition:transform .2s, filter .2s}
+  .fab:hover{transform:translateY(-1px);filter:brightness(1.1)}
+  .fab svg{width:17px;height:17px;flex:none;stroke:#fff;fill:none;stroke-width:2.3;stroke-linecap:round;stroke-linejoin:round}
+  .fab::after{content:"";position:absolute;inset:0;border-radius:999px;animation:pulse 2.2s infinite}
   #helpBtn{background:linear-gradient(160deg,#1bb4e4,#1877c4);box-shadow:0 8px 20px -8px rgba(24,119,196,.7)}
   #reportBtn{background:linear-gradient(160deg,#f5b700,#ef7d00);box-shadow:0 8px 20px -8px rgba(239,125,0,.75)}
-  .fab-tip{background:rgba(255,255,255,.08);color:#dbe6f5;font-size:12px;font-weight:600;padding:6px 11px;border-radius:999px;
-    white-space:nowrap;border:1px solid rgba(255,255,255,.14);pointer-events:none}
-  @media(max-width:820px){.fab-tip{display:none}}
-  @media(max-width:640px){.fab{width:46px;height:46px}.barlogo img{height:26px}.barlogo .barlogo-txt{font-size:17px}
-    .fab-wrap{bottom:calc(var(--footer) + var(--bar2) + 10px)} .fab-help{left:12px} .fab-report{right:12px}}
+  .fab-tip{pointer-events:none}
+  /* En pantallas angostas queda solo el ícono, para no empujar el "Paso X / Y" */
+  @media(max-width:760px){.fab-tip{display:none} .fab{padding:0;width:32px;justify-content:center}}
+  @media(max-width:640px){.barlogo img{height:26px}.barlogo .barlogo-txt{font-size:17px}}
 
   /* 8) Indicador "hay más contenido abajo" (evita que el usuario se pierda
         interacciones que quedan fuera de la pantalla) */
@@ -918,7 +918,17 @@
 </head>
 <body>
 <header class="hud">
-  <div class="brand"><span class="logo" id="brandlogo"></span><span><b>HSE-001 · Reinducción H&amp;S</b><small id="modlabel">Módulos 1 · 2</small></span></div>
+  <div class="brand"><span class="logo" id="brandlogo"></span><span><b>HSE-001<span class="brandlong"> · Reinducción H&amp;S</span></b><small id="modlabel">Módulos 1 · 2</small></span></div>
+  <div class="hudacc">
+    <button class="fab" id="helpBtn" title="Ayuda: te resalta en rojo lo que falta por explorar" aria-label="Ayuda">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.2 9a2.8 2.8 0 0 1 5.4 1c0 1.8-2.6 2-2.6 4"/><path d="M12 17h0"/></svg>
+      <span class="fab-tip">Ayuda</span>
+    </button>
+    <button class="fab" id="reportBtn" title="Reportar un problema en esta diapositiva" aria-label="Reportar un problema">
+      <svg viewBox="0 0 24 24"><path d="M12 3l9 16H3z"/><path d="M12 9v5M12 17h0"/></svg>
+      <span class="fab-tip">Reportar</span>
+    </button>
+  </div>
   <div class="step">Paso <span id="cur">1</span> / <span id="tot">15</span></div>
   <div class="hudbar"><div id="hudfill"></div></div>
 </header>
@@ -2065,21 +2075,7 @@
 </div>
 <!-- BARRA INTERMEDIA: separa las interacciones · logo Holcim al centro -->
 <div class="brandbar">
-  <div class="fab-wrap fab-help">
-    <button class="fab" id="helpBtn" title="Ayuda" aria-label="Ayuda">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.2 9a2.8 2.8 0 0 1 5.4 1c0 1.8-2.6 2-2.6 4"/><path d="M12 17h0"/></svg>
-    </button>
-    <span class="fab-tip">Oprímeme para más ayuda</span>
-  </div>
-
   <span class="barlogo" id="barLogo" aria-label="Holcim"></span>
-
-  <div class="fab-wrap fab-report">
-    <button class="fab" id="reportBtn" title="Reportar un problema en esta diapositiva" aria-label="Reportar un problema">
-      <svg viewBox="0 0 24 24"><path d="M12 3l9 16H3z"/><path d="M12 9v5M12 17h0"/></svg>
-    </button>
-    <span class="fab-tip">Oprímeme para reportar un problema</span>
-  </div>
 </div>
 
 <!-- MODAL: reportar problema -->
