@@ -311,43 +311,40 @@ Verdadero/Falso). La respuesta correcta va marcada con **✔**.
 - &nbsp;&nbsp;&nbsp; Contaminación
 
 
-## Módulo 6 · Comunicación y consulta
+## Reemplazan a las del módulo 6, retirado del curso
 
-**45. El COPASST está compuesto por:**  <br>_Selección múltiple_
-
-- **✔** Igual número de representantes del empleador y de los trabajadores
-- &nbsp;&nbsp;&nbsp; Solo representantes de los trabajadores
-- &nbsp;&nbsp;&nbsp; Solo representantes del empleador
-- &nbsp;&nbsp;&nbsp; Únicamente personal del área de HSE
-
-**46. El Comité de Convivencia Laboral determina si existe o no acoso laboral.**  <br>_Verdadero / Falso_
-
-- **✔** Falso
-- &nbsp;&nbsp;&nbsp; Verdadero
-
-**47. La brigada especializada o clase III está formada para la prevención y atención de emergencias en sectores de:**  <br>_Selección múltiple_
-
-- **✔** Alto riesgo (petrolero, minero, químico, eléctrico, entre otros)
-- &nbsp;&nbsp;&nbsp; Riesgo administrativo únicamente
-- &nbsp;&nbsp;&nbsp; Comercio y oficinas
-- &nbsp;&nbsp;&nbsp; Transporte urbano de pasajeros
-
-**48. En la responsabilidad civil derivada de un accidente de trabajo, la reparación de daños puede llegar hasta:**  <br>_Selección múltiple_
-
-- **✔** 1000 SMMLV
-- &nbsp;&nbsp;&nbsp; 100 SMMLV
-- &nbsp;&nbsp;&nbsp; 10 SMMLV
-- &nbsp;&nbsp;&nbsp; No tiene límite definido
-
-**49. La norma ISO 45001 corresponde al sistema de gestión de:**  <br>_Selección múltiple_
-
-- **✔** Seguridad y Salud en el Trabajo
-- &nbsp;&nbsp;&nbsp; Calidad
-- &nbsp;&nbsp;&nbsp; Ambiental
-- &nbsp;&nbsp;&nbsp; Seguridad Vial
-
-**50. Es responsabilidad del trabajador procurar el cuidado integral de su salud e informar oportunamente los peligros del sitio de trabajo.**  <br>_Verdadero / Falso_
+**45. Los cinco frentes de la hoja de ruta hacia la ambición «Cero» son Compromiso, Mejora Continua, Bienestar, Seguridad Vial y Programa de Controles Críticos.**  <br>_Verdadero / Falso_
 
 - **✔** Verdadero
 - &nbsp;&nbsp;&nbsp; Falso
 
+**46. El indicador C-VPC corresponde al abordaje a trabajadores en labores relacionadas con:**  <br>_Selección múltiple_
+
+- **✔** Los Controles Críticos
+- &nbsp;&nbsp;&nbsp; La dotación de EPP
+- &nbsp;&nbsp;&nbsp; El pago de la nómina
+- &nbsp;&nbsp;&nbsp; Las auditorías financieras
+
+**47. Las tres técnicas del ATS son definir el paso de la tarea, identificar peligros, riesgos y consecuencias, y formular y cumplir controles.**  <br>_Verdadero / Falso_
+
+- **✔** Verdadero
+- &nbsp;&nbsp;&nbsp; Falso
+
+**48. Dentro del ITS, el Análisis de Riesgo Personal sirve para:**  <br>_Selección múltiple_
+
+- **✔** Identificar peligros y controles que no se contemplaron ni documentaron en el ITS
+- &nbsp;&nbsp;&nbsp; Reemplazar el permiso de trabajo
+- &nbsp;&nbsp;&nbsp; Calificar el desempeño del trabajador
+- &nbsp;&nbsp;&nbsp; Programar el mantenimiento de los equipos
+
+**49. ¿Cuántos Eventos Prioritarios no Deseados (PUE) tiene definidos Holcim?**  <br>_Selección múltiple_
+
+- **✔** 12
+- &nbsp;&nbsp;&nbsp; 5
+- &nbsp;&nbsp;&nbsp; 8
+- &nbsp;&nbsp;&nbsp; 20
+
+**50. El «Contacto con Harina Caliente» es uno de los PUE definidos por Holcim.**  <br>_Verdadero / Falso_
+
+- **✔** Verdadero
+- &nbsp;&nbsp;&nbsp; Falso
