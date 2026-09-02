@@ -1062,6 +1062,11 @@
     .heroMedia{order:-1}               /* en pantallas angostas va arriba */
   }
   @media(max-height:900px) and (max-width:900px){.heroMedia{display:none!important}}
+  /* En las portadas de módulo el título es largo y la columna más angosta:
+     se modera un poco para que no se parta en cinco renglones. */
+  .portadaMod .hero-code{font-size:clamp(30px,4.2vw,50px)}
+  .portadaMod .hero-title{font-size:clamp(19px,2.9vw,32px)}
+  @media(max-width:900px){.portadaMod .hero-title{font-size:clamp(19px,5.6vw,28px)}}
 
   /* 17) PORTADA: subtítulo de módulo, barra ancha y atajos al contenido */
   .hero-sub{font-size:clamp(15px,1.9vw,21px);font-weight:700;color:#8fd6f2;margin-top:6px;letter-spacing:.2px}
@@ -1530,6 +1535,8 @@
 <section class="slide dark" data-mod="2">
     <div class="blob b1"></div><div class="blob b2"></div>
     <div class="wrap">
+    <div class="heroSplit portadaMod">
+      <div class="heroTxt">
       <div class="eyebrow rv up">Salud &amp; Seguridad · 2026 · Módulo 2</div>
       <div class="hero-code rv up" style="--d:1">HSE-001</div>
       <div class="hero-title rv up" style="--d:2">Planeación estratégica H&amp;S<br>SG-SST Holcim Colombia</div>
@@ -1541,6 +1548,9 @@
       </div>
       <p class="lead rv up" style="--d:5">Usa <b>Atrás</b> y <b>Siguiente</b> para avanzar. Tu avance queda guardado automáticamente.</p>
     </div>
+      <figure class="mediaBox heroMedia rv right" data-media="imagenes/m2-portada" style="--d:3"></figure>
+    </div>
+  
   </section>
 <section class="slide dark teal" data-mod="2">
     <div class="wrap">
@@ -1661,6 +1671,8 @@
 <section class="slide dark teal" data-mod="3">
   <div class="blob b1"></div><div class="blob b2"></div>
   <div class="wrap">
+    <div class="heroSplit portadaMod">
+      <div class="heroTxt">
     <div class="eyebrow rv up">Salud &amp; Seguridad · 2026 · Módulo 3</div>
     <div class="hero-code rv up" style="--d:1">HSE-001</div>
     <div class="hero-title rv up" style="--d:2">Control operacional<br>Identificación de peligros y requisitos legales</div>
@@ -1668,6 +1680,9 @@
     <div class="tag rv up" style="--d:4"><span class="pill">ATS · ITS · IPVR</span><span class="pill">Gestión del cambio</span><span class="pill">Estándares HSE</span></div>
     <p class="lead rv up" style="--d:5">Explora cada actividad interactiva para poder avanzar. Tu avance queda guardado automáticamente.</p>
   </div>
+      <figure class="mediaBox heroMedia rv right" data-media="imagenes/m3-portada" style="--d:3"></figure>
+    </div>
+  
 </section>
 <section class="slide light" data-mod="3">
   <div class="wrap">
@@ -1765,6 +1780,8 @@
 <section class="slide dark teal" data-mod="4">
   <div class="blob b1"></div><div class="blob b2"></div>
   <div class="wrap">
+    <div class="heroSplit portadaMod">
+      <div class="heroTxt">
     <div class="eyebrow rv up">Salud &amp; Seguridad · 2026 · Módulo 4 · Parte 1</div>
     <div class="hero-code rv up" style="--d:1">HSE-001</div>
     <div class="hero-title rv up" style="--d:2">Controles operacionales complementarios<br>Estándares HSE en detalle</div>
@@ -1772,6 +1789,9 @@
     <div class="tag rv up" style="--d:4"><span class="pill">Sistema de gestión</span><span class="pill">EPP · PSM</span><span class="pill">Equipos móviles · Alturas</span></div>
     <p class="lead rv up" style="--d:5">Explora las actividades interactivas para avanzar. Tu avance queda guardado automáticamente.</p>
   </div>
+      <figure class="mediaBox heroMedia rv right" data-media="imagenes/m4p1-portada" style="--d:3"></figure>
+    </div>
+  
 </section>
 <section class="slide dark" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">HSE-001 · Sistema de gestión</div><h2 class="rv up" style="--d:1">Liderazgo, compromiso y planificación</h2><p class="lead rv up" style="--d:2">Toca cada punto. 👆</p><div class="accgrid" style="margin-top:16px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>Normas HSE no negociables</h4><span class="chev">+</span></div><div class="acc-body"><p>Las reglas de salud, seguridad y ambiente aplican a todos los niveles y su cumplimiento es obligatorio para mantener la relación contractual.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1bb4e4"></span><h4>Reconocimiento</h4><span class="chev">+</span></div><div class="acc-body"><p>Refuerza los comportamientos positivos y las aportaciones de los equipos.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#0e2c56"></span><h4>Medidas correctivas</h4><span class="chev">+</span></div><div class="acc-body"><p>Aborda los incumplimientos con medidas correctivas y orientación.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Estrategia y mejora (HSE-IP)</h4><span class="chev">+</span></div><div class="acc-body"><p>Todas las acciones deben alinearse con el Plan de Mejora de Salud, Seguridad y Medio Ambiente definido por la unidad.</p></div></div></div></div>
@@ -1841,6 +1861,8 @@
 <section class="slide dark" data-mod="4">
   <div class="blob b1"></div><div class="blob b2"></div>
   <div class="wrap">
+    <div class="heroSplit portadaMod">
+      <div class="heroTxt">
     <div class="eyebrow rv up">Salud &amp; Seguridad · 2026 · Módulo 4 · Parte 2</div>
     <div class="hero-code rv up" style="--d:1">HSE-001</div>
     <div class="hero-title rv up" style="--d:2">Controles operacionales complementarios<br>Estándares operativos en detalle</div>
@@ -1848,6 +1870,9 @@
     <div class="tag rv up" style="--d:4"><span class="pill">Andamios · LOTOTO</span><span class="pill">Eléctrico · Maquinaria</span><span class="pill">Caliente · Cargas · Vial</span></div>
     <p class="lead rv up" style="--d:5">Explora las actividades interactivas para avanzar. Tu avance queda guardado automáticamente.</p>
   </div>
+      <figure class="mediaBox heroMedia rv right" data-media="imagenes/m4p2-portada" style="--d:3"></figure>
+    </div>
+  
 </section>
 <section class="slide light" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">HSE-102 · Trabajo en alturas</div>
@@ -1988,6 +2013,8 @@
 <section class="slide dark" data-mod="4">
   <div class="blob b1"></div><div class="blob b2"></div>
   <div class="wrap">
+    <div class="heroSplit portadaMod">
+      <div class="heroTxt">
     <div class="eyebrow rv up">Salud &amp; Seguridad · 2026 · Módulo 4 · Parte 3</div>
     <div class="hero-code rv up" style="--d:1">HSE-001</div>
     <div class="hero-title rv up" style="--d:2">Controles operacionales complementarios<br>Estándares de salud y bienestar</div>
@@ -1995,6 +2022,9 @@
     <div class="tag rv up" style="--d:4"><span class="pill">Asbestos · Sustancias</span><span class="pill">Audición · Ergonomía</span><span class="pill">Wellbeing · Evaluación</span></div>
     <p class="lead rv up" style="--d:5">Última parte del curso. Al terminar podrás presentar la evaluación final.</p>
   </div>
+      <figure class="mediaBox heroMedia rv right" data-media="imagenes/m4p3-portada" style="--d:3"></figure>
+    </div>
+  
 </section>
 <section class="slide light" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">HSE-201 · Asbestos</div>
@@ -2118,6 +2148,8 @@
 <section class="slide dark teal" data-mod="5">
   <div class="blob b1"></div><div class="blob b2"></div>
   <div class="wrap">
+    <div class="heroSplit portadaMod">
+      <div class="heroTxt">
     <div class="eyebrow rv up">Salud &amp; Seguridad · 2026 · Módulo 5</div>
     <div class="hero-code rv up" style="--d:1">HSE-001</div>
     <div class="hero-title rv up" style="--d:2">Gestión de Controles Críticos<br>PUE y CCM</div>
@@ -2125,6 +2157,9 @@
     <div class="tag rv up" style="--d:4"><span class="pill">12 eventos prioritarios</span><span class="pill">Controles críticos</span><span class="pill">Examen final</span></div>
     <p class="lead rv up" style="--d:5">Explora los controles críticos de cada PUE para avanzar. Al final encontrarás el examen.</p>
   </div>
+      <figure class="mediaBox heroMedia rv right" data-media="imagenes/m5-portada" style="--d:3"></figure>
+    </div>
+  
 </section>
 <section class="slide light mint" data-mod="5">
 <div class="wrap"><div class="eyebrow rv up">Gestión de Controles Críticos</div>
@@ -2225,6 +2260,8 @@
 <section class="slide dark" data-mod="6">
   <div class="blob b1"></div><div class="blob b2"></div>
   <div class="wrap">
+    <div class="heroSplit portadaMod">
+      <div class="heroTxt">
     <div class="eyebrow rv up">Salud &amp; Seguridad · 2026 · Módulo 6</div>
     <div class="hero-code rv up" style="--d:1">HSE-001</div>
     <div class="hero-title rv up" style="--d:2">Comunicación, participación<br>y consulta en SST</div>
@@ -2232,6 +2269,9 @@
     <div class="tag rv up" style="--d:4"><span class="pill">COPASST · Convivencia</span><span class="pill">Brigada</span><span class="pill">Responsabilidades</span></div>
     <p class="lead rv up" style="--d:5">Último módulo del curso. Explora cada mecanismo para avanzar.</p>
   </div>
+      <figure class="mediaBox heroMedia rv right" data-media="imagenes/m6-portada" style="--d:3"></figure>
+    </div>
+  
 </section>
 <section class="slide light" data-mod="6">
 <div class="wrap"><div class="eyebrow rv up">Comunicación, participación y consulta</div>
@@ -2436,7 +2476,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-02-x";
+var VERSION_CURSO = "2026-09-02-y";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
@@ -3623,14 +3663,24 @@ document.querySelectorAll('.pueBox').forEach(function(box){
    el marco no se muestra y no deja espacio vacío. */
 document.querySelectorAll('.mediaBox[data-media]').forEach(function(caja){
   var ruta=caja.getAttribute('data-media'); if(!ruta) return;
-  var yaLocal=false, esVideo=/\.(mp4|webm)(\?|$)/i.test(ruta);
+  var esVideo=/\.(mp4|webm)(\?|$)/i.test(ruta);
+  var tieneExt=/\.[a-z0-9]{2,5}(\?|$)/i.test(ruta);
+  /* Sin extensión se prueban todas: así basta con subir el archivo, sea el
+     formato que sea, sin tocar el código. */
+  var rutas=[];
+  if(tieneExt){ rutas.push(asset(ruta)); rutas.push(ruta); }
+  else {
+    EXT_FOTO.forEach(function(e){ rutas.push(asset(ruta + '.' + e)); });
+    EXT_FOTO.forEach(function(e){ rutas.push(ruta + '.' + e); });
+  }
   var el=document.createElement(esVideo?'video':'img');
   if(esVideo){ el.autoplay=true; el.muted=true; el.loop=true; el.playsInline=true; el.setAttribute('playsinline',''); }
   else { el.alt=''; el.loading='eager'; el.decoding='async'; }   // eager: la diapositiva está fuera de pantalla
   function ok(){ caja.innerHTML=''; caja.appendChild(el); caja.classList.add('ready'); }
   if(esVideo) el.addEventListener('loadeddata', ok); else el.onload = ok;
-  el.onerror=function(){ if(!yaLocal){ yaLocal=true; el.src=ruta; } };   // respaldo local
-  registrarMedio(caja, function(){ el.src=asset(ruta); });
+  var i=0;
+  el.onerror=function(){ i++; if(i < rutas.length) el.src=rutas[i]; };
+  registrarMedio(caja, function(){ el.src=rutas[0]; });
 });
 /* Estos .mediaBox se registran después del primer chrome(), así que se dispara
    una vez más para que los de las primeras diapositivas no esperen a navegar. */
