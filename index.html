@@ -1079,8 +1079,11 @@
     background:var(--grad);box-shadow:0 24px 60px -24px rgba(0,0,0,.85);
     display:none}                      /* se muestra solo si el archivo carga */
   .heroMedia.ready{display:block}
+  /* Sin proporción fija: se respeta la del archivo, así no se recorta ni le
+     quedan franjas negras a los lados. El alto máximo evita que una imagen
+     vertical se coma la diapositiva. */
   .heroMedia img,.heroMedia video{display:block;width:100%;height:auto;border-radius:16px;
-    background:#0b2549;object-fit:cover;aspect-ratio:16/10}
+    background:#0b2549;object-fit:contain;max-height:min(52vh,430px)}
   @media(max-width:900px){
     .heroSplit{grid-template-columns:1fr;gap:22px}
     .heroMedia{order:-1}               /* en pantallas angostas va arriba */
@@ -1132,7 +1135,7 @@
     box-shadow:0 20px 50px -22px rgba(0,0,0,.8);display:none}
   .mediaBox.ready{display:block}
   .mediaBox img,.mediaBox video{display:block;width:100%;height:auto;border-radius:14px;
-    background:#0b2549;object-fit:cover;aspect-ratio:16/10}
+    background:#0b2549;object-fit:contain;max-height:min(52vh,430px)}
   @media(max-height:820px) and (max-width:900px){.mediaBox{display:none!important}}
 
   /* 20) Tarjetas centradas y con texto más legible en cualquier pantalla */
@@ -1721,7 +1724,7 @@
     <div class="tag rv up" style="--d:4"><span class="pill">ATS · ITS · IPVR</span><span class="pill">Gestión del cambio</span><span class="pill">Estándares HSE</span></div>
     <p class="lead rv up" style="--d:5">Explora cada actividad interactiva para poder avanzar. Tu avance queda guardado automáticamente.</p>
   </div>
-      <figure class="mediaBox heroMedia rv right" data-media="imagenes/m3-portada" style="--d:3"></figure>
+      <figure class="mediaBox heroMedia rv right" data-media="imagenes/m3-portada" data-loop="no" style="--d:3"></figure>
     </div>
   
 </section>
@@ -2509,7 +2512,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-03-c";
+var VERSION_CURSO = "2026-09-03-d";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
@@ -3717,7 +3720,9 @@ document.querySelectorAll('.mediaBox[data-media]').forEach(function(caja){
     el = nuevo;
     function fin(){ if(el===nuevo) ok(); }
     function fallo(){ if(el===nuevo) probar(); }
-    if(esVideo){ nuevo.autoplay=true; nuevo.muted=true; nuevo.loop=true; nuevo.playsInline=true;
+    /* data-loop="no": se reproduce una vez y se queda quieto en el último cuadro. */
+    var repetir = caja.getAttribute('data-loop') !== 'no';
+    if(esVideo){ nuevo.autoplay=true; nuevo.muted=true; nuevo.loop=repetir; nuevo.playsInline=true;
       nuevo.setAttribute('playsinline',''); nuevo.preload='auto';
       nuevo.addEventListener('loadeddata', fin); nuevo.addEventListener('error', fallo); }
     else { nuevo.alt=''; nuevo.decoding='async'; nuevo.onload=fin; nuevo.onerror=fallo; }
