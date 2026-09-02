@@ -372,17 +372,34 @@
   /* Al venir siempre abiertas, sobra el aire pensado para el acordeón: se
      compactan para que las 8 tarjetas quepan sin desplazarse. El texto ya no
      se sangra bajo el icono, así aprovecha todo el ancho. */
-  .acc-auto{gap:9px}
+  .acc-auto{gap:7px}
   /* En pantallas bajas la instrucción sobra: las tarjetas ya vienen abiertas. */
   @media(max-height:820px){.acc-auto{margin-top:8px!important}
     .slide.tiene-auto .lead{display:none}
     .slide.tiene-auto{padding-top:18px;padding-bottom:16px}
     .slide.tiene-auto h2{font-size:26px;margin-bottom:2px}}
-  .acc-auto .acc-head{padding:11px 14px 4px}
+  .acc-auto .acc-head{padding:9px 13px 3px}
   .acc-auto .acc-head h4{font-size:14.5px}
   .acc-auto .acc-head .tri,.acc-auto .acc-head .ico{width:30px;height:30px}
+  /* Si subes una imagen para la tarjeta, reemplaza al icono dibujado.
+     La tarjeta pasa a dos columnas —imagen a la izquierda, título y texto a la
+     derecha— y la imagen abarca las dos filas: así puede ser bastante más
+     grande SIN que la tarjeta crezca de alto. */
+  .acc-head .tri.foto{display:flex;align-items:center;justify-content:center}
+  .acc-head .tri.foto img{max-width:100%;max-height:100%;width:auto;height:auto;
+    display:block;object-fit:contain;border-radius:8px}
+  .acc-auto .acc.conFotos{display:grid;grid-template-columns:72px 1fr;
+    column-gap:12px;align-items:start;padding:10px 13px}
+  .acc-auto .acc.conFotos .acc-head{display:contents}
+  .acc-auto .acc.conFotos .acc-head .tri.foto{grid-row:1 / span 2;grid-column:1;
+    width:72px;height:72px;align-self:start;margin-top:2px}
+  .acc-auto .acc.conFotos .acc-head h4{grid-row:1;grid-column:2;align-self:end;margin-bottom:1px}
+  .acc-auto .acc.conFotos.open .acc-body{grid-row:2;grid-column:2;padding:0;align-self:start}
+  /* Con imagen vuelven a DOS columnas: el texto necesita ancho para no crecer. */
+  @media(min-width:1100px){.accgrid.acc-auto.hayFotos{grid-template-columns:1fr 1fr;gap:8px}}
+
   .acc-auto .acc-head .stripe{height:26px}
-  .acc-auto .acc.open .acc-body{padding:0 14px 12px 14px}
+  .acc-auto .acc.open .acc-body{padding:0 13px 10px 13px}
   /* En pantalla ancha pasan a TRES columnas: 8 tarjetas caben en 3 filas en vez
      de 4, que es lo que hacía falta para no tener que desplazarse. */
   @media(min-width:1100px){.accgrid.acc-auto{grid-template-columns:repeat(3,1fr)}}
@@ -1237,35 +1254,35 @@
       <p class="lead rv up" style="--d:2">Toca cada tarjeta para <b>ampliar</b> su información. 👆</p>
       <div class="accgrid" style="margin-top:22px">
         <div class="acc rv up" style="--d:0" tabindex="0" role="button" aria-expanded="false">
-          <div class="acc-head"><span class="tri" id="t_elec"></span><h4>Eléctrico</h4><span class="chev">+</span></div>
+          <div class="acc-head"><span class="tri" id="t_elec" data-foto="electrico(D12)"></span><h4>Eléctrico</h4><span class="chev">+</span></div>
           <div class="acc-body"><p>Por contacto con energía de <b>alta, media y baja tensión</b> y electricidad <b>estática</b>.</p></div>
         </div>
         <div class="acc rv up" style="--d:1" tabindex="0" role="button" aria-expanded="false">
-          <div class="acc-head"><span class="tri" id="t_loc"></span><h4>Locativo</h4><span class="chev">+</span></div>
+          <div class="acc-head"><span class="tri" id="t_loc" data-foto="locativo(D12)"></span><h4>Locativo</h4><span class="chev">+</span></div>
           <div class="acc-body"><p>Por <b>almacenamiento</b>, superficies de trabajo (irregularidades, deslizantes o con diferencia de nivel), condiciones de <b>orden y aseo</b> y <b>caída de objetos</b>.</p></div>
         </div>
         <div class="acc rv up" style="--d:2" tabindex="0" role="button" aria-expanded="false">
-          <div class="acc-head"><span class="tri" id="t_tra"></span><h4>Tránsito</h4><span class="chev">+</span></div>
+          <div class="acc-head"><span class="tri" id="t_tra" data-foto="transito(D12)"></span><h4>Tránsito</h4><span class="chev">+</span></div>
           <div class="acc-body"><p>Por <b>accidentes de tránsito</b> con vehículos, motocicletas, bicicletas, etc.</p></div>
         </div>
         <div class="acc rv up" style="--d:3" tabindex="0" role="button" aria-expanded="false">
-          <div class="acc-head"><span class="tri" id="t_alt"></span><h4>Alturas</h4><span class="chev">+</span></div>
+          <div class="acc-head"><span class="tri" id="t_alt" data-foto="alturas(D12)"></span><h4>Alturas</h4><span class="chev">+</span></div>
           <div class="acc-body"><p>Por trabajos a una <b>altura mayor o igual a 1,8 metros</b> desde un plano horizontal.</p></div>
         </div>
         <div class="acc rv up" style="--d:4" tabindex="0" role="button" aria-expanded="false">
-          <div class="acc-head"><span class="tri" id="t_pub"></span><h4>Público</h4><span class="chev">+</span></div>
+          <div class="acc-head"><span class="tri" id="t_pub" data-foto="publico(D12)"></span><h4>Público</h4><span class="chev">+</span></div>
           <div class="acc-body"><p>Por <b>robos, atracos, asaltos, atentados</b>, desorden público, etc.</p></div>
         </div>
         <div class="acc rv up" style="--d:5" tabindex="0" role="button" aria-expanded="false">
-          <div class="acc-head"><span class="tri" id="t_mec"></span><h4>Mecánico</h4><span class="chev">+</span></div>
+          <div class="acc-head"><span class="tri" id="t_mec" data-foto="mecanico(D12)"></span><h4>Mecánico</h4><span class="chev">+</span></div>
           <div class="acc-body"><p>Por elementos de <b>máquinas, herramientas</b>, piezas a trabajar y <b>materiales proyectados</b>, sólidos o fluidos.</p></div>
         </div>
         <div class="acc rv up" style="--d:6" tabindex="0" role="button" aria-expanded="false">
-          <div class="acc-head"><span class="tri" id="t_tec"></span><h4>Tecnológico</h4><span class="chev">+</span></div>
+          <div class="acc-head"><span class="tri" id="t_tec" data-foto="tecnologico(D12)"></span><h4>Tecnológico</h4><span class="chev">+</span></div>
           <div class="acc-body"><p>Por <b>explosión, fuga, derrame</b> o <b>incendio</b>.</p></div>
         </div>
         <div class="acc rv up" style="--d:7" tabindex="0" role="button" aria-expanded="false">
-          <div class="acc-head"><span class="tri" id="t_conf"></span><h4>Espacios confinados</h4><span class="chev">+</span></div>
+          <div class="acc-head"><span class="tri" id="t_conf" data-foto="confinados(D12)"></span><h4>Espacios confinados</h4><span class="chev">+</span></div>
           <div class="acc-body">
             <span class="tag">Por espacios que:</span>
             <div class="li"><span class="b"></span>No están diseñados para ocupación continua.</div>
@@ -2172,7 +2189,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-01-i";
+var VERSION_CURSO = "2026-09-01-j";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
@@ -2422,6 +2439,9 @@ document.querySelectorAll('[data-foto]').forEach(function(slot){
     // define el alto, y solo debe crecer si la imagen existe de verdad
     var volteable = slot.closest && slot.closest('.flip');
     if(volteable) volteable.classList.add('conFoto');
+    var tarjeta = slot.closest && slot.closest('.acc');
+    if(tarjeta){ tarjeta.classList.add('conFotos');
+      if(tarjeta.parentElement) tarjeta.parentElement.classList.add('hayFotos'); }
   };
   img.onerror = function(){ i++; if(i < rutas.length) img.src = rutas[i]; };
   registrarMedio(slot, function(){ img.src = rutas[0]; });
