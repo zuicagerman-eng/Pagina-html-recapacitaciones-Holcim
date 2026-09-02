@@ -369,6 +369,26 @@
   .acc-auto .acc{cursor:default}
   .acc-auto .acc:hover{transform:none}
   .acc-auto .acc .chev{display:none}
+  /* Al venir siempre abiertas, sobra el aire pensado para el acordeón: se
+     compactan para que las 8 tarjetas quepan sin desplazarse. El texto ya no
+     se sangra bajo el icono, así aprovecha todo el ancho. */
+  .acc-auto{gap:9px}
+  /* En pantallas bajas la instrucción sobra: las tarjetas ya vienen abiertas. */
+  @media(max-height:820px){.acc-auto{margin-top:8px!important}
+    .slide.tiene-auto .lead{display:none}
+    .slide.tiene-auto{padding-top:18px;padding-bottom:16px}
+    .slide.tiene-auto h2{font-size:26px;margin-bottom:2px}}
+  .acc-auto .acc-head{padding:11px 14px 4px}
+  .acc-auto .acc-head h4{font-size:14.5px}
+  .acc-auto .acc-head .tri,.acc-auto .acc-head .ico{width:30px;height:30px}
+  .acc-auto .acc-head .stripe{height:26px}
+  .acc-auto .acc.open .acc-body{padding:0 14px 12px 14px}
+  /* En pantalla ancha pasan a TRES columnas: 8 tarjetas caben en 3 filas en vez
+     de 4, que es lo que hacía falta para no tener que desplazarse. */
+  @media(min-width:1100px){.accgrid.acc-auto{grid-template-columns:repeat(3,1fr)}}
+  .acc-auto .acc-body p,.acc-auto .acc-body .li,.acc-auto .acc-body .pt{font-size:12.8px;line-height:1.45}
+  .acc-auto .acc-body .li,.acc-auto .acc-body .pt{margin-top:4px}
+  .acc-auto .acc-body .tag,.acc-auto .acc-body .ptitle{margin-bottom:2px}
   .acc-body{max-height:0;overflow:hidden;opacity:0;transition:max-height .4s ease,opacity .35s ease,padding .4s ease;padding:0 16px}
   .acc.open .acc-body{max-height:360px;opacity:1;padding:0 16px 16px 60px}
   .acc-body p{font-size:13.5px;color:var(--muted);line-height:1.5}
@@ -2152,7 +2172,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-01-h";
+var VERSION_CURSO = "2026-09-01-i";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
@@ -2699,6 +2719,7 @@ document.querySelectorAll('.accgrid').forEach(function(rejilla){
   if(tarjetas.length < ACC_AUTO) return;
   rejilla.classList.add('acc-auto');
   var slide = rejilla.closest('.slide');
+  if(slide) slide.classList.add('tiene-auto');   // la usa el CSS para compactar
   var pista = slide && slide.querySelector('.lead');
   if(pista && /(toca|clic|click|explora|desplieg)/i.test(pista.textContent))
     pista.innerHTML = 'Revisa cada condición y continúa con <b>Siguiente \u2192</b>.';
