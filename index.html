@@ -785,11 +785,6 @@
   .act svg{width:42px;height:42px;flex:none}
   .act .tick{position:absolute;top:7px;right:7px;width:21px;height:21px;border-radius:50%;background:#fff;color:var(--ok);display:none;place-items:center;font-size:12px;font-weight:800}
   .act.sel .tick{display:grid}
-  .pyr{display:flex;flex-direction:column;align-items:center;gap:4px;margin-top:22px}
-  .plevel{color:#fff;font-weight:800;text-align:center;padding:12px 10px;cursor:pointer;position:relative;transition:.2s;border:2px solid transparent;border-radius:6px;font-size:15px}
-  .plevel:hover{filter:brightness(1.08)} .plevel.sel{border-color:#0b2545}
-  .plevel .who{display:block;font-weight:600;font-size:12px;opacity:0;max-height:0;overflow:hidden;transition:.3s}
-  .plevel.sel .who{opacity:1;max-height:40px;margin-top:4px}
   .pdfrow{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:20px}
   @media(max-width:640px){.pdfrow{grid-template-columns:1fr}}
   .pdfmini{background:linear-gradient(160deg,#1bb4e4,#1481c4);color:#fff;border-radius:14px;padding:15px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px}
@@ -1746,14 +1741,6 @@
     <div class="accgrid" style="margin-top:12px"><div class="acc rv up"><div class="acc-head"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><text x="12" y="16" font-size="12" fill="#fff" text-anchor="middle" stroke="none">1</text></svg></span><h4>Identificar el cambio</h4><span class="chev">+</span></div><div class="acc-body"><p>Detectar la necesidad de cambio y su impacto.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><text x="12" y="16" font-size="12" fill="#fff" text-anchor="middle" stroke="none">2</text></svg></span><h4>Evaluar riesgos</h4><span class="chev">+</span></div><div class="acc-body"><p>Analizar los riesgos asociados y definir controles necesarios.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><text x="12" y="16" font-size="12" fill="#fff" text-anchor="middle" stroke="none">3</text></svg></span><h4>Implementar controles</h4><span class="chev">+</span></div><div class="acc-body"><p>Ejecutar las medidas de control para mitigar riesgos.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><text x="12" y="16" font-size="12" fill="#fff" text-anchor="middle" stroke="none">4</text></svg></span><h4>Actualizar documentación</h4><span class="chev">+</span></div><div class="acc-body"><p>Revisar y ajustar documentos afectados por el cambio.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><text x="12" y="16" font-size="12" fill="#fff" text-anchor="middle" stroke="none">5</text></svg></span><h4>Comunicar y capacitar</h4><span class="chev">+</span></div><div class="acc-body"><p>Informar y entrenar al personal sobre los cambios.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><text x="12" y="16" font-size="12" fill="#fff" text-anchor="middle" stroke="none">6</text></svg></span><h4>Aprobar el cambio</h4><span class="chev">+</span></div><div class="acc-body"><p>Obtener la validación formal para proceder.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><text x="12" y="16" font-size="12" fill="#fff" text-anchor="middle" stroke="none">7</text></svg></span><h4>Ejecutar las acciones</h4><span class="chev">+</span></div><div class="acc-body"><p>Implementar el cambio planificado según lo aprobado.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><text x="12" y="16" font-size="12" fill="#fff" text-anchor="middle" stroke="none">8</text></svg></span><h4>Inspeccionar</h4><span class="chev">+</span></div><div class="acc-body"><p>Verificar que el cambio se haya realizado correctamente.</p></div></div></div>
   </div>
 </section>
-<section class="slide light mint" data-mod="3">
-  <div class="wrap">
-    <div class="eyebrow rv up">Control operacional · Requisitos legales H&amp;S</div>
-    <h2 class="rv up" style="--d:1">Pirámide de Kelsen</h2>
-    <div class="infobanner rv up" style="--d:2">Colombia cuenta con un orden jerárquico en sus normas, que establece el orden de aplicabilidad entre ellas y ayuda a resolver contradicciones entre normas de distinto rango. Toca cada nivel. 👆</div>
-    <div class="pyr"><div class="plevel gclick rv up" style="background:#e23b32;width:92%" tabindex="0" role="button">CP · Constitución Política<span class="who">Emitida / interpretada por la Corte Constitucional</span></div><div class="plevel gclick rv up" style="background:#ef5522;width:80%" tabindex="0" role="button">Ley<span class="who">Congreso de la República</span></div><div class="plevel gclick rv up" style="background:#f5b700;width:68%" tabindex="0" role="button">Decreto<span class="who">Presidente de la República</span></div><div class="plevel gclick rv up" style="background:#8bbf3a;width:56%" tabindex="0" role="button">Resolución<span class="who">Ministerios</span></div><div class="plevel gclick rv up" style="background:#17a2a2;width:44%" tabindex="0" role="button">Ordenanza<span class="who">Asamblea Departamental</span></div><div class="plevel gclick rv up" style="background:#0e6e78;width:32%" tabindex="0" role="button">Acuerdo<span class="who">Concejo Municipal</span></div></div>
-  </div>
-</section>
 <section class="slide dark teal" data-mod="3">
   <div class="wrap">
     <div class="eyebrow rv up">Requisitos legales</div>
@@ -2484,7 +2471,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-02-z";
+var VERSION_CURSO = "2026-09-03-a";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
@@ -3180,11 +3167,11 @@ var PLANO = [
 })();
 /* ====== CLICS GATEADOS ======
    Solo se exige (y se permite) el clic donde el clic REVELA algo nuevo:
-   .plevel destapa el "quién" de cada nivel y .hot muestra su etiqueta.
+   .hot muestra la etiqueta de su punto en el plano.
    Las fichas .act y .chip3 solo pintaban un ✓ sin aportar información, así que
    dejan de ser obligatorias y dejan de ser clicables: son texto informativo. */
 document.querySelectorAll('.gclick').forEach(function(el){
-  var revela = el.classList.contains('plevel') || el.classList.contains('hot');
+  var revela = el.classList.contains('hot');
   if(!revela){
     el.classList.add('noclick');
     el.removeAttribute('tabindex'); el.removeAttribute('role');
@@ -3798,8 +3785,8 @@ var BANCO = [
 {m:'3',p:'El ITS (Instructivo de Trabajo Seguro) define la forma estandarizada y segura de ejecutar una tarea estándar.',o:['Verdadero','Falso'],r:0},
 {m:'3',p:'La matriz IPVR se actualiza:',o:['Cada año, o ante accidente mortal, evento catastrófico o cambios en procesos','Solo cuando lo pida la ARL','Cada cinco años','Únicamente al cambiar de contratista'],r:0},
 {m:'3',p:'¿Cuál de las siguientes actividades NO requiere permiso de trabajo?',o:['Labores administrativas de oficina','Trabajo en alturas','Trabajo en caliente','Aislamiento de energías (LOTOTO)'],r:0},
-{m:'3',p:'En la Pirámide de Kelsen, ¿quién emite los Decretos?',o:['El Presidente de la República','El Congreso de la República','Los Ministerios','El Concejo Municipal'],r:0},
-{m:'3',p:'En la Pirámide de Kelsen, las Resoluciones son emitidas por:',o:['Los Ministerios','La Corte Constitucional','La Asamblea Departamental','El Presidente de la República'],r:0},
+{m:'3',p:'La Resolución 0312 de 2019, que aplica en Holcim, corresponde a:',o:['Los estándares mínimos del SG-SST','La norma de seguridad vial','La guía de organización saludable','El reglamento de higiene industrial'],r:0},
+{m:'3',p:'La NTC ISO 39001, dentro de las normas que aplican en Holcim, corresponde a la seguridad vial.',o:['Verdadero','Falso'],r:0},
 {m:'3',p:'El Decreto 1072 de 2015 corresponde a:',o:['El SG-SST (Sistema de Gestión de Seguridad y Salud en el Trabajo)','Los estándares mínimos del SG-SST','La guía de organización saludable','La norma de seguridad vial'],r:0},
 {m:'3',p:'El estándar HSE-103 corresponde a:',o:['Aislamiento de energías (LOTOTO)','Trabajo en alturas','Espacios confinados','Trabajo en caliente'],r:0},
 /* ---------- Módulo 4 · Controles complementarios ---------- */

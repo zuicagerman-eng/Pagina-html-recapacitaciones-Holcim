@@ -148,19 +148,17 @@ Verdadero/Falso). La respuesta correcta va marcada con **✔**.
 - &nbsp;&nbsp;&nbsp; Trabajo en caliente
 - &nbsp;&nbsp;&nbsp; Aislamiento de energías (LOTOTO)
 
-**21. En la Pirámide de Kelsen, ¿quién emite los Decretos?**  <br>_Selección múltiple_
+**21. La Resolución 0312 de 2019, que aplica en Holcim, corresponde a:**  <br>_Selección múltiple_
 
-- **✔** El Presidente de la República
-- &nbsp;&nbsp;&nbsp; El Congreso de la República
-- &nbsp;&nbsp;&nbsp; Los Ministerios
-- &nbsp;&nbsp;&nbsp; El Concejo Municipal
+- **✔** Los estándares mínimos del SG-SST
+- &nbsp;&nbsp;&nbsp; La norma de seguridad vial
+- &nbsp;&nbsp;&nbsp; La guía de organización saludable
+- &nbsp;&nbsp;&nbsp; El reglamento de higiene industrial
 
-**22. En la Pirámide de Kelsen, las Resoluciones son emitidas por:**  <br>_Selección múltiple_
+**22. La NTC ISO 39001, dentro de las normas que aplican en Holcim, corresponde a la seguridad vial.**  <br>_Verdadero / Falso_
 
-- **✔** Los Ministerios
-- &nbsp;&nbsp;&nbsp; La Corte Constitucional
-- &nbsp;&nbsp;&nbsp; La Asamblea Departamental
-- &nbsp;&nbsp;&nbsp; El Presidente de la República
+- **✔** Verdadero
+- &nbsp;&nbsp;&nbsp; Falso
 
 **23. El Decreto 1072 de 2015 corresponde a:**  <br>_Selección múltiple_
 
