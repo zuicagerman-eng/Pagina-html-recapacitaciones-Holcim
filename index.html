@@ -657,6 +657,33 @@
   .lcard h3{font-size:16px;font-weight:800;line-height:1.2}
   .lcard .en{font-size:11.5px;opacity:.82;font-weight:700;letter-spacing:.4px;margin:3px 0 8px}
   .lcard p{font-size:13.5px;line-height:1.5;opacity:.95}
+  /* ===== HOJA DE RUTA HACIA LA AMBICIÓN "CERO" =====
+     Cinco tarjetas: imagen arriba, franja de color y texto centrado. Con flex
+     las que sobran en la última fila quedan centradas, no pegadas a un lado. */
+  .ruta{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-top:20px}
+  .rcard{flex:1 1 205px;max-width:250px;border-radius:16px;overflow:hidden;
+    box-shadow:var(--shadow);display:flex;flex-direction:column;text-align:center}
+  .rcard.a{background:var(--panel)}
+  .rcard.b{background:linear-gradient(160deg,#1bb4e4,#1481c4)}
+  /* Alto fijo: una imagen vertical no puede estirar la tarjeta. */
+  .rcard .rtop{height:140px;display:flex;align-items:center;justify-content:center;padding:14px;flex:none}
+  .rcard .rtop svg{width:74px;height:74px;stroke:#fff;fill:none;stroke-width:1.7;
+    stroke-linecap:round;stroke-linejoin:round}
+  .rcard .rtop.foto img{max-width:100%;max-height:112px;width:auto;height:auto;
+    display:block;object-fit:contain}
+  .rcard .linea{height:4px;background:var(--grad);flex:none}
+  .rcard .rbody{padding:14px 14px 18px;flex:1;display:flex;flex-direction:column;gap:8px}
+  .rcard h3{font-size:16px;font-weight:800;line-height:1.2}
+  .rcard.a h3{color:var(--green)} .rcard.b h3{color:#fff}
+  .rcard p{font-size:12.8px;line-height:1.5;color:#dbe6f5}
+  @media(max-height:860px){
+    .rcard .rtop{height:112px;padding:10px}
+    .rcard .rtop svg{width:60px;height:60px}
+    .rcard .rtop.foto img{max-height:90px}
+    .rcard h3{font-size:15px} .rcard p{font-size:12.2px}
+    .rcard .rbody{padding:11px 12px 14px;gap:6px}
+  }
+  @media(max-width:520px){.rcard{flex:1 1 100%;max-width:340px}}
   /* cierre */
   .done-badge{width:96px;height:96px;border-radius:50%;background:var(--grad);display:grid;place-items:center;margin:0 auto 24px}
   .done-badge svg{width:52px;height:52px;stroke:#fff;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
@@ -1456,7 +1483,7 @@
       <div class="tag rv up" style="--d:4">
         <span class="pill">Modelo operativo H&amp;S</span>
         <span class="pill">Reglas HSE</span>
-        <span class="pill">Liderazgo visible</span>
+        <span class="pill">Ambición “Cero”</span>
       </div>
       <p class="lead rv up" style="--d:5">Usa <b>Atrás</b> y <b>Siguiente</b> para avanzar. Tu avance queda guardado automáticamente.</p>
     </div>
@@ -1522,15 +1549,36 @@
     </div>
   </section>
 <section class="slide dark teal" data-mod="2">
-    <div class="wrap">
-      <div class="eyebrow rv up">B.O.G</div>
-      <h2 class="rv up" style="--d:1">Indicadores de liderazgo visible</h2>
-      <p class="lead rv up" style="--d:2">Herramientas para prevenir incidentes desde el liderazgo en campo.</p>
-      <div class="lead4">
-        <div class="lcard b rv left" style="--d:0"><div class="lic"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="12" rx="2"/><path d="M9 20h6M12 16v4"/></svg></div><div><h3>Tiempo en campo</h3><div class="en">Time In the Field · T.I.F</div><p>Tiempo en campo para supervisar la operación.</p></div></div>
-        <div class="lcard a rv right" style="--d:1"><div class="lic"><svg viewBox="0 0 24 24"><circle cx="8" cy="8" r="3"/><circle cx="16" cy="9" r="2.4"/><path d="M3 19c0-3 2.5-5 5-5s5 2 5 5M14 19c0-2.2 1.4-3.8 3-3.8"/></svg></div><div><h3>Compromiso personal visible</h3><div class="en">Visible Personal Commitment · V.P.C</div><p>Interacción y abordaje a trabajadores que ejecutan labores en Holcim Colombia.</p></div></div>
-        <div class="lcard a rv left" style="--d:2"><div class="lic"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 0 1 16 0v6H4z"/><path d="M12 12v6M8 18l4-6 4 6"/></svg></div><div><h3>C-VPC de Controles Críticos</h3><div class="en">Critical Visible Personal Commitment · C-V.P.C</div><p>Abordaje a trabajadores en labores relacionadas con los Controles Críticos.</p></div></div>
-        <div class="lcard b rv right" style="--d:3"><div class="lic"><svg viewBox="0 0 24 24"><path d="M12 3l9 16H3z"/><path d="M12 9v5M12 17h0"/></svg></div><div><h3>Identificación de peligros</h3><div class="en">Hazard Identification · HAZ-ID</div><p>Condición insegura presente en las operaciones de Holcim Colombia.</p></div></div>
+    <div class="wrap wrap-ancho">
+      <div class="eyebrow rv up">Modelo operativo de H&amp;S</div>
+      <h2 class="rv up" style="--d:1">Hoja de ruta hacia la ambición “Cero”</h2>
+      <p class="lead rv up" style="--d:2">Los cinco frentes con los que llegamos a cero daños.</p>
+      <div class="ruta">
+        <div class="rcard a rv up" style="--d:0">
+          <div class="rtop" data-foto="compromiso(D15)"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 4l16 5.5v13C40 33 33 40.5 24 44 15 40.5 8 33 8 22.5v-13z"/><rect x="11.5" y="16" width="12" height="10" rx="3"/><path d="M15.5 26v4l4-4"/><path d="M15.6 19.6a1.9 1.9 0 0 1 3.6.8c0 1.3-1.8 1.5-1.8 2.7M17.4 25.1h.02"/><rect x="25" y="16" width="12" height="10" rx="3"/><path d="M32.5 26v4l-4-4"/><path d="M31 18.6v3.7M31 24.4h.02"/></svg></div>
+          <div class="linea"></div>
+          <div class="rbody"><h3>Compromiso</h3><p>Empoderar e involucrar a los trabajadores para impulsar tiempo de calidad en campo.</p></div>
+        </div>
+        <div class="rcard b rv up" style="--d:1">
+          <div class="rtop" data-foto="mejora(D15)"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="30" r="8.5"/><circle cx="24" cy="27.2" r="2.2"/><path d="M20.6 34.2c0-1.9 1.5-3.4 3.4-3.4s3.4 1.5 3.4 3.4"/><path d="M24 21.5v-3M24 38.5v3M15.5 30h-3M32.5 30h3M18 24l-2.1-2.1M30 24l2.1-2.1M18 36l-2.1 2.1M30 36l2.1 2.1"/><path d="M14 18V8M10.8 11.2L14 8l3.2 3.2M34 18V8M30.8 11.2L34 8l3.2 3.2"/></svg></div>
+          <div class="linea"></div>
+          <div class="rbody"><h3>Mejora Continua</h3><p>Lograr la excelencia en HSE mediante la implementación de acciones priorizadas.</p></div>
+        </div>
+        <div class="rcard a rv up" style="--d:2">
+          <div class="rtop" data-foto="bienestar(D15)"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="17"/><circle cx="24" cy="24" r="7.5"/><path d="M29.3 18.7l6-6M18.7 18.7l-6-6M29.3 29.3l6 6M18.7 29.3l-6 6"/><path d="M24 27.4c-2.7-1.9-4.4-3.2-4.4-4.9a2.35 2.35 0 0 1 4.4-1.2 2.35 2.35 0 0 1 4.4 1.2c0 1.7-1.7 3-4.4 4.9z"/></svg></div>
+          <div class="linea"></div>
+          <div class="rbody"><h3>Bienestar</h3><p>Acciones que cambian comportamientos y promueven el bienestar.</p></div>
+        </div>
+        <div class="rcard b rv up" style="--d:3">
+          <div class="rtop" data-foto="vial(D15)"><svg viewBox="0 0 48 48" aria-hidden="true"><g transform="rotate(-35 22 16)"><rect x="12" y="9" width="21" height="14" rx="7"/></g><path d="M5 27h33v5H5zM5 27v-5h8v5"/><circle cx="13" cy="35" r="3.4"/><circle cx="31" cy="35" r="3.4"/></svg></div>
+          <div class="linea"></div>
+          <div class="rbody"><h3>Seguridad Vial</h3><p>Superioridad en Seguridad Vial.</p></div>
+        </div>
+        <div class="rcard a rv up" style="--d:4">
+          <div class="rtop" data-foto="controlescriticos(D15)"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 4l16 5.5v13C40 33 33 40.5 24 44 15 40.5 8 33 8 22.5v-13z"/><path d="M16.5 23.5l5.5 5.5 11-11"/></svg></div>
+          <div class="linea"></div>
+          <div class="rbody"><h3>Programa de Controles Críticos</h3><p>Eliminar fatalidades y lesiones graves.</p></div>
+        </div>
       </div>
     </div>
   </section>
@@ -1542,7 +1590,7 @@
       <p class="lead rv up" style="--d:3;max-width:52ch;margin:14px auto 0">Continúa con el <b>Módulo 3: Control operacional</b> usando el botón <b>Siguiente →</b>.</p>
       <div class="recap rv up" style="--d:4">
         <span class="chip">SG-SST</span><span class="chip">Políticas</span>
-        <span class="chip">Reglas HSE</span><span class="chip">Liderazgo visible</span>
+        <span class="chip">Reglas HSE</span><span class="chip">Ambición “Cero”</span>
       </div>
     </div>
   </section>
@@ -2325,7 +2373,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-02-u";
+var VERSION_CURSO = "2026-09-02-v";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
@@ -3600,9 +3648,9 @@ var BANCO = [
 /* ---------- Módulo 2 · Planeación estratégica ---------- */
 {m:'2',p:'Según las Reglas HSE, ¿en qué plazo máximo se deben reportar los incidentes?',o:['No mayor a 24 horas','No mayor a 72 horas','Antes de terminar la semana','Antes del cierre del mes'],r:0},
 {m:'2',p:'El objetivo principal de la Política HSE de Holcim es:',o:['Desarrollar nuestros negocios con cero daños','Reducir los costos de operación','Aumentar la productividad de las plantas','Cumplir únicamente la norma legal mínima'],r:0},
-{m:'2',p:'Dentro de los indicadores de liderazgo visible, T.I.F (Time In the Field) corresponde a:',o:['Tiempo en campo para supervisar la operación','Total de incidentes por fábrica','Tiempo de inducción del funcionario','Tasa de incapacidad frecuente'],r:0},
-{m:'2',p:'El indicador V.P.C (Visible Personal Commitment) se refiere a:',o:['La interacción y abordaje a trabajadores que ejecutan labores','La verificación del permiso de trabajo en campo','La validación de proveedores certificados','La vigilancia por cámaras de la planta'],r:0},
-{m:'2',p:'El indicador HAZ-ID corresponde al reporte de una condición insegura presente en las operaciones.',o:['Verdadero','Falso'],r:0},
+{m:'2',p:'En la hoja de ruta hacia la ambición «Cero», el frente de Compromiso busca:',o:['Empoderar e involucrar a los trabajadores para impulsar tiempo de calidad en campo','Aumentar la producción de las plantas','Reducir el número de contratistas','Publicar los resultados financieros'],r:0},
+{m:'2',p:'El frente de Mejora Continua de la hoja de ruta hacia la ambición «Cero» busca:',o:['Lograr la excelencia en HSE mediante la implementación de acciones priorizadas','Renovar la maquinaria cada año','Reemplazar las auditorías internas','Ampliar el horario de la operación'],r:0},
+{m:'2',p:'El Programa de Controles Críticos, dentro de la hoja de ruta hacia la ambición «Cero», busca eliminar fatalidades y lesiones graves.',o:['Verdadero','Falso'],r:0},
 {m:'2',p:'Las políticas y declaraciones de Holcim otorgan autoridad para detener trabajos inseguros.',o:['Verdadero','Falso'],r:0},
 /* ---------- Módulo 3 · Control operacional ---------- */
 {m:'3',p:'El ATS (Análisis de Trabajo Seguro) se utiliza para tareas:',o:['No estándar: no planificadas, impredecibles o por primera vez','Rutinarias que se repiten todos los días','Exclusivamente administrativas','Solo de mantenimiento eléctrico'],r:0},

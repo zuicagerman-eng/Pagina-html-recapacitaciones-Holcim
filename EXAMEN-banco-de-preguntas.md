@@ -88,21 +88,21 @@ Verdadero/Falso). La respuesta correcta va marcada con **✔**.
 - &nbsp;&nbsp;&nbsp; Aumentar la productividad de las plantas
 - &nbsp;&nbsp;&nbsp; Cumplir únicamente la norma legal mínima
 
-**12. Dentro de los indicadores de liderazgo visible, T.I.F (Time In the Field) corresponde a:**  <br>_Selección múltiple_
+**12. En la hoja de ruta hacia la ambición «Cero», el frente de Compromiso busca:**  <br>_Selección múltiple_
 
-- **✔** Tiempo en campo para supervisar la operación
-- &nbsp;&nbsp;&nbsp; Total de incidentes por fábrica
-- &nbsp;&nbsp;&nbsp; Tiempo de inducción del funcionario
-- &nbsp;&nbsp;&nbsp; Tasa de incapacidad frecuente
+- **✔** Empoderar e involucrar a los trabajadores para impulsar tiempo de calidad en campo
+- &nbsp;&nbsp;&nbsp; Aumentar la producción de las plantas
+- &nbsp;&nbsp;&nbsp; Reducir el número de contratistas
+- &nbsp;&nbsp;&nbsp; Publicar los resultados financieros
 
-**13. El indicador V.P.C (Visible Personal Commitment) se refiere a:**  <br>_Selección múltiple_
+**13. El frente de Mejora Continua de la hoja de ruta hacia la ambición «Cero» busca:**  <br>_Selección múltiple_
 
-- **✔** La interacción y abordaje a trabajadores que ejecutan labores
-- &nbsp;&nbsp;&nbsp; La verificación del permiso de trabajo en campo
-- &nbsp;&nbsp;&nbsp; La validación de proveedores certificados
-- &nbsp;&nbsp;&nbsp; La vigilancia por cámaras de la planta
+- **✔** Lograr la excelencia en HSE mediante la implementación de acciones priorizadas
+- &nbsp;&nbsp;&nbsp; Renovar la maquinaria cada año
+- &nbsp;&nbsp;&nbsp; Reemplazar las auditorías internas
+- &nbsp;&nbsp;&nbsp; Ampliar el horario de la operación
 
-**14. El indicador HAZ-ID corresponde al reporte de una condición insegura presente en las operaciones.**  <br>_Verdadero / Falso_
+**14. El Programa de Controles Críticos, dentro de la hoja de ruta hacia la ambición «Cero», busca eliminar fatalidades y lesiones graves.**  <br>_Verdadero / Falso_
 
 - **✔** Verdadero
 - &nbsp;&nbsp;&nbsp; Falso
