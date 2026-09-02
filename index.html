@@ -118,6 +118,41 @@
   @media(max-width:640px){.flips-foto .flip.conFoto,.flips-foto .flip.conFoto .flip-in{height:auto;min-height:250px}
     .fotoflip{width:124px;height:150px} .fotoflip img{max-width:124px;max-height:150px}}
 
+  /* ====== MENÚ LATERAL DE VISTAS ======
+     Cinco temas que antes eran cinco diapositivas ahora viven en una sola: se
+     cambia de vista con el menú de la izquierda, sin perder el avance. */
+  .wrap-ancho{max-width:1240px}
+  .tabs2{display:grid;grid-template-columns:250px 1fr;gap:20px;align-items:start}
+  .tabmenu{display:flex;flex-direction:column;gap:8px;position:sticky;top:0}
+  .tabbtn{text-align:left;background:#fff;border:2px solid rgba(11,37,73,.10);
+    border-radius:11px;padding:11px 13px;font-family:var(--font);font-weight:700;
+    font-size:13px;line-height:1.32;color:var(--blue);cursor:pointer;transition:.18s}
+  .tabbtn:hover{border-color:var(--cyan);transform:translateX(2px)}
+  .tabbtn.on{background:var(--grad);color:#04121f;border-color:transparent;
+    box-shadow:0 10px 22px -12px rgba(24,119,196,.7)}
+  .tabbtn.visto:not(.on):after{content:" ✓";color:var(--ok);font-weight:800}
+  .slide.dark .tabbtn,.slide.dark.teal .tabbtn{background:rgba(255,255,255,.07);
+    color:#eaf1fb;border-color:rgba(255,255,255,.14)}
+  .tabcont{min-width:0}
+  .vista{display:none}
+  .vista.on{display:block}
+  /* Dentro de una vista el título ya no necesita tanto aire */
+  .vista>.eyebrow{margin-top:0}
+  .vista h2{font-size:27px}
+  @media(max-height:900px){.vista h2{font-size:24px}}
+  /* El video se ajusta al alto disponible para que la vista quepa sin scroll */
+  .vista .videobox{padding-top:0;width:auto;max-width:100%;aspect-ratio:16/9;
+    height:calc(100vh - 372px);max-height:546px;min-height:190px;margin:18px auto 0}
+  .vista .vhint{justify-content:center;text-align:center}
+  /* En pantallas angostas el menú se pone arriba, en fila desplazable */
+  @media(max-width:900px){
+    .tabs2{grid-template-columns:1fr;gap:12px}
+    .tabmenu{flex-direction:row;overflow-x:auto;padding-bottom:4px;position:static;
+      scrollbar-width:thin;-webkit-overflow-scrolling:touch}
+    .tabbtn{flex:none;max-width:210px;font-size:12px;padding:9px 11px}
+    .tabbtn:hover{transform:none}
+  }
+
   /* ====== EXAMEN FINAL ====== */
   .exwrap{max-width:820px;margin:0 auto}
   .excampo{margin-top:14px}
@@ -1151,10 +1186,20 @@
       <div class="warn rv up" style="--d:2"><svg viewBox="0 0 24 24"><path d="M12 3l9 16H3z"/><path d="M12 9v5M12 17h0"/></svg>No usar ropa holgada, para evitar atrapamientos con partes móviles de equipos.</div>
     </div>
   </section>
-  <!-- 6 VIDEO (después de Línea roja) -->
-  <section class="slide light mint" data-gate="video">
-    <div class="wrap">
-      <div class="eyebrow rv up">Introducción</div>
+  <!-- 6 ANÁLISIS DE PELIGROS Y RIESGOS (5 vistas con menú lateral) -->
+  <section class="slide light" data-gate="video">
+    <div class="wrap wrap-ancho">
+      <div class="tabs2">
+        <nav class="tabmenu" aria-label="Secciones de análisis de peligros y riesgos">
+          <button type="button" class="tabbtn on" data-vista="0">1 · Video: análisis de peligros y riesgos</button>
+          <button type="button" class="tabbtn" data-vista="1">2 · Conceptos clave</button>
+          <button type="button" class="tabbtn" data-vista="2">3 · ¿Cómo diferencias el peligro del riesgo?</button>
+          <button type="button" class="tabbtn" data-vista="3">4 · ¿Cuál escenario tiene mayor riesgo?</button>
+          <button type="button" class="tabbtn" data-vista="4">5 · Ejemplo: peligro → riesgo → accidente</button>
+        </nav>
+        <div class="tabcont">
+        <div class="vista on" data-vista="0">
+<div class="eyebrow rv up">Introducción</div>
       <h2 class="rv up" style="--d:1">Video de bienvenida</h2>
       <p class="lead rv up" style="--d:2">Observa el video completo para habilitar el botón <b>Siguiente</b>.</p>
       <div class="videobox rv up" style="--d:3">
@@ -1168,12 +1213,9 @@
         <span id="vhintTxt">Reproduce el video hasta el final para continuar.</span>
       </div>
       <button class="vskip" id="vskip" style="display:none">Habilitar manualmente (solo administrador)</button>
-    </div>
-  </section>
-  <!-- 7 CONCEPTOS CLAVE (flip) -->
-  <section class="slide light">
-    <div class="wrap">
-      <div class="eyebrow rv up">Generalidades</div>
+        </div>
+        <div class="vista" data-vista="1">
+<div class="eyebrow rv up">Generalidades</div>
       <h2 class="rv up" style="--d:1">Conceptos clave</h2>
       <p class="lead rv up" style="--d:2">Toca cada tarjeta para ver su definición y un ejemplo. 👆</p>
       <div class="flips flips-foto" style="margin-top:24px">
@@ -1194,12 +1236,9 @@
           <div class="face back"><h4>Accidente de trabajo</h4><div class="backrow"><div class="backtxt"><p>Suceso repentino por causa u ocasión del trabajo que produce lesión, perturbación funcional, invalidez o muerte.</p><div class="ej"><b>Ejemplo:</b> caída de alturas al realizar labores en la cubierta.</div></div><div class="fotoflip" data-foto="accidente(D7)"></div></div></div>
         </div></div>
       </div>
-    </div>
-  </section>
-  <!-- 9 PELIGRO vs RIESGO -->
-  <section class="slide light mint">
-    <div class="wrap">
-      <div class="eyebrow rv up">Conceptos clave</div>
+        </div>
+        <div class="vista" data-vista="2">
+<div class="eyebrow rv up">Conceptos clave</div>
       <h2 class="rv up" style="--d:1">¿Cómo diferencias el peligro del riesgo?</h2>
       <div class="pr rv up" style="--d:2;margin-top:22px">
         <div class="col pel">
@@ -1229,12 +1268,9 @@
           </div>
         </div>
       </div>
-    </div>
-  </section>
-  <!-- 10 QUIZ -->
-  <section class="slide dark teal">
-    <div class="wrap">
-      <div class="eyebrow rv up">Ponte a prueba</div>
+        </div>
+        <div class="vista" data-vista="3">
+<div class="eyebrow rv up">Ponte a prueba</div>
       <h2 class="rv up" style="--d:1">¿Cuál escenario tiene mayor riesgo?</h2>
       <p class="lead rv up" style="--d:2">Un colaborador debe pintar una pared. Elige y descubre por qué.</p>
       <div class="quiz rv up" style="--d:3;margin-top:22px" id="quiz">
@@ -1242,12 +1278,9 @@
         <div class="opt" data-correct="0"><div class="optfoto" data-foto="escenarioB(D9)"></div><div class="tg">B</div><p>Sube y baja <b>2 veces al día</b> con un <b>andamio</b>.</p><div class="mark">✕</div></div>
       </div>
       <div class="verdict" id="verdict">Hay <b>mayor riesgo en el escenario A</b>: subir con mayor frecuencia y mediante una escalera implica mayor exposición y mayor daño al caerse a distinto nivel.</div>
-    </div>
-  </section>
-  <!-- 11 EJEMPLO TIBURÓN -->
-  <section class="slide light">
-    <div class="wrap">
-      <div class="eyebrow rv up">Ejemplo</div>
+        </div>
+        <div class="vista" data-vista="4">
+<div class="eyebrow rv up">Ejemplo</div>
       <h2 class="rv up" style="--d:1">Peligro → Riesgo → Accidente</h2>
       <div class="steps3" style="margin-top:28px">
         <div class="s3 pel rv left"><span class="k">Peligro</span><div class="art" id="a_shark1" data-foto="peligro(D10)"></div><p><b>Tiburón</b> en la playa de un hotel.</p></div>
@@ -1255,6 +1288,9 @@
         <div class="s3 rie rv up" style="--d:2"><span class="k">Riesgo</span><div class="art" id="a_shark2" data-foto="riesgo(D10)"></div><p>Probabilidad de ser <b>mordido</b> al nadar en aguas infestadas.</p></div>
         <div class="arrow rv scale" style="--d:3"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
         <div class="s3 accid rv right" style="--d:4"><span class="k">Accidente</span><div class="art" id="a_shark3" data-foto="accidente(D10)"></div><p>La persona <b>muere</b> al ser mordida mientras nadaba.</p></div>
+      </div>
+        </div>
+        </div>
       </div>
     </div>
   </section>
@@ -2218,7 +2254,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-01-m";
+var VERSION_CURSO = "2026-09-02-n";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
@@ -3753,6 +3789,33 @@ document.addEventListener('DOMContentLoaded', function(){
     fase('datos');
     try{ elDatos.scrollIntoView({block:'start'}); }catch(e){}
   });
+});
+
+/* ====== MENÚ LATERAL DE VISTAS ======
+   Las cinco vistas comparten diapositiva. Cada botón es una interacción
+   obligatoria: así nadie se salta un tema por no abrirlo. */
+document.querySelectorAll('.tabs2').forEach(function(caja){
+  var botones = Array.prototype.slice.call(caja.querySelectorAll('.tabbtn'));
+  var vistas  = Array.prototype.slice.call(caja.querySelectorAll('.vista'));
+  botones.forEach(function(b, i){
+    b.classList.add('req');
+    if(i === 0) b.classList.add('visto');
+    function ir(){
+      botones.forEach(function(x,k){ x.classList.toggle('on', k===i); });
+      vistas.forEach(function(v,k){ v.classList.toggle('on', k===i); });
+      b.classList.add('visto');
+      markDone(b);
+      // el contenido cambia de alto: se rehace la animación y el aviso de scroll
+      var slide = caja.closest('.slide');
+      if(slide){ slide.scrollTop = 0;
+        vistas[i].querySelectorAll('.rv').forEach(function(el){
+          el.classList.remove('in'); void el.offsetWidth; el.classList.add('in'); }); }
+      if(window.revisarScroll) setTimeout(window.revisarScroll, 420);
+    }
+    b.addEventListener('click', ir);
+  });
+  // la primera vista ya está a la vista al llegar: cuenta como leída
+  if(botones[0]) markDone(botones[0]);
 });
 
 /* ====== MODO ADMINISTRADOR ======
