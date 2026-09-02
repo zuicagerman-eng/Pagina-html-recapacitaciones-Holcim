@@ -541,9 +541,11 @@
   }
   /* ===== Componentes Módulo 2 ===== */
   /* ===== WHEEL SG-SST ===== */
-  .wheelwrap{display:grid;grid-template-columns:minmax(0,360px) 1fr;gap:30px;align-items:center;margin-top:22px}
-  @media(max-width:800px){.wheelwrap{grid-template-columns:1fr;justify-items:center}}
-  .wheel{position:relative;width:min(360px,82vw);aspect-ratio:1;flex:none}
+  /* La rueda va centrada, con tres globos a cada lado alineados con su punto. */
+  .wheelwrap{display:grid;grid-template-columns:1fr auto 1fr;gap:16px;
+    align-items:center;justify-items:center;margin-top:16px}
+  .wheel{position:relative;width:min(340px,82vw);aspect-ratio:1;flex:none}
+  @media(max-height:860px){.wheel{width:min(290px,82vw)}}
   .ring{position:absolute;inset:0;border-radius:50%;box-shadow:var(--shadow);
     background:conic-gradient(var(--danger) 0 60deg,var(--gold) 60deg 120deg,var(--green) 120deg 180deg,var(--teal) 180deg 240deg,var(--orange) 240deg 300deg,#17a2a2 300deg 360deg)}
   .core{position:absolute;inset:15%;border-radius:50%;overflow:hidden;background:linear-gradient(90deg,var(--panel) 0 50%,var(--cyan) 50% 100%);display:grid;grid-template-columns:1fr 1fr;color:#fff;box-shadow:inset 0 0 0 4px rgba(255,255,255,.14)}
@@ -555,10 +557,35 @@
   .wpoint:hover,.wpoint.active{transform:translate(-50%,-50%) scale(1.16)}
   .wpoint svg{width:22px;height:22px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
   @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,255,255,.55)}70%{box-shadow:0 0 0 12px rgba(255,255,255,0)}100%{box-shadow:0 0 0 0 rgba(255,255,255,0)}}
-  .winfo{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-left:6px solid var(--cyan);border-radius:16px;padding:24px;min-height:150px;transition:border-color .3s;width:100%}
-  .winfo .wp{font-size:11.5px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:#8fd6f2;margin-bottom:8px;display:block}
-  .winfo .wt{font-size:20px;font-weight:800;margin-bottom:8px;color:#fff}
-  .winfo .wd{font-size:15px;line-height:1.6;color:#c2d0e6}
+  /* Globos de texto: aparecen al pasar por su punto y ya no se vuelven a ir. */
+  .wglobos{display:grid;grid-template-rows:repeat(3,auto);gap:12px;align-content:center;
+    width:100%;max-width:330px}
+  .wglobo{position:relative;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.10);
+    border-radius:14px;padding:11px 14px;opacity:0;transform:translateY(8px);
+    transition:opacity .4s ease,transform .4s ease}
+  .wglobo.on{opacity:1;transform:none}
+  .wglobo:after{content:"";position:absolute;top:50%;margin-top:-8px;
+    width:0;height:0;border:8px solid transparent}
+  .wglobos.izq .wglobo{border-right:5px solid var(--c);text-align:right}
+  .wglobos.izq .wglobo:after{right:-16px;border-left-color:var(--c)}
+  .wglobos.der .wglobo{border-left:5px solid var(--c)}
+  .wglobos.der .wglobo:after{left:-16px;border-right-color:var(--c)}
+  .wglobo .wp{font-size:10px;font-weight:800;letter-spacing:1.3px;text-transform:uppercase;
+    color:var(--c);display:block;margin-bottom:3px}
+  .wglobo .wt{font-size:15px;font-weight:800;color:#fff;margin-bottom:4px;line-height:1.2}
+  .wglobo .wd{font-size:12.6px;line-height:1.45;color:#c2d0e6}
+  @media(max-height:860px){.wglobo{padding:9px 12px}
+    .wglobo .wt{font-size:14px} .wglobo .wd{font-size:12px;line-height:1.4}}
+  /* Un punto ya visto deja de titilar: se ve de una cuáles faltan. */
+  .wpoint.visto::after{animation:none}
+  /* En pantalla angosta: primero la rueda y debajo los seis globos en una columna. */
+  @media(max-width:900px){
+    .wheelwrap{grid-template-columns:1fr;gap:12px}
+    .wheel{order:-1}
+    .wglobos{max-width:520px;grid-template-rows:none}
+    .wglobos.izq .wglobo{text-align:left;border-right:0;border-left:5px solid var(--c)}
+    .wglobo:after{display:none}
+  }
   /* ===== PDFs ===== */
   .infobanner{background:var(--panel);color:#fff;border-radius:12px;padding:15px 20px;font-size:14px;line-height:1.5;border-left:5px solid;border-image:var(--grad) 1;margin-top:14px}
   .pdfcards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:22px}
@@ -1421,8 +1448,9 @@
     <div class="wrap">
       <div class="eyebrow rv up">Planeación estratégica H&amp;S</div>
       <h2 class="rv up" style="--d:1">SG-SST Holcim Colombia</h2>
-      <p class="lead rv up" style="--d:2">Pasa el cursor (o toca) los puntos titilantes para descubrir la información. 👆</p>
+      <p class="lead rv up" style="--d:2">Pasa el cursor o toca cada punto: su mensaje se queda a la vista. 👆</p>
       <div class="wheelwrap">
+        <div class="wglobos izq" id="wgizq"></div>
         <div class="wheel rv scale" style="--d:1">
           <div class="ring"></div>
           <div class="core">
@@ -1430,11 +1458,7 @@
             <div class="half"><svg viewBox="0 0 24 24"><path d="M4 11a8 8 0 0 1 16 0"/><path d="M3 11h18"/><path d="M12 15c1.6-1.6 3-2.4 3-4a1.6 1.6 0 0 0-3-.6 1.6 1.6 0 0 0-3 .6c0 1.6 1.4 2.4 3 4z"/></svg><b>MODELO OPERATIVO DE H&amp;S</b></div>
           </div>
         </div>
-        <div class="winfo rv right" id="winfo">
-          <span class="wp">Selecciona un punto</span>
-          <div class="wt">6 componentes del SG-SST</div>
-          <div class="wd">Cada punto del anillo representa un pilar de la planeación estratégica de Salud y Seguridad. Pasa el cursor o toca cada uno para ver su descripción.</div>
-        </div>
+        <div class="wglobos der" id="wgder"></div>
       </div>
     </div>
   </section>
@@ -2284,7 +2308,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-02-q";
+var VERSION_CURSO = "2026-09-02-r";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
@@ -2756,11 +2780,23 @@ var WHEEL=[
  {a:210,c:'#17868a',t:'Reglas HSE',d:'Reglas HSE, Programas y Planes HS.',icon:'rules'},
  {a:270,c:'#ef7d00',t:'Requisitos legales',d:'Requisitos Legales, estándares Holcim y de Cliente.',icon:'legal'}
 ];
-var wheelEl=document.querySelector('.wheel'), winfo=document.getElementById('winfo');
-function showInfo(p){
-  winfo.style.borderLeftColor=p.c;
-  winfo.innerHTML='<span class="wp" style="color:'+p.c+'">Componente SG-SST</span><div class="wt">'+p.t+'</div><div class="wd">'+p.d+'</div>';
-}
+var wheelEl=document.querySelector('.wheel');
+var wgIzq=document.getElementById('wgizq'), wgDer=document.getElementById('wgder');
+/* Qué globo va en cada columna y en qué fila, para que quede a la altura de su
+   punto: arriba, en medio y abajo. Los ángulos son los de WHEEL. */
+var WCOL={330:['izq',0],270:['izq',1],210:['izq',2],30:['der',0],90:['der',1],150:['der',2]};
+var wGlobos={};
+[['izq',wgIzq],['der',wgDer]].forEach(function(par){
+  WHEEL.filter(function(p){ return WCOL[p.a][0]===par[0]; })
+       .sort(function(a,b){ return WCOL[a.a][1]-WCOL[b.a][1]; })
+       .forEach(function(p){
+    var g=document.createElement('div');
+    g.className='wglobo'; g.style.setProperty('--c',p.c);
+    g.innerHTML='<span class="wp">Componente SG-SST</span><div class="wt">'+p.t+
+                '</div><div class="wd">'+p.d+'</div>';
+    par[1].appendChild(g); wGlobos[p.a]=g;
+  });
+});
 WHEEL.forEach(function(p){
   var rad=p.a*Math.PI/180, x=50+48*Math.sin(rad), y=50-48*Math.cos(rad);
   var b=document.createElement('button');
@@ -2768,7 +2804,12 @@ WHEEL.forEach(function(p){
   b.innerHTML='<svg viewBox="0 0 24 24">'+WICON[p.icon]+'</svg>';
   b.setAttribute('aria-label',p.t);
   b.classList.add('req');
-  function act(){ document.querySelectorAll('.wpoint').forEach(function(w){w.classList.remove('active');}); b.classList.add('active'); showInfo(p); markDone(b); }
+  /* El globo se queda puesto: no se vuelve a ocultar. */
+  function act(){
+    document.querySelectorAll('.wpoint').forEach(function(w){w.classList.remove('active');});
+    b.classList.add('active'); b.classList.add('visto');
+    wGlobos[p.a].classList.add('on'); markDone(b);
+  }
   b.addEventListener('mouseenter',act);
   b.addEventListener('focus',act);
   b.addEventListener('click',act);
