@@ -467,13 +467,14 @@
      La tarjeta pasa a dos columnas —imagen a la izquierda, título y texto a la
      derecha— y la imagen abarca las dos filas: así puede ser bastante más
      grande SIN que la tarjeta crezca de alto. */
-  .acc-head .tri.foto{display:flex;align-items:center;justify-content:center}
-  .acc-head .tri.foto img{max-width:100%;max-height:100%;width:auto;height:auto;
+  .acc-head .tri.foto,.acc-head .ico.foto{display:flex;align-items:center;justify-content:center;background:none;box-shadow:none;padding:0}
+  .acc-head .tri.foto img,.acc-head .ico.foto img{max-width:100%;max-height:100%;width:auto;height:auto;
     display:block;object-fit:contain;border-radius:8px}
   .acc-auto .acc.conFotos{display:grid;grid-template-columns:118px 1fr;
     column-gap:12px;align-items:start;padding:10px 13px}
   .acc-auto .acc.conFotos .acc-head{display:contents}
-  .acc-auto .acc.conFotos .acc-head .tri.foto{grid-row:1 / span 2;grid-column:1;
+  .acc-auto .acc.conFotos .acc-head .tri.foto,
+  .acc-auto .acc.conFotos .acc-head .ico.foto{grid-row:1 / span 2;grid-column:1;
     width:118px;height:118px;align-self:start;margin-top:2px}
   .acc-auto .acc.conFotos .acc-head h4{grid-row:1;grid-column:2;align-self:end;margin-bottom:1px}
   .acc-auto .acc.conFotos.open .acc-body{grid-row:2;grid-column:2;padding:0;align-self:start}
@@ -482,7 +483,8 @@
      quepan sin desplazarse; en monitores grandes se ve bastante más grande. */
   @media(max-height:900px){
     .acc-auto .acc.conFotos{grid-template-columns:92px 1fr}
-    .acc-auto .acc.conFotos .acc-head .tri.foto{width:92px;height:92px}}
+    .acc-auto .acc.conFotos .acc-head .tri.foto,
+    .acc-auto .acc.conFotos .acc-head .ico.foto{width:92px;height:92px}}
 
   .acc-auto .acc-head .stripe{height:26px}
   .acc-auto .acc.open .acc-body{padding:0 13px 10px 13px}
@@ -499,8 +501,8 @@
   }
   .acc.ancha .acc-body .li{break-inside:avoid}
   @media(min-width:1100px){
-    .acc-auto .acc.ancha .acc-body{column-count:2;column-gap:18px}
-    .acc-auto .acc.ancha .acc-body .tag{column-span:all}
+    .acc-auto .acc.ancha.lista .acc-body{column-count:2;column-gap:18px}
+    .acc-auto .acc.ancha.lista .acc-body .tag{column-span:all}
   }
   .acc-auto .acc-body p,.acc-auto .acc-body .li,.acc-auto .acc-body .pt{font-size:12.8px;line-height:1.45}
   .acc-auto .acc-body .li,.acc-auto .acc-body .pt{margin-top:4px}
@@ -1418,7 +1420,7 @@
           <div class="acc-head"><span class="tri" id="t_tec" data-foto="tecnologico(D12)"></span><h4>Tecnológico</h4><span class="chev">+</span></div>
           <div class="acc-body"><p>Por <b>explosión, fuga, derrame</b> o <b>incendio</b>.</p></div>
         </div>
-        <div class="acc ancha rv up" style="--d:7" tabindex="0" role="button" aria-expanded="false">
+        <div class="acc ancha lista rv up" style="--d:7" tabindex="0" role="button" aria-expanded="false">
           <div class="acc-head"><span class="tri" id="t_conf" data-foto="confinados(D12)"></span><h4>Espacios confinados</h4><span class="chev">+</span></div>
           <div class="acc-body">
             <span class="tag">Por espacios que:</span>
@@ -1504,7 +1506,7 @@
     </div>
   </section>
 <section class="slide dark" data-mod="2">
-    <div class="wrap">
+    <div class="wrap wrap-ancho">
       <div class="eyebrow rv up">Modelo operativo de H&amp;S</div>
       <h2 class="rv up" style="--d:1">Reglas HSE</h2>
       <p class="lead rv up" style="--d:2">Da clic sobre cada regla para conocer su detalle. 👆</p>
@@ -2323,7 +2325,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-02-t";
+var VERSION_CURSO = "2026-09-02-u";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
@@ -2558,7 +2560,12 @@ document.getElementById('s_beard').innerHTML = sign('<path d="M24 24a8 8 0 0 1 1
    junto al HTML. Si ninguna existe, la tarjeta conserva su señal dibujada, así
    que la diapositiva nunca queda con un hueco. */
 var EXT_FOTO = ['png','gif','jpg','jpeg','webp'];
+/* Se puede llamar otra vez cuando un generador crea tarjetas nuevas; los huecos
+   ya preparados se saltan. */
+function activarFotos(){
 document.querySelectorAll('[data-foto]').forEach(function(slot){
+  if(slot.getAttribute('data-foto-listo')) return;
+  slot.setAttribute('data-foto-listo','1');
   var nombre = slot.getAttribute('data-foto');
   var rutas = [];
   EXT_FOTO.forEach(function(e){ rutas.push(asset('imagenes/' + nombre + '.' + e)); });
@@ -2583,6 +2590,8 @@ document.querySelectorAll('[data-foto]').forEach(function(slot){
   img.onerror = function(){ i++; if(i < rutas.length) img.src = rutas[i]; };
   registrarMedio(slot, function(){ img.src = rutas[0]; });
 });
+}
+activarFotos();
 /* ====== Tiburón ====== */
 function shark(c){return '<svg viewBox="0 0 64 64" width="100%" height="100%"><g fill="'+c+'"><path d="M6 40c8-2 14-2 20 0 6-10 16-16 30-16-4 6-6 10-6 14 4 2 8 4 8 4-6 2-14 2-20 0-4 6-12 8-20 6l-2 6-4-8c-4 0-8-2-6-6z"/><circle cx="46" cy="30" r="1.8" fill="#0b2545"/></g><path d="M4 46c6 3 10 3 16 0 6 3 10 3 16 0 6 3 10 3 16 0" fill="none" stroke="#1bb4e4" stroke-width="2.5" stroke-linecap="round"/></svg>';}
 document.getElementById('a_shark1').innerHTML = shark('#5aa9d6');
@@ -2844,23 +2853,28 @@ var RICON={
   conduc:'<path d="M5 13l1.5-4h11L19 13M4 13h16v4H4zM7 17v2M17 17v2"/><circle cx="8" cy="15" r="0"/>',
   alcohol:'<circle cx="12" cy="12" r="9"/><path d="M5 5l14 14M10 4h4v3l1 4v7h-6v-7l1-4z"/>'
 };
+/* f: nombre del archivo en imagenes/. Si no existe, se ve el icono dibujado. */
 var REGLAS=[
- {i:'reportar',t:'Reportar',d:'Reporta todos los incidentes en un plazo no mayor a 24 horas.'},
- {i:'epp',t:'EPP',d:'Utiliza siempre el equipo de protección personal (EPP) básico y específico para cada tarea.'},
- {i:'permiso',t:'Permisos de trabajo',d:'Obtén y haz seguimiento de los permisos para trabajos en altura, en caliente, en espacios confinados, de aislamiento y bloqueo, y de elevación y soporte de cargas. Aísla, bloquea, etiqueta y prueba siempre.'},
- {i:'cumpl',t:'Cumplimiento de permisos',d:'Cumple con todos los permisos medioambientales y operacionales.'},
- {i:'control',t:'Controles críticos',d:'No te saltes ni deshabilites ningún dispositivo de seguridad o control crítico.'},
- {i:'fuego',t:'Línea de fuego',d:'No trabajes sin las protecciones de la maquinaria, ni te sitúes o camines bajo una carga suspendida o en zonas de exclusión.'},
- {i:'conduc',t:'Conducción segura',d:'No conduzcas sin cinturón ni usando el teléfono celular, y no superes los límites de velocidad ni las horas de servicio.'},
- {i:'alcohol',t:'No alcohol ni drogas',d:'No trabajes ni conduzcas bajo la influencia del alcohol o las drogas.'}
+ {i:'reportar',f:'reportar(D14)',t:'Reportar',d:'Reporta todos los incidentes en un plazo no mayor a 24 horas.'},
+ {i:'epp',f:'epp(D14)',t:'EPP',d:'Utiliza siempre el equipo de protección personal (EPP) básico y específico para cada tarea.'},
+ {i:'permiso',f:'permisos(D14)',t:'Permisos de trabajo',d:'Obtén y haz seguimiento de los permisos para trabajos en altura, en caliente, en espacios confinados, de aislamiento y bloqueo, y de elevación y soporte de cargas. Aísla, bloquea, etiqueta y prueba siempre.'},
+ {i:'cumpl',f:'cumplimiento(D14)',t:'Cumplimiento de permisos',d:'Cumple con todos los permisos medioambientales y operacionales.'},
+ {i:'control',f:'controles(D14)',t:'Controles críticos',d:'No te saltes ni deshabilites ningún dispositivo de seguridad o control crítico.'},
+ {i:'fuego',f:'lineafuego(D14)',t:'Línea de fuego',d:'No trabajes sin las protecciones de la maquinaria, ni te sitúes o camines bajo una carga suspendida o en zonas de exclusión.'},
+ {i:'conduc',f:'conduccion(D14)',t:'Conducción segura',d:'No conduzcas sin cinturón ni usando el teléfono celular, y no superes los límites de velocidad ni las horas de servicio.'},
+ {i:'alcohol',f:'alcohol(D14)',t:'No alcohol ni drogas',d:'No trabajes ni conduzcas bajo la influencia del alcohol o las drogas.'}
 ];
 var reglasEl=document.getElementById('reglas');
 REGLAS.forEach(function(r,k){
   var el=document.createElement('div'); el.className='acc rv up'; el.style.setProperty('--d',k%2);
+  /* La penúltima ocupa dos columnas: es la de texto más largo y así la última
+     fila queda completa, sin el hueco que quedaba antes. */
+  if(k===REGLAS.length-2) el.classList.add('ancha');
   el.setAttribute('tabindex','0'); el.setAttribute('role','button');
-  el.innerHTML='<div class="acc-head"><span class="ico"><svg viewBox="0 0 24 24">'+RICON[r.i]+'</svg></span><h4>'+r.t+'</h4><span class="chev">+</span></div><div class="acc-body"><p>'+r.d+'</p></div>';
+  el.innerHTML='<div class="acc-head"><span class="ico" data-foto="'+r.f+'"><svg viewBox="0 0 24 24">'+RICON[r.i]+'</svg></span><h4>'+r.t+'</h4><span class="chev">+</span></div><div class="acc-body"><p>'+r.d+'</p></div>';
   reglasEl.appendChild(el);
 });
+activarFotos();
 /* ====== OBJETIVO PRINCIPAL (acordeón) ====== */
 var OBJ=[
  {c:'#17868a',t:'Estilos de vida y entornos saludables',d:'Promocionar estilos de vida, condiciones y entornos de trabajo más saludables y seguros.',p:['Implementar y mantener los Controles Críticos.','Reportar y gestionar Peligros, VPCs y CVPCs.','Registrar Tiempo en campo de calidad.']},
