@@ -608,9 +608,21 @@
   .modal-head{display:flex;align-items:center;gap:12px;padding:14px 18px;background:var(--navy);color:#fff}
   .modal-head span{font-weight:700;font-size:15px;flex:1}
   .modal-head button{background:rgba(255,255,255,.15);border:none;color:#fff;width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:16px;transition:.2s}
+  /* En celular el visor va justo; este enlace abre el PDF en su propia pestaña. */
+  .pdfopen{display:none;background:rgba(255,255,255,.15);color:#fff;text-decoration:none;
+    border-radius:999px;padding:7px 14px;font-size:12.5px;font-weight:700;white-space:nowrap;transition:.2s}
+  .pdfopen:hover{background:var(--cyan)}
+  .pdfopen.on{display:inline-block}
   .modal-head button:hover{background:var(--danger)}
   .modal iframe{flex:1;border:0;width:100%;background:#f4f7fb}
   .modal .nopdf{flex:1;display:none;place-items:center;text-align:center;color:var(--muted);padding:34px;font-size:14px;line-height:1.6}
+  /* En celular el titulo no debe comerse la cabecera del visor. */
+  @media(max-width:640px){
+    .modal{padding:10px}
+    .modal-head{padding:10px 12px;gap:8px}
+    .modal-head span{font-size:13px;line-height:1.25;max-height:2.5em;overflow:hidden}
+    .pdfopen{padding:6px 11px;font-size:11.5px}
+  }
   /* ===== Acordeón (Reglas y Objetivo) ===== */
   .accgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}
   @media(max-width:760px){.accgrid{grid-template-columns:1fr}}
@@ -2245,7 +2257,7 @@
 <!-- MODAL PDF -->
 <div class="modal" id="pdfmodal">
   <div class="modal-box">
-    <div class="modal-head"><span id="pdfTitle"></span><button id="pdfClose" aria-label="Cerrar">✕</button></div>
+    <div class="modal-head"><span id="pdfTitle"></span><a id="pdfOpen" class="pdfopen" target="_blank" rel="noopener">Abrir aparte ↗</a><button id="pdfClose" aria-label="Cerrar">✕</button></div>
     <iframe id="pdfFrame" title="Documento PDF" allow="autoplay"></iframe>
     <div class="nopdf" id="pdfMissing"></div>
   </div>
@@ -2311,7 +2323,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-02-s";
+var VERSION_CURSO = "2026-09-02-t";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
@@ -2362,7 +2374,10 @@ var LOGO_BARRA   = asset("imagenes/logo-barra.png");
    y funcionará también dentro de Apps Script / el portal. */
 document.querySelectorAll('source[data-audio],audio[data-audio]').forEach(function(el){ el.src=asset(el.getAttribute('data-audio')); });
 document.querySelectorAll('img[data-img]').forEach(function(el){ el.src=asset(el.getAttribute('data-img')); });
-/* ===== PDFs Módulo 2 (pega los ID de Drive) ===== */
+/* ===== PDFs =====
+   Lo primero que busca el curso es documentos/<clave>.pdf dentro de este mismo
+   repositorio: así lo abre cualquiera, sin pedir permisos. Los ID de Drive de
+   abajo son solo el respaldo mientras subes cada archivo. */
 var PDFS = {
   politica    : "1oANFGDzC4aV3DgqxJZHGcggIfBD59UHv",
   declaracion : "1hcT0sKn57HdzsS08jwS0ioVnWoV4Gkdw",
@@ -3029,20 +3044,50 @@ function marcarCompletado(){
 /* ====== MODAL PDF ====== */
 var modal=document.getElementById('pdfmodal'), pdfFrame=document.getElementById('pdfFrame'),
     pdfTitle=document.getElementById('pdfTitle'), pdfMissing=document.getElementById('pdfMissing');
+var pdfOpen=document.getElementById('pdfOpen');
+/* ¿Existe este archivo en el propio sitio? Se pregunta sin descargarlo. */
+function existePdf(url,cb){
+  var x;
+  try{ x=new XMLHttpRequest(); }catch(e){ cb(false); return; }
+  x.open('HEAD',url,true);
+  x.onload=function(){ cb(x.status>=200 && x.status<300); };
+  x.onerror=function(){ cb(false); };
+  x.ontimeout=function(){ cb(false); };
+  x.timeout=6000;
+  try{ x.send(); }catch(e){ cb(false); }
+}
+function verPdf(url,externo){
+  pdfMissing.style.display='none'; pdfFrame.style.display='block';
+  pdfFrame.src=url;
+  /* Con Drive el enlace suelto pide permisos; solo se ofrece con los del sitio. */
+  if(externo){ pdfOpen.classList.remove('on'); pdfOpen.removeAttribute('href'); }
+  else { pdfOpen.href=url; pdfOpen.classList.add('on'); }
+}
+function faltaPdf(key){
+  pdfFrame.style.display='none'; pdfOpen.classList.remove('on'); pdfMissing.style.display='grid';
+  pdfMissing.innerHTML='<b>Documento disponible próximamente.</b><br>Este material aún no está publicado. Puedes continuar con la capacitación con normalidad.'+
+    '<br><br><span style="font-size:12px;opacity:.6">(Para el administrador: sube <b>documentos/'+key+'.pdf</b> al repositorio.)</span>';
+}
 function openPdf(key,title){
   pdfTitle.innerHTML=title;
-  var id=PDFS[key];
-  if(!id || id.indexOf('PON_AQUI')===0){
-    pdfFrame.style.display='none'; pdfMissing.style.display='grid';
-    pdfMissing.innerHTML='<b>Documento disponible próximamente.</b><br>Este material aún no está publicado. Puedes continuar con la capacitación con normalidad.'+
-      '<br><br><span style="font-size:12px;opacity:.6">(Para el administrador: configura el ID de Drive en <b>PDFS.'+key+'</b>)</span>';
-  }else{
-    pdfMissing.style.display='none'; pdfFrame.style.display='block';
-    pdfFrame.src='https://drive.google.com/file/d/'+id+'/preview';
-  }
-  modal.classList.add('show');
+  pdfFrame.style.display='none'; pdfMissing.style.display='none'; pdfOpen.classList.remove('on');
+  pdfFrame.src='about:blank'; modal.classList.add('show');
+  /* 1º el PDF publicado en el propio sitio (lo ve cualquiera, sin permisos).
+     2º si no está, el respaldo de Drive (puede pedir acceso fuera de Holcim). */
+  var rutas=[asset('documentos/'+key+'.pdf'), 'documentos/'+key+'.pdf'];
+  var i=0;
+  (function probar(){
+    if(i>=rutas.length){
+      var id=PDFS[key];
+      if(id && id.indexOf('PON_AQUI')!==0) verPdf('https://drive.google.com/file/d/'+id+'/preview',true);
+      else faltaPdf(key);
+      return;
+    }
+    var url=rutas[i++];
+    existePdf(url,function(ok){ if(ok) verPdf(url,false); else probar(); });
+  })();
 }
-function closePdf(){ modal.classList.remove('show'); pdfFrame.src=''; }
+function closePdf(){ modal.classList.remove('show'); pdfFrame.src='about:blank'; pdfOpen.classList.remove('on'); }
 document.querySelectorAll('.pdfbtn').forEach(function(b){
   b.addEventListener('click',function(){ openPdf(b.getAttribute('data-pdf'), b.getAttribute('data-title')); });
 });
