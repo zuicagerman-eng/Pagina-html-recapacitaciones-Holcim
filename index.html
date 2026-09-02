@@ -1163,6 +1163,14 @@
 
   /* 21) Variante SIN marco: muestra la imagen completa y nunca la agranda
          más allá de su tamaño real (evita que se vea pixelada). */
+  /* Lámina: una sola imagen que ocupa la diapositiva. Sin marco ni fondo, con
+     el alto limitado para que quepa siempre. */
+  .mediaBox.lamina{padding:0;background:none;box-shadow:none;border-radius:0;
+    margin:18px auto 0;width:auto;max-width:100%;text-align:center}
+  .mediaBox.lamina img,.mediaBox.lamina video{width:auto;max-width:100%;height:auto;
+    max-height:min(58vh,480px);margin:0 auto;border-radius:12px;background:none}
+  @media(max-height:820px){.mediaBox.lamina{margin-top:12px}
+    .mediaBox.lamina img,.mediaBox.lamina video{max-height:min(56vh,400px)}}
   .mediaBox.plain{padding:0;background:none;box-shadow:none;border-radius:0}
   .mediaBox.plain img,.mediaBox.plain video{
     width:auto;max-width:min(100%,var(--maxw,320px));height:auto;
@@ -1742,8 +1750,8 @@
   <div class="wrap">
     <div class="eyebrow rv up">Control operacional</div>
     <h2 class="rv up" style="--d:1">Principales controles operacionales</h2>
-    <p class="lead rv up" style="--d:2">Las <b>tareas</b> se dividen en <b>No estándar</b> y <b>Estándar</b>. Toca cada control para conocerlo. 👆</p>
-    <div class="accgrid" style="margin-top:20px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#0e2c56"></span><h4>ATS · Análisis de Trabajo Seguro</h4><span class="chev">+</span></div><div class="acc-body"><p>Control para <b>tareas No estándar</b> (no planificadas, impredecibles o por primera vez).</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Permiso de trabajo</h4><span class="chev">+</span></div><div class="acc-body"><p>Autorización para actividades de alto riesgo antes de ejecutarlas. Control transversal.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1bb4e4"></span><h4>Inspecciones / Check list</h4><span class="chev">+</span></div><div class="acc-body"><p>Verificación del estado seguro de equipos, áreas y condiciones. Control transversal.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>Reporte de interacciones y peligros</h4><span class="chev">+</span></div><div class="acc-body"><p>Identificación y reporte oportuno de condiciones y actos inseguros. Control transversal.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#17868a"></span><h4>Matriz IPVR</h4><span class="chev">+</span></div><div class="acc-body"><p>Control para <b>tareas Estándar</b> (rutinarias que se repiten): identificación de peligros y valoración de riesgos.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#ef7d00"></span><h4>ITS · Instructivo de Trabajo Seguro</h4><span class="chev">+</span></div><div class="acc-body"><p>Control para <b>tareas Estándar</b> (rutinarias): secuencia estandarizada y segura de pasos.</p></div></div></div>
+    <figure class="mediaBox lamina rv up" data-media="imagenes/controles-operacionales"
+            data-loop="no" style="--d:2"></figure>
   </div>
 </section>
 <section class="slide nogate dark" data-mod="3">
@@ -2522,7 +2530,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-03-e";
+var VERSION_CURSO = "2026-09-03-f";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
@@ -3704,6 +3712,33 @@ document.querySelectorAll('.pueBox').forEach(function(box){
    Uso en el HTML:  <figure class="mediaBox" data-media="imagenes/archivo.png"></figure>
    Prueba la URL absoluta y luego la ruta local; si el archivo no existe,
    el marco no se muestra y no deja espacio vacío. */
+/* Un GIF se repite para siempre si trae el bloque NETSCAPE. Con data-loop="no"
+   se descarga, se le quita ese bloque (19 bytes de cabecera, la imagen no se
+   toca) y se muestra desde memoria: se reproduce una vez y se queda en el
+   último cuadro. Sirve para cualquier GIF que subas, sin editarlo. */
+function gifUnaVez(url, listo){
+  if(!/\.gif(\?|$)/i.test(url) || !window.Blob || !window.URL || !URL.createObjectURL){ listo(url); return; }
+  var x;
+  try{ x = new XMLHttpRequest(); }catch(e){ listo(url); return; }
+  x.open('GET', url, true);
+  x.responseType = 'arraybuffer';
+  x.onerror = function(){ listo(url); };          // sin red: se usa el GIF tal cual
+  x.onload = function(){
+    try{
+      var b = new Uint8Array(x.response), i = -1;
+      for(var k = 0; k < b.length - 16; k++){
+        if(b[k]===0x21 && b[k+1]===0xFF && b[k+2]===0x0B &&
+           b[k+3]===0x4E && b[k+4]===0x45 && b[k+5]===0x54 && b[k+6]===0x53){ i = k; break; }
+      }
+      if(i < 0){ listo(url); return; }            // ya venía sin repetición
+      var out = new Uint8Array(b.length - 19);
+      out.set(b.subarray(0, i), 0);
+      out.set(b.subarray(i + 19), i);
+      listo(URL.createObjectURL(new Blob([out], {type:'image/gif'})));
+    }catch(e){ listo(url); }
+  };
+  try{ x.send(); }catch(e){ listo(url); }
+}
 /* Sin extensión se prueban varias, empezando por el video: un MP4 pesa entre
    diez y veinte veces menos que el mismo GIF, así que si existe se prefiere y
    el GIF queda de respaldo. */
@@ -3739,6 +3774,7 @@ document.querySelectorAll('.mediaBox[data-media]').forEach(function(caja){
          pasa al siguiente formato para no dejar el hueco vacío. */
       setTimeout(function(){ if(el===nuevo && !listo) fallo(); }, 5000); }
     else { nuevo.alt=''; nuevo.decoding='async'; nuevo.onload=fin; nuevo.onerror=fallo; }
+    if(!esVideo && !repetir){ gifUnaVez(url, function(u){ if(el===nuevo) nuevo.src=u; }); return; }
     nuevo.src=url;
   }
   registrarMedio(caja, probar);
