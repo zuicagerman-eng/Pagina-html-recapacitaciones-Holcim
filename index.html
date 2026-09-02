@@ -499,13 +499,21 @@
      sobran, para que no quede una fila coja. Con imagen pasan a dos columnas
      (cuatro filas parejas) y la lista de la tarjeta larga se parte en dos,
      asi ninguna fila queda mucho mas alta que las demas. */
+  /* Ocho tarjetas en dos columnas de cuatro, llenadas de arriba abajo. */
   @media(min-width:1100px){
-    .accgrid.acc-auto .acc.ancha{grid-column:span 2}
+    .accgrid.acc-auto.dosx4{grid-template-columns:1fr 1fr;
+      grid-template-rows:repeat(4,auto);grid-auto-flow:column;gap:9px}
   }
-  .acc.ancha .acc-body .li{break-inside:avoid}
+  /* Cuatro filas apiladas: en portátiles la imagen se modera para que quepan. */
+  @media(max-height:900px){
+    .accgrid.acc-auto.dosx4 .acc.conFotos{grid-template-columns:72px 1fr}
+    .accgrid.acc-auto.dosx4 .acc.conFotos .acc-head .tri.foto,
+    .accgrid.acc-auto.dosx4 .acc.conFotos .acc-head .ico.foto{width:72px;height:72px}
+  }
+  .acc.lista .acc-body .li{break-inside:avoid}
   @media(min-width:1100px){
-    .acc-auto .acc.ancha.lista .acc-body{column-count:2;column-gap:18px}
-    .acc-auto .acc.ancha.lista .acc-body .tag{column-span:all}
+    .acc-auto .acc.lista .acc-body{column-count:2;column-gap:18px}
+    .acc-auto .acc.lista .acc-body .tag{column-span:all}
   }
   /* ===== Ajuste fino de alto =====
      Lo pone el JS solo en la diapositiva que no cabe: primero un apretón suave
@@ -1477,7 +1485,7 @@
       <div class="eyebrow rv up">Generalidades / Conceptos básicos</div>
       <h2 class="rv up" style="--d:1">Condiciones de seguridad</h2>
       <p class="lead rv up" style="--d:2">Toca cada tarjeta para <b>ampliar</b> su información. 👆</p>
-      <div class="accgrid" style="margin-top:22px">
+      <div class="accgrid dosx4" style="margin-top:22px">
         <div class="acc rv up" style="--d:0" tabindex="0" role="button" aria-expanded="false">
           <div class="acc-head"><span class="tri" id="t_elec" data-foto="electrico(D12)"></span><h4>Eléctrico</h4><span class="chev">+</span></div>
           <div class="acc-body"><p>Por contacto con energía de <b>alta, media y baja tensión</b> y electricidad <b>estática</b>.</p></div>
@@ -1506,7 +1514,7 @@
           <div class="acc-head"><span class="tri" id="t_tec" data-foto="tecnologico(D12)"></span><h4>Tecnológico</h4><span class="chev">+</span></div>
           <div class="acc-body"><p>Por <b>explosión, fuga, derrame</b> o <b>incendio</b>.</p></div>
         </div>
-        <div class="acc ancha lista rv up" style="--d:7" tabindex="0" role="button" aria-expanded="false">
+        <div class="acc lista rv up" style="--d:7" tabindex="0" role="button" aria-expanded="false">
           <div class="acc-head"><span class="tri" id="t_conf" data-foto="confinados(D12)"></span><h4>Espacios confinados</h4><span class="chev">+</span></div>
           <div class="acc-body">
             <span class="tag">Por espacios que:</span>
@@ -2476,7 +2484,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-02-y";
+var VERSION_CURSO = "2026-09-02-z";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
@@ -2595,7 +2603,8 @@ function cargarMediosCercanos(){
   var el=document.createElement(esVideo?'video':'img');
   if(esVideo){ el.autoplay=true; el.muted=true; el.loop=true; el.playsInline=true; el.setAttribute('playsinline',''); }
   else { el.alt='Reinducción en Salud y Seguridad Holcim'; el.loading='eager'; el.decoding='async'; }
-  function ok(){ caja.innerHTML=''; caja.appendChild(el); caja.classList.add('ready'); }
+  function ok(){ caja.innerHTML=''; caja.appendChild(el); caja.classList.add('ready');
+    if(window.revisarScroll) setTimeout(window.revisarScroll, 150); }
   if(esVideo){ el.addEventListener('loadeddata', ok); }
   else { el.onload = ok; }
   el.onerror = function(){ if(!yaLocal){ yaLocal=true; el.src=local; } };
@@ -2737,6 +2746,8 @@ document.querySelectorAll('[data-foto]').forEach(function(slot){
     var tarjeta = slot.closest && slot.closest('.acc');
     if(tarjeta){ tarjeta.classList.add('conFotos');
       if(tarjeta.parentElement) tarjeta.parentElement.classList.add('hayFotos'); }
+    /* La imagen cambia el alto de la tarjeta: hay que volver a medir si cabe. */
+    if(window.revisarScroll) setTimeout(window.revisarScroll, 150);
   };
   img.onerror = function(){ i++; if(i < rutas.length) img.src = rutas[i]; };
   registrarMedio(slot, function(){ img.src = rutas[0]; });
@@ -2854,7 +2865,7 @@ function chrome(){
   pipEls.forEach(function(p,k){ p.className = ''; if(k===idx) p.classList.add('on'); if(k>maxUnlocked) p.classList.add('lock'); });
   pipFlags.forEach(function(f){ f.classList.toggle('lock', (+f.getAttribute('data-i')) > maxUnlocked); });
   if(idx===N-1) marcarCompletado();
-  if(window.revisarScroll) setTimeout(window.revisarScroll, 60);
+  if(window.revisarScroll){ setTimeout(window.revisarScroll, 60); setTimeout(window.revisarScroll, 1500); }
   if(window.actualizarAtajos) window.actualizarAtajos();
   // pausar video si salgo de su slide
   if(gate!=='video' && vplayer){ try{ vplayer.pause(); }catch(e){} }
@@ -3092,7 +3103,12 @@ function despliegaAuto(s){
       setTimeout(function(){
         c.classList.add('open');
         // la diapositiva crece al abrirse: hay que rehacer el aviso de "desliza"
-        if(k === tarjetas.length - 1 && window.revisarScroll) setTimeout(window.revisarScroll, 450);
+        /* Dos revisiones: una al terminar la cascada y otra cuando ya cerró la
+           transición de alto, que es cuando se sabe de verdad si cabe. */
+        if(k === tarjetas.length - 1 && window.revisarScroll){
+          setTimeout(window.revisarScroll, 450);
+          setTimeout(window.revisarScroll, 1400);
+        }
       }, 240 + k * 85);
     });
   });
