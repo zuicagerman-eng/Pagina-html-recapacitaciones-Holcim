@@ -100,17 +100,23 @@
   .face.back{display:flex;flex-direction:column}
   .backrow{display:flex;gap:14px;align-items:center;flex:1;min-height:0;margin-top:2px}
   .backtxt{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center}
-  .fotoflip{display:none;flex:none;width:134px;height:152px;
+  .fotoflip{display:none;flex:none;width:172px;height:186px;
     align-items:center;justify-content:center}
   .fotoflip.foto{display:flex}
-  .fotoflip img{max-width:134px;max-height:152px;width:auto;height:auto;
+  .fotoflip img{max-width:172px;max-height:186px;width:auto;height:auto;
     display:block;object-fit:contain;border-radius:10px}
-  /* Con la imagen al lado, la tarjeta apenas crece respecto a la original. */
-  .flips-foto .flip.conFoto,.flips-foto .flip.conFoto .flip-in{height:226px}
-  @media(max-height:900px){.flips-foto .flip.conFoto,.flips-foto .flip.conFoto .flip-in{height:210px}
-    .fotoflip{height:136px} .fotoflip img{max-height:136px}}
-  @media(max-width:640px){.flips-foto .flip.conFoto,.flips-foto .flip.conFoto .flip-in{height:auto;min-height:236px}
-    .fotoflip{width:104px;height:126px} .fotoflip img{max-width:104px;max-height:126px}}
+  /* El texto se aprieta un poco (letra y espaciado) para cederle ancho y alto a
+     la imagen sin que la tarjeta crezca. */
+  .flips-foto .back p{font-size:12.5px;line-height:1.42}
+  .flips-foto .back .ej{margin-top:8px;padding:8px 10px;font-size:12px;line-height:1.38}
+  .flips-foto .back h4{margin-bottom:5px}
+  .flips-foto .backrow{gap:12px}
+  .flips-foto .flip.conFoto,.flips-foto .flip.conFoto .flip-in{height:238px}
+  @media(max-height:900px){.flips-foto .flip.conFoto,.flips-foto .flip.conFoto .flip-in{height:208px}
+    .fotoflip{height:154px} .fotoflip img{max-height:154px}
+    .flips-foto{gap:12px}}
+  @media(max-width:640px){.flips-foto .flip.conFoto,.flips-foto .flip.conFoto .flip-in{height:auto;min-height:250px}
+    .fotoflip{width:124px;height:150px} .fotoflip img{max-width:124px;max-height:150px}}
 
   /* ====== EXAMEN FINAL ====== */
   .exwrap{max-width:820px;margin:0 auto}
@@ -2117,7 +2123,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-01-f";
+var VERSION_CURSO = "2026-09-01-g";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
