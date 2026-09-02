@@ -301,6 +301,23 @@
   .pr .head{display:flex;align-items:center;gap:12px;margin-bottom:6px}
   .pr .head .ic{margin-bottom:0;width:44px;height:44px} .pr .head h3{font-size:19px;font-weight:800}
   .pr .col.pel .head h3{color:var(--blue)} .pr .col.rie .head h3{color:var(--cyan)}
+  /* Peligro vs Riesgo: la definición oficial del Decreto y, al lado, un hueco
+     grande para la imagen. El hueco lleva medida fija para que una imagen
+     vertical no estire el panel; con "contain" nada se deforma. */
+  .pr .head h3{line-height:1.15}
+  .pr .norma{display:block;font-size:11px;font-weight:700;letter-spacing:.5px;color:#8aa2bd;margin-top:1px}
+  .prbody{display:flex;gap:16px;align-items:flex-start;margin-top:10px}
+  .prtxt{flex:1;min-width:0}
+  .prfoto{display:none;flex:none;width:225px;height:300px;align-items:center;justify-content:center}
+  .prfoto.foto{display:flex}
+  .prfoto img{max-width:225px;max-height:300px;width:auto;height:auto;
+    display:block;object-fit:contain;border-radius:12px;box-shadow:0 10px 26px -14px rgba(0,0,0,.45)}
+  @media(max-height:900px){.prfoto{width:196px;height:262px}
+    .prfoto img{max-width:196px;max-height:262px}
+    .pr .col{padding:18px} .pr .def{margin-bottom:10px}}
+  /* En pantallas angostas la imagen pasa debajo del texto, centrada */
+  @media(max-width:900px){.prbody{flex-direction:column;align-items:center}
+    .prtxt{width:100%} .prfoto{width:100%;height:190px} .prfoto img{max-width:100%;max-height:190px}}
   .pr .def{font-size:13.5px;color:var(--muted);line-height:1.5;margin-bottom:14px}
   .pr .row{padding:11px 0;border-top:1px dashed #cdd8e6;font-size:13.5px;line-height:1.45}
   .pr .row b{color:var(--ink)}
@@ -1120,18 +1137,30 @@
       <h2 class="rv up" style="--d:1">¿Cómo diferencias el peligro del riesgo?</h2>
       <div class="pr rv up" style="--d:2;margin-top:22px">
         <div class="col pel">
-          <div class="head"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3l9 16H3z"/><path d="M12 9v5M12 17h0"/></svg></div><h3>Peligro</h3></div>
-          <div class="def">Fuente, situación o acto que <b>puede</b> ocasionar daños.</div>
-          <div class="row"><b>Situación:</b> piso resbaloso.</div>
-          <div class="row"><b>Situación:</b> proyección de partículas calientes.</div>
-          <div class="row"><b>Acto:</b> manipular un tablero eléctrico con manos húmedas.</div>
+          <div class="head"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3l9 16H3z"/><path d="M12 9v5M12 17h0"/></svg></div>
+            <div><h3>Peligro</h3><span class="norma">Decreto 1072:2015</span></div></div>
+          <div class="prbody">
+            <div class="prtxt">
+              <div class="def"><b>Fuente, situación o acto con potencial de causar daño</b> en la salud de los trabajadores, en los equipos o en las instalaciones.</div>
+              <div class="row"><b>Situación:</b> piso resbaloso.</div>
+              <div class="row"><b>Situación:</b> proyección de partículas calientes.</div>
+              <div class="row"><b>Acto:</b> manipular un tablero eléctrico con manos húmedas.</div>
+            </div>
+            <div class="prfoto" data-foto="peligro(D8)"></div>
+          </div>
         </div>
         <div class="col rie">
-          <div class="head"><div class="ic"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 18 0 9 9 0 1 0-18 0M12 8v4M12 15h0"/></svg></div><h3>Riesgo</h3></div>
-          <div class="def">La forma en que ese peligro <b>me causa daño</b> al exponerme.</div>
-          <div class="row">Riesgo de caída al mismo nivel.</div>
-          <div class="row">Riesgo de contacto con partículas calientes.</div>
-          <div class="row">Riesgo de contacto eléctrico.</div>
+          <div class="head"><div class="ic"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 18 0 9 9 0 1 0-18 0M12 8v4M12 15h0"/></svg></div>
+            <div><h3>Riesgo</h3><span class="norma">Decreto 1072:2015</span></div></div>
+          <div class="prbody">
+            <div class="prtxt">
+              <div class="def">Combinación de la <b>probabilidad de que ocurra una o más exposiciones o eventos peligrosos</b> y la <b>severidad del daño</b> que puede ser causada por estos.</div>
+              <div class="row">Riesgo de caída al mismo nivel.</div>
+              <div class="row">Riesgo de contacto con partículas calientes.</div>
+              <div class="row">Riesgo de contacto eléctrico.</div>
+            </div>
+            <div class="prfoto" data-foto="riesgo(D8)"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -2123,7 +2152,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-01-g";
+var VERSION_CURSO = "2026-09-01-h";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
