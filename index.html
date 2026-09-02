@@ -470,26 +470,38 @@
   .acc-head .tri.foto{display:flex;align-items:center;justify-content:center}
   .acc-head .tri.foto img{max-width:100%;max-height:100%;width:auto;height:auto;
     display:block;object-fit:contain;border-radius:8px}
-  .acc-auto .acc.conFotos{display:grid;grid-template-columns:92px 1fr;
+  .acc-auto .acc.conFotos{display:grid;grid-template-columns:118px 1fr;
     column-gap:12px;align-items:start;padding:10px 13px}
   .acc-auto .acc.conFotos .acc-head{display:contents}
   .acc-auto .acc.conFotos .acc-head .tri.foto{grid-row:1 / span 2;grid-column:1;
-    width:92px;height:92px;align-self:start;margin-top:2px}
+    width:118px;height:118px;align-self:start;margin-top:2px}
   .acc-auto .acc.conFotos .acc-head h4{grid-row:1;grid-column:2;align-self:end;margin-bottom:1px}
   .acc-auto .acc.conFotos.open .acc-body{grid-row:2;grid-column:2;padding:0;align-self:start}
-  /* Con imagen vuelven a DOS columnas: el texto necesita ancho para no crecer. */
-  @media(min-width:1100px){.accgrid.acc-auto.hayFotos{grid-template-columns:1fr 1fr;gap:8px}}
+  @media(min-width:1100px){.accgrid.acc-auto.hayFotos{gap:9px}}
   /* En portátiles (pantalla baja) la imagen se reduce para que las 8 tarjetas
      quepan sin desplazarse; en monitores grandes se ve bastante más grande. */
   @media(max-height:900px){
-    .acc-auto .acc.conFotos{grid-template-columns:60px 1fr}
-    .acc-auto .acc.conFotos .acc-head .tri.foto{width:60px;height:60px}}
+    .acc-auto .acc.conFotos{grid-template-columns:92px 1fr}
+    .acc-auto .acc.conFotos .acc-head .tri.foto{width:92px;height:92px}}
 
   .acc-auto .acc-head .stripe{height:26px}
   .acc-auto .acc.open .acc-body{padding:0 13px 10px 13px}
   /* En pantalla ancha pasan a TRES columnas: 8 tarjetas caben en 3 filas en vez
      de 4, que es lo que hacía falta para no tener que desplazarse. */
   @media(min-width:1100px){.accgrid.acc-auto{grid-template-columns:repeat(3,1fr)}}
+  /* ===== Reparto de las 8 tarjetas =====
+     Sin imagen van en tres columnas y la tarjeta larga ocupa las dos que
+     sobran, para que no quede una fila coja. Con imagen pasan a dos columnas
+     (cuatro filas parejas) y la lista de la tarjeta larga se parte en dos,
+     asi ninguna fila queda mucho mas alta que las demas. */
+  @media(min-width:1100px){
+    .accgrid.acc-auto .acc.ancha{grid-column:span 2}
+  }
+  .acc.ancha .acc-body .li{break-inside:avoid}
+  @media(min-width:1100px){
+    .acc-auto .acc.ancha .acc-body{column-count:2;column-gap:18px}
+    .acc-auto .acc.ancha .acc-body .tag{column-span:all}
+  }
   .acc-auto .acc-body p,.acc-auto .acc-body .li,.acc-auto .acc-body .pt{font-size:12.8px;line-height:1.45}
   .acc-auto .acc-body .li,.acc-auto .acc-body .pt{margin-top:4px}
   .acc-auto .acc-body .tag,.acc-auto .acc-body .ptitle{margin-bottom:2px}
@@ -1331,7 +1343,7 @@
   </section>
   <!-- CONDICIONES DE SEGURIDAD (acordeón interactivo, incluye espacios confinados) -->
   <section class="slide dark">
-    <div class="wrap">
+    <div class="wrap wrap-ancho">
       <div class="eyebrow rv up">Generalidades / Conceptos básicos</div>
       <h2 class="rv up" style="--d:1">Condiciones de seguridad</h2>
       <p class="lead rv up" style="--d:2">Toca cada tarjeta para <b>ampliar</b> su información. 👆</p>
@@ -1364,7 +1376,7 @@
           <div class="acc-head"><span class="tri" id="t_tec" data-foto="tecnologico(D12)"></span><h4>Tecnológico</h4><span class="chev">+</span></div>
           <div class="acc-body"><p>Por <b>explosión, fuga, derrame</b> o <b>incendio</b>.</p></div>
         </div>
-        <div class="acc rv up" style="--d:7" tabindex="0" role="button" aria-expanded="false">
+        <div class="acc ancha rv up" style="--d:7" tabindex="0" role="button" aria-expanded="false">
           <div class="acc-head"><span class="tri" id="t_conf" data-foto="confinados(D12)"></span><h4>Espacios confinados</h4><span class="chev">+</span></div>
           <div class="acc-body">
             <span class="tag">Por espacios que:</span>
@@ -2272,7 +2284,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-02-p";
+var VERSION_CURSO = "2026-09-02-q";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
