@@ -658,6 +658,32 @@
     .wglobos.izq .wglobo{text-align:left;border-right:0;border-left:5px solid var(--c)}
     .wglobo:after{display:none}
   }
+  /* ===== TÉCNICA / DEFINICIÓN / DEBER (ATS) =====
+     Tres columnas con bandas de color y cajas blancas, sin nada que tocar. */
+  .tecnicas{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:16px;
+    align-items:stretch}
+  .tec{display:flex;flex-direction:column;border:3px solid var(--c);border-radius:14px;
+    overflow:hidden;background:#fff;box-shadow:var(--shadow)}
+  .tbanda{background:var(--c);color:#fff;font-weight:800;font-size:15px;text-align:center;
+    padding:7px 10px;letter-spacing:.2px}
+  .tcaja{padding:10px 13px;flex:none}
+  .tcaja p{font-size:13px;line-height:1.45;color:var(--ink)}
+  .tcaja:last-child{flex:1}
+  /* La primera caja lleva el icono al lado del texto. */
+  .tcaja-ico{display:flex;align-items:center;gap:11px}
+  .tecfoto{width:52px;height:52px;flex:none;display:grid;place-items:center}
+  .tecfoto svg{width:40px;height:40px;stroke:var(--c);fill:none;stroke-width:1.8;
+    stroke-linecap:round;stroke-linejoin:round}
+  /* Con imagen propia el hueco crece un poco y se ve completa. */
+  .tecfoto.foto{width:66px;height:66px}
+  .tecfoto.foto img{max-width:100%;max-height:100%;width:auto;height:auto;
+    object-fit:contain;display:block}
+  @media(max-height:820px){
+    .tbanda{font-size:14px;padding:5px 10px}
+    .tcaja{padding:8px 12px} .tcaja p{font-size:12.4px;line-height:1.4}
+    .tecfoto.foto{width:56px;height:56px} .tecfoto svg{width:34px;height:34px}
+  }
+  @media(max-width:900px){.tecnicas{grid-template-columns:1fr;gap:12px}}
   /* ===== PDFs ===== */
   .infobanner{background:var(--panel);color:#fff;border-radius:12px;padding:15px 20px;font-size:14px;line-height:1.5;border-left:5px solid;border-image:var(--grad) 1;margin-top:14px}
   .pdfcards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:22px}
@@ -1763,11 +1789,45 @@
   </div>
 </section>
 <section class="slide light mint" data-mod="3">
-  <div class="wrap">
+  <div class="wrap wrap-ancho">
     <div class="eyebrow rv up">Control operacional</div>
     <h2 class="rv up" style="--d:1">ATS · Análisis de Trabajo Seguro</h2>
     <div class="infobanner rv up" style="--d:2">Técnicas sistemáticas para identificar los pasos básicos de una tarea <b>no estándar</b>, sus peligros y controles mínimos para ejecutar la labor (válido solo por un turno de trabajo).</div>
-    <div class="accgrid" style="margin-top:18px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>Definir el paso de la tarea</h4><span class="chev">+</span></div><div class="acc-body"><p class="tdd"><b>Definición:</b> Divida la tarea en diferentes pasos.</p><p class="tdd"><b>Deber:</b> Debe ser conocido y firmado por todo el equipo de trabajo que desarrolla la actividad.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#17868a"></span><h4>Identificar peligros, riesgos y consecuencias</h4><span class="chev">+</span></div><div class="acc-body"><p class="tdd"><b>Definición:</b> Identifique los peligros y riesgos existentes para cada paso.</p><p class="tdd"><b>Deber:</b> Debe ser autorizado y firmado por el supervisor / interventor de la actividad.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#ef7d00"></span><h4>Formular y cumplir controles</h4><span class="chev">+</span></div><div class="acc-body"><p class="tdd"><b>Definición:</b> Formule los controles aplicables a los peligros y riesgos de cada paso identificado.</p><p class="tdd"><b>Deber:</b> <b>Acciones para Salvar Vidas.</b> Se deben identificar los cambios durante el desarrollo de la actividad. Firmado por todo el personal.</p></div></div></div>
+    <div class="tecnicas">
+      <article class="tec rv up" style="--c:#8bbf3a;--d:0">
+        <h3 class="tbanda">Técnica</h3>
+        <div class="tcaja tcaja-ico">
+          <span class="tecfoto" data-foto="atspaso(D21)"><svg viewBox="0 0 24 24"><rect x="7" y="4" width="14" height="18" rx="2"/><path d="M10 3h6v3h-6z"/><path d="M10.5 10h7M10.5 14h7M10.5 18h4"/></svg></span>
+          <p>Definir el paso de la tarea.</p>
+        </div>
+        <h4 class="tbanda">Definición</h4>
+        <div class="tcaja"><p>Divida la tarea en diferentes pasos.</p></div>
+        <h4 class="tbanda">Deber</h4>
+        <div class="tcaja"><p>Debe ser conocido y firmado por todo el equipo de trabajo que desarrolla la actividad.</p></div>
+      </article>
+      <article class="tec rv up" style="--c:#17868a;--d:1">
+        <h3 class="tbanda">Técnica</h3>
+        <div class="tcaja tcaja-ico">
+          <span class="tecfoto" data-foto="atspeligros(D21)"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M16 16l5 5"/><path d="M11 8l2.6 4.6H8.4z"/></svg></span>
+          <p>Identificar peligros, riesgos y consecuencias.</p>
+        </div>
+        <h4 class="tbanda">Definición</h4>
+        <div class="tcaja"><p>Identifique los peligros y riesgos existentes para cada paso.</p></div>
+        <h4 class="tbanda">Deber</h4>
+        <div class="tcaja"><p>Debe ser autorizado y firmado por el supervisor / interventor de la actividad.</p></div>
+      </article>
+      <article class="tec rv up" style="--c:#ef7d00;--d:2">
+        <h3 class="tbanda">Técnica</h3>
+        <div class="tcaja tcaja-ico">
+          <span class="tecfoto" data-foto="atscontroles(D21)"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><rect x="6" y="8" width="7" height="3" rx="1"/><circle cx="8" cy="15" r="1.6"/><circle cx="13" cy="15" r="1.6"/><circle cx="18" cy="15" r="1.6"/></svg></span>
+          <p>Formular y cumplir controles.</p>
+        </div>
+        <h4 class="tbanda">Definición</h4>
+        <div class="tcaja"><p>Formule los controles aplicables a los peligros y riesgos de cada paso identificado.</p></div>
+        <h4 class="tbanda">Deber</h4>
+        <div class="tcaja"><p><b>Acciones para Salvar Vidas.</b> Se deben identificar los cambios durante el desarrollo de la actividad. Firmado por todo el personal.</p></div>
+      </article>
+    </div>
   </div>
 </section>
 <section class="slide dark teal" data-mod="3">
@@ -2530,7 +2590,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-03-f";
+var VERSION_CURSO = "2026-09-03-g";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
