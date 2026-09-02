@@ -803,6 +803,16 @@
      para que las 8 fichas quepan en pantalla sin scroll. */
   .act svg{width:42px;height:42px;flex:none}
   .act .tick{position:absolute;top:7px;right:7px;width:21px;height:21px;border-radius:50%;background:#fff;color:var(--ok);display:none;place-items:center;font-size:12px;font-weight:800}
+  /* Con imagen la ficha se parte en dos: la ilustración arriba, a todo el ancho,
+     y abajo la franja de color con el nombre. Alto fijo: la fila no se desalinea. */
+  .act .actfoto{display:none}
+  .act.conFoto{padding:0;gap:0;justify-content:flex-start;overflow:hidden}
+  .act.conFoto>svg{display:none}
+  .act.conFoto .actfoto{display:block;width:100%;height:150px;flex:none;background:#fff}
+  .act.conFoto .actfoto img{width:100%;height:100%;object-fit:cover;display:block}
+  .act.conFoto>span:not(.tick):not(.actfoto){padding:12px 10px;display:block}
+  @media(max-height:860px){.act.conFoto .actfoto{height:120px}}
+  @media(max-width:900px){.act.conFoto .actfoto{height:135px}}
   .act.sel .tick{display:grid}
   .pdfrow{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:20px}
   @media(max-width:640px){.pdfrow{grid-template-columns:1fr}}
@@ -1741,7 +1751,7 @@
     <div class="eyebrow rv up">Control operacional</div>
     <h2 class="rv up" style="--d:1">Actividades que requieren permiso de trabajo</h2>
     <p class="lead rv up" style="--d:2">Toca cada actividad para reconocerlas todas. 👆</p>
-    <div class="acts"><div class="act gclick rv scale" style="background:#0e2c56" tabindex="0" role="button"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 20V6l6 3M12 9v11M6 12h6"/></svg><span>Trabajo en Alturas</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#1bb4e4" tabindex="0" role="button"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="5" width="12" height="14" rx="2"/><circle cx="12" cy="11" r="2"/><path d="M9 19l3-4 3 4"/></svg><span>Trabajo en Espacios Confinados</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#97d13b" tabindex="0" role="button"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c3 3 4 7 2 10 3-1 4-4 3-7 3 3 4 9 0 13-4 3-11 1-11-5 0-4 3-7 6-11z"/></svg><span>Trabajo en Caliente</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#e6007e" tabindex="0" role="button"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16M6 20l4-9 3 2 2-5 3 3"/></svg><span>Excavaciones</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#e23b32" tabindex="0" role="button"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3l-7 11h5l-2 7 8-11h-5z"/></svg><span>Alta y Media Tensión</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#97d13b" tabindex="0" role="button"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="11" width="12" height="9" rx="2"/><path d="M9 11V8a3 3 0 0 1 6 0v3"/></svg><span>Aislamiento de Energías (LOTOTO)</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#1bb4e4" tabindex="0" role="button"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 20h12M8 20V9a4 4 0 0 1 8 0v11M10 5c0 1 2 1 2 0M14 5c0 1-2 1-2 0"/></svg><span>Trabajos con Harina Caliente</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#0e2c56" tabindex="0" role="button"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h12l4 4M8 5v14M5 19h6M12 9v3M10 15h4v4h-4z"/></svg><span>Izaje de Cargas</span><span class="tick">✓</span></div></div>
+    <div class="acts"><div class="act gclick rv scale" style="background:#0e2c56" tabindex="0" role="button"><span class="actfoto" data-foto="alturas(D17)"></span><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 20V6l6 3M12 9v11M6 12h6"/></svg><span>Trabajo en Alturas</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#1bb4e4" tabindex="0" role="button"><span class="actfoto" data-foto="confinados(D17)"></span><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="5" width="12" height="14" rx="2"/><circle cx="12" cy="11" r="2"/><path d="M9 19l3-4 3 4"/></svg><span>Trabajo en Espacios Confinados</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#97d13b" tabindex="0" role="button"><span class="actfoto" data-foto="caliente(D17)"></span><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c3 3 4 7 2 10 3-1 4-4 3-7 3 3 4 9 0 13-4 3-11 1-11-5 0-4 3-7 6-11z"/></svg><span>Trabajo en Caliente</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#e6007e" tabindex="0" role="button"><span class="actfoto" data-foto="excavaciones(D17)"></span><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16M6 20l4-9 3 2 2-5 3 3"/></svg><span>Excavaciones</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#e23b32" tabindex="0" role="button"><span class="actfoto" data-foto="tension(D17)"></span><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3l-7 11h5l-2 7 8-11h-5z"/></svg><span>Alta y Media Tensión</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#97d13b" tabindex="0" role="button"><span class="actfoto" data-foto="lototo(D17)"></span><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="11" width="12" height="9" rx="2"/><path d="M9 11V8a3 3 0 0 1 6 0v3"/></svg><span>Aislamiento de Energías (LOTOTO)</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#1bb4e4" tabindex="0" role="button"><span class="actfoto" data-foto="harina(D17)"></span><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 20h12M8 20V9a4 4 0 0 1 8 0v11M10 5c0 1 2 1 2 0M14 5c0 1-2 1-2 0"/></svg><span>Trabajos con Harina Caliente</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#0e2c56" tabindex="0" role="button"><span class="actfoto" data-foto="izaje(D17)"></span><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h12l4 4M8 5v14M5 19h6M12 9v3M10 15h4v4h-4z"/></svg><span>Izaje de Cargas</span><span class="tick">✓</span></div></div>
   </div>
 </section>
 <section class="slide light mint" data-mod="3">
@@ -2512,7 +2522,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-03-d";
+var VERSION_CURSO = "2026-09-03-e";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
@@ -3724,7 +3734,10 @@ document.querySelectorAll('.mediaBox[data-media]').forEach(function(caja){
     var repetir = caja.getAttribute('data-loop') !== 'no';
     if(esVideo){ nuevo.autoplay=true; nuevo.muted=true; nuevo.loop=repetir; nuevo.playsInline=true;
       nuevo.setAttribute('playsinline',''); nuevo.preload='auto';
-      nuevo.addEventListener('loadeddata', fin); nuevo.addEventListener('error', fallo); }
+      nuevo.addEventListener('loadeddata', fin); nuevo.addEventListener('error', fallo);
+      /* Si el navegador no sabe leer ese video, a veces ni avisa: a los 5 s se
+         pasa al siguiente formato para no dejar el hueco vacío. */
+      setTimeout(function(){ if(el===nuevo && !listo) fallo(); }, 5000); }
     else { nuevo.alt=''; nuevo.decoding='async'; nuevo.onload=fin; nuevo.onerror=fallo; }
     nuevo.src=url;
   }
