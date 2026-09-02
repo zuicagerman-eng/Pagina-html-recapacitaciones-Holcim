@@ -360,6 +360,15 @@
   .s3 .k{font-size:11px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;padding:5px 13px;border-radius:999px;color:#fff;display:inline-block;margin-bottom:12px}
   .s3.pel .k{background:var(--blue)} .s3.rie .k{background:var(--cyan)} .s3.accid .k{background:var(--danger)}
   .s3 .art{width:70px;height:70px;margin:0 auto 12px} .s3 p{font-size:13.5px;line-height:1.5;color:var(--ink)}
+  /* Con imagen propia, el dibujo del tiburón se reemplaza y el hueco crece.
+     Medida fija: las tres tarjetas quedan iguales con cualquier proporción. */
+  .s3 .art.foto{width:100%;height:170px;margin:0 auto 12px;
+    display:flex;align-items:center;justify-content:center}
+  .s3 .art.foto img{max-width:100%;max-height:170px;width:auto;height:auto;
+    display:block;object-fit:contain;border-radius:12px}
+  @media(max-height:900px){.s3 .art.foto,.s3 .art.foto img{height:140px;max-height:140px}
+    .s3{padding:16px 14px}}
+  @media(max-width:640px){.s3 .art.foto,.s3 .art.foto img{height:150px;max-height:150px}}
   .arrow svg{width:32px;height:32px;stroke:var(--cyan);fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
   /* clasificación de peligros */
   .cats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
@@ -1071,14 +1080,9 @@
   <!-- 3 PLAN DE EMERGENCIAS -->
   <section class="slide dark teal">
     <div class="wrap">
-     <div class="split2 split2-auto">
-      <div>
       <div class="eyebrow rv up">Emergencias y prevención de incidentes</div>
       <h2 class="rv up" style="--d:1">Emergencias: ¿qué hacer?</h2>
       <p class="lead rv up" style="--d:2">Todos nuestros sitios de trabajo cuentan con un <b>Plan de Emergencias</b> con diferentes recursos:</p>
-      </div>
-      <figure class="mediaBox plain rv right" data-media="imagenes/emergencias.png" style="--d:2;--maxw:300px"></figure>
-     </div>
       <div class="grid3 grid3-center" style="margin-top:26px">
         <div class="card card-center rv up" style="--d:0"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 21s-7-6.3-7-11a7 7 0 0 1 14 0c0 4.7-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></div><h3>Señalización</h3><p>Rutas de evacuación, punto de encuentro, etc.</p></div>
         <div class="card card-center rv up" style="--d:1"><div class="ic"><svg viewBox="0 0 24 24"><path d="M9 3h6v4H9zM7 7h10v14H7zM10 11v6M14 11v6"/></svg></div><h3>Recursos técnicos</h3><p>Extintores, botiquines, camillas, DEA, alarma, línea de emergencia, radios, etc.</p></div>
@@ -1246,11 +1250,11 @@
       <div class="eyebrow rv up">Ejemplo</div>
       <h2 class="rv up" style="--d:1">Peligro → Riesgo → Accidente</h2>
       <div class="steps3" style="margin-top:28px">
-        <div class="s3 pel rv left"><span class="k">Peligro</span><div class="art" id="a_shark1"></div><p><b>Tiburón</b> en la playa de un hotel.</p></div>
+        <div class="s3 pel rv left"><span class="k">Peligro</span><div class="art" id="a_shark1" data-foto="peligro(D10)"></div><p><b>Tiburón</b> en la playa de un hotel.</p></div>
         <div class="arrow rv scale" style="--d:1"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
-        <div class="s3 rie rv up" style="--d:2"><span class="k">Riesgo</span><div class="art" id="a_shark2"></div><p>Probabilidad de ser <b>mordido</b> al nadar en aguas infestadas.</p></div>
+        <div class="s3 rie rv up" style="--d:2"><span class="k">Riesgo</span><div class="art" id="a_shark2" data-foto="riesgo(D10)"></div><p>Probabilidad de ser <b>mordido</b> al nadar en aguas infestadas.</p></div>
         <div class="arrow rv scale" style="--d:3"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
-        <div class="s3 accid rv right" style="--d:4"><span class="k">Accidente</span><div class="art" id="a_shark3"></div><p>La persona <b>muere</b> al ser mordida mientras nadaba.</p></div>
+        <div class="s3 accid rv right" style="--d:4"><span class="k">Accidente</span><div class="art" id="a_shark3" data-foto="accidente(D10)"></div><p>La persona <b>muere</b> al ser mordida mientras nadaba.</p></div>
       </div>
     </div>
   </section>
@@ -2214,7 +2218,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-01-l";
+var VERSION_CURSO = "2026-09-01-m";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
