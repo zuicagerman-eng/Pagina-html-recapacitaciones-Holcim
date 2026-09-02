@@ -89,6 +89,23 @@
   .wnota{font-size:12.5px;color:#9fb6cd;margin-top:10px;line-height:1.45}
   .wver{font-size:11px;color:#7f93b0;margin-top:14px;letter-spacing:.4px}
 
+  /* Espacio para la imagen dentro de la cara trasera de las tarjetas volteables.
+     Es una franja de alto fijo abajo: así la imagen no empuja el texto y las 4
+     tarjetas quedan iguales. Mientras no exista el archivo, la franja no ocupa
+     nada y la tarjeta se ve como antes. */
+  .fotoflip{display:none;margin-top:auto;padding-top:8px;height:64px;
+    align-items:center;justify-content:center}
+  .fotoflip.foto{display:flex}
+  .fotoflip img{max-width:min(100%,140px);max-height:64px;width:auto;height:auto;
+    display:block;object-fit:contain;border-radius:8px}
+  .face.back{display:flex;flex-direction:column}
+  /* Solo estas tarjetas crecen para que la franja de la imagen quepa; las
+     volteables de otras diapositivas se quedan como estaban. */
+  .flips-foto .flip.conFoto,.flips-foto .flip.conFoto .flip-in{height:252px}
+  @media(max-height:900px){.flips-foto .flip.conFoto,.flips-foto .flip.conFoto .flip-in{height:236px}}
+  @media(max-width:640px){.flips-foto .flip.conFoto,.flips-foto .flip.conFoto .flip-in{height:auto;min-height:300px}
+    .fotoflip{height:58px} .fotoflip img{max-height:58px}}
+
   /* ====== EXAMEN FINAL ====== */
   .exwrap{max-width:820px;margin:0 auto}
   .excampo{margin-top:14px}
@@ -1064,22 +1081,22 @@
       <div class="eyebrow rv up">Generalidades</div>
       <h2 class="rv up" style="--d:1">Conceptos clave</h2>
       <p class="lead rv up" style="--d:2">Toca cada tarjeta para ver su definición y un ejemplo. 👆</p>
-      <div class="flips" style="margin-top:24px">
+      <div class="flips flips-foto" style="margin-top:24px">
         <div class="flip rv up" style="--d:0" tabindex="0" role="button"><div class="flip-in">
           <div class="face front"><div class="n">1</div><h3>Acto inseguro</h3><div class="hint">Toca para ver ↺</div></div>
-          <div class="face back"><h4>Acto inseguro</h4><p>Acción inapropiada de un trabajador que se ejecuta de manera insegura, desobedeciendo la forma estandarizada y segura.</p><div class="ej"><b>Ejemplo:</b> usar el celular mientras se operan equipos o se camina en la operación.</div></div>
+          <div class="face back"><h4>Acto inseguro</h4><p>Acción inapropiada de un trabajador que se ejecuta de manera insegura, desobedeciendo la forma estandarizada y segura.</p><div class="ej"><b>Ejemplo:</b> usar el celular mientras se operan equipos o se camina en la operación.</div><div class="fotoflip" data-foto="acto(D7)"></div></div>
         </div></div>
         <div class="flip rv up" style="--d:1" tabindex="0" role="button"><div class="flip-in">
           <div class="face front"><div class="n">2</div><h3>Condición insegura</h3><div class="hint">Toca para ver ↺</div></div>
-          <div class="face back"><h4>Condición insegura</h4><p>Situación inapropiada en el lugar de trabajo, con presencia de condiciones peligrosas no gestionadas.</p><div class="ej"><b>Ejemplo:</b> barreras físicas inapropiadas.</div></div>
+          <div class="face back"><h4>Condición insegura</h4><p>Situación inapropiada en el lugar de trabajo, con presencia de condiciones peligrosas no gestionadas.</p><div class="ej"><b>Ejemplo:</b> barreras físicas inapropiadas.</div><div class="fotoflip" data-foto="condicion(D7)"></div></div>
         </div></div>
         <div class="flip rv up" style="--d:2" tabindex="0" role="button"><div class="flip-in">
           <div class="face front"><div class="n">3</div><h3>Incidente de trabajo</h3><div class="hint">Toca para ver ↺</div></div>
-          <div class="face back"><h4>Incidente de trabajo</h4><p>Suceso con el potencial de ser un accidente, en el que hubo personas involucradas sin lesiones ni daños.</p><div class="ej"><b>Ejemplo:</b> un trabajador casi se cae de una plataforma elevadora.</div></div>
+          <div class="face back"><h4>Incidente de trabajo</h4><p>Suceso con el potencial de ser un accidente, en el que hubo personas involucradas sin lesiones ni daños.</p><div class="ej"><b>Ejemplo:</b> un trabajador casi se cae de una plataforma elevadora.</div><div class="fotoflip" data-foto="incidente(D7)"></div></div>
         </div></div>
         <div class="flip rv up" style="--d:3" tabindex="0" role="button"><div class="flip-in">
           <div class="face front"><div class="n">4</div><h3>Accidente de trabajo</h3><div class="hint">Toca para ver ↺</div></div>
-          <div class="face back"><h4>Accidente de trabajo</h4><p>Suceso repentino por causa u ocasión del trabajo que produce lesión, perturbación funcional, invalidez o muerte.</p><div class="ej"><b>Ejemplo:</b> caída de alturas al realizar labores en la cubierta.</div></div>
+          <div class="face back"><h4>Accidente de trabajo</h4><p>Suceso repentino por causa u ocasión del trabajo que produce lesión, perturbación funcional, invalidez o muerte.</p><div class="ej"><b>Ejemplo:</b> caída de alturas al realizar labores en la cubierta.</div><div class="fotoflip" data-foto="accidente(D7)"></div></div>
         </div></div>
       </div>
     </div>
@@ -2094,7 +2111,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-01-c";
+var VERSION_CURSO = "2026-09-01-d";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
@@ -2340,6 +2357,10 @@ document.querySelectorAll('[data-foto]').forEach(function(slot){
     slot.appendChild(img);
     slot.classList.add('foto');
     if(slot.parentElement) slot.parentElement.classList.add('conFoto');
+    // en las tarjetas volteables hay que marcar la tarjeta entera: es la que
+    // define el alto, y solo debe crecer si la imagen existe de verdad
+    var volteable = slot.closest && slot.closest('.flip');
+    if(volteable) volteable.classList.add('conFoto');
   };
   img.onerror = function(){ i++; if(i < rutas.length) img.src = rutas[i]; };
   registrarMedio(slot, function(){ img.src = rutas[0]; });
