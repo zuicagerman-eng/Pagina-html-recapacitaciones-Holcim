@@ -504,6 +504,23 @@
     .acc-auto .acc.ancha.lista .acc-body{column-count:2;column-gap:18px}
     .acc-auto .acc.ancha.lista .acc-body .tag{column-span:all}
   }
+  /* ===== Dos grupos rotulados (Reglas HSE) =====
+     Una columna para lo que hay que hacer y otra para lo prohibido. */
+  .dosgrupos{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:14px;align-items:start}
+  .gtit{font-size:12.5px;font-weight:800;letter-spacing:1.3px;text-transform:uppercase;
+    margin-bottom:9px;display:flex;align-items:center;gap:9px}
+  .gtit:before{content:"";width:22px;height:3px;border-radius:2px;background:currentColor;flex:none}
+  .gtit.hacer{color:var(--green)}
+  .gtit.prohib{color:#ff8f85}
+  .dosgrupos .accgrid{grid-template-columns:1fr;margin-top:0}
+  @media(min-width:1100px){.dosgrupos .accgrid.acc-auto{grid-template-columns:1fr}}
+  /* Aquí la tarjeta es ancha pero hay ocho apiladas: la imagen se modera. */
+  @media(max-height:900px){
+    .dosgrupos .acc-auto .acc.conFotos{grid-template-columns:74px 1fr}
+    .dosgrupos .acc-auto .acc.conFotos .acc-head .tri.foto,
+    .dosgrupos .acc-auto .acc.conFotos .acc-head .ico.foto{width:74px;height:74px}
+  }
+  @media(max-width:900px){.dosgrupos{grid-template-columns:1fr;gap:14px}}
   .acc-auto .acc-body p,.acc-auto .acc-body .li,.acc-auto .acc-body .pt{font-size:12.8px;line-height:1.45}
   .acc-auto .acc-body .li,.acc-auto .acc-body .pt{margin-top:4px}
   .acc-auto .acc-body .tag,.acc-auto .acc-body .ptitle{margin-bottom:2px}
@@ -1537,7 +1554,16 @@
       <div class="eyebrow rv up">Modelo operativo de H&amp;S</div>
       <h2 class="rv up" style="--d:1">Reglas HSE</h2>
       <p class="lead rv up" style="--d:2">Da clic sobre cada regla para conocer su detalle. 👆</p>
-      <div class="accgrid" id="reglas" style="margin-top:22px"></div>
+      <div class="dosgrupos">
+        <div class="grupo">
+          <h3 class="gtit hacer">Lo que debes hacer</h3>
+          <div class="accgrid auto-si" id="reglas"></div>
+        </div>
+        <div class="grupo">
+          <h3 class="gtit prohib">Lo que está prohibido</h3>
+          <div class="accgrid auto-si" id="reglas2"></div>
+        </div>
+      </div>
     </div>
   </section>
 <section class="slide light mint" data-mod="2">
@@ -2373,7 +2399,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-02-v";
+var VERSION_CURSO = "2026-09-02-w";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
@@ -2912,15 +2938,15 @@ var REGLAS=[
  {i:'conduc',f:'conduccion(D14)',t:'Conducción segura',d:'No conduzcas sin cinturón ni usando el teléfono celular, y no superes los límites de velocidad ni las horas de servicio.'},
  {i:'alcohol',f:'alcohol(D14)',t:'No alcohol ni drogas',d:'No trabajes ni conduzcas bajo la influencia del alcohol o las drogas.'}
 ];
-var reglasEl=document.getElementById('reglas');
+var reglasEl=document.getElementById('reglas'), reglasEl2=document.getElementById('reglas2');
+/* Las cuatro primeras son cosas que hay que hacer; las cuatro últimas son
+   prohibiciones. Por eso van en dos columnas separadas y rotuladas. */
+var CORTE_REGLAS = 4;
 REGLAS.forEach(function(r,k){
   var el=document.createElement('div'); el.className='acc rv up'; el.style.setProperty('--d',k%2);
-  /* La penúltima ocupa dos columnas: es la de texto más largo y así la última
-     fila queda completa, sin el hueco que quedaba antes. */
-  if(k===REGLAS.length-2) el.classList.add('ancha');
   el.setAttribute('tabindex','0'); el.setAttribute('role','button');
   el.innerHTML='<div class="acc-head"><span class="ico" data-foto="'+r.f+'"><svg viewBox="0 0 24 24">'+RICON[r.i]+'</svg></span><h4>'+r.t+'</h4><span class="chev">+</span></div><div class="acc-body"><p>'+r.d+'</p></div>';
-  reglasEl.appendChild(el);
+  (k < CORTE_REGLAS ? reglasEl : reglasEl2).appendChild(el);
 });
 activarFotos();
 /* ====== OBJETIVO PRINCIPAL (acordeón) ====== */
@@ -2953,7 +2979,7 @@ OBJ.forEach(function(o,k){
 var ACC_AUTO = 6;
 document.querySelectorAll('.accgrid').forEach(function(rejilla){
   var tarjetas = Array.prototype.filter.call(rejilla.children, function(c){ return c.classList.contains('acc'); });
-  if(tarjetas.length < ACC_AUTO) return;
+  if(tarjetas.length < ACC_AUTO && !rejilla.classList.contains('auto-si')) return;
   rejilla.classList.add('acc-auto');
   var slide = rejilla.closest('.slide');
   if(slide) slide.classList.add('tiene-auto');   // la usa el CSS para compactar
