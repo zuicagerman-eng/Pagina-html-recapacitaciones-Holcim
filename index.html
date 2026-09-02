@@ -413,16 +413,23 @@
   .cat .top{height:96px;display:grid;place-items:center;background:#eef3f9;overflow:hidden}
   .cat .top svg{width:52px;height:52px}
   /* Con foto la cabecera crece un poco y la imagen se ve completa */
-  .cat .top.foto{height:132px;padding:8px}
-  .cat .top.foto img{width:100%;height:100%;object-fit:contain;display:block}
+  .cat .top.foto{height:118px;padding:8px;display:flex;align-items:center;justify-content:center}
+  .cat .top.foto img{max-width:100%;max-height:100px;width:auto;height:auto;
+    object-fit:contain;display:block}
   .cat .bd{padding:16px 16px 18px;color:#fff}
   /* En pantallas bajas (1366x768) se aprieta un poco para que quepan las 6 */
   @media(max-height:820px){
     .cats{gap:12px}
-    .cat .top.foto{height:100px}
+    .cat .top.foto{height:96px}
+    .cat .top.foto img{max-height:80px}
     .cat .bd{padding:11px 14px 12px}
     .cat .bd h3{font-size:15px;margin-bottom:3px}
     .cat .bd p{font-size:12px;line-height:1.4}
+  }
+  /* En celular las tarjetas van en una columna: la imagen puede ser mayor */
+  @media(max-width:520px){
+    .cat .top.foto{height:126px}
+    .cat .top.foto img{max-height:108px}
   }
   .bd.d{background:var(--panel)} .bd.c{background:linear-gradient(160deg,#1bb4e4,#1481c4)}
   .cat .bd h3{font-size:16px;font-weight:800;margin-bottom:5px}
@@ -2265,7 +2272,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-02-o";
+var VERSION_CURSO = "2026-09-02-p";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
