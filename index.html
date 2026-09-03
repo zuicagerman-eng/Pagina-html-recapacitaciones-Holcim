@@ -849,9 +849,11 @@
     align-items:center;margin-top:12px}
   .izafila .lineat li{font-size:13.2px;padding:7px 0 7px 18px}
   .izafila .lineat li:before{width:15px;height:15px;top:calc(50% - 7px)}
+  /* El marco se cine a la foto: con width:100% y object-fit quedaban franjas
+     blancas a los lados cuando la imagen no llenaba la columna. */
   .izafoto{display:flex;align-items:center;justify-content:center;padding:4px;
-    border-radius:8px;background:var(--grad)}
-  .izafoto img{width:100%;height:auto;max-height:250px;object-fit:contain;display:block;
+    border-radius:8px;background:var(--grad);width:fit-content;max-width:100%;margin-inline:auto}
+  .izafoto img{width:auto;height:auto;max-width:100%;max-height:250px;display:block;
     border-radius:5px;background:#fff}
   .izafoto svg{width:100%;max-width:300px;height:190px;fill:none;stroke:#fff;
     stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
@@ -887,8 +889,8 @@
   .conduc{display:grid;grid-template-columns:1fr 1.15fr;gap:clamp(16px,3vw,34px);
     align-items:center;margin-top:12px}
   .conducfoto{display:flex;align-items:center;justify-content:center;padding:4px;
-    border-radius:8px;background:var(--grad)}
-  .conducfoto img{width:100%;height:auto;max-height:430px;object-fit:contain;display:block;
+    border-radius:8px;background:var(--grad);width:fit-content;max-width:100%;margin-inline:auto}
+  .conducfoto img{width:auto;height:auto;max-width:100%;max-height:430px;display:block;
     border-radius:5px;background:#fff}
   .conducfoto svg{width:100%;max-width:300px;height:330px;fill:none;stroke:#fff;
     stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;opacity:.7}
@@ -4559,7 +4561,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-05-h";
+var VERSION_CURSO = "2026-09-05-i";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
