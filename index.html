@@ -701,6 +701,47 @@
   @media(max-width:520px){
     .tarjfila{grid-template-columns:1fr;justify-items:center}
   }
+  /* ===== 5 Reglas de Oro: el cono invertido =====
+     El cono va dibujado, sin fotos. Los rotulos y el cono comparten una
+     rejilla de cinco filas iguales, y el SVG se estira sin conservar
+     proporcion, asi que cada banda cae exactamente frente a su rotulo. */
+  .rooro{display:grid;grid-template-columns:1.55fr 1fr;gap:clamp(16px,3vw,36px);
+    align-items:center;margin-top:14px}
+  .rocono{display:grid;grid-template-columns:1fr auto;gap:0;align-items:stretch}
+  .rolista{display:grid;grid-template-rows:repeat(5,1fr);gap:6px;align-content:stretch}
+  .roregla{display:flex;align-items:center;min-width:0}
+  .ronum{flex:none;width:34px;height:34px;border-radius:50%;background:var(--panel);color:#fff;
+    display:grid;place-items:center;font-weight:800;font-size:15px;z-index:2;
+    box-shadow:0 3px 9px -3px rgba(0,0,0,.45)}
+  /* La punta de la flecha apunta al cono; el circulo se monta sobre el arranque. */
+  .rotexto{flex:1;min-width:0;margin-left:-13px;padding:8px 26px 8px 22px;
+    font-size:12.6px;font-weight:800;line-height:1.28;text-align:center;
+    clip-path:polygon(0 0,calc(100% - 15px) 0,100% 50%,calc(100% - 15px) 100%,0 100%)}
+  .conosvg{display:block;width:clamp(150px,17vw,232px);height:100%}
+  .rolado{display:flex;flex-direction:column;align-items:center;gap:10px}
+  .rocaja{margin:0;font-size:12.8px;line-height:1.45;text-align:center;
+    border-radius:10px;padding:12px 16px}
+  .rocaja.verde{background:#fff;border:2px solid var(--green);color:var(--ink);font-weight:700}
+  .rocaja.gris{background:#eceff2;color:var(--ink);border-bottom:4px solid;border-image:var(--grad) 1;
+    border-radius:10px 10px 0 0}
+  .roflecha{width:56px;height:15px;fill:none;stroke:var(--green);stroke-width:2;
+    stroke-linecap:round;stroke-linejoin:round;flex:none}
+  .apretado .rotexto{font-size:11.8px;padding:6px 24px 6px 20px}
+  .apretado .rocaja{font-size:12.2px;padding:10px 14px}
+  .muy-apretado .ronum{width:30px;height:30px;font-size:13.5px}
+  .muy-apretado .rotexto{font-size:11.2px;line-height:1.24}
+  .muy-apretado .rocaja{font-size:11.6px;padding:9px 13px}
+  .ultra .rocaja{font-size:11.2px;padding:8px 12px}
+  @media(pointer:coarse){ .ronum{width:36px;height:36px} }
+  @media(max-width:920px){
+    /* El cono se pone encima y los dos avisos debajo, a lo ancho. */
+    .rooro{grid-template-columns:1fr}
+    .rolado{max-width:620px;margin-inline:auto}
+  }
+  @media(max-width:520px){
+    .conosvg{width:96px}
+    .rotexto{font-size:11.4px;padding:6px 20px 6px 18px}
+  }
   /* En pantallas tactiles no se encogen los blancos que hay que pulsar. */
   @media(pointer:coarse){
     .slide.ultra .act{min-height:84px;padding:14px 10px}
@@ -3721,10 +3762,23 @@
 <section class="slide light" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">HSE-105 · Seguridad eléctrica</div>
 <h2 class="rv up" style="--d:1">Las 5 Reglas de Oro</h2>
-<div class="infobanner rv up" style="--d:2">Únicamente un <b>eléctrico autorizado</b> puede hacer la instalación, inspección, prueba y mantenimiento de instalaciones y equipos eléctricos.</div>
-<p class="lead rv up">Toca cada regla en orden. 👆</p>
-<div class="accgrid" style="margin-top:12px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#0e2c56"></span><h4>1 · Corte visible</h4><span class="chev">+</span></div><div class="acc-body"><p>Efectuar el <b>corte visible</b> de todas las fuentes de tensión.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1bb4e4"></span><h4>2 · Condenación / bloqueo</h4><span class="chev">+</span></div><div class="acc-body"><p>Efectuar <b>condenación o bloqueo y etiquetado</b> de los aparatos de corte.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#5b6b82"></span><h4>3 · Verificar ausencia de tensión</h4><span class="chev">+</span></div><div class="acc-body"><p>Verificar la <b>ausencia de tensión</b> en cada una de las fases.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#f5b700"></span><h4>4 · Puesta a tierra</h4><span class="chev">+</span></div><div class="acc-body"><p>Instalar <b>puesta a tierra</b> y poner en <b>cortocircuito</b>.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#17868a"></span><h4>5 · Señalizar y delimitar</h4><span class="chev">+</span></div><div class="acc-body"><p><b>Señalizar y delimitar</b> la zona de trabajo.</p></div></div></div>
-<div class="warn rv up" style="--d:2"><svg viewBox="0 0 24 24"><path d="M12 3l9 16H3z"/><path d="M12 9v5M12 17h0"/></svg><span>En Holcim las intervenciones eléctricas se realizan <b>exclusivamente sin tensión</b>. No está permitido ejecutar trabajos en circuitos o áreas energizadas.</span></div>
+<div class="rooro rv up" style="--d:2">
+  <div class="rocono">
+    <div class="rolista">
+      <div class="roregla"><span class="ronum">1</span><div class="rotexto" style="background:#e7eaee;color:#0e2c56">Efectuar el <b>corte visible</b> de todas las fuentes de tensión.</div></div>
+      <div class="roregla"><span class="ronum">2</span><div class="rotexto" style="background:#1bb4e4;color:#fff">Efectuar <b>condenación o bloqueo y etiquetado</b> de los aparatos de corte.</div></div>
+      <div class="roregla"><span class="ronum">3</span><div class="rotexto" style="background:#c8ced4;color:#0e2c56">Verificar la <b>ausencia de tensión</b> en cada una de las fases.</div></div>
+      <div class="roregla"><span class="ronum">4</span><div class="rotexto" style="background:#f5b700;color:#10233d">Instalar <b>puesta a tierra</b> y poner en <b>cortocircuito</b>.</div></div>
+      <div class="roregla"><span class="ronum">5</span><div class="rotexto" style="background:#1877c4;color:#fff"><b>Señalizar y delimitar</b> la zona de trabajo.</div></div>
+    </div>
+    <svg class="conosvg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M0.0 0 H100.0 L93.2 20 H6.8 Z" fill="#ced4da"/><ellipse cx="50" cy="0" rx="50.0" ry="3" fill="rgba(255,255,255,.3)"/><path d="M6.8 20 H93.2 L86.4 40 H13.6 Z" fill="#1bb4e4"/><ellipse cx="50" cy="20" rx="43.2" ry="3" fill="rgba(255,255,255,.3)"/><path d="M13.6 40 H86.4 L79.6 60 H20.4 Z" fill="#98a2ab"/><ellipse cx="50" cy="40" rx="36.4" ry="3" fill="rgba(255,255,255,.3)"/><path d="M20.4 60 H79.6 L72.8 80 H27.2 Z" fill="#f5b700"/><ellipse cx="50" cy="60" rx="29.6" ry="3" fill="rgba(255,255,255,.3)"/><path d="M27.2 80 H72.8 L66.0 100 H34.0 Z" fill="#0e2c56"/><ellipse cx="50" cy="80" rx="22.8" ry="3" fill="rgba(255,255,255,.3)"/><ellipse cx="50" cy="100" rx="16" ry="3" fill="rgba(0,0,0,.22)"/></svg>
+  </div>
+  <div class="rolado">
+    <p class="rocaja verde">Únicamente un <b>eléctrico autorizado</b> puede hacer la instalación, inspección, prueba y mantenimiento de instalaciones y equipos eléctricos.</p>
+    <svg class="roflecha" viewBox="0 0 60 16" aria-hidden="true"><path d="M2 8h50M46 3l7 5-7 5"/></svg>
+    <p class="rocaja gris">En Holcim, las intervenciones en instalaciones eléctricas se realizan <b>exclusivamente bajo condiciones de trabajo sin tensión, cumpliendo estrictamente con las 5 Reglas de Oro.</b> No está permitido ejecutar trabajos en circuitos o áreas energizadas, garantizando así la integridad del personal y la seguridad operativa.</p>
+  </div>
+</div>
 </div>
 </section>
 <section class="slide dark" data-mod="4">
@@ -4209,7 +4263,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-05-b";
+var VERSION_CURSO = "2026-09-05-c";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
