@@ -843,14 +843,22 @@
   .pdfrow{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:20px}
   @media(max-width:640px){.pdfrow{grid-template-columns:1fr}}
   .pdfmini{background:linear-gradient(160deg,#1bb4e4,#1481c4);color:#fff;border-radius:14px;padding:15px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px}
-  .pdfmini span{font-size:13px;font-weight:600;line-height:1.4}
-  /* Ilustración a la derecha de la tarjeta "Ver más". Sin archivo no ocupa. */
-  .pdfmini .minifoto{display:none}
-  .pdfmini .minifoto.foto{display:flex;align-items:center;justify-content:center;
-    width:74px;height:60px;flex:none;order:3}
-  .pdfmini .minifoto.foto img{max-width:100%;max-height:100%;width:auto;height:auto;
-    object-fit:contain;display:block}
-  @media(max-height:820px){.pdfmini .minifoto.foto{width:62px;height:50px}}
+  .pdfmini>span:not(.miniico){font-size:13px;font-weight:600;line-height:1.4;min-width:0;flex:1}
+  /* En pantallas muy angostas el texto se lleva su propia linea: si no, el
+     boton y el icono empujaban la tarjeta fuera de la pantalla. */
+  @media(max-width:640px){
+    .pdfmini{flex-wrap:wrap;gap:10px}
+    .pdfmini>span:not(.miniico){flex:1 1 100%}
+  }
+  /* Icono a la derecha de la tarjeta "Ver más". Dibujado: no hay archivo que
+     subir ni hueco que se quede vacío. */
+  .pdfmini .miniico{display:flex;align-items:center;justify-content:center;
+    width:52px;height:52px;flex:none;order:3;border-radius:13px;
+    background:rgba(255,255,255,.16)}
+  .pdfmini .miniico svg{width:30px;height:30px;stroke:#fff;fill:none;stroke-width:1.7;
+    stroke-linecap:round;stroke-linejoin:round}
+  @media(max-height:820px){.pdfmini .miniico{width:44px;height:44px}
+    .pdfmini .miniico svg{width:26px;height:26px}}
   .acc-body .tdd{margin-top:7px} .acc-body .tdd b{color:var(--blue)}
   /* welcome */
   #welcome{position:fixed;inset:0;z-index:300;background:rgba(4,15,35,.78);display:flex;align-items:center;justify-content:center;padding:18px;backdrop-filter:blur(3px)}
@@ -1920,8 +1928,8 @@
       </article>
     </div>
     <div class="pdfrow rv up" style="--d:2">
-      <div class="pdfmini"><span>Da clic en <b>“Ver más”</b> para conocer los <b>cargos, roles, responsabilidades y autoridades</b>.</span><button class="pdfbtn" data-pdf="cargos" data-title="Cargos, roles, responsabilidades y autoridades">Ver más</button><span class="minifoto" data-foto="ipvrcargos(D23)"></span></div>
-      <div class="pdfmini"><span>Da clic en <b>“Ver más”</b> para conocer los <b>Niveles de riesgo</b>.</span><button class="pdfbtn" data-pdf="niveles" data-title="Niveles de riesgo">Ver más</button><span class="minifoto" data-foto="ipvrniveles(D23)"></span></div>
+      <div class="pdfmini"><span>Da clic en <b>“Ver más”</b> para conocer los <b>cargos, roles, responsabilidades y autoridades</b>.</span><button class="pdfbtn" data-pdf="cargos" data-title="Cargos, roles, responsabilidades y autoridades">Ver más</button><span class="miniico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="2.5" width="6" height="5" rx="1.2"/><rect x="2" y="16" width="6" height="5" rx="1.2"/><rect x="16" y="16" width="6" height="5" rx="1.2"/><path d="M12 7.5v4M5 16v-4h14v4"/></svg></span></div>
+      <div class="pdfmini"><span>Da clic en <b>“Ver más”</b> para conocer los <b>Niveles de riesgo</b>.</span><button class="pdfbtn" data-pdf="niveles" data-title="Niveles de riesgo">Ver más</button><span class="miniico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.2 18a8.8 8.8 0 1 1 17.6 0"/><path d="M12 18l4.2-5.2"/><circle cx="12" cy="18" r="1.5"/><path d="M5.4 11.4l1.5.9M12 8.2v1.7M18.6 11.4l-1.5.9"/></svg></span></div>
     </div>
   </div>
 </section>
@@ -2566,7 +2574,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-03-j";
+var VERSION_CURSO = "2026-09-03-k";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
