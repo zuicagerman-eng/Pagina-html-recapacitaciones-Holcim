@@ -1012,6 +1012,45 @@
     .carrpuntos{bottom:13px}
   }
   @media(prefers-reduced-motion:reduce){ .carrvia{transition:none} }
+  /* ===== Trabajo en solitario ===== */
+  .solintro{font-size:12.9px;line-height:1.45;margin-top:5px;opacity:.92}
+  .solpasos{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:12px}
+  .solcard{position:relative;margin:0;background:var(--c);color:#fff;border-radius:11px;
+    padding:12px 16px 16px;display:flex;flex-direction:column;align-items:center;gap:7px;
+    text-align:center;box-shadow:var(--shadow);
+    border-bottom:4px solid;border-image:var(--grad) 1;min-width:0}
+  .solnum{font-size:22px;font-weight:800;line-height:1}
+  .solcard p{margin:0;font-size:12.6px;font-weight:700;line-height:1.4}
+  /* La flecha apunta a la tarjeta siguiente y se mueve despacio hacia ella. */
+  .solflecha{position:absolute;top:11px;right:12px;width:52px;height:16px;fill:none;
+    stroke:#fff;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;
+    opacity:.9;animation:solvai 1.8s ease-in-out infinite}
+  @keyframes solvai{0%,100%{transform:translateX(0)}50%{transform:translateX(7px)}}
+  .solejem{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:8px;
+    max-width:720px;margin-inline:auto}
+  .solej{margin:0;display:flex;flex-direction:column;align-items:center;gap:5px;text-align:center}
+  .solej .ph{display:flex;align-items:center;justify-content:center;
+    width:78px;height:78px;background:#fff;border-radius:14px;padding:8px}
+  .solej .ph img{max-width:100%;max-height:100%;width:auto;height:auto;display:block}
+  .solej .ph svg{width:54px;height:54px;fill:none;stroke:var(--panel);stroke-width:3;
+    stroke-linecap:round;stroke-linejoin:round}
+  .solej figcaption{font-size:12.4px;font-weight:700;line-height:1.3;color:var(--green)}
+  .apretado .solcard{padding:10px 14px 13px} .apretado .solcard p{font-size:12px}
+  .apretado .solnum{font-size:19px}
+  .apretado .solej .ph{width:66px;height:66px} .apretado .solej .ph svg{width:46px;height:46px}
+  .muy-apretado .solintro{display:none}
+  .muy-apretado .solcard p{font-size:11.4px;line-height:1.34}
+  .muy-apretado .solej .ph{width:56px;height:56px} .muy-apretado .solej .ph svg{width:38px;height:38px}
+  .muy-apretado .solej figcaption{font-size:11.6px}
+  .ultra .solcard p{font-size:10.9px} .ultra .solnum{font-size:17px}
+  .ultra .solej .ph{width:48px;height:48px} .ultra .solej .ph svg{width:32px;height:32px}
+  @media(max-width:820px){
+    .solpasos{grid-template-columns:1fr}
+    /* Apiladas, la flecha ya no apunta a la de al lado: se retira. */
+    .solflecha{display:none}
+    .solejem{grid-template-columns:1fr;max-width:420px}
+  }
+  @media(prefers-reduced-motion:reduce){ .solflecha{animation:none} }
   /* En pantallas tactiles no se encogen los blancos que hay que pulsar. */
   @media(pointer:coarse){
     .slide.ultra .act{min-height:84px;padding:14px 10px}
@@ -4339,9 +4378,31 @@
 <div class="wrap"><div class="eyebrow rv up">Otros controles de seguridad</div>
 <h2 class="rv up" style="--d:1">Trabajo en solitario</h2>
 <div class="infobanner rv up" style="--d:2">Actividad laboral que se desarrolla en un porcentaje de tiempo importante <b>sin vigilancia o compañía</b>: cuando el trabajo se realiza en un entorno donde no hay otros compañeros o personas disponibles para responder eficazmente ante acontecimientos inusuales o emergencias.</div>
-<p class="lead rv up">¿Qué se debe tener en cuenta? Toca cada punto. 👆</p>
-<div class="acts"><div class="act gclick rv scale" style="background:#ef7d00" tabindex="0" role="button"><span style="font-size:22px">1</span><span>Evaluar los cargos que podrían tener exposición.</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#97d13b" tabindex="0" role="button"><span style="font-size:22px">2</span><span>Priorizar por nivel de probabilidad y severidad para determinar la prioridad de los controles, con base en la jerarquía del control del riesgo.</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#e6007e" tabindex="0" role="button"><span style="font-size:22px">3</span><span>Incluir las actividades de trabajo en solitario en la <b>IPVR</b> de cada planta, asegurando la identificación del peligro, la evaluación del riesgo y sus controles.</span><span class="tick">✓</span></div></div>
-<div class="banner rv up" style="--d:2">Algunos ejemplos: <b>geólogos</b> en exploración de yacimientos · <b>vigilancia de planta</b> en horas nocturnas sin operación.</div>
+<h3 class="subverde chico" style="margin-top:10px">¿Qué se debe tener en cuenta?</h3>
+<p class="solintro">El propósito es establecer los controles necesarios para garantizar el <b>monitoreo y la respuesta ante emergencias</b> de quienes realizan trabajos en solitario.</p>
+<div class="solpasos rv up" style="--d:3">
+  <article class="solcard" style="--c:#ef7d00">
+    <span class="solnum">1</span>
+    <p>Evaluar los cargos que podrían tener <b>exposición</b>.</p>
+    <svg class="solflecha" viewBox="0 0 60 18" aria-hidden="true"><path d="M4 9h40"/><path d="M38 3l7 6-7 6"/></svg>
+  </article>
+  <article class="solcard" style="--c:#8cc63e">
+    <span class="solnum">2</span>
+    <p>Priorizar por nivel de <b>probabilidad y severidad</b> para determinar la prioridad de los controles, con base en la <b>jerarquía del control del riesgo</b>.</p>
+    <svg class="solflecha" viewBox="0 0 60 18" aria-hidden="true"><path d="M4 9h40"/><path d="M38 3l7 6-7 6"/></svg>
+  </article>
+  <article class="solcard" style="--c:#e6007e">
+    <span class="solnum">3</span>
+    <p>Incluir las actividades de trabajo en solitario en la <b>IPVR de cada planta</b>, asegurando la identificación del peligro, la evaluación del riesgo y sus controles.</p>
+  </article>
+</div>
+<h3 class="subt chico" style="margin-top:12px">Algunos ejemplos</h3>
+<div class="solejem">
+  <figure class="solej"><span class="ph" data-foto="geologos(D61)"><svg viewBox="0 0 72 72" aria-hidden="true"><path d="M14 58l26-26"/><path d="M8 64l6-6 6 6-6 6z"/><path d="M40 32l10-10"/><path d="M46 10h18v18"/><path d="M64 10L44 30"/><path d="M10 40h16v16H10z"/><path d="M10 48h16"/></svg></span>
+    <figcaption><b>Geólogos</b> que realizan actividades de exploración geológica de yacimientos.</figcaption></figure>
+  <figure class="solej"><span class="ph" data-foto="vigilancia(D61)"><svg viewBox="0 0 72 72" aria-hidden="true"><path d="M22 22a14 14 0 0 1 28 0"/><path d="M18 22h36"/><circle cx="36" cy="34" r="8"/><path d="M20 62c0-9 7-16 16-16s16 7 16 16z"/><path d="M8 14l6 4M64 14l-6 4M36 4v6"/></svg></span>
+    <figcaption><b>Vigilancia de la planta</b> en horas nocturnas sin operación.</figcaption></figure>
+</div>
 </div>
 </section>
 <section class="slide light mint" data-mod="4">
@@ -4723,7 +4784,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-05-n";
+var VERSION_CURSO = "2026-09-05-o";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
