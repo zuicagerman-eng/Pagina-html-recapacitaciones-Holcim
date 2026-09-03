@@ -1051,6 +1051,36 @@
     .solejem{grid-template-columns:1fr;max-width:420px}
   }
   @media(prefers-reduced-motion:reduce){ .solflecha{animation:none} }
+  /* ===== Actividades prohibidas en solitario =====
+     Dos columnas de filas con icono y texto; las filas pares llevan fondo
+     para separarlas, como en el impreso. */
+  .prohsol{display:grid;grid-template-columns:1fr 1fr;gap:0 22px;margin-top:12px}
+  .prohfila{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center;
+    padding:7px 10px;border-radius:8px;min-width:0}
+  /* Sombrea la 2.a, 4.a y 6.a fila: con dos por fila son los elementos 3-4, 7-8, 11-12. */
+  .prohfila:nth-child(4n+3),.prohfila:nth-child(4n+4){background:rgba(11,37,73,.055)}
+  .slide.dark .prohfila:nth-child(4n+3),.slide.dark .prohfila:nth-child(4n+4){
+    background:rgba(255,255,255,.06)}
+  .prohfila .ph{display:flex;align-items:center;justify-content:center;
+    width:54px;height:54px;flex:none;background:#fff;border-radius:9px;padding:5px}
+  .prohfila .ph img{max-width:100%;max-height:100%;width:auto;height:auto;display:block}
+  .prohfila .ph svg{width:38px;height:38px;fill:none;stroke:var(--panel);stroke-width:2.6;
+    stroke-linecap:round;stroke-linejoin:round}
+  .prohfila p{margin:0;font-size:13.2px;line-height:1.36}
+  .apretado .prohfila{padding:5px 10px} .apretado .prohfila p{font-size:12.5px}
+  .apretado .prohfila .ph{width:46px;height:46px} .apretado .prohfila .ph svg{width:32px;height:32px}
+  .muy-apretado .prohfila{padding:4px 9px;gap:10px}
+  .muy-apretado .prohfila p{font-size:11.9px;line-height:1.3}
+  .muy-apretado .prohfila .ph{width:40px;height:40px} .muy-apretado .prohfila .ph svg{width:28px;height:28px}
+  .ultra .prohfila{padding:3px 8px} .ultra .prohfila p{font-size:11.2px}
+  .ultra .prohfila .ph{width:34px;height:34px} .ultra .prohfila .ph svg{width:24px;height:24px}
+  @media(max-width:820px){
+    .prohsol{grid-template-columns:1fr}
+    /* En una sola columna el sombreado alterna fila a fila. */
+    .prohfila:nth-child(4n+3),.prohfila:nth-child(4n+4){background:none}
+    .prohfila:nth-child(even){background:rgba(11,37,73,.055)}
+    .slide.dark .prohfila:nth-child(even){background:rgba(255,255,255,.06)}
+  }
   /* En pantallas tactiles no se encogen los blancos que hay que pulsar. */
   @media(pointer:coarse){
     .slide.ultra .act{min-height:84px;padding:14px 10px}
@@ -4408,8 +4438,52 @@
 <section class="slide light mint" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">Otros controles de seguridad</div>
 <h2 class="rv up" style="--d:1">Actividades prohibidas para trabajo en solitario</h2>
-<p class="lead rv up" style="--d:2">Toca cada actividad para reconocerlas todas. 👆</p>
-<div class="chipgrid"><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#0e2c56">1</span><span class="nm">Trabajo en alturas.</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#1877c4">2</span><span class="nm">Trabajo en espacios confinados.</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#1bb4e4">3</span><span class="nm">Trabajos cerca del agua.</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#e23b32">4</span><span class="nm">Trabajos en caliente.</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#ef7d00">5</span><span class="nm">Trabajos con atmósferas explosivas.</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#17868a">6</span><span class="nm">Visitas, personal en inducción o entrenamiento.</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#f5b700">7</span><span class="nm">Trabajos de aislamiento y bloqueo LOTOTO múltiple.</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#97d13b">8</span><span class="nm">Trabajos en excavaciones.</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#6a3d9a">9</span><span class="nm">Trabajos en equipos energizados (pruebas, lubricaciones, entre otros).</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#e6007e">10</span><span class="nm">Trabajos de elevación o soporte de cargas.</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#0e6e78">11</span><span class="nm">Trabajos en subestación.</span><span class="tick">✓</span></div></div>
+<div class="prohsol rv up" style="--d:2">
+  <div class="prohfila">
+    <span class="ph" data-foto="alturas(D62)"><svg viewBox="0 0 48 52" aria-hidden="true"><path d="M10 10h28M10 24h28M10 38h28"/><path d="M14 6v42M34 6v42"/><path d="M14 10l20 14M34 10L14 24"/><circle cx="17" cy="52" r="4"/><circle cx="31" cy="52" r="4"/></svg></span>
+    <p>Trabajo en <b>alturas</b>.</p>
+  </div>
+  <div class="prohfila">
+    <span class="ph" data-foto="confinados(D62)"><svg viewBox="0 0 48 52" aria-hidden="true"><path d="M8 8h32v10H8z"/><circle cx="24" cy="27" r="6"/><path d="M18 22a6 6 0 0 1 12 0"/><path d="M24 33v10M14 37h20M24 43l-5 8M24 43l5 8"/></svg></span>
+    <p>Trabajo en <b>espacios confinados</b>.</p>
+  </div>
+  <div class="prohfila">
+    <span class="ph" data-foto="cercaagua(D62)"><svg viewBox="0 0 48 52" aria-hidden="true"><path d="M4 34c6-6 12 6 18 0s12 6 18 0 12 6 18 0" transform="scale(.75)"/><path d="M4 42c5-5 9 5 14 0s9 5 14 0 9 5 14 0"/><path d="M10 10v14M16 8v16M22 12v12"/><path d="M30 14h12v10H30z"/></svg></span>
+    <p>Trabajos <b>cerca del agua</b>.</p>
+  </div>
+  <div class="prohfila">
+    <span class="ph" data-foto="caliente(D62)"><svg viewBox="0 0 48 52" aria-hidden="true"><path d="M8 40l14-14"/><path d="M22 22l10-8 6 6-8 10z"/><path d="M38 8l3-4M44 14l4-3M42 22l5 1"/><circle cx="14" cy="34" r="3"/></svg></span>
+    <p>Trabajos <b>en caliente</b>.</p>
+  </div>
+  <div class="prohfila">
+    <span class="ph" data-foto="explosivas(D62)"><svg viewBox="0 0 48 52" aria-hidden="true"><path d="M24 4l5 10 10-5-4 11 11 4-11 5 4 11-10-5-5 10-5-10-10 5 4-11-11-5 11-4-4-11 10 5z"/><circle cx="24" cy="24" r="5"/></svg></span>
+    <p>Trabajos con <b>atmósferas explosivas</b>.</p>
+  </div>
+  <div class="prohfila">
+    <span class="ph" data-foto="visitas(D62)"><svg viewBox="0 0 48 52" aria-hidden="true"><circle cx="14" cy="16" r="6"/><path d="M6 34a8 8 0 0 1 16 0"/><circle cx="34" cy="16" r="6"/><path d="M26 34a8 8 0 0 1 16 0"/><circle cx="24" cy="34" r="6"/><path d="M16 48a8 8 0 0 1 16 0"/></svg></span>
+    <p><b>Visitas</b>, personal en inducción o entrenamiento.</p>
+  </div>
+  <div class="prohfila">
+    <span class="ph" data-foto="lototo(D62)"><svg viewBox="0 0 48 52" aria-hidden="true"><path d="M18 22V16a6 6 0 0 1 12 0"/><rect x="10" y="22" width="28" height="20" rx="4"/><circle cx="24" cy="30" r="3"/><path d="M24 33v5"/><path d="M32 12h10"/></svg></span>
+    <p>Trabajos de <b>aislamiento y bloqueo LOTOTO múltiple</b>.</p>
+  </div>
+  <div class="prohfila">
+    <span class="ph" data-foto="excavaciones(D62)"><svg viewBox="0 0 48 52" aria-hidden="true"><path d="M4 42h40"/><path d="M8 36V26h14v10"/><rect x="10" y="18" width="10" height="8" rx="2"/><path d="M22 26l14-12" stroke-width="4"/><path d="M36 14l4 3"/><path d="M34 20l6 12H28z"/><circle cx="11" cy="42" r="4"/><circle cx="19" cy="42" r="4"/></svg></span>
+    <p>Trabajos en <b>excavaciones</b>.</p>
+  </div>
+  <div class="prohfila">
+    <span class="ph" data-foto="energizados(D62)"><svg viewBox="0 0 48 52" aria-hidden="true"><circle cx="20" cy="12" r="6"/><path d="M14 8a6 6 0 0 1 12 0M11 8h18"/><path d="M20 20v14M12 25h16M20 34l-4 12M20 34l4 12"/><path d="M34 10h8v14h-8z"/><path d="M38 24v8"/><path d="M40 6l-4 8h6l-4 8"/></svg></span>
+    <p>Trabajos en <b>equipos energizados</b> (pruebas, lubricaciones, entre otros).</p>
+  </div>
+  <div class="prohfila">
+    <span class="ph" data-foto="elevacion(D62)"><svg viewBox="0 0 48 52" aria-hidden="true"><path d="M4 44h40"/><path d="M10 44V8h4v36"/><path d="M12 10h26"/><path d="M12 16l24-6"/><path d="M34 10v10"/><path d="M28 20h12v12H28z"/></svg></span>
+    <p>Trabajos de <b>elevación o soporte de cargas</b>.</p>
+  </div>
+  <div class="prohfila">
+    <span class="ph" data-foto="subestacion(D62)"><svg viewBox="0 0 48 52" aria-hidden="true"><rect x="8" y="6" width="32" height="34" rx="3"/><path d="M8 14h32"/><path d="M26 18l-8 12h6l-4 8 10-12h-6z"/><path d="M14 44v4M34 44v4"/></svg></span>
+    <p>Trabajos en <b>subestación</b>.</p>
+  </div>
+</div>
 </div>
 </section>
 <section class="slide dark teal" data-mod="4">
@@ -4784,7 +4858,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-05-o";
+var VERSION_CURSO = "2026-09-05-p";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
