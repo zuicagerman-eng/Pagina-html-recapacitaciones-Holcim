@@ -662,6 +662,51 @@
     .wglobos.izq .wglobo{text-align:left;border-right:0;border-left:5px solid var(--c)}
     .wglobo:after{display:none}
   }
+  /* ===== BLOQUE CON FOTO CIRCULAR (HSE-001) =====
+     Texto a la izquierda y foto en circulo a la derecha, como en el impreso.
+     El circulo lleva el aro degradado de la marca. */
+  .subverde{font-size:clamp(15px,1.9vw,19px);font-weight:800;color:var(--green);
+    line-height:1.25;margin-bottom:6px}
+  .bloqfoto{display:grid;grid-template-columns:1fr auto;gap:clamp(16px,3vw,34px);
+    align-items:center;margin-top:14px}
+  .bloqfoto p{font-size:14px;line-height:1.55;color:#dbe6f5}
+  .slide.light .bloqfoto p{color:var(--ink)}
+  /* Medida fija en pixeles: dentro de una rejilla un 100% se mide contra una
+     altura que depende del contenido y no limita nada. */
+  .fotocirc{width:152px;height:152px;flex:none;border-radius:50%;padding:4px;
+    background:var(--grad);display:block}
+  .fotocirc img,.fotocirc svg{width:100%;height:100%;border-radius:50%;display:block}
+  .fotocirc img{object-fit:cover}
+  .fotocirc svg{background:var(--panel);padding:26px;fill:none;stroke:#cfe3ff;
+    stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+  .slide.light .fotocirc svg{background:#e9f0f8;stroke:var(--panel)}
+  /* El icono de mano va en circulo blanco con aro verde, sobre la tarjeta.
+     Va con la misma especificidad que ".norma .nfoto": si no, el alto de 64px
+     de aquella regla ganaba y el circulo salia ovalado. El trazo tambien se
+     fuerza oscuro en las dos tarjetas: sobre el circulo blanco, el blanco
+     heredado dejaba el icono invisible. */
+  .normas .norma .nfoto-circ{width:104px;height:104px;flex:none;border-radius:50%;
+    background:#fff;box-shadow:0 0 0 4px var(--green);margin:0 auto 2px;padding:11px;
+    display:grid;place-items:center}
+  .normas .norma .nfoto-circ img{max-width:100%;max-height:100%;width:auto;height:auto}
+  .normas .norma .nfoto-circ svg{width:100%;height:100%;stroke:var(--panel);fill:none}
+  @media(max-height:820px){
+    .bloqfoto{gap:20px;margin-top:11px} .bloqfoto p{font-size:13.2px;line-height:1.48}
+    .fotocirc{width:124px;height:124px} .fotocirc svg{padding:21px}
+    .normas .norma .nfoto-circ{width:86px;height:86px;padding:9px}
+  }
+  .apretado .bloqfoto{gap:16px;margin-top:9px}
+  .apretado .bloqfoto p{font-size:12.4px;line-height:1.42}
+  .apretado .subverde{font-size:15px;margin-bottom:3px}
+  .apretado .fotocirc{width:102px;height:102px} .apretado .fotocirc svg{padding:17px}
+  .apretado .normas .norma .nfoto-circ{width:70px;height:70px;padding:7px}
+  .muy-apretado .fotocirc{width:88px;height:88px}
+  .muy-apretado .normas .norma .nfoto-circ{width:60px;height:60px;padding:6px}
+  @media(max-width:700px){
+    .bloqfoto{grid-template-columns:1fr;justify-items:center;text-align:center;gap:12px}
+    .bloqfoto>div{order:2}
+  }
+
   /* ===== RUEDA DE ESTÁNDARES =====
      Misma idea que la rueda del SG-SST: se pasa por cada gajo y su nombre se
      enciende y ya no se vuelve a apagar. Aqui son hasta once, asi que el
@@ -2475,8 +2520,42 @@
     </div>
   
 </section>
-<section class="slide dark" data-mod="4">
-<div class="wrap"><div class="eyebrow rv up">HSE-001 · Sistema de gestión</div><h2 class="rv up" style="--d:1">Liderazgo, compromiso y planificación</h2><p class="lead rv up" style="--d:2">Toca cada punto. 👆</p><div class="accgrid" style="margin-top:16px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>Normas HSE no negociables</h4><span class="chev">+</span></div><div class="acc-body"><p>Las reglas de salud, seguridad y ambiente aplican a todos los niveles y su cumplimiento es obligatorio para mantener la relación contractual.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1bb4e4"></span><h4>Reconocimiento</h4><span class="chev">+</span></div><div class="acc-body"><p>Refuerza los comportamientos positivos y las aportaciones de los equipos.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#0e2c56"></span><h4>Medidas correctivas</h4><span class="chev">+</span></div><div class="acc-body"><p>Aborda los incumplimientos con medidas correctivas y orientación.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Estrategia y mejora (HSE-IP)</h4><span class="chev">+</span></div><div class="acc-body"><p>Todas las acciones deben alinearse con el Plan de Mejora de Salud, Seguridad y Medio Ambiente definido por la unidad.</p></div></div></div></div>
+<section class="slide nogate dark" data-mod="4">
+  <div class="wrap">
+    <div class="eyebrow rv up">HSE-001 · Sistema de gestión</div>
+    <h2 class="rv up" style="--d:1">Liderazgo, compromiso y planificación</h2>
+    <h3 class="subt rv up" style="--d:2">Numerales 3.1 &ndash; 3.2</h3>
+
+    <div class="bloqfoto rv up" style="--d:3">
+      <div>
+        <h3 class="subverde">Normas HSE no negociables</h3>
+        <p>Las reglas de salud, seguridad y ambiente se aplican a todos los niveles y su cumplimiento es obligatorio para mantener la relación contractual.</p>
+      </div>
+      <span class="fotocirc" data-foto="normashse(D31)"><svg viewBox="0 0 64 64"><path d="M6 42V24h26v18M32 30h11l7 8v4H32"/><circle cx="17" cy="46" r="5"/><circle cx="45" cy="46" r="5"/><path d="M10 28h14M10 34h9"/></svg></span>
+    </div>
+
+    <h3 class="subverde rv up" style="margin-top:16px">Gestión de consecuencias y reconocimiento</h3>
+    <div class="normas dos" style="margin-top:8px">
+      <article class="norma rv up" style="--d:1">
+        <span class="nfoto nfoto-circ" data-foto="reconocimiento(D31)"><svg viewBox="0 0 64 64"><circle cx="30" cy="21" r="12"/><path d="M25 21l4 4 8-8"/><path d="M30 33v9"/><path d="M18 42h16a4 4 0 0 1 4 4v10H18a5 5 0 0 1-5-5v-4a5 5 0 0 1 5-5z"/><path d="M38 47h8M38 52h6"/></svg></span>
+        <h4>Reconocimiento</h4>
+        <div class="ntxt"><p>Refuerza los comportamientos positivos y las aportaciones de los equipos.</p></div>
+      </article>
+      <article class="norma rv up" style="--d:2">
+        <span class="nfoto nfoto-circ" data-foto="correctivas(D31)"><svg viewBox="0 0 64 64"><circle cx="30" cy="21" r="12"/><path d="M25 16l10 10M35 16L25 26"/><path d="M30 33v9"/><path d="M18 42h16a4 4 0 0 1 4 4v10H18a5 5 0 0 1-5-5v-4a5 5 0 0 1 5-5z"/><path d="M38 47h8M38 52h6"/></svg></span>
+        <h4>Medidas correctivas</h4>
+        <div class="ntxt"><p>Aborda los incumplimientos con medidas correctivas y orientación.</p></div>
+      </article>
+    </div>
+
+    <div class="bloqfoto rv up" style="--d:4">
+      <div>
+        <h3 class="subverde">Estrategia y mejora (HSE-IP)</h3>
+        <p>Todas las acciones deben alinearse con el Plan de Mejora de Salud, Seguridad y Medio Ambiente definido por la unidad.</p>
+      </div>
+      <span class="fotocirc" data-foto="estrategia(D31)"><svg viewBox="0 0 64 64"><circle cx="22" cy="20" r="7"/><circle cx="43" cy="23" r="6"/><path d="M9 50c0-8 6-14 13-14s13 6 13 14M34 50c0-6.5 4.5-11 9-11s9 4.5 9 11"/><path d="M15 15a7 7 0 0 1 14 0M37 18a6 6 0 0 1 12 0"/></svg></span>
+    </div>
+  </div>
 </section>
 <section class="slide light" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">HSE-001 · Sistema de gestión</div><h2 class="rv up" style="--d:1">Personas y capacitación</h2><p class="lead rv up" style="--d:2">Toca cada punto. 👆</p><div class="accgrid" style="margin-top:16px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>Verificación de competencias para roles clave</h4><span class="chev">+</span></div><div class="acc-body"><p>Los contratistas en roles críticos deben presentar calificaciones y certificaciones válidas, con verificación anual.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#17868a"></span><h4>Ciclo de inducción e incorporación</h4><span class="chev">+</span></div><div class="acc-body"><p>Inducción inicial con evaluación de conocimientos, y proceso de <b>onboarding</b> con acompañamiento (coaching) para trabajadores nuevos o transferidos.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Programa de capacitación HSE</h4><span class="chev">+</span></div><div class="acc-body"><p>Es obligatorio seguir la matriz y el plan anual de capacitación, que incluye evaluaciones para asegurar que el contenido sea comprendido por los niveles operativos.</p></div></div></div></div>
@@ -3089,7 +3168,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-04-a";
+var VERSION_CURSO = "2026-09-04-b";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
