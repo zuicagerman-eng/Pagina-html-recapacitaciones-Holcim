@@ -632,46 +632,74 @@
   /* ===== Aislamiento de energia: iconos + fotos de bloqueo =====
      A la izquierda la rejilla de diez tipos de energia (cada uno con su GIF)
      y a la derecha las tres fotos de bloqueo con su pie, como en el impreso. */
-  .ener{display:grid;grid-template-columns:1.3fr 1fr;gap:clamp(16px,3vw,34px);
-    margin-top:12px;align-items:start}
-  .enerrej{display:grid;grid-template-columns:repeat(4,1fr);gap:10px 6px;justify-items:center}
+  .ener{margin-top:12px}
+  .enerrej{display:grid;grid-template-columns:repeat(5,1fr);gap:16px 10px;justify-items:center;
+    max-width:900px;margin-inline:auto}
   .enerito{display:flex;flex-direction:column;align-items:center;gap:5px;text-align:center;margin:0}
-  /* Los dos ultimos quedan centrados bajo la rejilla, como en el impreso. */
-  .enerito:nth-child(9){grid-column:2}
   .enerito .ph{display:flex;align-items:center;justify-content:center;
-    width:62px;height:62px;background:#fff;border-radius:12px;padding:7px}
-  .enerito .ph img{max-width:100%;max-height:48px;width:auto;height:auto;display:block}
-  .enerito .ph svg{width:40px;height:40px;fill:none;stroke:var(--panel);
+    width:84px;height:84px;background:#fff;border-radius:15px;padding:9px}
+  .enerito .ph img{max-width:100%;max-height:66px;width:auto;height:auto;display:block}
+  .enerito .ph svg{width:56px;height:56px;fill:none;stroke:var(--panel);
     stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
-  .enerito figcaption{font-size:12.2px;font-weight:700;line-height:1.2}
-  .bloqrej{display:grid;grid-template-columns:1fr 1fr;gap:10px;justify-items:center}
-  .bloqcard{margin:0;display:flex;flex-direction:column;align-items:center;gap:6px;width:100%}
-  .bloqcard.ancho{grid-column:1/-1;width:min(100%,300px)}
-  .bloqcard .ph{display:flex;align-items:center;justify-content:center;width:100%;
-    padding:3px;border-radius:6px;background:var(--grad)}
-  .bloqcard .ph img{width:100%;height:auto;max-height:132px;object-fit:contain;
-    display:block;border-radius:3px;background:#fff}
-  .bloqcard .ph svg{width:100%;height:104px;fill:none;stroke:rgba(255,255,255,.55);
-    stroke-width:3;stroke-linejoin:round;background:rgba(255,255,255,.06);border-radius:3px}
-  .bloqcard figcaption{font-size:12.4px;font-weight:800;text-align:center;line-height:1.2}
-  .apretado .enerito .ph{width:56px;height:56px}
-  .apretado .enerito .ph img{max-height:42px} .apretado .enerito .ph svg{width:36px;height:36px}
-  .apretado .bloqcard .ph img{max-height:114px} .apretado .bloqcard .ph svg{height:90px}
-  .muy-apretado .enerito .ph{width:50px;height:50px;padding:5px}
-  .muy-apretado .enerito .ph img{max-height:38px} .muy-apretado .enerito .ph svg{width:32px;height:32px}
-  .muy-apretado .enerito figcaption{font-size:11.4px}
-  .muy-apretado .bloqcard .ph img{max-height:98px} .muy-apretado .bloqcard .ph svg{height:78px}
-  .ultra .enerito .ph{width:44px;height:44px;padding:4px}
-  .ultra .enerito .ph img{max-height:34px} .ultra .enerito .ph svg{width:28px;height:28px}
-  .ultra .bloqcard .ph img{max-height:84px} .ultra .bloqcard .ph svg{height:66px}
+  .enerito figcaption{font-size:13.4px;font-weight:700;line-height:1.2}
+  .apretado .enerito .ph{width:72px;height:72px}
+  .apretado .enerito .ph img{max-height:56px} .apretado .enerito .ph svg{width:48px;height:48px}
+  .muy-apretado .enerito .ph{width:62px;height:62px;padding:6px}
+  .muy-apretado .enerito .ph img{max-height:48px} .muy-apretado .enerito .ph svg{width:40px;height:40px}
+  .muy-apretado .enerito figcaption{font-size:12.2px}
+  .ultra .enerito .ph{width:54px;height:54px;padding:5px}
+  .ultra .enerito .ph img{max-height:42px} .ultra .enerito .ph svg{width:34px;height:34px}
+  @media(max-width:520px){ .enerrej{grid-template-columns:repeat(3,1fr)} }
+  /* ===== Elementos de bloqueo y etiquetado =====
+     Dos columnas: a la izquierda los candados y, debajo, las tarjetas; a la
+     derecha la foto de los dispositivos ocupando las dos filas. */
+  .elem{display:grid;grid-template-columns:1.25fr 1fr;gap:13px;align-items:start;margin-top:12px}
+  .elemcaja{background:#fff;border-radius:13px;padding:11px 14px 13px;box-shadow:var(--shadow);min-width:0}
+  .elemcaja.alta{grid-row:span 2;display:flex;flex-direction:column}
+  .elemcaja .subverde{margin-bottom:8px}
+  .candfila{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:center;margin-bottom:8px}
+  .candfila:last-child{margin-bottom:0}
+  .candfila .ph{display:flex;align-items:center;justify-content:center;
+    width:58px;height:58px;flex:none;border:2px solid #e6ecf3;border-radius:9px;padding:4px}
+  .candfila .ph img{max-width:100%;max-height:48px;width:auto;height:auto;display:block}
+  .candfila .ph svg{width:34px;height:44px;fill:none;stroke:var(--panel);stroke-width:3;
+    stroke-linecap:round;stroke-linejoin:round}
+  .candbarra{border-radius:8px;padding:7px 12px;min-width:0}
+  .candbarra b{display:block;font-size:13px;line-height:1.2}
+  .candbarra span{display:block;font-size:11.4px;line-height:1.34;margin-top:2px;opacity:.9}
+  .elemcaja .ph.ancha{flex:1;display:flex;align-items:center;justify-content:center;
+    border:2px solid #e6ecf3;border-radius:9px;padding:6px;min-height:0}
+  .elemcaja .ph.ancha img{max-width:100%;max-height:280px;width:auto;height:auto;display:block}
+  .elemcaja .ph.ancha svg{width:100%;max-width:280px;height:auto;fill:none;stroke:#b9c6d4;
+    stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+  .tarjfila{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center}
+  .tarjfila .ph{display:flex;align-items:center;justify-content:center;
+    width:96px;flex:none;border:2px solid #e6ecf3;border-radius:9px;padding:5px}
+  .tarjfila .ph img{max-width:100%;max-height:96px;width:auto;height:auto;display:block}
+  .tarjfila .ph svg{width:82px;height:64px;fill:none;stroke:var(--panel);stroke-width:3;
+    stroke-linecap:round;stroke-linejoin:round}
+  .tarjfila .lineat li{font-size:12.8px;padding:6px 0 6px 16px;color:var(--ink)}
+  .tarjfila .lineat li:before{width:13px;height:13px;top:calc(50% - 6px)}
+  .tarjfila .lineat li b.tv{color:#2f9d4e} .tarjfila .lineat li b.ta{color:#c98a00}
+  .tarjfila .lineat li b.tn{color:#e2670f}
+  .elemnota{font-size:12.4px;line-height:1.4;color:var(--ink)}
+  .apretado .candfila .ph{width:50px;height:50px} .apretado .candfila .ph svg{width:29px;height:38px}
+  .apretado .candfila .ph img{max-height:40px}
+  .apretado .elemcaja .ph.ancha img{max-height:236px}
+  .muy-apretado .candbarra span{display:none}
+  .muy-apretado .candfila .ph{width:44px;height:44px} .muy-apretado .candfila .ph svg{width:26px;height:33px}
+  .muy-apretado .candfila .ph img{max-height:35px}
+  .muy-apretado .elemcaja .ph.ancha img{max-height:198px}
+  .muy-apretado .tarjfila .ph{width:80px} .muy-apretado .tarjfila .ph img{max-height:78px}
+  .ultra .elemcaja .ph.ancha img{max-height:166px}
+  .ultra .tarjfila .lineat li{font-size:12px;padding:4px 0 4px 16px}
   @media(max-width:900px){
-    /* Apiladas: primero los tipos de energia y debajo las fotos de bloqueo. */
-    .ener{grid-template-columns:1fr}
-    .bloqrej{max-width:420px;margin-inline:auto}
+    /* Apilado: candados, tarjetas y al final la foto de los dispositivos. */
+    .elem{grid-template-columns:1fr}
+    .elemcaja.alta{grid-row:auto;order:3}
   }
-  @media(max-width:460px){
-    .enerrej{grid-template-columns:repeat(3,1fr)}
-    .enerito:nth-child(9){grid-column:auto}
+  @media(max-width:520px){
+    .tarjfila{grid-template-columns:1fr;justify-items:center}
   }
   /* En pantallas tactiles no se encogen los blancos que hay que pulsar. */
   @media(pointer:coarse){
@@ -2512,7 +2540,7 @@
         <div class="eppcard rv up" style="--d:4"><div class="ic" data-foto="gafas(D5)"><svg viewBox="0 0 24 24"><rect x="3" y="9" width="7" height="6" rx="3"/><rect x="14" y="9" width="7" height="6" rx="3"/><path d="M10 11h4"/></svg></div><span>Gafas</span></div>
         <div class="eppcard rv up" style="--d:5"><div class="ic" data-foto="altavisibilidad(D5)"><svg viewBox="0 0 24 24"><path d="M8 4l4 3 4-3 4 3v14H4V7zM12 7v13"/></svg></div><span>Alta visibilidad · manga larga</span></div>
       </div>
-      <div class="warn rv up" style="--d:2"><svg viewBox="0 0 24 24"><path d="M12 3l9 16H3z"/><path d="M12 9v5M12 17h0"/></svg>No usar ropa holgada, para evitar atrapamientos con partes móviles de equipos.</div>
+      <div class="warn rv up" style="--d:2"><svg viewBox="0 0 24 24"><path d="M12 3l9 16H3z"/><path d="M12 9v5M12 17h0"/></svg><span>No usar ropa holgada, para evitar atrapamientos con partes móviles de equipos.</span></div>
     </div>
   </section>
   <!-- 6 ANÁLISIS DE PELIGROS Y RIESGOS (5 vistas con menú lateral) -->
@@ -3654,26 +3682,39 @@
         <figure class="enerito rv up" style="--d:5"><span class="ph" data-foto="termica(D50)"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M20 8a4 4 0 0 1 8 0v20a7 7 0 1 1-8 0z"/><path d="M24 20v10"/><path d="M32 12h6M32 18h6M32 24h6"/></svg></span><figcaption>Térmica</figcaption></figure>
     </div>
   </div>
-  <div class="bloqcol">
-    <h3 class="subverde chico">Algunos tipos de bloqueo</h3>
-    <div class="bloqrej">
-        <figure class="bloqcard rv up"><span class="ph" data-foto="bloqueohidraulico(D50)"><svg viewBox="0 0 120 90" aria-hidden="true"><rect x="4" y="4" width="112" height="82" rx="4"/><path d="M4 66l26-22 20 16 18-14 48 34"/><circle cx="86" cy="28" r="9"/></svg></span><figcaption>Bloqueo hidráulico</figcaption></figure>
-        <figure class="bloqcard rv up"><span class="ph" data-foto="bloqueoneumatico(D50)"><svg viewBox="0 0 120 90" aria-hidden="true"><rect x="4" y="4" width="112" height="82" rx="4"/><path d="M4 66l26-22 20 16 18-14 48 34"/><circle cx="86" cy="28" r="9"/></svg></span><figcaption>Bloqueo neumático</figcaption></figure>
-        <figure class="bloqcard ancho rv up"><span class="ph" data-foto="bloqueomecanico(D50)"><svg viewBox="0 0 120 90" aria-hidden="true"><rect x="4" y="4" width="112" height="82" rx="4"/><path d="M4 66l26-22 20 16 18-14 48 34"/><circle cx="86" cy="28" r="9"/></svg></span><figcaption>Bloqueo mecánico</figcaption></figure>
-    </div>
-  </div>
 </div>
-<div class="warn rv up" style="--d:2"><svg viewBox="0 0 24 24"><path d="M12 3l9 16H3z"/><path d="M12 9v5M12 17h0"/></svg>Todas las herramientas eléctricas deben contar con un <b>precinto de inspección Holcim</b>.</div>
+<div class="warn rv up" style="--d:2"><svg viewBox="0 0 24 24"><path d="M12 3l9 16H3z"/><path d="M12 9v5M12 17h0"/></svg><span>Todas las herramientas eléctricas deben contar con un <b>precinto de inspección Holcim</b>.</span></div>
 <div class="pdfrow rv up" style="grid-template-columns:1fr"><div class="pdfmini"><span>Profundiza en los tipos de <b>bloqueo, etiquetado y pruebas</b>.</span><button class="pdfbtn" data-pdf="lototo_guia" data-title="Bloqueo, etiquetado y pruebas (LOTOTO)">Ver más</button></div></div>
 </div>
 </section>
 <section class="slide light mint" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">HSE-103 · Aislamiento de energía</div>
 <h2 class="rv up" style="--d:1">Elementos usados para el bloqueo y etiquetado</h2>
-<p class="lead rv up" style="--d:2">Candados según su color — toca cada uno. 👆</p>
-<div class="accgrid" style="margin-top:14px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#f5b700"></span><h4>Candado amarillo · Punto de bloqueo</h4><span class="chev">+</span></div><div class="acc-body"><p>Se instala en el <b>punto de bloqueo</b> del equipo o la fuente de energía.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#17868a"></span><h4>Candado verde · Estación de bloqueo</h4><span class="chev">+</span></div><div class="acc-body"><p>Corresponde a la <b>estación o caja de bloqueo</b> donde se centralizan las llaves.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#e23b32"></span><h4>Candado rojo · Ejecutor</h4><span class="chev">+</span></div><div class="acc-body"><p>Lo coloca cada <b>ejecutor</b> de la actividad; garantiza que nadie energice mientras él trabaja.</p></div></div></div>
-<p class="lead rv up" style="margin-top:20px">Tarjetas — toca cada una. 👆</p>
-<div class="accgrid" style="margin-top:12px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#3fb559"></span><h4>Tarjeta verde</h4><span class="chev">+</span></div><div class="acc-body"><p>Se coloca en la <b>estación o caja</b> de bloqueo.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#f5b700"></span><h4>Tarjeta amarilla</h4><span class="chev">+</span></div><div class="acc-body"><p>Se coloca en los <b>puntos de bloqueo</b>.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#ef7d00"></span><h4>Tarjeta naranja</h4><span class="chev">+</span></div><div class="acc-body"><p>Usada para <b>inspección o prueba</b>.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#e23b32"></span><h4>Tarjeta de aislamiento</h4><span class="chev">+</span></div><div class="acc-body"><p>La coloca el <b>ejecutor</b> de la actividad para <b>delimitar el área de trabajo</b>.</p></div></div></div>
+<div class="elem rv up" style="--d:2">
+  <div class="elemcaja">
+    <h3 class="subverde chico">Candados</h3>
+      <div class="candfila"><span class="ph" data-foto="candadoamarillo(D51)"><svg viewBox="0 0 60 76" aria-hidden="true"><path d="M18 32V22a12 12 0 0 1 24 0v10"/><rect x="8" y="32" width="44" height="38" rx="6"/><circle cx="30" cy="47" r="5"/><path d="M30 52v9"/></svg></span><div class="candbarra" style="background:#f5c400;color:#10233d"><b>Amarillo · Punto de bloqueo</b><span>Se instala en el punto de bloqueo del equipo o la fuente de energía.</span></div></div>
+      <div class="candfila"><span class="ph" data-foto="candadoverde(D51)"><svg viewBox="0 0 60 76" aria-hidden="true"><path d="M18 32V22a12 12 0 0 1 24 0v10"/><rect x="8" y="32" width="44" height="38" rx="6"/><circle cx="30" cy="47" r="5"/><path d="M30 52v9"/></svg></span><div class="candbarra" style="background:#17868a;color:#fff"><b>Verde · Estación de bloqueo</b><span>Corresponde a la estación o caja donde se centralizan las llaves.</span></div></div>
+      <div class="candfila"><span class="ph" data-foto="candadorojo(D51)"><svg viewBox="0 0 60 76" aria-hidden="true"><path d="M18 32V22a12 12 0 0 1 24 0v10"/><rect x="8" y="32" width="44" height="38" rx="6"/><circle cx="30" cy="47" r="5"/><path d="M30 52v9"/></svg></span><div class="candbarra" style="background:#e23b32;color:#fff"><b>Rojo · Ejecutor</b><span>Lo coloca cada ejecutor; garantiza que nadie energice mientras trabaja.</span></div></div>
+  </div>
+  <div class="elemcaja alta">
+    <h3 class="subverde chico">Dispositivos para bloqueo</h3>
+    <span class="ph ancha" data-foto="dispositivos(D51)"><svg viewBox="0 0 160 92" aria-hidden="true"><rect x="6" y="30" width="46" height="42" rx="5"/><path d="M18 30V22a11 11 0 0 1 22 0v8"/><path d="M12 44h34M12 54h34"/><path d="M70 34v-6a9 9 0 0 1 18 0v6"/><rect x="66" y="34" width="26" height="24" rx="4"/><circle cx="79" cy="45" r="4"/><path d="M104 30h16v40h-16z"/><circle cx="112" cy="40" r="3"/><circle cx="112" cy="52" r="3"/><circle cx="112" cy="62" r="3"/><path d="M132 26h22a4 4 0 0 1 4 4v38a4 4 0 0 1-4 4h-22a4 4 0 0 1-4-4V30a4 4 0 0 1 4-4z"/><path d="M136 38h14M136 48h14M136 58h9"/></svg></span>
+  </div>
+  <div class="elemcaja">
+    <h3 class="subverde chico">Tarjetas de bloqueo</h3>
+    <div class="tarjfila">
+      <span class="ph" data-foto="tarjetasbloqueo(D51)"><svg viewBox="0 0 100 76" aria-hidden="true"><path d="M8 10h30a4 4 0 0 1 4 4v50a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V18z"/><circle cx="23" cy="18" r="3"/><path d="M12 32h22M12 40h22M12 48h16"/><path d="M58 10h30a4 4 0 0 1 4 4v50a4 4 0 0 1-4 4H58a4 4 0 0 1-4-4V18z"/><circle cx="73" cy="18" r="3"/><path d="M62 32h22M62 40h22M62 48h16"/></svg></span>
+      <ul class="lineat">
+        <li><b class="tv">Verde</b>: se coloca en la <b>estación o caja</b> de bloqueo.</li>
+        <li><b class="ta">Amarilla</b>: se coloca en los <b>puntos de bloqueo</b>.</li>
+        <li><b class="tn">Naranja</b>: usada para <b>inspección o prueba</b>.</li>
+      </ul>
+    </div>
+    <h3 class="subverde chico" style="margin-top:10px">Tarjetas de aislamiento</h3>
+    <p class="elemnota">La coloca el <b>ejecutor</b> de la actividad para <b>delimitar el área de trabajo</b>.</p>
+  </div>
+</div>
 <div class="infobanner rv up" style="margin-top:16px">Los elementos se guardan en la <b>estación de candados</b> y en la <b>caja de bloqueo</b>, junto con los dispositivos (garras, hasps, portacandados y tarjetas).</div>
 </div>
 </section>
@@ -3683,7 +3724,7 @@
 <div class="infobanner rv up" style="--d:2">Únicamente un <b>eléctrico autorizado</b> puede hacer la instalación, inspección, prueba y mantenimiento de instalaciones y equipos eléctricos.</div>
 <p class="lead rv up">Toca cada regla en orden. 👆</p>
 <div class="accgrid" style="margin-top:12px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#0e2c56"></span><h4>1 · Corte visible</h4><span class="chev">+</span></div><div class="acc-body"><p>Efectuar el <b>corte visible</b> de todas las fuentes de tensión.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1bb4e4"></span><h4>2 · Condenación / bloqueo</h4><span class="chev">+</span></div><div class="acc-body"><p>Efectuar <b>condenación o bloqueo y etiquetado</b> de los aparatos de corte.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#5b6b82"></span><h4>3 · Verificar ausencia de tensión</h4><span class="chev">+</span></div><div class="acc-body"><p>Verificar la <b>ausencia de tensión</b> en cada una de las fases.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#f5b700"></span><h4>4 · Puesta a tierra</h4><span class="chev">+</span></div><div class="acc-body"><p>Instalar <b>puesta a tierra</b> y poner en <b>cortocircuito</b>.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#17868a"></span><h4>5 · Señalizar y delimitar</h4><span class="chev">+</span></div><div class="acc-body"><p><b>Señalizar y delimitar</b> la zona de trabajo.</p></div></div></div>
-<div class="warn rv up" style="--d:2"><svg viewBox="0 0 24 24"><path d="M12 3l9 16H3z"/><path d="M12 9v5M12 17h0"/></svg>En Holcim las intervenciones eléctricas se realizan <b>exclusivamente sin tensión</b>. No está permitido ejecutar trabajos en circuitos o áreas energizadas.</div>
+<div class="warn rv up" style="--d:2"><svg viewBox="0 0 24 24"><path d="M12 3l9 16H3z"/><path d="M12 9v5M12 17h0"/></svg><span>En Holcim las intervenciones eléctricas se realizan <b>exclusivamente sin tensión</b>. No está permitido ejecutar trabajos en circuitos o áreas energizadas.</span></div>
 </div>
 </section>
 <section class="slide dark" data-mod="4">
@@ -3753,7 +3794,7 @@
 <div class="infobanner rv up" style="--d:2">Es un corte artificial, cavidad, zanja o depresión en la superficie de la tierra formada por el retiro de suelo y roca con una <b>profundidad mayor a 30 centímetros</b>.</div>
 <p class="lead rv up">Toca cada paso para conocer cada ejemplo. 👆</p>
 <div class="accgrid" style="margin-top:12px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#0e2c56"></span><h4>1 · Permisos</h4><span class="chev">+</span></div><div class="acc-body"><p>✦ <b>ATS o ITS</b> y el <b>Permiso de Trabajo</b> de excavaciones.</p><p class="tdd">✦ Solicite permiso de <b>trabajo en alturas</b> si la excavación supera <b>1,8 m</b> y permiso de <b>espacios confinados</b> si supera <b>1,2 m</b>.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1bb4e4"></span><h4>2 · Verifica la existencia de redes</h4><span class="chev">+</span></div><div class="acc-body"><div class="li"><span class="b"></span>Hidráulicas.</div><div class="li"><span class="b"></span>Neumáticas.</div><div class="li"><span class="b"></span>Eléctricas.</div><div class="li"><span class="b"></span>Telefónicas.</div><div class="li"><span class="b"></span>Alcantarillado.</div><div class="li"><span class="b"></span>Red contra incendio en el área de la excavación.</div></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>3 · Apuntalamiento y ventilación</h4><span class="chev">+</span></div><div class="acc-body"><p>✦ Asegura el <b>apuntalamiento</b> y la <b>ventilación</b> de la excavación.</p><p class="tdd">✦ Cuando la excavación tenga más de <b>2 m</b> de profundidad debe apuntalarse.</p></div></div></div>
-<div class="warn rv up" style="--d:2"><svg viewBox="0 0 24 24"><path d="M12 3l9 16H3z"/><path d="M12 9v5M12 17h0"/></svg>¡Identifica y asegúrate de <b>no obstaculizar la ruta de evacuación</b> y respuesta ante emergencias!</div>
+<div class="warn rv up" style="--d:2"><svg viewBox="0 0 24 24"><path d="M12 3l9 16H3z"/><path d="M12 9v5M12 17h0"/></svg><span>¡Identifica y asegúrate de <b>no obstaculizar la ruta de evacuación</b> y respuesta ante emergencias!</span></div>
 </div>
 </section>
 <section class="slide dark" data-mod="4">
@@ -4168,7 +4209,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-05-a";
+var VERSION_CURSO = "2026-09-05-b";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
