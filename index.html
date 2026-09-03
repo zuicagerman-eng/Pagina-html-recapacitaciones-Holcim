@@ -88,9 +88,12 @@
   #pips i.lock{opacity:.16;cursor:not-allowed}
 
   #seguirBtn{background:var(--grad);color:#04121f}
-  #startBtn.secundario{background:rgba(255,255,255,.14);color:#fff}
-  .wnota{font-size:12.5px;color:#9fb6cd;margin-top:10px;line-height:1.45}
-  .wver{font-size:11px;color:#7f93b0;margin-top:14px;letter-spacing:.4px}
+  /* Estos tres se escribieron cuando la caja de bienvenida era oscura. Sobre
+     el fondo claro de ahora quedaban casi invisibles: el aviso del avance
+     guardado y la version apenas se leian, y "Empezar de nuevo" salia blanco
+     sobre blanco. El estilo del boton vive ahora en .wstart.secundario. */
+  .wnota{font-size:12.5px;color:#4a5c73;margin-top:10px;line-height:1.45}
+  .wver{font-size:11px;color:#6b7d95;margin-top:14px;letter-spacing:.4px}
 
   /* Espacio para la imagen dentro de la cara trasera de las tarjetas volteables.
      Es una franja de alto fijo abajo: así la imagen no empuja el texto y las 4
@@ -539,6 +542,7 @@
   .slide.apretado .acc-body .li,.slide.apretado .acc-body .pt{margin-top:3px}
   .slide.apretado .acc-body .ptitle,.slide.apretado .acc-body .tag{font-size:11px;margin-bottom:1px}
   .slide.muy-apretado h2{font-size:21px}
+  .slide.muy-apretado .lead{font-size:12.4px;line-height:1.4;margin-top:3px}
   .slide.muy-apretado .infobanner,.slide.muy-apretado .objhero{padding:9px 13px;font-size:12.4px}
   .slide.muy-apretado .objhero .t{font-size:15px}
   .slide.muy-apretado .acc-body p,.slide.muy-apretado .acc-body .li,
@@ -998,6 +1002,44 @@
   .wdemo .a{background:#8a97a8} .wdemo .s{background:var(--panel)}
   .wstart{background:var(--cyan);color:#fff;border:none;border-radius:999px;padding:13px 42px;font-weight:800;font-size:16px;cursor:pointer;font-family:var(--font);margin-top:4px;transition:.2s}
   .wstart:hover{background:var(--blue);transform:translateY(-1px)}
+  /* "Empezar de nuevo" es la accion destructiva: se ve, pero no compite con
+     "Continuar". Antes el JS le ponia esta clase y no habia regla que aplicar,
+     asi que salia igual de azul que el boton principal. */
+  .wstart.secundario{background:transparent;color:var(--panel);
+    box-shadow:inset 0 0 0 2px #b9c8db;padding:12px 26px;font-size:14.5px}
+  .wstart.secundario:hover{background:#fff;color:var(--danger);
+    box-shadow:inset 0 0 0 2px var(--danger);transform:none}
+  /* Los botones se quedan pegados al fondo de la caja: aunque el texto de la
+     guia sea largo y toque desplazarse, nunca quedan cortados. */
+  /* La caja es una columna: la guia se desplaza y los botones son un pie
+     fijo. Antes iban dentro del texto y, si la guia no cabia, quedaban
+     cortados por el borde de la caja. */
+  .wbox{display:flex;flex-direction:column;max-height:min(92vh,100vh - 36px)}
+  .wbody{overflow-y:auto;min-height:0;flex:1 1 auto}
+  .wacts{flex:none;padding:14px 0 4px;border-top:1px solid #dbe4ee}
+  .wbody{padding-bottom:8px}
+  /* En portatiles y celulares la guia no cabe entera. Se compacta primero, y
+     lo que aun sobre se desplaza: el degradado del borde avisa que sigue. */
+  @media(max-height:900px){
+    .wbox{padding:22px 24px 0}
+    .wbox h3{font-size:21px;margin-bottom:10px}
+    .wbox p{font-size:13.5px;line-height:1.45;margin-bottom:9px}
+    .wdemo{margin:10px 0}
+    .wdemo span{padding:7px 15px;font-size:12.5px}
+    .wtools{gap:8px;margin:10px 0 4px}
+    .wtool{padding:9px 12px;gap:10px}
+    .wacts{margin:0 -24px;padding:12px 24px 4px}
+    .wfoot{margin:16px -24px 0;padding:12px}
+  }
+  .wbody.desplaza{-webkit-mask-image:linear-gradient(180deg,#000 calc(100% - 20px),transparent);
+    mask-image:linear-gradient(180deg,#000 calc(100% - 20px),transparent)}
+  .wbtns{display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap}
+  .wnota{margin-top:10px}
+  @media(max-width:520px){
+    .wacts{margin:0 -18px;padding:12px 18px 8px}
+    .wbtns{flex-direction:column-reverse}
+    .wbtns .wstart{width:100%}
+  }
   .wfoot{display:flex;align-items:center;justify-content:center;gap:10px;padding:16px;background:#fff;margin:24px -30px 0;border-top:3px solid;border-image:var(--grad) 1}
   .wfoot .wlogo{width:26px;height:26px} .wfoot b{font-size:19px;letter-spacing:1px;color:var(--ink)}
   /* ===== Módulo 4 ===== */
@@ -1443,6 +1485,72 @@
     .exbar{flex-direction:column;align-items:stretch} .exbtn{width:100%}
     .exmarca{width:88px;height:88px;font-size:23px}
   }
+  /* ===== Ajuste automatico: las 5 diapositivas que no cabian =====
+     El curso ya marcaba "apretado" y "muy-apretado" en la diapositiva que se
+     sale de la pantalla, pero estos bloques no tenian regla y seguian igual.
+     Van al final para que ganen a las medidas de mas arriba. */
+
+  /* Tarjetas volteables (Comportamientos prohibidos, Conceptos basicos):
+     tres filas de tarjetas altas no caben en un portatil. */
+  /* Encoger la tarjeta le cortaba el texto por dentro. En pantalla ancha sale
+     mas barato poner tres columnas: cinco tarjetas pasan de tres filas a dos
+     y caben sin tocarles el alto. */
+  .apretado .flips{gap:12px}
+  .apretado .flip,.apretado .flip.conFoto,.apretado .flips-foto .flip.conFoto{height:186px}
+  @media(min-width:1180px){
+    .muy-apretado .flips{grid-template-columns:repeat(3,1fr)}
+    .muy-apretado .flip,.muy-apretado .flip.conFoto,
+    .muy-apretado .flips-foto .flip.conFoto{height:226px}
+    /* Mas angosta la tarjeta, el reverso necesita letra algo menor. */
+    .muy-apretado .flips .back p{font-size:11.7px;line-height:1.36}
+    .muy-apretado .flips .back .ej{font-size:11.2px;line-height:1.32;padding:6px 9px;margin-top:5px}
+    .muy-apretado .flips .front h4,.muy-apretado .flips .back h4{font-size:14px}
+  }
+  /* Portatiles de 720p: hay 48px menos de alto que en un 768p y no alcanza. */
+  @media(min-width:1180px) and (max-height:760px){
+    .muy-apretado .flip,.muy-apretado .flip.conFoto,
+    .muy-apretado .flips-foto .flip.conFoto{height:200px}
+    .muy-apretado .flips .back p{font-size:11px;line-height:1.3}
+    .muy-apretado .flips .back .ej{font-size:10.6px;line-height:1.28;padding:5px 8px;margin-top:4px}
+  }
+
+  /* Lamina de imagen (Enfoque de seguridad de procesos): la imagen mandaba
+     su alto natural y empujaba el resto fuera. */
+  .apretado .plano{margin-top:12px;background:none;box-shadow:none}
+  .apretado .plano img{width:auto;max-width:100%;max-height:min(52vh,400px);margin:0 auto}
+  .muy-apretado .plano img{max-height:min(45vh,330px)}
+
+  /* Listas de verdadero/falso y de seleccion (evaluaciones de modulo). */
+  .apretado .evlist,.apretado .mlist{gap:8px;margin-top:10px}
+  .apretado .evrow,.apretado .mrow{padding:10px 13px;gap:10px}
+  .apretado .evq,.apretado .mq{font-size:12.6px;line-height:1.38}
+  .apretado .evfoot{margin-top:12px}
+  .muy-apretado .evlist,.muy-apretado .mlist{gap:6px;margin-top:8px}
+  .muy-apretado .evrow,.muy-apretado .mrow{padding:5px 10px;gap:8px}
+  .muy-apretado .evq,.muy-apretado .mq{font-size:12.1px;line-height:1.32}
+  .muy-apretado .evbtn{padding:5px 12px;font-size:11.5px}
+  .muy-apretado .evfoot{margin-top:9px}
+  .muy-apretado .evbtn-go{padding:9px 26px;font-size:14px}
+  @media(max-height:760px){
+    .muy-apretado .evrow,.muy-apretado .mrow{padding:4px 9px}
+    .muy-apretado .evq,.muy-apretado .mq{font-size:11.6px;line-height:1.28}
+    .muy-apretado .evbtn{padding:4px 10px;font-size:11px}
+    .muy-apretado .evlist,.muy-apretado .mlist{gap:5px}
+  }
+  /* En pantalla tactil el boton no se encoge: apretar la diapositiva sirve
+     para que quepa en un portatil, pero en un celular dejaria el boton por
+     debajo del minimo para acertarle con el dedo. Ahi es preferible el
+     desplazamiento, que en celular ya es lo normal. */
+  @media(pointer:coarse){
+    .muy-apretado .evbtn,.apretado .evbtn{min-height:38px;padding:9px 15px;font-size:12.5px}
+    .muy-apretado .evrow,.apretado .evrow{padding:9px 12px}
+  }
+  /* Con nueve preguntas en fila no alcanza el alto de un portatil. Solo si
+     hace falta, y solo si hay ancho de sobra, se parten en dos columnas:
+     en una sola columna se leen mejor, asi que no es el estado normal. */
+  @media(min-width:1080px){
+    .apretado .evlist,.apretado .mlist{display:grid;grid-template-columns:repeat(2,1fr);align-content:start}
+  }
 </style>
 </head>
 <body>
@@ -1477,9 +1585,9 @@
       <div class="atajos rv up" style="--d:5">
         <span class="atajos-lbl">Contenido del módulo</span>
         <div class="tag">
-          <button class="pill pill-go" data-goto="1">Gestión de emergencias</button>
-          <button class="pill pill-go" data-goto="6">Conceptos clave</button>
-          <button class="pill pill-go" data-goto="11">Clasificación de peligros</button>
+          <button class="pill pill-go" data-ir="Emergencias: ¿qué hacer?">Gestión de emergencias</button>
+          <button class="pill pill-go" data-ir="Clasificación de peligros">Clasificación de peligros</button>
+          <button class="pill pill-go" data-ir="Condiciones de seguridad">Condiciones de seguridad</button>
         </div>
       </div>
       <p class="lead hero-hint rv up" style="--d:6">Usa <b>Atrás</b> y <b>Siguiente</b> para avanzar. El curso guarda tu avance: puedes cerrarlo y retomarlo donde quedaste.</p>
@@ -1757,12 +1865,16 @@
       <div class="hero-code rv up" style="--d:1">HSE-001</div>
       <div class="hero-title rv up" style="--d:2">Planeación estratégica H&amp;S<br>SG-SST Holcim Colombia</div>
       <div class="gline rv up" style="--d:3"></div>
-      <div class="tag rv up" style="--d:4">
-        <span class="pill">Modelo operativo H&amp;S</span>
-        <span class="pill">Reglas HSE</span>
-        <span class="pill">Ambición “Cero”</span>
+      <p class="lead rv up" style="--d:4">En este módulo verás cómo Holcim Colombia planea y organiza la salud y la seguridad: el sistema de gestión <b>SG-SST</b>, las políticas que lo sostienen, las <b>Reglas HSE</b> que no se negocian y la hoja de ruta hacia la ambición <b>“Cero”</b>.</p>
+      <div class="atajos rv up" style="--d:5">
+        <span class="atajos-lbl">Contenido del módulo</span>
+        <div class="tag">
+          <button class="pill pill-go" data-ir="SG-SST Holcim Colombia">El sistema SG-SST</button>
+          <button class="pill pill-go" data-ir="Reglas HSE">Reglas HSE</button>
+          <button class="pill pill-go" data-ir="Hoja de ruta hacia la ambición">Ambición “Cero”</button>
+        </div>
       </div>
-      <p class="lead rv up" style="--d:5">Usa <b>Atrás</b> y <b>Siguiente</b> para avanzar. Tu avance queda guardado automáticamente.</p>
+      <p class="lead hero-hint rv up" style="--d:6">Usa <b>Atrás</b> y <b>Siguiente</b> para avanzar. Tu avance queda guardado automáticamente.</p>
     </div>
       <figure class="mediaBox heroMedia rv right" data-media="imagenes/m2-portada" style="--d:3"></figure>
     </div>
@@ -1906,8 +2018,16 @@
     <div class="hero-code rv up" style="--d:1">HSE-001</div>
     <div class="hero-title rv up" style="--d:2">Control operacional<br>Identificación de peligros y requisitos legales</div>
     <div class="gline rv up" style="--d:3"></div>
-    <div class="tag rv up" style="--d:4"><span class="pill">ATS · ITS · IPVR</span><span class="pill">Gestión del cambio</span><span class="pill">Estándares HSE</span></div>
-    <p class="lead rv up" style="--d:5">Explora cada actividad interactiva para poder avanzar. Tu avance queda guardado automáticamente.</p>
+    <p class="lead rv up" style="--d:4">Aquí verás cómo se controla el trabajo en el terreno: qué controles operacionales existen, cuándo se usa un <b>ATS</b>, un <b>ITS</b> o la <b>matriz IPVR</b>, cómo se gestiona un cambio y qué normas y estándares aplican en Holcim.</p>
+      <div class="atajos rv up" style="--d:5">
+        <span class="atajos-lbl">Contenido del módulo</span>
+        <div class="tag">
+          <button class="pill pill-go" data-ir="Principales controles operacionales">Controles operacionales</button>
+          <button class="pill pill-go" data-ir="ATS · Análisis de Trabajo Seguro">ATS · ITS · IPVR</button>
+          <button class="pill pill-go" data-ir="Normas que aplican en Holcim">Normas y estándares</button>
+        </div>
+      </div>
+    <p class="lead hero-hint rv up" style="--d:6">Explora cada actividad interactiva para poder avanzar. Tu avance queda guardado automáticamente.</p>
   </div>
       <figure class="mediaBox heroMedia rv right" data-media="imagenes/m3-portada" data-loop="no" style="--d:3"></figure>
     </div>
@@ -2142,8 +2262,16 @@
     <div class="hero-code rv up" style="--d:1">HSE-001</div>
     <div class="hero-title rv up" style="--d:2">Controles operacionales complementarios<br>Estándares HSE en detalle</div>
     <div class="gline rv up" style="--d:3"></div>
-    <div class="tag rv up" style="--d:4"><span class="pill">Sistema de gestión</span><span class="pill">EPP · PSM</span><span class="pill">Equipos móviles · Alturas</span></div>
-    <p class="lead rv up" style="--d:5">Explora las actividades interactivas para avanzar. Tu avance queda guardado automáticamente.</p>
+    <p class="lead rv up" style="--d:4">Primera parte de los controles complementarios: cómo se lidera y planifica el sistema, el <b>reporte e investigación de accidentes</b>, los <b>elementos de protección personal</b> y la <b>seguridad de procesos (PSM)</b>.</p>
+      <div class="atajos rv up" style="--d:5">
+        <span class="atajos-lbl">Contenido del módulo</span>
+        <div class="tag">
+          <button class="pill pill-go" data-ir="Reporte e investigación de accidentes">Reporte de accidentes</button>
+          <button class="pill pill-go" data-ir="¿Qué son los EPP?">Elementos de protección</button>
+          <button class="pill pill-go" data-ir="El propósito del PSM">Seguridad de procesos</button>
+        </div>
+      </div>
+    <p class="lead hero-hint rv up" style="--d:6">Explora las actividades interactivas para avanzar. Tu avance queda guardado automáticamente.</p>
   </div>
       <figure class="mediaBox heroMedia rv right" data-media="imagenes/m4p1-portada" style="--d:3"></figure>
     </div>
@@ -2223,8 +2351,16 @@
     <div class="hero-code rv up" style="--d:1">HSE-001</div>
     <div class="hero-title rv up" style="--d:2">Controles operacionales complementarios<br>Estándares operativos en detalle</div>
     <div class="gline rv up" style="--d:3"></div>
-    <div class="tag rv up" style="--d:4"><span class="pill">Andamios · LOTOTO</span><span class="pill">Eléctrico · Maquinaria</span><span class="pill">Caliente · Cargas · Vial</span></div>
-    <p class="lead rv up" style="--d:5">Explora las actividades interactivas para avanzar. Tu avance queda guardado automáticamente.</p>
+    <p class="lead rv up" style="--d:4">Segunda parte: trabajo en <b>alturas y andamios</b>, bloqueo y etiquetado de energías <b>(LOTOTO)</b>, protección en maquinaria, trabajo en caliente, izaje de cargas, seguridad vial, excavaciones y trabajo en solitario.</p>
+      <div class="atajos rv up" style="--d:5">
+        <span class="atajos-lbl">Contenido del módulo</span>
+        <div class="tag">
+          <button class="pill pill-go" data-ir="Tipos de energía, bloqueo y pruebas">Bloqueo de energías</button>
+          <button class="pill pill-go" data-ir="Trabajo en Caliente">Trabajo en caliente</button>
+          <button class="pill pill-go" data-ir="Contexto de seguridad vial Holcim">Seguridad vial</button>
+        </div>
+      </div>
+    <p class="lead hero-hint rv up" style="--d:6">Explora las actividades interactivas para avanzar. Tu avance queda guardado automáticamente.</p>
   </div>
       <figure class="mediaBox heroMedia rv right" data-media="imagenes/m4p2-portada" style="--d:3"></figure>
     </div>
@@ -2375,8 +2511,16 @@
     <div class="hero-code rv up" style="--d:1">HSE-001</div>
     <div class="hero-title rv up" style="--d:2">Controles operacionales complementarios<br>Estándares de salud y bienestar</div>
     <div class="gline rv up" style="--d:3"></div>
-    <div class="tag rv up" style="--d:4"><span class="pill">Asbestos · Sustancias</span><span class="pill">Audición · Ergonomía</span><span class="pill">Wellbeing · Evaluación</span></div>
-    <p class="lead rv up" style="--d:5">Última parte del curso. Al terminar podrás presentar la evaluación final.</p>
+    <p class="lead rv up" style="--d:4">Tercera parte, centrada en la salud: <b>asbestos</b>, <b>sustancias químicas</b> y sus pictogramas, <b>conservación de la audición</b>, ergonomía, vibración y los programas de medicina preventiva y bienestar.</p>
+      <div class="atajos rv up" style="--d:5">
+        <span class="atajos-lbl">Contenido del módulo</span>
+        <div class="tag">
+          <button class="pill pill-go" data-ir="Pictogramas">Sustancias químicas</button>
+          <button class="pill pill-go" data-ir="La audición y sus señales de alerta">Conservación auditiva</button>
+          <button class="pill pill-go" data-ir="Wellbeing (Pilares)">Salud y bienestar</button>
+        </div>
+      </div>
+    <p class="lead hero-hint rv up" style="--d:6">Última parte del curso. Al terminar podrás presentar la evaluación final.</p>
   </div>
       <figure class="mediaBox heroMedia rv right" data-media="imagenes/m4p3-portada" style="--d:3"></figure>
     </div>
@@ -2510,8 +2654,16 @@
     <div class="hero-code rv up" style="--d:1">HSE-001</div>
     <div class="hero-title rv up" style="--d:2">Gestión de Controles Críticos<br>PUE y CCM</div>
     <div class="gline rv up" style="--d:3"></div>
-    <div class="tag rv up" style="--d:4"><span class="pill">12 eventos prioritarios</span><span class="pill">Controles críticos</span><span class="pill">Examen final</span></div>
-    <p class="lead rv up" style="--d:5">Explora los controles críticos de cada PUE para avanzar. Al final encontrarás el examen.</p>
+    <p class="lead rv up" style="--d:4">El último módulo reúne los <b>Peligros de Único Evento (PUE)</b> y sus <b>Controles Críticos de Mitigación (CCM)</b>: los escenarios que pueden causar una fatalidad y los controles que impiden que ocurran.</p>
+      <div class="atajos rv up" style="--d:5">
+        <span class="atajos-lbl">Contenido del módulo</span>
+        <div class="tag">
+          <button class="pill pill-go" data-ir="PUE y CCM">Qué son PUE y CCM</button>
+          <button class="pill pill-go" data-ir="PUE · Caída de Alturas">Los 12 escenarios</button>
+          <button class="pill pill-go" data-ir="Examen · Controles Críticos">Examen del módulo</button>
+        </div>
+      </div>
+    <p class="lead hero-hint rv up" style="--d:6">Explora los controles críticos de cada PUE para avanzar. Al final encontrarás el examen.</p>
   </div>
       <figure class="mediaBox heroMedia rv right" data-media="imagenes/m5-portada" style="--d:3"></figure>
     </div>
@@ -2675,26 +2827,32 @@
 <!-- POP-UP GUÍA -->
 <div id="welcome">
   <div class="wbox">
+   <div class="wbody">
     <h3>Guía para navegar el curso</h3>
     <p><span class="wn">1.</span> Asegúrate de revisar todo el contenido para avanzar de forma correcta y completar el curso satisfactoriamente.</p>
     <p>◆ Realiza las <b>actividades interactivas</b> que se presentan a lo largo del contenido. Son necesarias para avanzar.</p>
     <p><span class="wn">2.</span> Utiliza los botones de navegación para moverte entre los temas: <b>“Siguiente”</b> o <b>“Anterior”</b>.</p>
     <div class="wdemo"><span class="a">← Anterior</span><span class="s">Siguiente →</span></div>
-    <p><span class="wn">3.</span> En la barra inferior tienes dos botones de apoyo:</p>
+    <p><span class="wn">3.</span> Arriba a la derecha, en la barra superior, tienes dos botones de apoyo:</p>
     <div class="wtools">
       <div class="wtool">
         <span class="wtool-ic wtool-help"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.2 9a2.8 2.8 0 0 1 5.4 1c0 1.8-2.6 2-2.6 4"/><path d="M12 17h0"/></svg></span>
-        <span class="wtool-tx"><b>Ayuda</b> · a la izquierda. Si el botón <b>Siguiente</b> no se activa, presiónalo y te <b>resaltará en rojo</b> lo que falta por explorar en esa diapositiva.</span>
+        <span class="wtool-tx"><b>Ayuda</b> · el botón azul. Si el botón <b>Siguiente</b> no se activa, presiónalo y te <b>resaltará en rojo</b> lo que falta por explorar en esa diapositiva.</span>
       </div>
       <div class="wtool">
         <span class="wtool-ic wtool-rep"><svg viewBox="0 0 24 24"><path d="M12 3l9 16H3z"/><path d="M12 9v5M12 17h0"/></svg></span>
-        <span class="wtool-tx"><b>Reportar un problema</b> · a la derecha. Si encuentras un error, presiónalo y cuéntanos.</span>
+        <span class="wtool-tx"><b>Reportar un problema</b> · el botón naranja, al lado. Si encuentras un error, presiónalo y cuéntanos.</span>
       </div>
     </div>
-    <p>Ahora da clic en el botón <b>“Iniciar”</b> para comenzar la reinducción.</p>
-    <button class="wstart" id="seguirBtn" style="display:none">Continuar donde quedé</button>
-    <button class="wstart" id="startBtn">Iniciar</button>
-    <p class="wnota" id="wnota" style="display:none"></p>
+    <p>Ahora usa el botón de abajo para comenzar.</p>
+   </div>
+    <div class="wacts">
+      <div class="wbtns">
+        <button class="wstart" id="seguirBtn" style="display:none">Continuar donde quedé</button>
+        <button class="wstart" id="startBtn">Iniciar</button>
+      </div>
+      <p class="wnota" id="wnota" style="display:none"></p>
+    </div>
     <p class="wver" id="wver"></p>
     <div class="wfoot"><span class="wlogo" id="wlogo"></span></div>
   </div>
@@ -2710,7 +2868,7 @@
     <div class="modal-head"><span>Reportar un problema</span><button id="reportClose" aria-label="Cerrar">✕</button></div>
     <div class="report-body">
       <div class="report-loc">Diapositiva <b id="reportSlide">—</b> · <span id="reportMod">—</span></div>
-      <div class="report-tip">💡 Antes de reportar, prueba el botón de <b>ayuda&nbsp;ⓘ</b> (abajo a la izquierda): puede indicarte qué te falta en la diapositiva.</div>
+      <div class="report-tip">💡 Antes de reportar, prueba el botón de <b>ayuda&nbsp;ⓘ</b> (arriba a la derecha): puede indicarte qué te falta en la diapositiva.</div>
       <label class="report-lbl" for="reportName">Tu nombre (opcional)</label>
       <input id="reportName" class="report-in" type="text" placeholder="Ej: David Restrepo" autocomplete="name">
       <label class="report-lbl" for="reportMsg">¿Qué problema encontraste?</label>
@@ -2733,7 +2891,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-03-o";
+var VERSION_CURSO = "2026-09-03-t";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
@@ -2901,6 +3059,19 @@ document.addEventListener('DOMContentLoaded', function(){
     btnIniciar.classList.add('secundario');
     nota.style.display = '';
     nota.textContent = 'Tienes un avance guardado en este equipo. "Empezar de nuevo" lo borra.';
+  }
+
+  /* El degradado del borde inferior solo aparece si de verdad queda guia por
+     ver, y se quita al llegar al final: si no, parece que falta algo. */
+  var cuerpo = caja.querySelector('.wbody');
+  if(cuerpo){
+    var marcar = function(){
+      var queda = cuerpo.scrollHeight - cuerpo.clientHeight - cuerpo.scrollTop;
+      cuerpo.classList.toggle('desplaza', queda > 8);
+    };
+    cuerpo.addEventListener('scroll', marcar);
+    window.addEventListener('resize', marcar);
+    setTimeout(marcar, 60);
   }
 
   btnSeguir.addEventListener('click', function(){
@@ -3991,6 +4162,29 @@ cargarMediosCercanos();
    si aún no has llegado a esa parte, se avisa en lugar de saltarla. */
 (function(){
   var botones=Array.prototype.slice.call(document.querySelectorAll('.pill-go'));
+  if(!botones.length) return;
+  /* El destino se busca por el titulo de la diapositiva, no por su numero.
+     Antes iba por numero y bastaba con anadir o quitar una diapositiva para
+     que el atajo apuntara a otra cosa; con el titulo se recalcula solo.
+     Si el titulo ya no existe, el atajo se retira en vez de llevar a
+     cualquier parte. */
+  function buscar(texto){
+    var t=(texto||'').trim().toLowerCase();
+    if(!t) return -1;
+    for(var i=0;i<slides.length;i++){
+      var h=slides[i].querySelector('h2');
+      if(h && h.textContent.trim().toLowerCase().indexOf(t)===0) return i;
+    }
+    return -1;
+  }
+  botones=botones.filter(function(b){
+    var texto=b.getAttribute('data-ir');
+    if(texto==null) return true;                 // ya trae data-goto fijo
+    var i=buscar(texto);
+    if(i<0){ if(b.parentElement) b.parentElement.removeChild(b); return false; }
+    b.setAttribute('data-goto', i);
+    return true;
+  });
   if(!botones.length) return;
   function estado(){
     botones.forEach(function(b){
