@@ -740,8 +740,26 @@
     border-radius:50%;background:var(--panel)}
   .rico svg{width:46px;height:46px;fill:none;stroke:#fff;stroke-width:1.8;
     stroke-linecap:round;stroke-linejoin:round}
-  .rico.foto{background:none;border-radius:0}
-  .rico.foto img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;display:block}
+  /* La imagen que se sube trae el paso entero: circulo, hilo y flecha con el
+     nombre. Cuando entra, el dibujo de respaldo sobra y se retira, para no
+     ver dos veces lo mismo. El rotulo no se borra, solo se oculta: los
+     lectores de pantalla lo siguen leyendo, porque en la imagen no esta
+     como texto. */
+  .rpaso{position:relative}
+  /* La imagen que se sube es el circulo con su icono, y ya trae el fondo
+     azul: por eso al entrar se retira el circulo dibujado de respaldo, para
+     no ver un circulo sobre otro. El hilo y la flecha con el rotulo siguen
+     siendo del curso, asi el texto se lee nitido a cualquier tamano en vez
+     de venir incrustado en la imagen.
+     El tope va en pixeles sobre la imagen y no en porcentaje sobre la caja:
+     dentro de una rejilla el 100% se mide contra una altura que depende del
+     propio contenido, no limita nada y la imagen sale a tamano natural. */
+  .rico.foto{background:none;border-radius:0;display:flex;align-items:center;justify-content:center}
+  .rico.foto img{max-width:100%;max-height:86px;width:auto;height:auto;display:block}
+  @media(max-height:820px){.rico.foto img{max-height:72px}}
+  .apretado .rico.foto img{max-height:60px}
+  .muy-apretado .rico.foto img{max-height:50px}
+  @media(max-height:760px){.muy-apretado .rico.foto img{max-height:44px}}
   .rhilo{width:0;height:26px;border-left:4px dashed var(--green);margin:6px 0}
   /* Alto fijo: si no, la flecha de una sola linea queda mas baja que las de
      dos y las tres dejan de leerse como una misma fila. */
@@ -2987,7 +3005,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-03-w";
+var VERSION_CURSO = "2026-09-03-y";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
