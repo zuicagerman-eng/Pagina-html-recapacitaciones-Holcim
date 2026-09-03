@@ -707,6 +707,9 @@
   .norma .nfoto svg{stroke:#fff}
   .normas .norma:nth-child(2n+1) .nfoto svg{stroke:#06243f}
   .norma .nfoto{display:flex;align-items:center;justify-content:center;height:64px}
+  .norma .nfoto-gr{height:120px;margin-top:4px}
+  @media(max-height:820px){.norma .nfoto-gr{height:96px}}
+  .apretado .norma .nfoto-gr{height:78px}
   .norma .nfoto img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;display:block}
   .norma .nfoto svg{height:100%;width:auto;fill:none;stroke-width:1.7;
     stroke-linecap:round;stroke-linejoin:round}
@@ -723,6 +726,68 @@
   .apretado .norma{padding:10px 12px 0;gap:6px}
   .apretado .norma p{font-size:11.8px;line-height:1.36}
   .apretado .norma .nfoto{height:42px}
+  /* ===== Ruta de tres pasos con flecha (Requisitos legales) =====
+     Icono en circulo, hilo punteado y flecha con el nombre del paso, igual
+     que en el material impreso. */
+  .ruta3{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:16px;align-items:start}
+  .rpaso{display:flex;flex-direction:column;align-items:center;text-align:center;
+    padding:16px 14px;min-width:0}
+  .rpaso:nth-child(even){background:rgba(11,37,69,.05)}
+  .slide.dark .rpaso:nth-child(even){background:rgba(255,255,255,.06)}
+  /* El circulo es el respaldo dibujado. Si se sube la imagen, ella ya lo trae
+     y el fondo sobra: por eso se quita en cuanto la foto entra. */
+  .rico{width:86px;height:86px;flex:none;display:grid;place-items:center;
+    border-radius:50%;background:var(--panel)}
+  .rico svg{width:46px;height:46px;fill:none;stroke:#fff;stroke-width:1.8;
+    stroke-linecap:round;stroke-linejoin:round}
+  .rico.foto{background:none;border-radius:0}
+  .rico.foto img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;display:block}
+  .rhilo{width:0;height:26px;border-left:4px dashed var(--green);margin:6px 0}
+  /* Alto fijo: si no, la flecha de una sola linea queda mas baja que las de
+     dos y las tres dejan de leerse como una misma fila. */
+  .rflecha{position:relative;width:100%;background:var(--panel);color:#fff;
+    font-weight:800;font-size:14px;line-height:1.25;text-transform:uppercase;
+    letter-spacing:.3px;padding:11px 40px 11px 16px;text-align:left;
+    display:flex;align-items:center;min-height:58px;
+    clip-path:polygon(0 0,calc(100% - 32px) 0,100% 50%,calc(100% - 32px) 100%,0 100%)}
+  /* El texto tambien arranca a la misma altura en las tres columnas. */
+  .rpaso{justify-content:flex-start}
+  .ruta3{align-items:stretch}
+  .rpaso p{font-size:13.4px;line-height:1.5;color:var(--ink);margin-top:14px}
+  .slide.dark .rpaso p{color:#eaf1fb}
+  @media(max-height:820px){
+    .rpaso{padding:12px 12px} .rico{width:72px;height:72px} .rico svg{width:38px;height:38px}
+    .rhilo{height:20px} .rflecha{font-size:13px;padding:9px 36px 9px 14px;min-height:50px}
+    .rpaso p{font-size:12.6px;line-height:1.44;margin-top:11px}
+  }
+  .apretado .rico{width:60px;height:60px} .apretado .rico svg{width:32px;height:32px}
+  .apretado .rhilo{height:15px} .apretado .rpaso p{font-size:12px;margin-top:9px}
+  .apretado .rflecha{font-size:12.2px;padding:7px 32px 7px 13px;min-height:44px}
+  @media(max-width:820px){
+    .ruta3{grid-template-columns:1fr;gap:10px}
+    .rpaso{padding:12px 14px}
+    .rflecha{width:auto;min-width:70%}
+  }
+  /* Dos tarjetas en lugar de tres, para comparaciones cara a cara. */
+  .normas.dos{grid-template-columns:repeat(2,1fr)}
+  /* La lista de estados vive dentro de una tarjeta oscura. */
+  .norma .lineat{padding-left:22px;margin-top:2px}
+  .norma .lineat li{font-size:13.5px;padding:8px 0 8px 16px;color:#eaf4ff;
+    border-bottom-color:rgba(255,255,255,.24)}
+  .norma .lineat li:before{width:15px;height:15px;left:-8px;top:calc(50% - 7px);
+    box-shadow:0 0 0 3px var(--panel)}
+  .normas .norma:nth-child(2n+1) .lineat li{color:#06243f;border-bottom-color:rgba(6,36,63,.2)}
+  .normas .norma:nth-child(2n+1) .lineat li:before{box-shadow:0 0 0 3px var(--cyan)}
+  @media(max-height:820px){.norma .lineat li{font-size:12.6px;padding:6px 0 6px 15px}}
+  .apretado .norma .lineat li{font-size:12px;padding:4px 0 4px 14px}
+  /* Aviso de enlace entre bloques: fondo neutro y franja de marca al pie,
+     como en el material impreso. */
+  .avisogris{background:#eef2f7;color:var(--ink);border-radius:12px 12px 0 0;
+    padding:13px 20px;font-size:14px;line-height:1.5;text-align:center;margin-top:14px;
+    border-bottom:5px solid;border-image:var(--grad) 1}
+  .slide.dark .avisogris{background:rgba(255,255,255,.08);color:#eaf1fb}
+  @media(max-height:820px){.avisogris{padding:10px 16px;font-size:13px;margin-top:10px}}
+  .apretado .avisogris{padding:8px 14px;font-size:12.4px;margin-top:8px}
   @media(max-width:900px){.normas{grid-template-columns:repeat(2,1fr)}}
   @media(max-width:560px){.normas{grid-template-columns:1fr}
     .norma .nfoto{height:46px}}
@@ -2232,12 +2297,34 @@
 </section>
 <section class="slide nogate light" data-mod="3">
   <div class="wrap">
-    <div class="eyebrow rv up">Requisitos legales</div>
+    <div class="eyebrow rv up">Control operacional · Requisitos legales H&amp;S</div>
+    <h2 class="rv up" style="--d:1">¡Así lo hacemos en Holcim!</h2>
+    <div class="gline rv up" style="--d:2"></div>
+    <div class="ruta3">
+      <div class="rpaso rv up" style="--d:0"><span class="rico" data-foto="investigacion(D27)"><svg viewBox="0 0 40 40"><rect x="6" y="8" width="28" height="19" rx="2.5"/><path d="M16 32h8M20 27v5"/><path d="M17 13l7 7-3 .6-.6 3z"/></svg></span><span class="rhilo"></span><span class="rflecha">Investigación<br>y análisis</span><p>Permanente consulta de fuentes productoras de normas jurídicas externas e internas, y estudio de aplicabilidad y acciones a ejecutar.</p></div>
+      <div class="rpaso rv up" style="--d:1"><span class="rico" data-foto="identificacion(D27)"><svg viewBox="0 0 40 40"><path d="M11 6h12l6 6v22H11z"/><path d="M23 6v6h6"/><circle cx="19" cy="22" r="5"/><path d="M23 26l4 4"/></svg></span><span class="rhilo"></span><span class="rflecha">Identificación</span><p>Alineación del requisito legal con los temas, peligros, aspectos o impactos según sus actividades y procesos.</p></div>
+      <div class="rpaso rv up" style="--d:2"><span class="rico" data-foto="revision(D27)"><svg viewBox="0 0 40 40"><rect x="9" y="8" width="19" height="25" rx="2.5"/><rect x="15" y="5" width="7" height="4.5" rx="1.2"/><path d="M13.5 15h3M13.5 21h3M13.5 27h3M19.5 15h6M19.5 21h4"/><path d="M29 17l4.5 4.5-7 7L23 30l1.5-3.5z"/></svg></span><span class="rhilo"></span><span class="rflecha">Revisión de<br>aplicación normativa</span><p>Acción de verificación por parte del responsable de la Compañía, para determinar la aplicación del requisito.</p></div>
+    </div>
+  </div>
+</section>
+<section class="slide nogate light mint" data-mod="3">
+  <div class="wrap">
+    <div class="eyebrow rv up">Control operacional · Requisitos legales H&amp;S</div>
     <h2 class="rv up" style="--d:1">Evaluación del cumplimiento</h2>
-    <p class="lead rv up" style="--d:2">Así lo hacemos en Holcim — toca cada paso. 👆</p>
-    <div class="accgrid" style="margin-top:12px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Investigación y análisis</h4><span class="chev">+</span></div><div class="acc-body"><p>Consulta permanente de fuentes de normas jurídicas externas e internas y estudio de aplicabilidad y acciones a ejecutar.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Identificación</h4><span class="chev">+</span></div><div class="acc-body"><p>Alineación del requisito legal con los temas, peligros, aspectos o impactos según las actividades y procesos.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Revisión de aplicación normativa</h4><span class="chev">+</span></div><div class="acc-body"><p>Verificación por parte del responsable de la Compañía para determinar la aplicación del requisito.</p></div></div></div>
-    <p class="lead rv up" style="margin-top:20px">Calificación del requisito: determina el estado (toca cada uno):</p>
-    <div class="chipgrid" style="grid-template-columns:repeat(4,1fr)"><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:var(--teal)">1</span><span class="nm">Sí cumple</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:var(--teal)">2</span><span class="nm">No cumple</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:var(--teal)">3</span><span class="nm">No aplica</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:var(--teal)">4</span><span class="nm">Sin evaluar</span><span class="tick">✓</span></div></div>
+    <p class="avisogris rv up" style="--d:2">Ahora, tenemos la <b>Evaluación del Cumplimiento</b> y cómo calificar requisitos mediante acciones clave para garantizar su gestión adecuada.</p>
+    <div class="normas dos" style="margin-top:16px">
+      <article class="norma rv up" style="--d:1">
+        <h4>Evaluación del Cumplimiento</h4>
+        <div class="ntxt"><p>Verificación del cumplimiento de los requisitos identificados, con acción a ejecutar.</p></div>
+        <span class="nfoto nfoto-gr" data-foto="evaluacion(D28)"><svg viewBox="0 0 40 34"><rect x="8" y="3" width="19" height="28" rx="2.5"/><rect x="14" y="1" width="7" height="4" rx="1.2"/><rect x="11.5" y="9" width="4.5" height="4.5" rx="1"/><rect x="11.5" y="16" width="4.5" height="4.5" rx="1"/><rect x="11.5" y="23" width="4.5" height="4.5" rx="1"/><path d="M18.5 11l2 2 3-3M18.5 18l2 2 3-3M19 24.2l3.4 3.4M22.4 24.2L19 27.6"/><path d="M29 14l6 6-3.5 1.2-1.2 3.5-6-6z"/></svg></span>
+      </article>
+      <article class="norma rv up" style="--d:2">
+        <h4>Calificación del requisito</h4>
+        <div class="ntxt"><p>Determinar el estado de cumplimiento en:</p>
+          <ul class="lineat"><li>Sí cumple</li><li>No cumple</li><li>No aplica</li><li>Sin evaluar</li></ul>
+        </div>
+      </article>
+    </div>
   </div>
 </section>
 <section class="slide nogate dark" data-mod="3"><div class="wrap"><div class="eyebrow rv up">Estándares de salud y seguridad</div><h2 class="rv up" style="--d:1">Estándares de Gestión</h2><p class="lead rv up" style="--d:2">Toca cada estándar para reconocerlos. 👆</p><div class="chipgrid"><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#17868a">HSE-001</span><span class="nm">Sistema de Gestión de Salud y Seguridad</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#97d13b">HSE-002</span><span class="nm">Notificación, clasificación e investigación de incidentes</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#f5b700">HSE-003</span><span class="nm">Equipo de protección personal</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#ef7d00">HSE-004</span><span class="nm">Construcción</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#6a3d9a">HSE-005</span><span class="nm">Gestión de seguridad de procesos</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#0e6e78">HSE-006</span><span class="nm">Bienestar y limpieza</span><span class="tick">✓</span></div></div></div></section>
@@ -2891,7 +2978,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-03-t";
+var VERSION_CURSO = "2026-09-03-v";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
