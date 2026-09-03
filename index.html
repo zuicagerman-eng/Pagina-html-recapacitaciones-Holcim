@@ -735,6 +735,18 @@
   .filaimg-foto{display:flex;align-items:center;justify-content:center;min-width:0}
   .filaimg-foto img{max-width:100%;max-height:340px;width:auto;height:auto;object-fit:contain;display:block}
   .filaimg-foto svg{width:100%;max-width:250px;height:auto}
+  .filaimg-foto .mediaBox{max-width:100%;margin:0}
+  .filaimg-foto .mediaBox img,.filaimg-foto .mediaBox video{max-height:340px;width:auto;
+    max-width:100%;height:auto;object-fit:contain}
+  /* El dibujo esta de respaldo: desaparece en cuanto el archivo real carga. */
+  .filaimg-foto .mediaBox.ready ~ .respaldo{display:none}
+  /* Aqui la ilustracion es parte del contenido, no un adorno: se queda aunque
+     la pantalla sea baja y angosta. */
+  @media(max-height:820px) and (max-width:900px){
+    .filaimg-foto .mediaBox.ready{display:block!important}
+  }
+  @media(max-height:820px){.filaimg-foto .mediaBox img,.filaimg-foto .mediaBox video{max-height:260px}}
+  @media(max-width:760px){.filaimg-foto .mediaBox img,.filaimg-foto .mediaBox video{max-height:190px}}
   .lineat{list-style:none;position:relative;padding-left:26px;min-width:0}
   /* La linea vertical no llega a los bordes: arranca y termina en el centro
      del primer y del ultimo punto, como en el material impreso. */
@@ -2016,7 +2028,7 @@
     <h3 class="subt rv up" style="--d:2">Condiciones generales</h3>
     <p class="lead rv up" style="--d:3">De acuerdo a lineamientos del grupo Holcim, a través del proceso de gestión del cambio, se entiende por <b>cambio</b>:</p>
     <div class="filaimg rv up" style="--d:4">
-      <div class="filaimg-foto" data-foto="cambio(D24)"><svg viewBox="0 0 120 110" aria-hidden="true" fill="none" stroke="#7fb3ff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M22 55a33 33 0 0 1 56-23"/><path d="M98 55a33 33 0 0 1-56 23"/><path d="M78 20v13H65"/><path d="M42 90V77h13"/><circle cx="60" cy="55" r="11" stroke="#97d13b"/><path d="M60 44v-6M60 72v6M49 55h-6M77 55h6" stroke="#97d13b"/></svg></div>
+      <div class="filaimg-foto"><figure class="mediaBox plain soft" data-media="imagenes/cambio(D24)" data-loop="no"></figure><span class="respaldo"><svg viewBox="0 0 120 110" aria-hidden="true" fill="none" stroke="#7fb3ff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M22 55a33 33 0 0 1 56-23"/><path d="M98 55a33 33 0 0 1-56 23"/><path d="M78 20v13H65"/><path d="M42 90V77h13"/><circle cx="60" cy="55" r="11" stroke="#97d13b"/><path d="M60 44v-6M60 72v6M49 55h-6M77 55h6" stroke="#97d13b"/></svg></span></div>
       <ul class="lineat">
         <li>Las ubicaciones de los lugares de trabajo y sus alrededores.</li>
         <li>La organización del trabajo.</li>
@@ -2676,7 +2688,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-03-m";
+var VERSION_CURSO = "2026-09-03-n";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
