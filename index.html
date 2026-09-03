@@ -1118,6 +1118,49 @@
   .ultra .asbusos li{font-size:11.2px} .ultra .asbcard{font-size:10.9px;min-height:42px}
   @media(max-width:820px){ .asbej{grid-template-columns:1fr 1fr} }
   @media(max-width:460px){ .asbej{grid-template-columns:1fr} }
+  /* ===== Pictogramas SGA =====
+     Cada grupo es una banda: a la izquierda el rotulo de color con su icono
+     y el numero de clases, y a la derecha la fila de señales. Las bandas van
+     escalonadas como en el impreso. */
+  .picto{display:grid;gap:10px;margin-top:10px}
+  .pictogrupo{display:grid;grid-template-columns:auto 1fr;align-items:stretch;
+    border:2px solid var(--amarillo,#f5c400);border-radius:9px;overflow:hidden;background:#fafcfe}
+  .pictogrupo:nth-child(2){margin-left:6%;margin-right:4%}
+  .pictogrupo:nth-child(3){margin-left:14%;margin-right:16%}
+  .pictocab{display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:4px;padding:11px 14px;width:158px;color:#fff;text-align:center}
+  .pictocab b{font-size:12.7px;line-height:1.24}
+  .pictocab i{font-size:11.6px;font-style:italic;opacity:.92}
+  .pictoico{display:grid;place-items:center;width:48px;height:48px;border-radius:50%;
+    background:#fff;border:2.5px solid #f5c400;flex:none;padding:5px}
+  .pictoico img{max-width:100%;max-height:100%;width:auto;height:auto;display:block;border-radius:50%}
+  .pictoico svg{width:28px;height:28px;fill:none;stroke:var(--panel);stroke-width:2.6;
+    stroke-linecap:round;stroke-linejoin:round}
+  .pictofila{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-around;
+    gap:6px 4px;padding:9px 12px;min-width:0}
+  .senal{margin:0;display:flex;flex-direction:column;align-items:center;gap:3px;text-align:center}
+  .senal .ph{display:flex;align-items:center;justify-content:center;width:74px;height:74px}
+  .senal .ph img{max-width:100%;max-height:100%;width:auto;height:auto;display:block}
+  .senal .ph svg{width:100%;height:100%}
+  .senal figcaption{font-size:11.6px;font-weight:700;color:var(--panel);line-height:1.2;max-width:96px}
+  .apretado .pictocab{width:140px} .apretado .pictocab b{font-size:12px}
+  .apretado .pictoico{width:42px;height:42px} .apretado .pictoico svg{width:24px;height:24px}
+  .apretado .senal .ph{width:62px;height:62px}
+  .muy-apretado .pictocab{width:124px;padding:9px 11px} .muy-apretado .pictocab b{font-size:11.4px}
+  .muy-apretado .pictocab i{font-size:10.8px}
+  .muy-apretado .pictoico{width:36px;height:36px} .muy-apretado .pictoico svg{width:21px;height:21px}
+  .muy-apretado .senal .ph{width:54px;height:54px}
+  .muy-apretado .senal figcaption{font-size:10.8px}
+  .ultra .pictocab{width:110px} .ultra .senal .ph{width:46px;height:46px}
+  .ultra .senal figcaption{font-size:10.2px}
+  @media(max-width:820px){
+    /* Sin escalonado y con el rotulo arriba: en angosto no cabe de lado. */
+    .pictogrupo{grid-template-columns:1fr}
+    .pictogrupo:nth-child(2),.pictogrupo:nth-child(3){margin:0}
+    .pictocab,.apretado .pictocab,.muy-apretado .pictocab,.ultra .pictocab{
+      width:auto;flex-direction:row;gap:9px;justify-content:flex-start;text-align:left}
+    .pictocab i{margin-left:4px}
+  }
   @media(max-width:820px){
     .prohsol{grid-template-columns:1fr}
     /* En una sola columna el sombreado alterna fila a fila. */
@@ -4563,8 +4606,43 @@
 <div class="wrap"><div class="eyebrow rv up">HSE-202 · Sustancias peligrosas</div>
 <h2 class="rv up" style="--d:1">Pictogramas</h2>
 <div class="infobanner rv up" style="--d:2">Las sustancias peligrosas presentan riesgo para la salud, la seguridad o el medio ambiente. Al adquirirlas e ingresarlas a los sitios de trabajo <b>deben estar identificadas con la etiqueta del Sistema Globalmente Armonizado</b>.</div>
-<p class="lead rv up">Toca cada grupo de peligros. 👆</p>
-<div class="accgrid" style="margin-top:12px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#17868a"></span><h4>Peligros físicos · 16 clases</h4><span class="chev">+</span></div><div class="acc-body"><div class="li"><span class="b"></span><b>Explosivos</b></div><div class="li"><span class="b"></span><b>Gases comprimidos</b></div><div class="li"><span class="b"></span><b>Inflamable</b></div><div class="li"><span class="b"></span><b>Comburente</b></div><div class="li"><span class="b"></span><b>Corrosivo</b></div></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#0e6e78"></span><h4>Peligros para la salud · 10 clases</h4><span class="chev">+</span></div><div class="acc-body"><div class="li"><span class="b"></span><b>Tóxico</b></div><div class="li"><span class="b"></span><b>Cancerígeno</b></div><div class="li"><span class="b"></span><b>Corrosivo</b></div><div class="li"><span class="b"></span><b>Irritante</b></div></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#3fb559"></span><h4>Peligros para el medio ambiente · 2 clases</h4><span class="chev">+</span></div><div class="acc-body"><div class="li"><span class="b"></span><b>Dañino para el ambiente</b></div><div class="li"><span class="b"></span><b>Irritante</b></div></div></div></div>
+<div class="picto rv up" style="--d:3">
+  <div class="pictogrupo">
+    <div class="pictocab" style="background:#2f9d95">
+      <span class="ph pictoico" data-foto="fisicos(D66)"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M10 42V14l14-8 14 8v28z"/><path d="M18 24h4M26 24h4M18 32h4M26 32h4M18 16h12"/><path d="M6 42h36"/></svg></span>
+      <b>Peligros físicos</b><i>16 clases</i>
+    </div>
+    <div class="pictofila">
+      <figure class="senal"><span class="ph" data-foto="explosivos(D66)"><svg viewBox="0 0 60 60" aria-hidden="true"><path d="M30 4l26 26-26 26L4 30z" fill="#fff" stroke="#d5322b" stroke-width="6"/><path d="M30 18v16M30 42h0" stroke="#0e2c56" stroke-width="4" stroke-linecap="round"/></svg></span><figcaption>Explosivos</figcaption></figure>
+      <figure class="senal"><span class="ph" data-foto="gases(D66)"><svg viewBox="0 0 60 60" aria-hidden="true"><path d="M30 4l26 26-26 26L4 30z" fill="#fff" stroke="#d5322b" stroke-width="6"/><path d="M30 18v16M30 42h0" stroke="#0e2c56" stroke-width="4" stroke-linecap="round"/></svg></span><figcaption>Gases comprimidos</figcaption></figure>
+      <figure class="senal"><span class="ph" data-foto="inflamable(D66)"><svg viewBox="0 0 60 60" aria-hidden="true"><path d="M30 4l26 26-26 26L4 30z" fill="#fff" stroke="#d5322b" stroke-width="6"/><path d="M30 18v16M30 42h0" stroke="#0e2c56" stroke-width="4" stroke-linecap="round"/></svg></span><figcaption>Inflamable</figcaption></figure>
+      <figure class="senal"><span class="ph" data-foto="comburente(D66)"><svg viewBox="0 0 60 60" aria-hidden="true"><path d="M30 4l26 26-26 26L4 30z" fill="#fff" stroke="#d5322b" stroke-width="6"/><path d="M30 18v16M30 42h0" stroke="#0e2c56" stroke-width="4" stroke-linecap="round"/></svg></span><figcaption>Comburente</figcaption></figure>
+      <figure class="senal"><span class="ph" data-foto="corrosivof(D66)"><svg viewBox="0 0 60 60" aria-hidden="true"><path d="M30 4l26 26-26 26L4 30z" fill="#fff" stroke="#d5322b" stroke-width="6"/><path d="M30 18v16M30 42h0" stroke="#0e2c56" stroke-width="4" stroke-linecap="round"/></svg></span><figcaption>Corrosivo</figcaption></figure>
+    </div>
+  </div>
+  <div class="pictogrupo">
+    <div class="pictocab" style="background:#0f7f86">
+      <span class="ph pictoico" data-foto="salud(D66)"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 40S8 30 8 19a8 8 0 0 1 16-3 8 8 0 0 1 16 3c0 11-16 21-16 21z"/><path d="M12 24h7l3-6 4 12 3-6h7"/></svg></span>
+      <b>Peligros para la salud</b><i>10 clases</i>
+    </div>
+    <div class="pictofila">
+      <figure class="senal"><span class="ph" data-foto="toxico(D66)"><svg viewBox="0 0 60 60" aria-hidden="true"><path d="M30 4l26 26-26 26L4 30z" fill="#fff" stroke="#d5322b" stroke-width="6"/><path d="M30 18v16M30 42h0" stroke="#0e2c56" stroke-width="4" stroke-linecap="round"/></svg></span><figcaption>Tóxico</figcaption></figure>
+      <figure class="senal"><span class="ph" data-foto="cancerigeno(D66)"><svg viewBox="0 0 60 60" aria-hidden="true"><path d="M30 4l26 26-26 26L4 30z" fill="#fff" stroke="#d5322b" stroke-width="6"/><path d="M30 18v16M30 42h0" stroke="#0e2c56" stroke-width="4" stroke-linecap="round"/></svg></span><figcaption>Cancerígeno</figcaption></figure>
+      <figure class="senal"><span class="ph" data-foto="corrosivos(D66)"><svg viewBox="0 0 60 60" aria-hidden="true"><path d="M30 4l26 26-26 26L4 30z" fill="#fff" stroke="#d5322b" stroke-width="6"/><path d="M30 18v16M30 42h0" stroke="#0e2c56" stroke-width="4" stroke-linecap="round"/></svg></span><figcaption>Corrosivo</figcaption></figure>
+      <figure class="senal"><span class="ph" data-foto="irritantes(D66)"><svg viewBox="0 0 60 60" aria-hidden="true"><path d="M30 4l26 26-26 26L4 30z" fill="#fff" stroke="#d5322b" stroke-width="6"/><path d="M30 18v16M30 42h0" stroke="#0e2c56" stroke-width="4" stroke-linecap="round"/></svg></span><figcaption>Irritante</figcaption></figure>
+    </div>
+  </div>
+  <div class="pictogrupo">
+    <div class="pictocab" style="background:#1f9d4e">
+      <span class="ph pictoico" data-foto="ambiente(D66)"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="18"/><path d="M6 24h36M24 6c6 7 6 29 0 36M24 6c-6 7-6 29 0 36"/><path d="M17 20c4-6 10-6 14 0-4 7-10 7-14 0z"/></svg></span>
+      <b>Peligros para el medio ambiente</b><i>2 clases</i>
+    </div>
+    <div class="pictofila">
+      <figure class="senal"><span class="ph" data-foto="daninoambiente(D66)"><svg viewBox="0 0 60 60" aria-hidden="true"><path d="M30 4l26 26-26 26L4 30z" fill="#fff" stroke="#d5322b" stroke-width="6"/><path d="M30 18v16M30 42h0" stroke="#0e2c56" stroke-width="4" stroke-linecap="round"/></svg></span><figcaption>Dañino para el ambiente</figcaption></figure>
+      <figure class="senal"><span class="ph" data-foto="irritantea(D66)"><svg viewBox="0 0 60 60" aria-hidden="true"><path d="M30 4l26 26-26 26L4 30z" fill="#fff" stroke="#d5322b" stroke-width="6"/><path d="M30 18v16M30 42h0" stroke="#0e2c56" stroke-width="4" stroke-linecap="round"/></svg></span><figcaption>Irritante</figcaption></figure>
+    </div>
+  </div>
+</div>
 </div></section>
 <section class="slide dark" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">HSE-202 · Sustancias peligrosas</div>
@@ -4909,7 +4987,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-05-t";
+var VERSION_CURSO = "2026-09-05-u";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
