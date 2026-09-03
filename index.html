@@ -692,7 +692,7 @@
   .pdfcard .pic{width:56px;height:56px;border-radius:15px;background:var(--grad);display:grid;place-items:center}
   .pdfcard .pic svg{width:29px;height:29px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
   .pdfcard h3{font-size:15px;color:var(--ink);line-height:1.3;font-weight:800;flex:1;display:flex;align-items:center}
-  .pdfbtn{background:var(--cyan);color:#fff;border:none;border-radius:999px;padding:10px 24px;font-weight:700;font-size:13.5px;cursor:pointer;font-family:var(--font);transition:.2s}
+  .pdfbtn{background:var(--cyan);color:#fff;border:none;border-radius:999px;padding:10px 24px;font-weight:700;font-size:13.5px;cursor:pointer;font-family:var(--font);transition:.2s;white-space:nowrap;flex:none}
   .pdfbtn:hover{background:var(--blue);transform:translateY(-1px)}
   .authbanner{margin-top:22px;background:linear-gradient(160deg,#1bb4e4,#1481c4);color:#fff;border-radius:14px;padding:18px 22px;font-size:14.5px;line-height:1.55;text-align:center}
   .authbanner b{color:#fff;text-transform:uppercase;letter-spacing:.5px}
@@ -844,6 +844,13 @@
   @media(max-width:640px){.pdfrow{grid-template-columns:1fr}}
   .pdfmini{background:linear-gradient(160deg,#1bb4e4,#1481c4);color:#fff;border-radius:14px;padding:15px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px}
   .pdfmini span{font-size:13px;font-weight:600;line-height:1.4}
+  /* Ilustración a la derecha de la tarjeta "Ver más". Sin archivo no ocupa. */
+  .pdfmini .minifoto{display:none}
+  .pdfmini .minifoto.foto{display:flex;align-items:center;justify-content:center;
+    width:74px;height:60px;flex:none;order:3}
+  .pdfmini .minifoto.foto img{max-width:100%;max-height:100%;width:auto;height:auto;
+    object-fit:contain;display:block}
+  @media(max-height:820px){.pdfmini .minifoto.foto{width:62px;height:50px}}
   .acc-body .tdd{margin-top:7px} .acc-body .tdd b{color:var(--blue)}
   /* welcome */
   #welcome{position:fixed;inset:0;z-index:300;background:rgba(4,15,35,.78);display:flex;align-items:center;justify-content:center;padding:18px;backdrop-filter:blur(3px)}
@@ -1873,14 +1880,48 @@
   </div>
 </section>
 <section class="slide light" data-mod="3">
-  <div class="wrap">
+  <div class="wrap wrap-ancho">
     <div class="eyebrow rv up">Control operacional</div>
     <h2 class="rv up" style="--d:1">IPVR · Identificación de Peligros y Valoración de Riesgos</h2>
     <div class="infobanner rv up" style="--d:2">Metodología sistemática para identificar peligros, evaluar los riesgos SST y establecer controles.</div>
-    <div class="accgrid" style="margin-top:18px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>Caracterizar las actividades</h4><span class="chev">+</span></div><div class="acc-body"><p class="tdd"><b>Definición:</b> ¿Qué actividades hacemos? ¿Dónde y quiénes las hacemos?</p><p class="tdd"><b>Deber:</b> Se debe construir y documentar por todas las áreas; dar alcance a procesos, actividades, máquinas, equipos, centros de trabajo y trabajadores.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1bb4e4"></span><h4>Identificar peligros y evaluar riesgos</h4><span class="chev">+</span></div><div class="acc-body"><p class="tdd"><b>Definición:</b> ¿A qué peligros nos exponemos? ¿Cómo nos podemos causar daño? ¿Qué tipo de daño?</p><p class="tdd"><b>Deber:</b> Se actualiza cada año o cuando ocurra un accidente mortal, un evento catastrófico o cambios en procesos, instalaciones, maquinaria o equipos.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#e6007e"></span><h4>Determinar controles</h4><span class="chev">+</span></div><div class="acc-body"><p class="tdd"><b>Definición:</b> ¿Qué debo hacer para gestionar los peligros, riesgos y daños?</p><p class="tdd"><b>Deber:</b> Permite definir las medidas para controlar el riesgo y aislar el peligro de manera priorizada.</p></div></div></div>
+    <div class="tecnicas">
+      <article class="tec rv up" style="--c:#8bbf3a;--d:0">
+        <h3 class="tbanda">Técnica</h3>
+        <div class="tcaja tcaja-ico">
+          <span class="tecfoto" data-foto="ipvract(D23)"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="8" height="7" rx="1.5"/><rect x="13" y="4" width="8" height="7" rx="1.5"/><rect x="3" y="13" width="8" height="7" rx="1.5"/><path d="M15 16.5l1.6 1.6L20 15"/></svg></span>
+          <p>Caracterizar las actividades.</p>
+        </div>
+        <h4 class="tbanda">Definición</h4>
+        <div class="tcaja"><p>¿Qué actividades hacemos?<br>¿Dónde y quiénes hacemos las actividades?</p></div>
+        <h4 class="tbanda">Deber</h4>
+        <div class="tcaja"><p>Se debe construir y documentar por todas las áreas. Dar alcance a todos los procesos, actividades, máquinas, equipos, centros de trabajo y trabajadores.</p></div>
+      </article>
+      <article class="tec rv up" style="--c:#1bb4e4;--d:1">
+        <h3 class="tbanda">Técnica</h3>
+        <div class="tcaja tcaja-ico">
+          <span class="tecfoto" data-foto="ipvrpel(D23)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 12l4-3"/><path d="M12 6.5l2.2 3.8h-4.4z"/></svg></span>
+          <p>Identificar peligros y evaluar riesgos / consecuencias.</p>
+        </div>
+        <h4 class="tbanda">Definición</h4>
+        <div class="tcaja"><p>¿A qué peligros nos exponemos?<br>¿Cómo nos podemos causar daño?<br>¿Qué tipo de daño nos causamos?</p></div>
+        <h4 class="tbanda">Deber</h4>
+        <div class="tcaja"><p>Se actualiza cada año o cuando ocurra un accidente de trabajo mortal, un evento catastrófico, cuando se presenten cambios en procesos, instalaciones, maquinaria o equipos de Holcim Colombia.</p></div>
+      </article>
+      <article class="tec rv up" style="--c:#e6007e;--d:2">
+        <h3 class="tbanda">Técnica</h3>
+        <div class="tcaja tcaja-ico">
+          <span class="tecfoto" data-foto="ipvrctrl(D23)"><svg viewBox="0 0 24 24"><path d="M5 3h9l4 4v8"/><path d="M5 3v18h7"/><path d="M8 8h6M8 12h5"/><rect x="14" y="16" width="7" height="5" rx="1"/><path d="M16 16v-1.5a1.5 1.5 0 0 1 3 0V16"/></svg></span>
+          <p>Determinar controles.</p>
+        </div>
+        <h4 class="tbanda">Definición</h4>
+        <div class="tcaja"><p>¿Qué debo hacer para gestionar los peligros, riesgos y daños?</p></div>
+        <h4 class="tbanda">Deber</h4>
+        <div class="tcaja"><p>Permite definir las medidas que se deben implementar para controlar el Riesgo y aislar el peligro de manera priorizada.</p></div>
+      </article>
+    </div>
     <div class="pdfrow rv up" style="--d:2">
-      <div class="pdfmini"><span>Conoce los <b>cargos, roles, responsabilidades y autoridades</b>.</span><button class="pdfbtn" data-pdf="cargos" data-title="Cargos, roles, responsabilidades y autoridades">Ver más</button></div>
-      <div class="pdfmini"><span>Conoce los <b>Niveles de riesgo</b>.</span><button class="pdfbtn" data-pdf="niveles" data-title="Niveles de riesgo">Ver más</button></div>
+      <div class="pdfmini"><span>Da clic en <b>“Ver más”</b> para conocer los <b>cargos, roles, responsabilidades y autoridades</b>.</span><button class="pdfbtn" data-pdf="cargos" data-title="Cargos, roles, responsabilidades y autoridades">Ver más</button><span class="minifoto" data-foto="ipvrcargos(D23)"></span></div>
+      <div class="pdfmini"><span>Da clic en <b>“Ver más”</b> para conocer los <b>Niveles de riesgo</b>.</span><button class="pdfbtn" data-pdf="niveles" data-title="Niveles de riesgo">Ver más</button><span class="minifoto" data-foto="ipvrniveles(D23)"></span></div>
     </div>
   </div>
 </section>
@@ -2525,7 +2566,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-03-i";
+var VERSION_CURSO = "2026-09-03-j";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
