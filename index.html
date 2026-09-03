@@ -729,6 +729,50 @@
   }
   @media(max-width:700px){.bloqfoto.ancha,.bloqfoto.fotoizq.ancha{grid-template-columns:1fr}}
 
+  /* ===== IMAGEN CON PIE DE COLOR =====
+     La ilustracion arriba y su explicacion en una banda debajo, como en el
+     impreso. La imagen no se recorta: manda su alto y el bloque se ajusta. */
+  .imgcap{display:flex;flex-direction:column;border-radius:11px;overflow:hidden;
+    background:var(--c,var(--panel));box-shadow:var(--shadow);min-width:0}
+  .imgcap .ph{background:#fff;display:flex;align-items:center;justify-content:center;padding:6px}
+  .imgcap .ph img{width:auto;height:auto;max-width:100%;max-height:var(--h,150px);display:block}
+  .imgcap .ph svg{height:var(--h,150px);width:auto;max-width:100%;fill:none;stroke:var(--panel);
+    stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+  .imgcap p{padding:10px 14px;font-size:12.8px;line-height:1.45;color:#fff}
+  .slide.light .imgcap p{color:#fff}
+  /* Ilustracion suelta y centrada, sin pie. */
+  .lamina{display:flex;justify-content:center;margin-top:11px}
+  .lamina .ph{background:#fff;border-radius:10px;padding:6px;display:flex;
+    align-items:center;justify-content:center;box-shadow:var(--shadow);
+    border-bottom:5px solid;border-image:var(--grad) 1}
+  .lamina .ph img{width:auto;height:auto;max-width:100%;max-height:var(--h,160px);display:block}
+  .lamina .ph svg{height:var(--h,160px);width:auto;max-width:100%;fill:none;stroke:var(--panel);
+    stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+  @media(max-height:820px){
+    .imgcap p{padding:8px 12px;font-size:12.1px;line-height:1.4}
+    .imgcap .ph img,.imgcap .ph svg{max-height:calc(var(--h,150px) * .8);height:auto}
+    .imgcap .ph svg{height:calc(var(--h,150px) * .8)}
+    .lamina{margin-top:8px}
+    .lamina .ph img{max-height:calc(var(--h,160px) * .78)}
+    .lamina .ph svg{height:calc(var(--h,160px) * .78)}
+  }
+  .apretado .imgcap p{padding:6px 11px;font-size:11.5px;line-height:1.34}
+  .apretado .imgcap .ph img{max-height:calc(var(--h,150px) * .62)}
+  .apretado .imgcap .ph svg{height:calc(var(--h,150px) * .62)}
+  .apretado .lamina{margin-top:6px}
+  .apretado .lamina .ph img{max-height:calc(var(--h,160px) * .6)}
+  .apretado .lamina .ph svg{height:calc(var(--h,160px) * .6)}
+  .muy-apretado .imgcap .ph img{max-height:calc(var(--h,150px) * .52)}
+  .muy-apretado .imgcap .ph svg{height:calc(var(--h,150px) * .52)}
+  .muy-apretado .lamina .ph img{max-height:calc(var(--h,160px) * .5)}
+  .muy-apretado .lamina .ph svg{height:calc(var(--h,160px) * .5)}
+  /* Dos columnas: el mapa a la izquierda y los dos bloques a la derecha. */
+  .mapafila{display:grid;grid-template-columns:1.25fr 1fr;gap:14px;align-items:start;margin-top:12px}
+  .mapacol{display:flex;flex-direction:column;gap:11px;min-width:0}
+  @media(max-height:820px){.mapafila{gap:11px;margin-top:9px}.mapacol{gap:9px}}
+  .apretado .mapafila{gap:9px;margin-top:7px} .apretado .mapacol{gap:7px}
+  @media(max-width:900px){.mapafila{grid-template-columns:1fr}}
+
   /* ===== PESTANAS CON ICONO (HSE-006) =====
      La barra de pestanas hace de resumen: cada boton lleva su figura y su
      nombre, como la tira de cuatro tarjetas del impreso. */
@@ -3283,8 +3327,48 @@
     </div>
   </div>
 </section>
-<section class="slide light" data-mod="4">
-<div class="wrap"><div class="eyebrow rv up">HSE-101 · Equipos móviles y tráfico en sitio</div><h2 class="rv up" style="--d:1">Peligros y plan de tránsito</h2><p class="lead rv up" style="--d:2">Toca cada punto. 👆</p><div class="accgrid" style="margin-top:16px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>Identificación de peligros</h4><span class="chev">+</span></div><div class="acc-body"><p>Designe a una persona competente para identificar peligros y evaluar riesgos, de forma que puedan ser eliminados.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Plan de gestión de tránsito</h4><span class="chev">+</span></div><div class="acc-body"><p>Cada localidad debe contar con un plan específico, visible y comunicado a todo el personal. Revíselo al menos una vez al año, mejorando la segregación de peatones y la separación entre vehículos ligeros y equipos móviles; con señalización grande y fácil de comprender.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#0e2c56"></span><h4>Mapa de la localidad</h4><span class="chev">+</span></div><div class="acc-body"><p>Debe incluir dirección y restricciones de tránsito, peligros (p. ej. líneas eléctricas aéreas), rutas peatonales y zonas sin EPP.</p></div></div></div></div>
+<section class="slide nogate light" data-mod="4">
+  <div class="wrap">
+    <div class="eyebrow rv up">HSE-101 · Equipos móviles y tráfico en sitio</div>
+    <h2 class="rv up" style="--d:1">Identificación de peligros</h2>
+    <div class="infobanner rv up" style="--d:2">Designe a una <b>persona competente</b> para identificar peligros y evaluar riesgos, de forma que puedan ser eliminados.</div>
+    <div class="lamina rv up" style="--d:3;--h:215px">
+      <span class="ph" data-foto="evalriesgos(D45)"><svg viewBox="0 0 200 80"><rect x="3" y="3" width="194" height="74" rx="3"/><circle cx="60" cy="30" r="9"/><path d="M50 26a10 10 0 0 1 20 0M47 26h26"/><path d="M46 68c0-12 6-21 14-21s14 9 14 21"/><rect x="70" y="40" width="20" height="26" rx="2"/><rect x="14" y="14" width="30" height="24" rx="2"/><path d="M20 22h18M20 28h12"/><path d="M110 46h34v14h-34zM144 50h14l8 6v4h-22z"/><circle cx="120" cy="63" r="4"/><circle cx="152" cy="63" r="4"/><path d="M172 44l10 6v14h-16V50z"/></svg></span>
+    </div>
+    <div class="lamina rv up" style="--d:4;--h:255px">
+      <span class="ph" data-foto="peligrostransito(D45)"><svg viewBox="0 0 200 100"><g><rect x="3" y="3" width="44" height="40" rx="2"/><rect x="53" y="3" width="44" height="40" rx="2"/><rect x="103" y="3" width="44" height="40" rx="2"/><rect x="153" y="3" width="44" height="40" rx="2"/><rect x="3" y="57" width="44" height="40" rx="2"/><rect x="53" y="57" width="44" height="40" rx="2"/><rect x="103" y="57" width="44" height="40" rx="2"/><rect x="153" y="57" width="44" height="40" rx="2"/><path d="M25 45v8M25 53l-3-3M25 53l3-3"/><path d="M75 45v8M75 53l-3-3M75 53l3-3"/><path d="M125 45v8M125 53l-3-3M125 53l3-3"/><path d="M175 45v8M175 53l-3-3M175 53l3-3"/><path d="M14 30l7-12 7 12zM22 24v3M22 29h0"/><path d="M64 30l7-12 7 12zM72 24v3M72 29h0"/><path d="M114 30l7-12 7 12zM122 24v3M122 29h0"/><path d="M164 30l7-12 7 12zM172 24v3M172 29h0"/></g></svg></span>
+    </div>
+  </div>
+</section>
+<section class="slide nogate light mint" data-mod="4">
+  <div class="wrap">
+    <div class="eyebrow rv up">HSE-101 · Equipos móviles y tráfico en sitio</div>
+    <h2 class="rv up" style="--d:1">Plan de gestión de tránsito</h2>
+    <p class="lead rv up" style="--d:2">Cada localidad debe contar con un plan específico, visible y comunicado a todo el personal.</p>
+    <div class="mapafila">
+      <div class="mapacol rv up" style="--d:3">
+        <h3 class="subverde chico">Mapa de la localidad</h3>
+        <div class="lamina" style="margin-top:0;--h:210px">
+          <span class="ph" data-foto="mapalocalidad(D45)"><svg viewBox="0 0 200 150"><path d="M10 30l50-16 70 18 60-16v104l-60 16-70-18-50 16z"/><path d="M60 14v104M130 32v104"/><path d="M20 60h34M84 52h36M150 66h36"/><rect x="70" y="60" width="34" height="26" rx="2"/><rect x="120" y="84" width="30" height="22" rx="2"/><circle cx="40" cy="96" r="9"/><path d="M36 96h8M40 92v8"/><path d="M166 40l8 14h-16z"/><circle cx="170" cy="110" r="10"/><path d="M164 110h12"/></svg></span>
+        </div>
+        <ul class="lineat" style="margin-top:2px">
+          <li>Dirección y restricciones de tránsito.</li>
+          <li>Peligros, por ejemplo líneas eléctricas aéreas.</li>
+          <li>Rutas peatonales y zonas sin EPP.</li>
+        </ul>
+      </div>
+      <div class="mapacol rv up" style="--d:4">
+        <article class="imgcap" style="--c:var(--panel);--h:158px">
+          <span class="ph" data-foto="revisionplanes(D45)"><svg viewBox="0 0 200 100"><circle cx="52" cy="30" r="11"/><path d="M40 26a12 12 0 0 1 24 0M37 26h30"/><path d="M30 92c0-16 10-28 22-28s22 12 22 28"/><path d="M74 60l24-12"/><rect x="104" y="12" width="34" height="46" rx="2"/><path d="M108 22h26M108 30h20M108 38h24"/><rect x="148" y="12" width="34" height="46" rx="2"/><path d="M152 22h26M152 30h20M152 38h24"/><circle cx="121" cy="8" r="7"/><circle cx="165" cy="8" r="7"/></svg></span>
+          <p>Revise los planes al menos una vez al año, enfocándose en mejorar la <b>segregación de peatones</b> y la separación entre vehículos ligeros y equipos móviles.</p>
+        </article>
+        <article class="imgcap" style="--c:var(--cyan);--h:158px">
+          <span class="ph" data-foto="senalizacion(D45)"><svg viewBox="0 0 200 110"><rect x="3" y="3" width="194" height="48" rx="3"/><rect x="3" y="59" width="194" height="48" rx="3"/><circle cx="150" cy="27" r="12"/><path d="M144 23a6 6 0 0 1 12 0M141 23h18"/><circle cx="150" cy="83" r="12"/><path d="M144 79a6 6 0 0 1 12 0M141 79h18"/><rect x="20" y="12" width="46" height="30" rx="2"/><rect x="20" y="68" width="46" height="30" rx="2"/><circle cx="92" cy="27" r="10"/><path d="M86 21l12 12M98 21L86 33"/><circle cx="92" cy="83" r="10"/><path d="M87 83l4 4 7-8"/></svg></span>
+          <p>Garantice que las señalizaciones sean lo suficientemente <b>grandes y fáciles de comprender</b>.</p>
+        </article>
+      </div>
+    </div>
+  </div>
 </section>
 <section class="slide dark" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">HSE-101 · Equipos móviles y tráfico en sitio</div><h2 class="rv up" style="--d:1">Operación e inspecciones</h2><p class="lead rv up" style="--d:2">Los operadores deben — toca cada punto. 👆</p><div class="acts" style="grid-template-columns:repeat(2,1fr)"><div class="act gclick rv scale" style="background:#0e2c56" tabindex="0" role="button"><span style="font-size:22px">1</span><span>Seleccionar el equipo móvil adecuado para la tarea.</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#1bb4e4" tabindex="0" role="button"><span style="font-size:22px">2</span><span>Reportar si no hay disponibilidad de un equipo móvil adecuado.</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#97d13b" tabindex="0" role="button"><span style="font-size:22px">3</span><span>Estacionar el equipo en un lugar seguro y estable, y retirar la llave (resguardarla para evitar uso no autorizado).</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#1877c4" tabindex="0" role="button"><span style="font-size:22px">4</span><span>Si el motor debe permanecer en marcha, mantenerse cerca pero fuera del área de peligro y asegurar la visibilidad.</span><span class="tick">✓</span></div></div><div class="accgrid" style="margin-top:16px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Inspecciones pre-operativas</h4><span class="chev">+</span></div><div class="acc-body"><p>Realiza inspecciones antes de cada turno y lleva un registro. Si un técnico de taller realiza la inspección, el operador aún debe hacer una inspección visual y revisar los frenos; asegura una evaluación de puntos ciegos e instala espejos adicionales donde sea necesario.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#ef7d00"></span><h4>Regla del hombre caído</h4><span class="chev">+</span></div><div class="acc-body"><p>Cuando un peatón ingresa al área de operación de un equipo móvil, el operador debe detenerse y no continuar hasta que el peatón se retire del área de riesgo.</p></div></div></div><div class="pdfrow rv up" style="grid-template-columns:1fr"><div class="pdfmini"><span>Consulta la <b>guía visual</b> de inspecciones.</span><button class="pdfbtn" data-pdf="moviles_guia" data-title="Guía visual · equipos móviles">Ver más</button></div></div></div>
@@ -3856,7 +3940,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-04-p";
+var VERSION_CURSO = "2026-09-04-q";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
