@@ -167,11 +167,6 @@
   }
 
   /* ====== EXAMEN FINAL ====== */
-  /* La seccion del examen cuelga del <body>, no del .deck, asi que ocupaba
-     toda la ventana: su barra de accion quedaba POR DEBAJO del pie fijo y el
-     boton "Calificar examen" no se podia pulsar con el raton. Se le dan los
-     mismos margenes que al .deck para que quede dentro del area visible. */
-  .slide[data-mod="EX"]{top:var(--hud);bottom:calc(var(--footer) + var(--bar2))}
   .exwrap{max-width:820px;margin:0 auto}
   .excampo{margin-top:14px}
   .excampo label{display:block;font-size:12.5px;font-weight:700;color:#bcd3ea;margin-bottom:5px}
@@ -568,6 +563,55 @@
   .slide.muy-apretado .behaviors{gap:7px;margin-top:10px}
   .slide.muy-apretado .chip3{padding:10px}
   .slide.muy-apretado .chip3 .nm{font-size:12.4px}
+  /* Tercer nivel. Con ventanas muy bajas (1280x720 con la barra de tareas del
+     sistema) todavia quedaban cuatro diapositivas con recorrido oculto. Aqui se
+     aprieta lo que faltaba: rotulo, avisos, tarjetas, fichas y la fila de PDF. */
+  .slide.ultra{padding-top:12px;padding-bottom:10px}
+  .slide.ultra .eyebrow{font-size:11px;letter-spacing:1.6px;margin-bottom:6px}
+  .slide.ultra h2{font-size:19.5px}
+  .slide.ultra .lead{font-size:11.9px;margin-top:2px}
+  .slide.ultra .lead[style*="margin-top"]{margin-top:9px!important}
+  .slide.ultra .infobanner,.slide.ultra .objhero{padding:8px 12px;font-size:11.9px;margin-top:7px}
+  .slide.ultra .banner,.slide.ultra .warn,.slide.ultra .authbanner{margin-top:10px;padding:9px 14px;font-size:12.2px}
+  .slide.ultra .warn svg{width:20px;height:20px}
+  .slide.ultra .pdfrow{margin-top:10px;gap:10px}
+  .slide.ultra .pdfmini{padding:9px 13px}
+  .slide.ultra .pdfmini>span:not(.miniico){font-size:11.9px}
+  .slide.ultra .accgrid{gap:4px}
+  .slide.ultra .accgrid[style*="margin-top"]{margin-top:8px!important}
+  .slide.ultra .acc-head h4{font-size:12.8px}
+  .slide.ultra .chipgrid,.slide.ultra .acts,.slide.ultra .behaviors{gap:6px;margin-top:8px}
+  .slide.ultra .chip3{padding:8px}
+  .slide.ultra .chip3 .nm{font-size:11.7px}
+  .slide.ultra .act{min-height:76px;padding:12px 9px;font-size:12px;gap:6px}
+  .slide.ultra .flips{gap:12px}
+  .slide.ultra .flip{height:190px}
+  .slide.ultra .face{padding:16px}
+  .slide.ultra .wbwrap{gap:18px;margin-top:10px}
+  .slide.ultra .wbring{width:min(250px,70vw)}
+  .slide.ultra .mediaBox img,.slide.ultra .mediaBox video{max-height:min(38vh,300px)}
+  .slide.ultra .panel,.slide.ultra .card-center{padding:15px 16px}
+  .slide.ultra .two{gap:14px}
+  .slide.ultra .acc-body p,.slide.ultra .acc-body .li,
+  .slide.ultra .acc-body .pt{font-size:11.2px;line-height:1.3}
+  .slide.ultra .acc.open .acc-body{padding:0 11px 6px}
+  .slide.ultra .acc-head{padding:7px 11px 2px}
+  .slide.ultra .chip3{gap:9px}
+  .slide.ultra .chip3 .code{font-size:11.5px;padding:4px 6px;min-width:50px}
+  .slide.ultra .mediaBox img,.slide.ultra .mediaBox video{max-height:min(38vh,300px)}
+  .slide.ultra .panel,.slide.ultra .card-center{padding:15px 16px}
+  .slide.ultra .two{gap:14px}
+  .slide.ultra .acc-body p,.slide.ultra .acc-body .li,
+  .slide.ultra .acc-body .pt{font-size:11.2px;line-height:1.3}
+  .slide.ultra .acc.open .acc-body{padding:0 11px 6px}
+  .slide.ultra .acc-head{padding:7px 11px 2px}
+  .slide.ultra .chip3{gap:9px}
+  .slide.ultra .chip3 .code{font-size:11.5px;padding:4px 6px;min-width:50px}
+  /* En pantallas tactiles no se encogen los blancos que hay que pulsar. */
+  @media(pointer:coarse){
+    .slide.ultra .act{min-height:84px;padding:14px 10px}
+    .slide.ultra .chip3{padding:10px}
+  }
   /* ===== Dos grupos rotulados (Reglas HSE) =====
      Una columna para lo que hay que hacer y otra para lo prohibido. */
   .dosgrupos{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:14px;align-items:start}
@@ -733,6 +777,25 @@
     .muy-apretado .avisocian{padding:5px 11px}
   }
   @media(max-width:700px){.bloqfoto.ancha,.bloqfoto.fotoizq.ancha{grid-template-columns:1fr}}
+
+  /* Dos bloques: las cuatro laminas de inspeccion a la izquierda y la regla
+     del hombre caido, con su rotulo, a la derecha. */
+  .insp{display:grid;grid-template-columns:1.7fr 1fr;gap:14px;align-items:start;margin-top:12px}
+  .insp4{display:grid;grid-template-columns:repeat(2,1fr);gap:11px}
+  .insptit{background:var(--panel);border-radius:11px 11px 0 0;padding:9px 14px;
+    font-size:13.4px;font-weight:800;color:var(--green);text-transform:uppercase;letter-spacing:.4px;
+    text-align:center;border-bottom:4px solid;border-image:var(--grad) 1}
+  .inspcol .imgcap{border-radius:0 0 11px 11px}
+  @media(max-height:820px){
+    .insp{gap:11px;margin-top:9px} .insp4{gap:9px}
+    .insptit{padding:7px 12px;font-size:12.4px}
+  }
+  .apretado .insp{gap:9px;margin-top:7px} .apretado .insp4{gap:7px}
+  .apretado .insptit{padding:5px 11px;font-size:11.6px}
+  @media(max-width:1000px){
+    .insp{grid-template-columns:1fr}
+  }
+  @media(max-width:620px){.insp4{grid-template-columns:1fr}}
 
   /* ===== IMAGEN CON PIE DE COLOR =====
      La ilustracion arriba y su explicacion en una banda debajo, como en el
@@ -3340,7 +3403,6 @@
     <div class="lamina rv up" style="--d:3;--h:330px">
       <span class="ph" data-foto="evalriesgos(D45)"><svg viewBox="0 0 200 80"><rect x="3" y="3" width="194" height="74" rx="3"/><circle cx="60" cy="30" r="9"/><path d="M50 26a10 10 0 0 1 20 0M47 26h26"/><path d="M46 68c0-12 6-21 14-21s14 9 14 21"/><rect x="70" y="40" width="20" height="26" rx="2"/><rect x="14" y="14" width="30" height="24" rx="2"/><path d="M20 22h18M20 28h12"/><path d="M110 46h34v14h-34zM144 50h14l8 6v4h-22z"/><circle cx="120" cy="63" r="4"/><circle cx="152" cy="63" r="4"/><path d="M172 44l10 6v14h-16V50z"/></svg></span>
     </div>
-</div>
   </div>
 </section>
 <section class="slide nogate light mint" data-mod="4">
@@ -3390,7 +3452,21 @@
   <div class="wrap">
     <div class="eyebrow rv up">HSE-101 · Equipos móviles y tráfico en sitio</div>
     <h2 class="rv up" style="--d:1">Inspecciones y regla del hombre caído</h2>
-    <div class="accgrid" style="margin-top:16px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Inspecciones pre-operativas</h4><span class="chev">+</span></div><div class="acc-body"><p>Realiza inspecciones antes de cada turno y lleva un registro. Si un técnico de taller realiza la inspección, el operador aún debe hacer una inspección visual y revisar los frenos; asegura una evaluación de puntos ciegos e instala espejos adicionales donde sea necesario.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#ef7d00"></span><h4>Regla del hombre caído</h4><span class="chev">+</span></div><div class="acc-body"><p>Cuando un peatón ingresa al área de operación de un equipo móvil, el operador debe detenerse y no continuar hasta que el peatón se retire del área de riesgo.</p></div></div></div>
+    <div class="insp">
+      <div class="insp4">
+        <article class="imgcap rv up" style="--c:var(--panel);--h:132px;--d:0"><span class="ph" data-foto="inspeccion1(D47)"><svg viewBox="0 0 200 110"><rect x="70" y="30" width="80" height="46" rx="3"/><path d="M150 46h22l16 16v14h-38"/><circle cx="96" cy="86" r="9"/><circle cx="166" cy="86" r="9"/><circle cx="34" cy="30" r="11"/><path d="M22 26a12 12 0 0 1 24 0M19 26h30"/><path d="M14 84c0-14 9-24 20-24s20 10 20 24"/><rect x="40" y="46" width="22" height="28" rx="2"/><path d="M45 54h12M45 62h9"/></svg></span><p>Realice inspecciones pre-operativas antes del inicio de cada turno y lleve un registro de las mismas.</p></article>
+        <article class="imgcap rv up" style="--c:var(--cyan);--h:132px;--d:1"><span class="ph" data-foto="inspeccion2(D47)"><svg viewBox="0 0 200 110"><circle cx="42" cy="28" r="11"/><path d="M30 24a12 12 0 0 1 24 0M27 24h30"/><path d="M22 88c0-15 9-26 20-26s20 11 20 26"/><circle cx="158" cy="28" r="11"/><path d="M146 24a12 12 0 0 1 24 0M143 24h30"/><path d="M138 88c0-15 9-26 20-26s20 11 20 26"/><circle cx="100" cy="56" r="24"/><path d="M100 32v10M100 70v10M76 56h10M114 56h10"/><circle cx="100" cy="56" r="7"/></svg></span><p>Si un técnico de taller realiza la inspección pre-operativa del equipo móvil, el operador aún debe realizar una inspección visual y revisar los frenos antes de operar en la localidad.</p></article>
+        <article class="imgcap rv up" style="--c:var(--cyan);--h:132px;--d:2"><span class="ph" data-foto="elementos(D47)"><svg viewBox="0 0 200 120"><rect x="10" y="8" width="40" height="34" rx="3"/><rect x="60" y="8" width="40" height="34" rx="3"/><rect x="110" y="8" width="40" height="34" rx="3"/><rect x="160" y="8" width="40" height="34" rx="3"/><rect x="10" y="62" width="40" height="34" rx="3"/><rect x="60" y="62" width="40" height="34" rx="3"/><rect x="110" y="62" width="40" height="34" rx="3"/><rect x="160" y="62" width="40" height="34" rx="3"/><path d="M22 26h16M22 34h10M72 26h16M72 34h10M122 26h16M122 34h10M172 26h16M172 34h10M22 80h16M22 88h10M72 80h16M72 88h10M122 80h16M122 88h10M172 80h16M172 88h10"/></svg></span><p>Entre los elementos de seguridad a revisar están: asientos y cinturones, espejo, ruedas, frenos, faros, alarma de reversa, líneas hidráulicas y defectos visibles.</p></article>
+        <article class="imgcap rv up" style="--c:var(--panel);--h:132px;--d:3"><span class="ph" data-foto="puntosciegos(D47)"><svg viewBox="0 0 200 110"><rect x="8" y="14" width="82" height="82" rx="4"/><rect x="110" y="14" width="82" height="82" rx="4"/><circle cx="40" cy="48" r="10"/><path d="M30 44a10 10 0 0 1 20 0M27 44h26"/><rect x="58" y="30" width="20" height="26" rx="2"/><circle cx="142" cy="48" r="10"/><path d="M132 44a10 10 0 0 1 20 0M129 44h26"/><rect x="160" y="30" width="20" height="26" rx="2"/><path d="M34 76l14 14M48 76L34 90" stroke-width="3"/><path d="M136 82l5 5 12-12" stroke-width="3"/></svg></span><p>Asegúrese de que todos los equipos sean sometidos a una evaluación de puntos ciegos y que se instalen espejos adicionales donde sea necesario.</p></article>
+      </div>
+      <div class="inspcol rv up" style="--d:2">
+        <div class="insptit">Regla del hombre caído</div>
+        <article class="imgcap" style="--c:var(--panel);--h:150px">
+          <span class="ph" data-foto="hombrecaido(D47)"><svg viewBox="0 0 200 130"><rect x="46" y="24" width="66" height="42" rx="4"/><path d="M56 34h20v18H56z"/><path d="M112 44h20l16 18v12h-36z"/><path d="M30 78h130v16H30z"/><circle cx="46" cy="86" r="9"/><circle cx="80" cy="86" r="9"/><circle cx="120" cy="86" r="9"/><circle cx="150" cy="86" r="9"/><circle cx="180" cy="46" r="10"/><path d="M170 42a10 10 0 0 1 20 0M167 42h26"/><path d="M164 110c0-14 7-24 16-24s16 10 16 24"/><path d="M158 60h-14M152 54l-8 6 8 6"/></svg></span>
+          <p>Cuando un peatón ingresa al área de operación de un equipo móvil, el operador del equipo debe detenerse y no continuar su actividad hasta tanto el peatón se retire del área de riesgo.</p>
+        </article>
+      </div>
+    </div>
     <div class="pdfrow rv up" style="grid-template-columns:1fr"><div class="pdfmini"><span>Consulta la <b>guía visual</b> de inspecciones.</span><button class="pdfbtn" data-pdf="moviles_guia" data-title="Guía visual · equipos móviles">Ver más</button></div></div>
   </div>
 </section>
@@ -3961,7 +4037,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-04-u";
+var VERSION_CURSO = "2026-09-04-w";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
@@ -4373,36 +4449,6 @@ function next(){
 function prev(){ if(idx>0) goTo(idx-1, -1); }
 nextBtn.addEventListener('click', next);
 prevBtn.addEventListener('click', prev);
-/* ====== RUEDA DEL RATÓN ======
-   Si a la diapositiva le queda contenido oculto, la rueda lo desplaza como
-   siempre y aquí no se hace nada. Cuando ya está al tope, el siguiente giro
-   pasa de diapositiva: antes la rueda se quedaba sin efecto en casi todas
-   —porque ya caben enteras— y eso se siente como si estuviera bloqueada.
-   Un gesto = un paso, y no se hace nada si hay una ventana abierta encima. */
-(function(){
-  var deck = document.querySelector('.deck'); if(!deck) return;
-  var ultimo = 0, acumulado = 0;
-  function ventanaAbierta(){
-    if(document.querySelector('#pdfmodal.show, #reportModal.show, #admpanel.show')) return true;
-    var w = document.getElementById('welcome');
-    return !!(w && !w.classList.contains('hide'));
-  }
-  deck.addEventListener('wheel', function(e){
-    if(ventanaAbierta()) return;
-    var s = slides[idx]; if(!s) return;
-    var margen = 2;
-    var puedeBajar = s.scrollTop + s.clientHeight < s.scrollHeight - margen;
-    var puedeSubir = s.scrollTop > margen;
-    /* Mientras quede recorrido dentro de la diapositiva, manda el desplazamiento. */
-    if((e.deltaY > 0 && puedeBajar) || (e.deltaY < 0 && puedeSubir)){ acumulado = 0; return; }
-    var ahora = Date.now();
-    if(ahora - ultimo < 650) return;
-    acumulado += e.deltaY;
-    if(Math.abs(acumulado) < 55) return;   /* un roce no cambia de diapositiva */
-    acumulado = 0; ultimo = ahora;
-    if(e.deltaY > 0) next(); else prev();
-  }, {passive:true});
-})();
 document.addEventListener('keydown', function(e){ var ap=document.getElementById('admpanel'); if(ap&&ap.classList.contains('show'))return; var md=document.getElementById('pdfmodal'); if(md&&md.classList.contains('show'))return; var wc=document.getElementById('welcome'); if(wc&&!wc.classList.contains('hide'))return; if(e.key==='ArrowRight') next(); if(e.key==='ArrowLeft') prev(); });
 /* reveal de la primera slide */
 reveal(slides[0]); chrome();
@@ -5197,11 +5243,13 @@ document.querySelectorAll('.pueBox').forEach(function(box){
      escalones antes de rendirse y dejar que se desplace. */
   function ajustar(s){
     if(!s || s.scrollTop > 0) return;   // ya la está leyendo: no le movemos el alto
-    s.classList.remove('apretado','muy-apretado');
+    s.classList.remove('apretado','muy-apretado','ultra');
     if(s.scrollHeight <= s.clientHeight + 4) return;
     s.classList.add('apretado');
     if(s.scrollHeight <= s.clientHeight + 4) return;
     s.classList.add('muy-apretado');
+    if(s.scrollHeight <= s.clientHeight + 4) return;
+    s.classList.add('ultra');
   }
   function revisar(){
     var s=slides[idx];
