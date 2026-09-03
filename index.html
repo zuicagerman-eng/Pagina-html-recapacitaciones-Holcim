@@ -684,6 +684,43 @@
     .tecfoto.foto{width:56px;height:56px} .tecfoto svg{width:34px;height:34px}
   }
   @media(max-width:900px){.tecnicas{grid-template-columns:1fr;gap:12px}}
+  /* ===== Flujo de 8 pasos en zigzag =====
+     Las flechas van dibujadas y animadas por CSS: son tres dibujos que se
+     repiten ocho veces, asi que no tiene sentido subir ocho archivos. */
+  .pasos8{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:16px}
+  /* La segunda fila arranca una columna mas a la derecha: es lo que hace que
+     el recorrido se lea en diagonal, como en el material impreso. */
+  .paso8:nth-child(5){grid-column:2}
+  .paso8{display:flex;flex-direction:column;gap:10px;justify-content:center;
+    padding:14px 13px;border-radius:12px;background:#fff;box-shadow:var(--shadow);
+    min-width:0;text-align:center}
+  .paso8:nth-child(even){background:#eef3f9}
+  .paso8 h4{font-size:14px;font-weight:800;color:var(--blue);line-height:1.25}
+  .paso8 p{font-size:12.6px;line-height:1.45;color:var(--ink)}
+  .p8flecha{display:flex;align-items:center;justify-content:center;height:26px}
+  .p8flecha svg{height:100%;width:auto;fill:none;stroke:var(--green);
+    stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
+  .paso8.abajo .p8flecha svg{stroke:var(--magenta)}
+  /* El destello corre de una punta a la otra: marca hacia donde sigue el flujo. */
+  @keyframes p8pulso{0%,100%{opacity:.28}45%{opacity:1}}
+  .p8flecha svg path{animation:p8pulso 1.7s ease-in-out infinite}
+  .p8flecha svg path:nth-child(2){animation-delay:.22s}
+  @media(prefers-reduced-motion:reduce){.p8flecha svg path{animation:none;opacity:.85}}
+  @media(max-height:820px){
+    .pasos8{gap:10px}
+    .paso8{padding:11px 11px;gap:8px}
+    .paso8 h4{font-size:13px} .paso8 p{font-size:12px;line-height:1.4}
+    .p8flecha{height:21px}
+  }
+  .apretado .paso8{padding:9px 10px;gap:6px}
+  .apretado .paso8 p{font-size:11.4px;line-height:1.35}
+  .apretado .p8flecha{height:17px}
+  /* En pantallas angostas el zigzag estorba: se vuelve una lista pareja. */
+  @media(max-width:900px){
+    .pasos8{grid-template-columns:repeat(2,1fr)}
+    .paso8:nth-child(5){grid-column:auto}
+  }
+  @media(max-width:520px){.pasos8{grid-template-columns:1fr}}
   /* Subtitulo bajo el h2, con el subrayado degradado de la marca. */
   .subt{font-size:clamp(17px,2.1vw,23px);font-weight:800;color:#bfe0ff;margin-top:4px;
     padding-bottom:7px;display:inline-block;border-bottom:4px solid transparent;
@@ -1995,8 +2032,17 @@
   <div class="wrap">
     <div class="eyebrow rv up">Control operacional · Gestión del cambio</div>
     <h2 class="rv up" style="--d:1">Así lo hacemos en Holcim</h2>
-    <p class="lead rv up" style="--d:2">El proceso tiene <b>8 pasos</b>. Toca cada uno para verlo. 👆</p>
-    <div class="accgrid" style="margin-top:12px"><div class="acc rv up"><div class="acc-head"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><text x="12" y="16" font-size="12" fill="#fff" text-anchor="middle" stroke="none">1</text></svg></span><h4>Identificar el cambio</h4><span class="chev">+</span></div><div class="acc-body"><p>Detectar la necesidad de cambio y su impacto.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><text x="12" y="16" font-size="12" fill="#fff" text-anchor="middle" stroke="none">2</text></svg></span><h4>Evaluar riesgos</h4><span class="chev">+</span></div><div class="acc-body"><p>Analizar los riesgos asociados y definir controles necesarios.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><text x="12" y="16" font-size="12" fill="#fff" text-anchor="middle" stroke="none">3</text></svg></span><h4>Implementar controles</h4><span class="chev">+</span></div><div class="acc-body"><p>Ejecutar las medidas de control para mitigar riesgos.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><text x="12" y="16" font-size="12" fill="#fff" text-anchor="middle" stroke="none">4</text></svg></span><h4>Actualizar documentación</h4><span class="chev">+</span></div><div class="acc-body"><p>Revisar y ajustar documentos afectados por el cambio.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><text x="12" y="16" font-size="12" fill="#fff" text-anchor="middle" stroke="none">5</text></svg></span><h4>Comunicar y capacitar</h4><span class="chev">+</span></div><div class="acc-body"><p>Informar y entrenar al personal sobre los cambios.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><text x="12" y="16" font-size="12" fill="#fff" text-anchor="middle" stroke="none">6</text></svg></span><h4>Aprobar el cambio</h4><span class="chev">+</span></div><div class="acc-body"><p>Obtener la validación formal para proceder.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><text x="12" y="16" font-size="12" fill="#fff" text-anchor="middle" stroke="none">7</text></svg></span><h4>Ejecutar las acciones</h4><span class="chev">+</span></div><div class="acc-body"><p>Implementar el cambio planificado según lo aprobado.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><text x="12" y="16" font-size="12" fill="#fff" text-anchor="middle" stroke="none">8</text></svg></span><h4>Inspeccionar</h4><span class="chev">+</span></div><div class="acc-body"><p>Verificar que el cambio se haya realizado correctamente.</p></div></div></div>
+    <p class="lead rv up" style="--d:2">El proceso de gestión del cambio tiene <b>8 pasos</b>, en este orden:</p>
+    <div class="pasos8">
+      <article class="paso8 arriba rv up" style="--d:1"><span class="p8flecha"><svg viewBox="0 0 30 22" aria-hidden="true"><path d="M4 3l8 8-8 8"/><path d="M17 3l8 8-8 8"/></svg></span><h4>1. Identificar el cambio</h4><p>Detectar la necesidad de cambio y su impacto.</p></article>
+      <article class="paso8 abajo rv up" style="--d:2"><h4>2. Evaluar riesgos</h4><p>Analizar los riesgos asociados y definir controles necesarios.</p><span class="p8flecha"><svg viewBox="0 0 30 22" aria-hidden="true"><path d="M4 3l8 8-8 8"/><path d="M17 3l8 8-8 8"/></svg></span></article>
+      <article class="paso8 arriba rv up" style="--d:3"><span class="p8flecha"><svg viewBox="0 0 30 22" aria-hidden="true"><path d="M4 3l8 8-8 8"/><path d="M17 3l8 8-8 8"/></svg></span><h4>3. Implementar controles</h4><p>Ejecutar las medidas de control para mitigar riesgos.</p></article>
+      <article class="paso8 abajo rv up" style="--d:4"><h4>4. Actualizar documentación</h4><p>Revisar y ajustar documentos afectados por el cambio.</p><span class="p8flecha"><svg viewBox="0 0 30 22" aria-hidden="true"><path d="M4 3l8 8-8 8"/><path d="M17 3l8 8-8 8"/></svg></span></article>
+      <article class="paso8 arriba rv up" style="--d:5"><span class="p8flecha"><svg viewBox="0 0 30 22" aria-hidden="true"><path d="M4 3l8 8-8 8"/><path d="M17 3l8 8-8 8"/></svg></span><h4>5. Comunicar y capacitar</h4><p>Informar y entrenar al personal sobre los cambios.</p></article>
+      <article class="paso8 abajo rv up" style="--d:6"><h4>6. Aprobar el cambio</h4><p>Obtener la validación formal para proceder.</p><span class="p8flecha"><svg viewBox="0 0 30 22" aria-hidden="true"><path d="M4 3l8 8-8 8"/><path d="M17 3l8 8-8 8"/></svg></span></article>
+      <article class="paso8 arriba rv up" style="--d:6"><span class="p8flecha"><svg viewBox="0 0 30 22" aria-hidden="true"><path d="M4 3l8 8-8 8"/><path d="M17 3l8 8-8 8"/></svg></span><h4>7. Ejecutar las acciones</h4><p>Implementar el cambio planificado según lo aprobado.</p></article>
+      <article class="paso8 abajo rv up" style="--d:6"><h4>8. Inspeccionar</h4><p>Verificar que el cambio se haya realizado correctamente.</p><span class="p8flecha"><svg viewBox="0 0 30 22" aria-hidden="true"><path d="M4 12l7 7L26 4"/></svg></span></article>
+    </div>
   </div>
 </section>
 <section class="slide dark teal" data-mod="3">
@@ -2630,7 +2676,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-03-l";
+var VERSION_CURSO = "2026-09-03-m";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
