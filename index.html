@@ -707,6 +707,48 @@
     .bloqfoto>div{order:2}
   }
 
+  /* ===== FILA PARTIDA: rotulo con icono + descripcion =====
+     Panel de color a la izquierda y caja blanca a la derecha, como el impreso.
+     El icono va dibujado: son dos figuras, no vale la pena subir archivos. */
+  .parfila{display:grid;grid-template-columns:minmax(170px,282px) 1fr;
+    border:2px solid var(--c);border-radius:9px;overflow:hidden;margin-top:9px}
+  .pfizq{background:var(--c);color:#fff;display:flex;align-items:center;gap:13px;
+    padding:12px 16px;font-weight:800;font-size:15px;line-height:1.22;min-width:0}
+  .pfico{width:44px;height:44px;flex:none;display:grid;place-items:center}
+  .pfico svg{width:100%;height:100%;fill:#fff}
+  .pfder{background:#fff;padding:12px 17px;display:flex;align-items:center;min-width:0}
+  .pfder p{font-size:13.6px;line-height:1.45;color:var(--ink)}
+  @media(max-height:820px){
+    .parfila{margin-top:7px} .pfizq{padding:9px 13px;font-size:14px;gap:11px}
+    .pfico{width:37px;height:37px} .pfder{padding:9px 14px} .pfder p{font-size:12.8px}
+  }
+  .apretado .pfizq{padding:7px 12px;font-size:13px} .apretado .pfico{width:31px;height:31px}
+  .apretado .pfder{padding:7px 12px} .apretado .pfder p{font-size:12.2px;line-height:1.38}
+  .muy-apretado .pfizq{padding:6px 11px;font-size:12.3px} .muy-apretado .pfico{width:27px;height:27px}
+  .muy-apretado .pfder p{font-size:11.7px;line-height:1.34}
+  @media(max-width:620px){
+    .parfila{grid-template-columns:1fr}
+    .pfizq{justify-content:flex-start}
+  }
+  /* La foto puede ir a la izquierda cuando el texto pesa mas que la imagen. */
+  .bloqfoto.fotoizq{grid-template-columns:auto 1fr}
+  @media(max-width:700px){.bloqfoto.fotoizq>div{order:2}}
+  /* Rotulo dentro del bloque, por debajo del verde. */
+  .subneg{font-size:14.6px;font-weight:800;color:#fff;margin:2px 0 4px}
+  .slide.light .subneg{color:var(--ink)}
+  @media(max-height:820px){.subneg{font-size:13.6px}}
+  .apretado .subneg{font-size:12.8px;margin:1px 0 2px}
+  @media(max-height:760px){
+    .muy-apretado .parfila{margin-top:5px}
+    .muy-apretado .pfizq{padding:5px 10px;font-size:11.8px}
+    .muy-apretado .pfder{padding:5px 11px}
+    .muy-apretado .subneg{font-size:12.2px;margin:0 0 1px}
+    .muy-apretado .fotorect svg{height:56px}
+    .muy-apretado .lineat li{padding:3px 0 3px 13px;font-size:11.6px}
+    .muy-apretado .subt{font-size:15px;padding-bottom:3px;border-bottom-width:3px}
+    .muy-apretado .subverde{font-size:13.4px;margin-bottom:2px}
+  }
+
   /* Lamina ancha centrada: la ilustracion es el contenido, no un adorno. */
   .fotoancha{display:flex;justify-content:center;margin-top:10px}
   .fotoancha img{max-width:100%;max-height:196px;width:auto;height:auto;display:block}
@@ -2606,8 +2648,42 @@
     <p class="lead rv up" style="--d:5">Es obligatorio seguir la matriz y el plan anual de capacitación, que incluye evaluaciones para asegurar que el contenido sea comprendido por los niveles operativos.</p>
   </div>
 </section>
-<section class="slide dark teal" data-mod="4">
-<div class="wrap"><div class="eyebrow rv up">HSE-001 · Sistema de gestión</div><h2 class="rv up" style="--d:1">Gestión de riesgos en el terreno</h2><p class="lead rv up" style="--d:2">Toca cada punto. 👆</p><div class="accgrid" style="margin-top:16px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>Trabajos rutinarios</h4><span class="chev">+</span></div><div class="acc-body"><p>Se controlan con <b>Instrucciones de Trabajo Seguro (ITS)</b>.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#ef7d00"></span><h4>No planificados o emergencias</h4><span class="chev">+</span></div><div class="acc-body"><p>Se controlan con <b>Análisis de Trabajo Seguro (ATS)</b>.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Fases de ejecución del trabajo</h4><span class="chev">+</span></div><div class="acc-body"><p>Revisión de ITS/LOTOTO · Aprobación del permiso de trabajo y verificación de controles críticos · Análisis de Riesgo Personal en el sitio.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#0e2c56"></span><h4>Autoridad para detener trabajos</h4><span class="chev">+</span></div><div class="acc-body"><p>Todo trabajador está empoderado y tiene la obligación de detener cualquier tarea que considere insegura (<b>Stop Work Authority</b>).</p></div></div></div><div class="infobanner rv up" style="margin-top:16px">Incluye el control de eventos críticos (PUE) y programas de higiene industrial para reducir la exposición a sustancias peligrosas según límites internacionales (ACGIH).</div></div>
+<section class="slide nogate dark teal" data-mod="4">
+  <div class="wrap">
+    <div class="eyebrow rv up">HSE-001 · Sistema de gestión</div>
+    <h2 class="rv up" style="--d:1">Gestión de riesgos en el terreno</h2>
+    <h3 class="subt rv up" style="--d:2">Numerales 3.5 &ndash; 3.10</h3>
+
+    <h3 class="subverde rv up" style="--d:3;margin-top:12px">Trabajos estándar vs. no estándar</h3>
+    <div class="parfila rv up" style="--c:#8bbf3a;--d:3">
+      <div class="pfizq"><span class="pfico"><svg viewBox="0 0 48 48" aria-hidden="true"><path fill-rule="evenodd" d="M20.6 3h6.8l.9 4.6 3.5 1.5 3.9-2.6 4.8 4.8-2.6 3.9 1.5 3.5 4.6.9v6.8l-4.6.9-1.5 3.5 2.6 3.9-4.8 4.8-3.9-2.6-3.5 1.5-.9 4.6h-6.8l-.9-4.6-3.5-1.5-3.9 2.6-4.8-4.8 2.6-3.9-1.5-3.5L3 27.4v-6.8l4.6-.9 1.5-3.5-2.6-3.9 4.8-4.8 3.9 2.6 3.5-1.5zM24 15.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17z"/></svg></span><span>Trabajos rutinarios</span></div>
+      <div class="pfder"><p>Se controlan con <b>Instrucciones de Trabajo Seguro (ITS)</b>.</p></div>
+    </div>
+    <div class="parfila rv up" style="--c:#ef7d00;--d:4">
+      <div class="pfizq"><span class="pfico"><svg viewBox="0 0 48 48" aria-hidden="true"><path fill-rule="evenodd" d="M24 4.5 46 42.5H2zM21.7 17h4.6l-.6 13h-3.4zM21.8 33.4h4.4v4.4h-4.4z"/></svg></span><span>No planificados o emergencias</span></div>
+      <div class="pfder"><p>Se controlan con <b>Análisis de Trabajo Seguro (ATS)</b>.</p></div>
+    </div>
+
+    <div class="bloqfoto fotoizq rv up" style="--d:5;margin-top:15px">
+      <span class="fotorect" data-foto="terreno(D33)"><svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="58" cy="34" r="11"/><path d="M46 27a12 12 0 0 1 24 0M42 27h32"/><path d="M38 96c0-14 9-24 20-24s20 10 20 24"/><rect x="66" y="60" width="22" height="27" rx="2"/><path d="M71 68h12M71 75h9"/><path d="M8 108h104"/></svg></span>
+      <div>
+        <h3 class="subverde">Ejecución y control del trabajo</h3>
+        <h4 class="subneg">Fases de ejecución del trabajo</h4>
+        <ul class="lineat">
+          <li>Revisión de ITS / LOTOTO.</li>
+          <li>Aprobación del permiso de trabajo y verificación de controles críticos.</li>
+          <li>Análisis de Riesgo Personal en el sitio.</li>
+        </ul>
+        <h4 class="subneg" style="margin-top:8px">Autoridad para detener trabajos</h4>
+        <ul class="lineat">
+          <li>Todo trabajador está empoderado y tiene la obligación de detener cualquier tarea que considere insegura (<b>Stop Work Authority</b>).</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 class="subverde rv up" style="--d:6;margin-top:14px">Gestión de riesgos laborales y salud</h3>
+    <div class="infobanner rv up" style="margin-top:6px">Incluye el control de eventos críticos (PUE) y programas de higiene industrial para reducir la exposición a sustancias peligrosas según límites internacionales (ACGIH).</div>
+  </div>
 </section>
 <section class="slide light mint" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">HSE-001 · Sistema de gestión</div><h2 class="rv up" style="--d:1">Soporte, emergencias y desempeño</h2><p class="lead rv up" style="--d:2">Voltea cada tarjeta para conocer la información. 👆</p><div class="flips" style="margin-top:16px"><div class="flip rv up" tabindex="0" role="button"><div class="flip-in"><div class="face front"><div class="n">1</div><h3>Preparación para emergencias y respuesta</h3><div class="hint">Toca para ver ↺</div></div><div class="face back"><h4>Preparación para emergencias y respuesta</h4><p>Las unidades deben garantizar planes de respuesta para proteger a las personas, los activos y la reputación en caso de incidentes.</p></div></div></div><div class="flip rv up" tabindex="0" role="button"><div class="flip-in"><div class="face front"><div class="n">2</div><h3>Control y conservación de documentos</h3><div class="hint">Toca para ver ↺</div></div><div class="face back"><h4>Control y conservación de documentos</h4><p>Los registros de cumplimiento deben conservarse por un mínimo de 5 años y estar disponibles para inspecciones regulatorias.</p></div></div></div><div class="flip rv up" tabindex="0" role="button"><div class="flip-in"><div class="face front"><div class="n">3</div><h3>Evaluación de brechas y auditorías</h3><div class="hint">Toca para ver ↺</div></div><div class="face back"><h4>Evaluación de brechas y auditorías</h4><p>Se realizan evaluaciones internas anuales y auditorías de grupo para verificar el cumplimiento del estándar HSEMS.</p></div></div></div><div class="flip rv up" tabindex="0" role="button"><div class="flip-in"><div class="face front"><div class="n">4</div><h3>Comité de HSE multifuncional</h3><div class="hint">Toca para ver ↺</div></div><div class="face back"><h4>Comité de HSE multifuncional</h4><p>Reuniones mensuales entre gerencia y trabajadores para revisar indicadores, investigar incidentes y gestionar cambios.</p></div></div></div></div></div>
@@ -3214,7 +3290,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-04-c";
+var VERSION_CURSO = "2026-09-04-d";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
