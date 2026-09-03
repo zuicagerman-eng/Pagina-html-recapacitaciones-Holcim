@@ -684,6 +684,45 @@
     .tecfoto.foto{width:56px;height:56px} .tecfoto svg{width:34px;height:34px}
   }
   @media(max-width:900px){.tecnicas{grid-template-columns:1fr;gap:12px}}
+  /* Subtitulo bajo el h2, con el subrayado degradado de la marca. */
+  .subt{font-size:clamp(17px,2.1vw,23px);font-weight:800;color:#bfe0ff;margin-top:4px;
+    padding-bottom:7px;display:inline-block;border-bottom:4px solid transparent;
+    border-image:var(--grad) 1}
+  .slide.light .subt{color:var(--panel)}
+  @media(max-height:820px){.subt{padding-bottom:5px}}
+  /* ===== Lista con linea de tiempo + imagen al lado =====
+     Se lee de corrido, sin tener que tocar nada: la usamos donde el contenido
+     es una enumeracion y no una actividad. */
+  .filaimg{display:grid;grid-template-columns:minmax(150px,270px) 1fr;gap:clamp(18px,3vw,40px);
+    align-items:center;margin-top:18px}
+  .filaimg-foto{display:flex;align-items:center;justify-content:center;min-width:0}
+  .filaimg-foto img{max-width:100%;max-height:340px;width:auto;height:auto;object-fit:contain;display:block}
+  .filaimg-foto svg{width:100%;max-width:250px;height:auto}
+  .lineat{list-style:none;position:relative;padding-left:26px;min-width:0}
+  /* La linea vertical no llega a los bordes: arranca y termina en el centro
+     del primer y del ultimo punto, como en el material impreso. */
+  .lineat:before{content:"";position:absolute;left:6px;top:var(--t0,20px);bottom:var(--t0,20px);
+    width:3px;border-radius:3px;background:linear-gradient(180deg,#97d13b,#1bb4e4 55%,#1877c4)}
+  .lineat li{position:relative;padding:11px 0 11px 20px;font-size:15px;line-height:1.5;
+    border-bottom:1px dotted rgba(255,255,255,.22)}
+  .lineat li:last-child{border-bottom:0}
+  .lineat li:before{content:"";position:absolute;left:-9px;top:calc(50% - 8px);
+    width:17px;height:17px;border-radius:50%;background:var(--grad);
+    box-shadow:0 0 0 3px rgba(7,26,56,.9)}
+  .slide.light .lineat li{border-bottom-color:rgba(11,37,69,.16)}
+  .slide.light .lineat li:before{box-shadow:0 0 0 3px #fff}
+  @media(max-height:820px){
+    .filaimg{gap:22px;margin-top:14px}
+    .filaimg-foto img{max-height:260px}
+    .lineat li{padding:8px 0 8px 18px;font-size:14px}
+  }
+  .apretado .filaimg-foto img{max-height:210px}
+  .apretado .lineat li{padding:6px 0 6px 18px;font-size:13.5px}
+  @media(max-width:760px){
+    .filaimg{grid-template-columns:1fr;gap:14px}
+    .filaimg-foto img{max-height:190px}
+    .filaimg-foto svg{max-width:190px}
+  }
   /* ===== PDFs ===== */
   .infobanner{background:var(--panel);color:#fff;border-radius:12px;padding:15px 20px;font-size:14px;line-height:1.5;border-left:5px solid;border-image:var(--grad) 1;margin-top:14px}
   .pdfcards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:22px}
@@ -1937,9 +1976,26 @@
   <div class="wrap">
     <div class="eyebrow rv up">Control operacional · Gestión del cambio</div>
     <h2 class="rv up" style="--d:1">Gestión del Cambio</h2>
-    <p class="lead rv up" style="--d:2">Se entiende por <b>cambio</b> (toca cada uno). 👆</p>
-    <div class="chipgrid" style="grid-template-columns:repeat(2,1fr)"><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:var(--cyan)">1</span><span class="nm">Las ubicaciones de los lugares de trabajo y sus alrededores.</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:var(--cyan)">2</span><span class="nm">La organización del trabajo.</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:var(--cyan)">3</span><span class="nm">Las condiciones de trabajo.</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:var(--cyan)">4</span><span class="nm">Los equipos.</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:var(--cyan)">5</span><span class="nm">La fuerza de trabajo.</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:var(--cyan)">6</span><span class="nm">Cambios en el conocimiento o información sobre los peligros y riesgos para la SST.</span><span class="tick">✓</span></div></div>
-    <p class="lead rv up" style="margin-top:22px">Así lo hacemos en Holcim — <b>8 pasos</b> (toca cada uno):</p>
+    <h3 class="subt rv up" style="--d:2">Condiciones generales</h3>
+    <p class="lead rv up" style="--d:3">De acuerdo a lineamientos del grupo Holcim, a través del proceso de gestión del cambio, se entiende por <b>cambio</b>:</p>
+    <div class="filaimg rv up" style="--d:4">
+      <div class="filaimg-foto" data-foto="cambio(D24)"><svg viewBox="0 0 120 110" aria-hidden="true" fill="none" stroke="#7fb3ff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M22 55a33 33 0 0 1 56-23"/><path d="M98 55a33 33 0 0 1-56 23"/><path d="M78 20v13H65"/><path d="M42 90V77h13"/><circle cx="60" cy="55" r="11" stroke="#97d13b"/><path d="M60 44v-6M60 72v6M49 55h-6M77 55h6" stroke="#97d13b"/></svg></div>
+      <ul class="lineat">
+        <li>Las ubicaciones de los lugares de trabajo y sus alrededores.</li>
+        <li>La organización del trabajo.</li>
+        <li>Las condiciones de trabajo.</li>
+        <li>Los equipos.</li>
+        <li>La fuerza de trabajo.</li>
+        <li>Cambios en el conocimiento o información sobre los peligros y riesgos para la SST.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+<section class="slide nogate light" data-mod="3">
+  <div class="wrap">
+    <div class="eyebrow rv up">Control operacional · Gestión del cambio</div>
+    <h2 class="rv up" style="--d:1">Así lo hacemos en Holcim</h2>
+    <p class="lead rv up" style="--d:2">El proceso tiene <b>8 pasos</b>. Toca cada uno para verlo. 👆</p>
     <div class="accgrid" style="margin-top:12px"><div class="acc rv up"><div class="acc-head"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><text x="12" y="16" font-size="12" fill="#fff" text-anchor="middle" stroke="none">1</text></svg></span><h4>Identificar el cambio</h4><span class="chev">+</span></div><div class="acc-body"><p>Detectar la necesidad de cambio y su impacto.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><text x="12" y="16" font-size="12" fill="#fff" text-anchor="middle" stroke="none">2</text></svg></span><h4>Evaluar riesgos</h4><span class="chev">+</span></div><div class="acc-body"><p>Analizar los riesgos asociados y definir controles necesarios.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><text x="12" y="16" font-size="12" fill="#fff" text-anchor="middle" stroke="none">3</text></svg></span><h4>Implementar controles</h4><span class="chev">+</span></div><div class="acc-body"><p>Ejecutar las medidas de control para mitigar riesgos.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><text x="12" y="16" font-size="12" fill="#fff" text-anchor="middle" stroke="none">4</text></svg></span><h4>Actualizar documentación</h4><span class="chev">+</span></div><div class="acc-body"><p>Revisar y ajustar documentos afectados por el cambio.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><text x="12" y="16" font-size="12" fill="#fff" text-anchor="middle" stroke="none">5</text></svg></span><h4>Comunicar y capacitar</h4><span class="chev">+</span></div><div class="acc-body"><p>Informar y entrenar al personal sobre los cambios.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><text x="12" y="16" font-size="12" fill="#fff" text-anchor="middle" stroke="none">6</text></svg></span><h4>Aprobar el cambio</h4><span class="chev">+</span></div><div class="acc-body"><p>Obtener la validación formal para proceder.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><text x="12" y="16" font-size="12" fill="#fff" text-anchor="middle" stroke="none">7</text></svg></span><h4>Ejecutar las acciones</h4><span class="chev">+</span></div><div class="acc-body"><p>Implementar el cambio planificado según lo aprobado.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><text x="12" y="16" font-size="12" fill="#fff" text-anchor="middle" stroke="none">8</text></svg></span><h4>Inspeccionar</h4><span class="chev">+</span></div><div class="acc-body"><p>Verificar que el cambio se haya realizado correctamente.</p></div></div></div>
   </div>
 </section>
@@ -2574,7 +2630,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-03-k";
+var VERSION_CURSO = "2026-09-03-l";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
