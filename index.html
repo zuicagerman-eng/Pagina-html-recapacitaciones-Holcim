@@ -766,6 +766,37 @@
   .ultra .maqficha .ph img{max-height:84px} .ultra .maqficha .ph svg{height:60px}
   .ultra .maqficha p{font-size:10.9px}
   @media(max-width:760px){ .maq{grid-template-columns:1fr} }
+  /* ===== Comportamientos prohibidos: seis fichas y una ancha =====
+     Imagen arriba, franja de color con el texto debajo y una linea del
+     degradado entre las dos, como en el impreso. Alternan azul y cian. */
+  .prohib{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
+  .prof{margin:0;display:flex;flex-direction:column;border-radius:11px;overflow:hidden;
+    background:var(--panel);color:#fff;box-shadow:var(--shadow);min-width:0}
+  .prof.cian{background:#1bb4e4;color:#06304a}
+  .prof.ancha{grid-column:1/-1}
+  /* El alto de la caja de imagen es fijo para que las franjas de color de
+     una misma fila arranquen a la misma altura, como en el impreso. */
+  .prof .ph{display:flex;align-items:center;justify-content:center;background:#e9eff5;
+    border-bottom:4px solid;border-image:var(--grad) 1;padding:6px;height:var(--ph,126px);flex:none}
+  .prof .ph img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;display:block}
+  .prof .ph svg{width:100%;max-width:210px;max-height:100%;height:96px;fill:none;stroke:#8fa3b8;
+    stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+  .prof.ancha{--ph:148px}
+  .prof.ancha .ph svg{max-width:400px;height:104px}
+  .prof p{margin:0;padding:10px 13px 12px;font-size:12.3px;font-weight:700;
+    line-height:1.36;text-align:center;flex:1}
+  .apretado .prohib{gap:10px}
+  .apretado .prof{--ph:104px} .apretado .prof.ancha{--ph:120px}
+  .apretado .prof .ph svg{height:78px}
+  .apretado .prof p{font-size:11.7px;padding:8px 12px 9px}
+  .muy-apretado .prof{--ph:84px} .muy-apretado .prof.ancha{--ph:96px}
+  .muy-apretado .prof .ph svg{height:62px}
+  .muy-apretado .prof p{font-size:11.1px;line-height:1.3}
+  .ultra .prof{--ph:66px} .ultra .prof.ancha{--ph:76px}
+  .ultra .prof .ph svg{height:50px}
+  .ultra .prof p{font-size:10.7px}
+  @media(max-width:900px){ .prohib{grid-template-columns:1fr 1fr} }
+  @media(max-width:560px){ .prohib{grid-template-columns:1fr} }
   /* En pantallas tactiles no se encogen los blancos que hay que pulsar. */
   @media(pointer:coarse){
     .slide.ultra .act{min-height:84px;padding:14px 10px}
@@ -3836,8 +3867,36 @@
 <section class="slide light mint" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">HSE-106 · Protección en maquinaria</div>
 <h2 class="rv up" style="--d:1">Comportamientos prohibidos</h2>
-<p class="lead rv up" style="--d:2">Toca cada comportamiento prohibido para reconocerlos. 👆</p>
-<div class="acts"><div class="act gclick rv scale" style="background:#e23b32" tabindex="0" role="button"><span style="font-size:22px">1</span><span>Operar equipos que carezcan de guardas de seguridad.</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#0e2c56" tabindex="0" role="button"><span style="font-size:22px">2</span><span>Operar equipos sin instalar primero las guardas.</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#1bb4e4" tabindex="0" role="button"><span style="font-size:22px">3</span><span>Retirar intencionadamente guardas o dispositivos de enclavamiento sin autorización formal.</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#e6007e" tabindex="0" role="button"><span style="font-size:22px">4</span><span>Mantenimiento o limpieza en máquinas sin guardas o con enclavamientos desactivados, sin aplicar LOTOTO.</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#ef7d00" tabindex="0" role="button"><span style="font-size:22px">5</span><span>Permitir que otra persona esté cerca de una máquina en funcionamiento a la que se le hayan retirado las guardas.</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#6a3d9a" tabindex="0" role="button"><span style="font-size:22px">6</span><span>No informar al supervisor de los incidentes relacionados con la maquinaria.</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#17868a" tabindex="0" role="button"><span style="font-size:22px">7</span><span>Usar cabello largo sin recoger, ropa suelta, chalecos, eslingas, anillos, pulseras, relojes, aretes y cadenas cerca de maquinaria móvil.</span><span class="tick">✓</span></div></div>
+<div class="prohib rv up" style="--d:2">
+  <article class="prof">
+    <span class="ph" data-foto="singuardas(D54)"><svg viewBox="0 0 140 88" aria-hidden="true"><path d="M10 62h84l14-18H24z"/><circle cx="26" cy="70" r="8"/><circle cx="88" cy="70" r="8"/><path d="M40 44V30M60 44V30M80 44V30"/><path d="M112 20l18 18M130 20l-18 18"/></svg></span>
+    <p>Operar equipos que carezcan de <b>guardas de seguridad</b>.</p>
+  </article>
+  <article class="prof cian">
+    <span class="ph" data-foto="sininstalar(D54)"><svg viewBox="0 0 140 88" aria-hidden="true"><path d="M8 58h70"/><circle cx="30" cy="42" r="12"/><path d="M30 30v-8M30 62v-4M18 42h-8M50 42h-8"/><circle cx="96" cy="34" r="11"/><path d="M85 28a11 11 0 0 1 22 0M82 28h28"/><path d="M96 45v22M84 52h24M96 67l-7 14M96 67l7 14"/><path d="M118 18l16 16M134 18l-16 16"/></svg></span>
+    <p>Operar equipos <b>sin instalar primero</b> las guardas.</p>
+  </article>
+  <article class="prof">
+    <span class="ph" data-foto="retirarguardas(D54)"><svg viewBox="0 0 140 88" aria-hidden="true"><rect x="12" y="16" width="56" height="56" rx="4"/><path d="M26 16v56M40 16v56M54 16v56M12 34h56M12 54h56"/><path d="M74 44h26"/><path d="M92 36l10 8-10 8"/><path d="M112 26l20 20M132 26l-20 20"/></svg></span>
+    <p>Retirar intencionadamente guardas o dispositivos de enclavamiento <b>sin autorización formal</b>.</p>
+  </article>
+  <article class="prof cian">
+    <span class="ph" data-foto="mantenimiento(D54)"><svg viewBox="0 0 140 88" aria-hidden="true"><circle cx="34" cy="40" r="15"/><path d="M34 25v-8M34 63v-6M19 40h-8M57 40h-6M23 29l-6-6M45 51l6 6M45 29l6-6M23 51l-6 6"/><path d="M74 60l24-24"/><path d="M96 30a9 9 0 1 1 12 12l-8 8-12-12z"/><path d="M70 56l-8 12 12-8"/><path d="M116 20l18 18M134 20l-18 18"/></svg></span>
+    <p>Mantenimiento o limpieza en máquinas sin guardas o con enclavamientos desactivados, <b>sin aplicar LOTOTO</b>.</p>
+  </article>
+  <article class="prof">
+    <span class="ph" data-foto="cercamaquina(D54)"><svg viewBox="0 0 140 88" aria-hidden="true"><circle cx="30" cy="44" r="16"/><path d="M30 28v32M14 44h32"/><circle cx="76" cy="26" r="9"/><path d="M67 20a9 9 0 0 1 18 0M64 20h24"/><path d="M76 35v20M66 41h20M76 55l-6 16M76 55l6 16"/><path d="M104 60h30"/><path d="M114 26l18 18M132 26l-18 18"/></svg></span>
+    <p>Permitir que otra persona esté <b>cerca de una máquina en funcionamiento</b> a la que se le hayan retirado las guardas.</p>
+  </article>
+  <article class="prof cian">
+    <span class="ph" data-foto="noinformar(D54)"><svg viewBox="0 0 140 88" aria-hidden="true"><path d="M18 18h58a4 4 0 0 1 4 4v34a4 4 0 0 1-4 4H40l-14 12V60h-8a4 4 0 0 1-4-4V22a4 4 0 0 1 4-4z"/><path d="M47 30v14M47 50h0"/><circle cx="108" cy="30" r="10"/><path d="M98 24a10 10 0 0 1 20 0M95 24h26"/><path d="M108 42v18M99 48h18"/><path d="M120 62l14 14M134 62l-14 14"/></svg></span>
+    <p><b>No informar al supervisor</b> de los incidentes relacionados con la maquinaria.</p>
+  </article>
+  <article class="prof ancha">
+    <span class="ph" data-foto="ropasuelta(D54)"><svg viewBox="0 0 200 76" aria-hidden="true"><circle cx="26" cy="22" r="9"/><path d="M17 16a9 9 0 0 1 18 0M14 16h24"/><path d="M26 31v22M16 37h20M26 53l-6 18M26 53l6 18"/><path d="M52 24c8-6 8 10 0 6"/><circle cx="80" cy="22" r="9"/><path d="M80 31v22M70 37h20M80 53l-6 18M80 53l6 18"/><path d="M92 34c10 4 10 12 0 14"/><circle cx="140" cy="30" r="7"/><circle cx="158" cy="30" r="7"/><path d="M147 30h4"/><path d="M130 52h44"/><path d="M182 14l14 14M196 14l-14 14"/></svg></span>
+    <p>Usar <b>cabello largo sin recoger</b>, ropa suelta, chalecos, eslingas, anillos, pulseras, relojes, aretes y cadenas cerca de <b>maquinaria móvil</b>.</p>
+  </article>
+</div>
 <div class="pdfrow rv up" style="grid-template-columns:1fr"><div class="pdfmini"><span>Consulta la <b>guía visual</b> de protección en maquinaria.</span><button class="pdfbtn" data-pdf="maquinaria_guia" data-title="Guía visual · Protección en maquinaria">Ver más</button></div></div>
 </div>
 </section>
@@ -4307,7 +4366,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-05-d";
+var VERSION_CURSO = "2026-09-05-e";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
