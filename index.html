@@ -724,6 +724,42 @@
   }
   @media(max-width:700px){.bloqfoto.ancha,.bloqfoto.fotoizq.ancha{grid-template-columns:1fr}}
 
+  /* ===== OCHO PRACTICAS CON LAMINA ARRIBA =====
+     Imagen arriba, franja de marca y el texto en panel de color; los colores
+     alternan azul oscuro y cian, como en el impreso. */
+  .gen8{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:12px}
+  .g8{display:flex;flex-direction:column;border-radius:11px;overflow:hidden;
+    background:var(--panel);box-shadow:var(--shadow);min-width:0}
+  .gen8 .g8:nth-child(even){background:var(--cyan)}
+  /* La lamina lleva alto fijo para que las ocho tarjetas queden a la par
+     aunque las fotos vengan con proporciones distintas. */
+  .g8foto{height:118px;flex:none;display:flex;align-items:center;justify-content:center;
+    background:rgba(255,255,255,.07);overflow:hidden}
+  .gen8 .g8:nth-child(even) .g8foto{background:rgba(255,255,255,.18)}
+  .g8foto img{width:100%;height:100%;object-fit:cover;display:block}
+  .g8foto svg{height:76px;width:auto;fill:none;stroke:#fff;stroke-width:1.6;
+    stroke-linecap:round;stroke-linejoin:round}
+  .g8 .bar{height:5px;flex:none;background:var(--grad)}
+  .g8txt{flex:1;padding:11px 13px}
+  .g8txt p{font-size:12.5px;line-height:1.45;color:#fff}
+  @media(max-height:820px){
+    .gen8{gap:10px;margin-top:9px}
+    .g8foto{height:96px} .g8foto svg{height:62px}
+    .g8txt{padding:9px 11px} .g8txt p{font-size:11.9px;line-height:1.38}
+  }
+  .apretado .gen8{gap:8px;margin-top:7px}
+  .apretado .g8foto{height:80px} .apretado .g8foto svg{height:52px}
+  .apretado .g8txt{padding:7px 10px} .apretado .g8txt p{font-size:11.3px;line-height:1.33}
+  .apretado .g8 .bar{height:4px}
+  .muy-apretado .g8foto{height:68px} .muy-apretado .g8foto svg{height:44px}
+  .muy-apretado .g8txt p{font-size:10.9px;line-height:1.3}
+  @media(max-height:760px){
+    .muy-apretado .g8foto{height:60px} .muy-apretado .g8foto svg{height:40px}
+  }
+  @media(max-width:1050px){.gen8{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:520px){.gen8{grid-template-columns:1fr}
+    .g8foto{height:150px}}
+
   /* Aviso en cian, para el que cierra una idea (distinto del azul oscuro). */
   .avisocian{background:var(--cyan);color:#062a3d;border-radius:12px;padding:12px 18px;
     font-size:13.6px;line-height:1.45;font-weight:700;margin-top:12px;
@@ -2968,8 +3004,24 @@
     </div>
   </div>
 </section>
-<section class="slide light mint" data-mod="4">
-<div class="wrap"><div class="eyebrow rv up">HSE-003 · Elementos de protección personal</div><h2 class="rv up" style="--d:1">Generalidades de los EPP</h2><p class="lead rv up" style="--d:2">Toca cada buena práctica. 👆</p><div class="acts"><div class="act gclick rv scale" style="background:#0e2c56" tabindex="0" role="button"><span style="font-size:22px">1</span><span>Capacitar sobre cómo elegir, usar, ajustar, cuidar, mantener y solicitar reposición del EPP.</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#1bb4e4" tabindex="0" role="button"><span style="font-size:22px">2</span><span>Inspeccionar el EPP antes de cada uso, verificando su estado y fecha de vencimiento.</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#97d13b" tabindex="0" role="button"><span style="font-size:22px">3</span><span>Conocer y entender la forma adecuada de colocar, ajustar y retirar el EPP.</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#1877c4" tabindex="0" role="button"><span style="font-size:22px">4</span><span>Establecer y señalizar los EPP requeridos en las áreas de trabajo.</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#e6007e" tabindex="0" role="button"><span style="font-size:22px">5</span><span>No compartir equipos de protección personal (como protección auditiva).</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#ef7d00" tabindex="0" role="button"><span style="font-size:22px">6</span><span>No utilizar pintura ni pegatinas para cubrir EPP dañado.</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#17868a" tabindex="0" role="button"><span style="font-size:22px">7</span><span>Reportar el equipo defectuoso y reemplazarlo.</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#6a3d9a" tabindex="0" role="button"><span style="font-size:22px">8</span><span>Almacenar el EPP correctamente y separar el EPP dañado del resto.</span><span class="tick">✓</span></div></div><div class="pdfrow rv up" style="grid-template-columns:1fr"><div class="pdfmini"><span>Da clic para conocer la <b>guía visual</b>.</span><button class="pdfbtn" data-pdf="epp_guia" data-title="Guía visual de EPP">Ver más</button></div></div></div>
+<section class="slide nogate light mint" data-mod="4">
+  <div class="wrap">
+    <div class="eyebrow rv up">HSE-003 · Elementos de protección personal</div>
+    <h2 class="rv up" style="--d:1">Generalidades de los EPP</h2>
+    <div class="gen8">
+      <article class="g8 rv up" style="--d:0"><span class="g8foto" data-foto="capacitar(D40)"><svg viewBox="0 0 90 60"><circle cx="16" cy="16" r="7"/><path d="M6 40c0-7 4.5-12 10-12s10 5 10 12"/><circle cx="40" cy="14" r="6"/><path d="M31 38c0-6 4-10 9-10s9 4 9 10"/><circle cx="62" cy="16" r="6"/><path d="M53 40c0-6 4-10 9-10s9 4 9 10"/><rect x="72" y="12" width="14" height="18" rx="2"/><path d="M76 18h6M76 23h4"/></svg></span><span class="bar"></span><div class="g8txt"><p>Capacitar a los colaboradores sobre cómo elegir, usar, ajustar, cuidar, mantener y solicitar reposición del EPP.</p></div></article>
+      <article class="g8 rv up" style="--d:1"><span class="g8foto" data-foto="inspeccionar(D40)"><svg viewBox="0 0 90 60"><circle cx="22" cy="16" r="7"/><path d="M11 42c0-7 5-12 11-12s11 5 11 12"/><rect x="48" y="8" width="30" height="40" rx="3"/><path d="M54 18h18M54 26h14M54 34h10"/><path d="M40 26l7 4"/></svg></span><span class="bar"></span><div class="g8txt"><p>Inspeccionar el EPP antes de cada uso, verificando su estado y fecha de vencimiento.</p></div></article>
+      <article class="g8 rv up" style="--d:2"><span class="g8foto" data-foto="colocar(D40)"><svg viewBox="0 0 90 60"><circle cx="45" cy="15" r="8"/><path d="M34 11a11 11 0 0 1 22 0M31 11h28"/><path d="M30 48c0-9 7-16 15-16s15 7 15 16"/><path d="M33 30l-9 6M57 30l9 6"/></svg></span><span class="bar"></span><div class="g8txt"><p>Conocer y entender la forma adecuada de colocar, ajustar y retirar el EPP.</p></div></article>
+      <article class="g8 rv up" style="--d:3"><span class="g8foto" data-foto="senalizar(D40)"><svg viewBox="0 0 90 60"><rect x="8" y="8" width="40" height="30" rx="2"/><path d="M8 16h40"/><circle cx="20" cy="27" r="5"/><circle cx="34" cy="27" r="5"/><path d="M28 46v8M20 54h16"/><circle cx="68" cy="18" r="7"/><path d="M58 46c0-7 4.5-12 10-12s10 5 10 12"/></svg></span><span class="bar"></span><div class="g8txt"><p>Establezca y señalice los EPP requeridos en las áreas de trabajo y garantice el uso adecuado de los mismos.</p></div></article>
+      <article class="g8 rv up" style="--d:4"><span class="g8foto" data-foto="nocompartir(D40)"><svg viewBox="0 0 90 60"><circle cx="22" cy="16" r="7"/><path d="M11 42c0-7 5-12 11-12s11 5 11 12"/><circle cx="66" cy="16" r="7"/><path d="M55 42c0-7 5-12 11-12s11 5 11 12"/><circle cx="44" cy="29" r="11"/><path d="M37 22l14 14"/></svg></span><span class="bar"></span><div class="g8txt"><p>No comparta equipos de protección personal, como protección auditiva.</p></div></article>
+      <article class="g8 rv up" style="--d:5"><span class="g8foto" data-foto="nopintura(D40)"><svg viewBox="0 0 90 60"><path d="M28 34a17 17 0 0 1 34 0z"/><path d="M24 38h42"/><path d="M36 18l18 12M54 18L36 30" stroke-width="2.6"/><path d="M70 14l10 6-4 8"/></svg></span><span class="bar"></span><div class="g8txt"><p>No utilice pintura ni pegatinas para cubrir EPP dañado.</p></div></article>
+      <article class="g8 rv up" style="--d:5"><span class="g8foto" data-foto="reportar(D40)"><svg viewBox="0 0 90 60"><rect x="10" y="8" width="26" height="36" rx="3"/><path d="M16 18h14M16 26h11M16 34h8"/><circle cx="62" cy="16" r="7"/><path d="M51 44c0-7 5-12 11-12s11 5 11 12"/><path d="M40 24l8 3"/><path d="M76 26l7 6-7 6" /></svg></span><span class="bar"></span><div class="g8txt"><p>Reporte el equipo defectuoso y reemplácelo.</p></div></article>
+      <article class="g8 rv up" style="--d:5"><span class="g8foto" data-foto="almacenar(D40)"><svg viewBox="0 0 90 60"><rect x="6" y="10" width="34" height="40" rx="2"/><path d="M6 24h34M6 37h34"/><path d="M14 17h8M14 30h8M14 43h8"/><rect x="48" y="10" width="36" height="40" rx="2"/><path d="M66 10v40"/><circle cx="60" cy="30" r="1.8"/><circle cx="72" cy="30" r="1.8"/></svg></span><span class="bar"></span><div class="g8txt"><p>Almacene el EPP correctamente y separe el EPP dañado del resto.</p></div></article>
+    </div>
+    <div class="pdfrow rv up" style="grid-template-columns:1fr">
+      <div class="pdfmini"><span>Da clic para conocer la <b>guía visual</b>.</span><button class="pdfbtn" data-pdf="epp_guia" data-title="Guía visual de EPP">Ver más</button></div>
+    </div>
+  </div>
 </section>
 <section class="slide dark" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">HSE-004 · Construcción</div><h2 class="rv up" style="--d:1">Generalidades de construcción</h2><p class="lead rv up" style="--d:2">Toca cada punto. 👆</p><div class="accgrid" style="margin-top:16px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1bb4e4"></span><h4>Propósito</h4><span class="chev">+</span></div><div class="acc-body"><p>Comunicar los requisitos mínimos de salud y seguridad de Holcim para la gestión de los riesgos asociados con las actividades de construcción: diseño e ingeniería, montaje e instalación, puesta en servicio, suspensión de actividad, desmantelamiento, desmontaje y demolición.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#0e2c56"></span><h4>Alcance</h4><span class="chev">+</span></div><div class="acc-body"><p>Esta norma se aplica a todos los proyectos de construcción y demolición que se realizan bajo control y gestión de Holcim.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>Programa de gestión</h4><span class="chev">+</span></div><div class="acc-body"><p>El país debe documentar un programa que tenga como mínimo: roles y responsabilidades, adquisición de equipos, puesta en servicio, gestión de cambios, procedimientos, auditorías y desviaciones de los requisitos.</p></div></div></div></div>
@@ -3561,7 +3613,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-04-i";
+var VERSION_CURSO = "2026-09-04-j";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
