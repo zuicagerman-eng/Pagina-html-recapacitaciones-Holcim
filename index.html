@@ -707,6 +707,44 @@
     .bloqfoto>div{order:2}
   }
 
+  /* ===== TARJETAS QUE GIRAN AL PASAR EL CURSOR =====
+     Cuatro en fila, con la ilustracion en la cara de frente y el texto en el
+     reverso. Con raton basta pasar por encima; en pantalla tactil, donde no
+     hay cursor, sigue funcionando el toque de siempre. */
+  .flips4{grid-template-columns:repeat(4,1fr);gap:14px}
+  @media(hover:hover) and (pointer:fine){
+    .flips4 .flip:hover .flip-in{transform:rotateY(180deg)}
+    .flips4 .flip.flipped:hover .flip-in{transform:none}
+  }
+  .flips4 .front{background:#dbe8f8;color:var(--panel);border:2px solid var(--blue);
+    justify-content:center;align-items:center;text-align:center;gap:14px;padding:18px 15px}
+  .flips4 .flip:nth-child(even) .front{background:#dcedb4;border-color:#8bbf3a}
+  .flips4 .front h3{font-size:16px;font-weight:800;line-height:1.25;color:var(--panel)}
+  .flips4 .front .n{display:none}
+  .flips4 .front .hint{font-size:11px;color:#3c5876}
+  .flips4 .back{border:2px solid var(--blue);padding:18px 16px;justify-content:center}
+  .flips4 .flip:nth-child(even) .back{border-color:#8bbf3a}
+  .flips4 .back h4{font-size:14.5px;line-height:1.22}
+  .flips4 .back p{font-size:12.8px;line-height:1.48}
+  /* La ilustracion no fuerza el alto de la tarjeta: tope en pixeles. */
+  .flipfoto{display:flex;align-items:center;justify-content:center;width:100%}
+  .flipfoto img{max-width:100%;max-height:104px;width:auto;height:auto;display:block}
+  .flipfoto svg{height:82px;width:auto;max-width:100%;fill:none;stroke:var(--panel);
+    stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+  @media(max-height:820px){
+    .flips4{gap:11px}
+    .flipfoto img{max-height:84px} .flipfoto svg{height:66px}
+    .flips4 .front h3{font-size:14.6px} .flips4 .back p{font-size:12.2px;line-height:1.42}
+  }
+  .apretado .flipfoto img{max-height:68px} .apretado .flipfoto svg{height:54px}
+  .apretado .flips4 .front{gap:9px;padding:13px 11px}
+  .apretado .flips4 .front h3{font-size:13.4px}
+  .apretado .flips4 .back{padding:13px 12px}
+  .apretado .flips4 .back p{font-size:11.7px;line-height:1.36}
+  .muy-apretado .flipfoto img{max-height:56px} .muy-apretado .flipfoto svg{height:46px}
+  @media(max-width:1000px){.flips4{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:600px){.flips4{grid-template-columns:1fr}}
+
   /* ===== FILA PARTIDA: rotulo con icono + descripcion =====
      Panel de color a la izquierda y caja blanca a la derecha, como el impreso.
      El icono va dibujado: son dos figuras, no vale la pena subir archivos. */
@@ -2686,7 +2724,37 @@
   </div>
 </section>
 <section class="slide light mint" data-mod="4">
-<div class="wrap"><div class="eyebrow rv up">HSE-001 · Sistema de gestión</div><h2 class="rv up" style="--d:1">Soporte, emergencias y desempeño</h2><p class="lead rv up" style="--d:2">Voltea cada tarjeta para conocer la información. 👆</p><div class="flips" style="margin-top:16px"><div class="flip rv up" tabindex="0" role="button"><div class="flip-in"><div class="face front"><div class="n">1</div><h3>Preparación para emergencias y respuesta</h3><div class="hint">Toca para ver ↺</div></div><div class="face back"><h4>Preparación para emergencias y respuesta</h4><p>Las unidades deben garantizar planes de respuesta para proteger a las personas, los activos y la reputación en caso de incidentes.</p></div></div></div><div class="flip rv up" tabindex="0" role="button"><div class="flip-in"><div class="face front"><div class="n">2</div><h3>Control y conservación de documentos</h3><div class="hint">Toca para ver ↺</div></div><div class="face back"><h4>Control y conservación de documentos</h4><p>Los registros de cumplimiento deben conservarse por un mínimo de 5 años y estar disponibles para inspecciones regulatorias.</p></div></div></div><div class="flip rv up" tabindex="0" role="button"><div class="flip-in"><div class="face front"><div class="n">3</div><h3>Evaluación de brechas y auditorías</h3><div class="hint">Toca para ver ↺</div></div><div class="face back"><h4>Evaluación de brechas y auditorías</h4><p>Se realizan evaluaciones internas anuales y auditorías de grupo para verificar el cumplimiento del estándar HSEMS.</p></div></div></div><div class="flip rv up" tabindex="0" role="button"><div class="flip-in"><div class="face front"><div class="n">4</div><h3>Comité de HSE multifuncional</h3><div class="hint">Toca para ver ↺</div></div><div class="face back"><h4>Comité de HSE multifuncional</h4><p>Reuniones mensuales entre gerencia y trabajadores para revisar indicadores, investigar incidentes y gestionar cambios.</p></div></div></div></div></div>
+  <div class="wrap">
+    <div class="eyebrow rv up">HSE-001 · Sistema de gestión</div>
+    <h2 class="rv up" style="--d:1">Soporte, emergencias y desempeño</h2>
+    <p class="lead rv up" style="--d:2">Pasa el cursor sobre cada tarjeta para conocer la información. En celular, tócala. 👆</p>
+    <div class="flips flips4" style="margin-top:14px">
+      <div class="flip rv up" tabindex="0" role="button" aria-label="Preparación para emergencias y respuesta">
+        <div class="flip-in">
+          <div class="face front"><span class="flipfoto" data-foto="emergencias(D34)"><svg viewBox="0 0 120 80"><path d="M6 58V30h52v28M58 38h26l14 12v8H58"/><circle cx="26" cy="62" r="7"/><circle cx="80" cy="62" r="7"/><path d="M24 38h16M32 30v16"/><path d="M70 14v8M66 18h8"/><path d="M56 14l-3-4M84 14l3-4"/></svg></span><h3>Preparación para emergencias y respuesta</h3></div>
+          <div class="face back"><h4>Preparación para emergencias y respuesta</h4><p>Las unidades deben garantizar planes de respuesta para proteger a las personas, los activos y la reputación en caso de incidentes.</p></div>
+        </div>
+      </div>
+      <div class="flip rv up" tabindex="0" role="button" aria-label="Control y conservación de documentos">
+        <div class="flip-in">
+          <div class="face front"><span class="flipfoto" data-foto="documentos(D34)"><svg viewBox="0 0 120 80"><path d="M8 22h34l8 8h62v42H8z"/><rect x="34" y="8" width="46" height="30" rx="3"/><path d="M44 18h26M44 26h20"/><path d="M8 34h104"/></svg></span><h3>Control y conservación de documentos</h3></div>
+          <div class="face back"><h4>Control y conservación de documentos</h4><p>Los registros de cumplimiento deben conservarse por un mínimo de 5 años y estar disponibles para inspecciones regulatorias.</p></div>
+        </div>
+      </div>
+      <div class="flip rv up" tabindex="0" role="button" aria-label="Evaluación de brechas y auditorías">
+        <div class="flip-in">
+          <div class="face front"><span class="flipfoto" data-foto="auditorias(D34)"><svg viewBox="0 0 120 80"><rect x="22" y="8" width="52" height="64" rx="4"/><rect x="38" y="3" width="20" height="10" rx="3"/><path d="M32 26h6M32 38h6M32 50h6"/><path d="M44 26h18M44 38h14M44 50h10"/><circle cx="86" cy="48" r="16"/><path d="M79 48l5 5 10-11"/><path d="M98 60l14 14"/></svg></span><h3>Evaluación de brechas y auditorías</h3></div>
+          <div class="face back"><h4>Evaluación de brechas y auditorías</h4><p>Se realizan evaluaciones internas anuales y auditorías de grupo para verificar el cumplimiento del estándar HSEMS.</p></div>
+        </div>
+      </div>
+      <div class="flip rv up" tabindex="0" role="button" aria-label="Comité de HSE multifuncional">
+        <div class="flip-in">
+          <div class="face front"><span class="flipfoto" data-foto="comite(D34)"><svg viewBox="0 0 120 80"><ellipse cx="60" cy="56" rx="30" ry="10"/><circle cx="26" cy="30" r="8"/><circle cx="60" cy="24" r="8"/><circle cx="94" cy="30" r="8"/><path d="M14 50c0-8 5-13 12-13s12 5 12 13M48 46c0-8 5-14 12-14s12 6 12 14M82 50c0-8 5-13 12-13s12 5 12 13"/></svg></span><h3>Comité de HSE multifuncional</h3></div>
+          <div class="face back"><h4>Comité de HSE multifuncional</h4><p>Reuniones mensuales entre gerencia y trabajadores para revisar indicadores, investigar incidentes y gestionar cambios.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 <section class="slide dark" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">HSE-002 · Reporte y gestión de eventos</div><h2 class="rv up" style="--d:1">Reporte e investigación de accidentes</h2><div class="infobanner rv up" style="--d:2">El reporte inmediato garantiza el registro oportuno en iCare.</div><p class="lead rv up">Toca cada paso. 👆</p><div class="accgrid" style="margin-top:14px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Paso 1</h4><span class="chev">+</span></div><div class="acc-body"><p>El trabajador accidentado reporta inmediatamente lo ocurrido a su jefe directo.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Paso 2</h4><span class="chev">+</span></div><div class="acc-body"><p>Si requiere atención de primeros auxilios se presta de inmediato; tan pronto como sea posible se diligencia el formato de “Descripción del Evento”.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Paso 3</h4><span class="chev">+</span></div><div class="acc-body"><p>Se reporta el evento a la ARL del trabajador, en el software que la compañía ha dispuesto.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Paso 4</h4><span class="chev">+</span></div><div class="acc-body"><p>Luego del reporte se recopilan fotografías, declaraciones y demás evidencia.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Paso 5</h4><span class="chev">+</span></div><div class="acc-body"><p>Se cita al trabajador accidentado, al jefe directo, a un representante del COPASST, analista de H&amp;S y demás personas del análisis causal.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Paso 6</h4><span class="chev">+</span></div><div class="acc-body"><p>Se realiza la investigación para encontrar las causas inmediatas y raíces del evento y generar planes de acción para que no vuelva a ocurrir.</p></div></div></div></div>
@@ -3290,7 +3358,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-04-d";
+var VERSION_CURSO = "2026-09-04-e";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
@@ -3757,6 +3825,12 @@ document.querySelectorAll('.flip').forEach(function(f){
   f.classList.add('req');
   function t(){ f.classList.toggle('flipped'); markDone(f); }
   f.addEventListener('click', t);
+  /* En las rejillas que giran con el cursor, pasar por encima ya muestra el
+     reverso: tambien cuenta como leida, o habria que hacer clic de todos
+     modos y la barrera no tendria sentido. */
+  if(f.parentElement && f.parentElement.classList.contains('flips4')){
+    f.addEventListener('mouseenter', function(){ markDone(f); });
+  }
   f.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); t(); } });
 });
 /* ===== Generadores Módulo 2 (antes de enlazar acordeones) ===== */
