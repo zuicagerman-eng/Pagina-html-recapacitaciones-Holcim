@@ -629,6 +629,50 @@
     .andtxt{grid-column:1/-1}
   }
   @media(max-width:560px){ .andam{grid-template-columns:1fr} }
+  /* ===== Aislamiento de energia: iconos + fotos de bloqueo =====
+     A la izquierda la rejilla de diez tipos de energia (cada uno con su GIF)
+     y a la derecha las tres fotos de bloqueo con su pie, como en el impreso. */
+  .ener{display:grid;grid-template-columns:1.3fr 1fr;gap:clamp(16px,3vw,34px);
+    margin-top:12px;align-items:start}
+  .enerrej{display:grid;grid-template-columns:repeat(4,1fr);gap:10px 6px;justify-items:center}
+  .enerito{display:flex;flex-direction:column;align-items:center;gap:5px;text-align:center;margin:0}
+  /* Los dos ultimos quedan centrados bajo la rejilla, como en el impreso. */
+  .enerito:nth-child(9){grid-column:2}
+  .enerito .ph{display:flex;align-items:center;justify-content:center;
+    width:62px;height:62px;background:#fff;border-radius:12px;padding:7px}
+  .enerito .ph img{max-width:100%;max-height:48px;width:auto;height:auto;display:block}
+  .enerito .ph svg{width:40px;height:40px;fill:none;stroke:var(--panel);
+    stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+  .enerito figcaption{font-size:12.2px;font-weight:700;line-height:1.2}
+  .bloqrej{display:grid;grid-template-columns:1fr 1fr;gap:10px;justify-items:center}
+  .bloqcard{margin:0;display:flex;flex-direction:column;align-items:center;gap:6px;width:100%}
+  .bloqcard.ancho{grid-column:1/-1;width:min(100%,300px)}
+  .bloqcard .ph{display:flex;align-items:center;justify-content:center;width:100%;
+    padding:3px;border-radius:6px;background:var(--grad)}
+  .bloqcard .ph img{width:100%;height:auto;max-height:132px;object-fit:contain;
+    display:block;border-radius:3px;background:#fff}
+  .bloqcard .ph svg{width:100%;height:104px;fill:none;stroke:rgba(255,255,255,.55);
+    stroke-width:3;stroke-linejoin:round;background:rgba(255,255,255,.06);border-radius:3px}
+  .bloqcard figcaption{font-size:12.4px;font-weight:800;text-align:center;line-height:1.2}
+  .apretado .enerito .ph{width:56px;height:56px}
+  .apretado .enerito .ph img{max-height:42px} .apretado .enerito .ph svg{width:36px;height:36px}
+  .apretado .bloqcard .ph img{max-height:114px} .apretado .bloqcard .ph svg{height:90px}
+  .muy-apretado .enerito .ph{width:50px;height:50px;padding:5px}
+  .muy-apretado .enerito .ph img{max-height:38px} .muy-apretado .enerito .ph svg{width:32px;height:32px}
+  .muy-apretado .enerito figcaption{font-size:11.4px}
+  .muy-apretado .bloqcard .ph img{max-height:98px} .muy-apretado .bloqcard .ph svg{height:78px}
+  .ultra .enerito .ph{width:44px;height:44px;padding:4px}
+  .ultra .enerito .ph img{max-height:34px} .ultra .enerito .ph svg{width:28px;height:28px}
+  .ultra .bloqcard .ph img{max-height:84px} .ultra .bloqcard .ph svg{height:66px}
+  @media(max-width:900px){
+    /* Apiladas: primero los tipos de energia y debajo las fotos de bloqueo. */
+    .ener{grid-template-columns:1fr}
+    .bloqrej{max-width:420px;margin-inline:auto}
+  }
+  @media(max-width:460px){
+    .enerrej{grid-template-columns:repeat(3,1fr)}
+    .enerito:nth-child(9){grid-column:auto}
+  }
   /* En pantallas tactiles no se encogen los blancos que hay que pulsar. */
   @media(pointer:coarse){
     .slide.ultra .act{min-height:84px;padding:14px 10px}
@@ -3594,10 +3638,31 @@
 <section class="slide dark teal" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">HSE-103 · Aislamiento de energía</div>
 <h2 class="rv up" style="--d:1">Tipos de energía, bloqueo y pruebas</h2>
-<p class="lead rv up" style="--d:2">Algunos tipos de energía — toca cada uno. 👆</p>
-<div class="chipgrid"><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#1bb4e4">1</span><span class="nm">Neumática</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#0e2c56">2</span><span class="nm">Mecánica</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#1877c4">3</span><span class="nm">Hidráulica</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#97d13b">4</span><span class="nm">Química</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#17868a">5</span><span class="nm">Gravitacional</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#f5b700">6</span><span class="nm">Eléctrica</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#e23b32">7</span><span class="nm">Explosiva</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#6a3d9a">8</span><span class="nm">Cinética</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#ef7d00">9</span><span class="nm">Radiante</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#e6007e">10</span><span class="nm">Térmica</span><span class="tick">✓</span></div></div>
-<p class="lead rv up" style="margin-top:20px">Algunos tipos de bloqueo — toca cada uno. 👆</p>
-<div class="accgrid" style="margin-top:12px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Bloqueo hidráulico</h4><span class="chev">+</span></div><div class="acc-body"><p>Se instala sobre válvulas y puntos del sistema <b>hidráulico</b> para impedir la liberación de energía.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1bb4e4"></span><h4>Bloqueo neumático</h4><span class="chev">+</span></div><div class="acc-body"><p>Bloquea las líneas y válvulas de <b>aire comprimido</b> del equipo.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>Bloqueo mecánico</h4><span class="chev">+</span></div><div class="acc-body"><p>Asegura físicamente partes móviles o de accionamiento con cadenas y dispositivos de bloqueo.</p></div></div></div>
+<div class="ener rv up" style="--d:2">
+  <div class="enercol">
+    <h3 class="subverde chico">Algunos tipos de energía</h3>
+    <div class="enerrej">
+        <figure class="enerito rv up" style="--d:0"><span class="ph" data-foto="neumatica(D50)"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="11"/><circle cx="24" cy="24" r="4"/><path d="M24 5v6M24 37v6M5 24h6M37 24h6M11 11l4 4M33 33l4 4M37 11l-4 4M15 33l-4 4"/></svg></span><figcaption>Neumática</figcaption></figure>
+        <figure class="enerito rv up" style="--d:1"><span class="ph" data-foto="mecanica(D50)"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="19" cy="19" r="8"/><path d="M19 6v4M19 28v4M6 19h4M28 19h4M10 10l3 3M25 25l3 3M28 10l-3 3M13 25l-3 3"/><circle cx="33" cy="33" r="6"/><path d="M33 24v3M33 39v3M24 33h3M39 33h3"/></svg></span><figcaption>Mecánica</figcaption></figure>
+        <figure class="enerito rv up" style="--d:2"><span class="ph" data-foto="hidraulica(D50)"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 12h16v8H8z"/><path d="M24 16h9v10"/><path d="M28 26h10"/><path d="M33 30c0 4-4 6-4 10a4 4 0 0 0 8 0c0-4-4-6-4-10z"/></svg></span><figcaption>Hidráulica</figcaption></figure>
+        <figure class="enerito rv up" style="--d:3"><span class="ph" data-foto="quimica(D50)"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M18 6v12L8 38a3 3 0 0 0 3 4h12a3 3 0 0 0 3-4L16 18V6"/><path d="M13 6h10"/><path d="M32 12v10l-6 14a3 3 0 0 0 3 4h10a3 3 0 0 0 3-4l-6-14V12"/><path d="M29 12h10"/></svg></span><figcaption>Química</figcaption></figure>
+        <figure class="enerito rv up" style="--d:4"><span class="ph" data-foto="gravitacional(D50)"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="12" r="6"/><path d="M24 18v14"/><path d="M18 40h12l-6-8z"/><path d="M12 30l4 4M36 30l-4 4"/></svg></span><figcaption>Gravitacional</figcaption></figure>
+        <figure class="enerito rv up" style="--d:5"><span class="ph" data-foto="electrica(D50)"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M14 6h20v22a10 10 0 0 1-20 0z"/><path d="M26 12l-8 12h8l-4 10"/><path d="M20 6V2M28 6V2"/></svg></span><figcaption>Eléctrica</figcaption></figure>
+        <figure class="enerito rv up" style="--d:5"><span class="ph" data-foto="explosiva(D50)"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 4l5 9 10-4-3 10 10 5-10 5 3 10-10-4-5 9-5-9-10 4 3-10-10-5 10-5-3-10 10 4z"/><circle cx="24" cy="24" r="6"/></svg></span><figcaption>Explosiva</figcaption></figure>
+        <figure class="enerito rv up" style="--d:5"><span class="ph" data-foto="cinetica(D50)"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M6 8h36"/><path d="M12 8v10M20 8v14M28 8v14M36 8v10"/><circle cx="12" cy="24" r="6"/><circle cx="20" cy="28" r="6"/><circle cx="28" cy="28" r="6"/><circle cx="36" cy="24" r="6"/></svg></span><figcaption>Cinética</figcaption></figure>
+        <figure class="enerito rv up" style="--d:5"><span class="ph" data-foto="radiante(D50)"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="6"/><path d="M24 18a18 18 0 0 1 15 9M24 18a18 18 0 0 0-15 9M24 30a18 18 0 0 0 15-9M9 33a18 18 0 0 0 15 9"/><circle cx="24" cy="24" r="19"/></svg></span><figcaption>Radiante</figcaption></figure>
+        <figure class="enerito rv up" style="--d:5"><span class="ph" data-foto="termica(D50)"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M20 8a4 4 0 0 1 8 0v20a7 7 0 1 1-8 0z"/><path d="M24 20v10"/><path d="M32 12h6M32 18h6M32 24h6"/></svg></span><figcaption>Térmica</figcaption></figure>
+    </div>
+  </div>
+  <div class="bloqcol">
+    <h3 class="subverde chico">Algunos tipos de bloqueo</h3>
+    <div class="bloqrej">
+        <figure class="bloqcard rv up"><span class="ph" data-foto="bloqueohidraulico(D50)"><svg viewBox="0 0 120 90" aria-hidden="true"><rect x="4" y="4" width="112" height="82" rx="4"/><path d="M4 66l26-22 20 16 18-14 48 34"/><circle cx="86" cy="28" r="9"/></svg></span><figcaption>Bloqueo hidráulico</figcaption></figure>
+        <figure class="bloqcard rv up"><span class="ph" data-foto="bloqueoneumatico(D50)"><svg viewBox="0 0 120 90" aria-hidden="true"><rect x="4" y="4" width="112" height="82" rx="4"/><path d="M4 66l26-22 20 16 18-14 48 34"/><circle cx="86" cy="28" r="9"/></svg></span><figcaption>Bloqueo neumático</figcaption></figure>
+        <figure class="bloqcard ancho rv up"><span class="ph" data-foto="bloqueomecanico(D50)"><svg viewBox="0 0 120 90" aria-hidden="true"><rect x="4" y="4" width="112" height="82" rx="4"/><path d="M4 66l26-22 20 16 18-14 48 34"/><circle cx="86" cy="28" r="9"/></svg></span><figcaption>Bloqueo mecánico</figcaption></figure>
+    </div>
+  </div>
+</div>
 <div class="warn rv up" style="--d:2"><svg viewBox="0 0 24 24"><path d="M12 3l9 16H3z"/><path d="M12 9v5M12 17h0"/></svg>Todas las herramientas eléctricas deben contar con un <b>precinto de inspección Holcim</b>.</div>
 <div class="pdfrow rv up" style="grid-template-columns:1fr"><div class="pdfmini"><span>Profundiza en los tipos de <b>bloqueo, etiquetado y pruebas</b>.</span><button class="pdfbtn" data-pdf="lototo_guia" data-title="Bloqueo, etiquetado y pruebas (LOTOTO)">Ver más</button></div></div>
 </div>
@@ -4103,7 +4168,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-04-z";
+var VERSION_CURSO = "2026-09-05-a";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
