@@ -1618,16 +1618,6 @@
   .wfoot{display:flex;align-items:center;justify-content:center;gap:10px;padding:16px;background:#fff;margin:24px -30px 0;border-top:3px solid;border-image:var(--grad) 1}
   .wfoot .wlogo{width:26px;height:26px} .wfoot b{font-size:19px;letter-spacing:1px;color:var(--ink)}
   /* ===== Módulo 4 ===== */
-  .plano{position:relative;max-width:840px;margin:18px auto 0;border-radius:14px;overflow:hidden;box-shadow:var(--shadow);background:#e7edf5;min-height:200px}
-  .plano img{width:100%;display:block}
-  .plano-ph{padding:60px 20px;text-align:center;color:#5b6b82;font-size:14px}
-  .hot{position:absolute;transform:translate(-50%,-50%);width:32px;height:32px;border-radius:50%;background:var(--blue);color:#fff;border:2px solid #fff;display:grid;place-items:center;font-weight:800;font-size:13px;cursor:pointer;box-shadow:0 4px 12px -3px rgba(0,0,0,.5);z-index:2}
-  .hot::before{content:"";position:absolute;inset:-3px;border-radius:50%;animation:pulse 1.9s infinite}
-  .hot.done{background:var(--ok)} .hot.done::before{animation:none}
-  .hot .hlabel{position:absolute;bottom:130%;left:50%;transform:translateX(-50%);background:var(--panel);color:#fff;padding:6px 11px;border-radius:8px;font-size:12px;font-weight:600;white-space:nowrap;max-width:220px;white-space:normal;width:max-content;opacity:0;pointer-events:none;transition:.2s;z-index:5}
-  .hot:hover .hlabel,.hot.sel .hlabel{opacity:1}
-  /* Los puntos del plano son más grandes en pantalla táctil. */
-  @media(pointer:coarse){.hot{width:40px;height:40px;font-size:15px}}
   .seqdots{display:flex;gap:14px;justify-content:center;margin-top:20px;flex-wrap:wrap}
   .seqdot{width:44px;height:44px;border-radius:50%;background:var(--panel);color:#fff;display:grid;place-items:center;font-weight:800;font-size:16px;cursor:pointer;border:3px solid transparent;transition:.2s}
   .seqdot:hover{transform:translateY(-2px)} .seqdot.cur{border-color:var(--cyan)} .seqdot.done{background:var(--ok)}
@@ -2089,11 +2079,6 @@
     .muy-apretado .flips .back .ej{font-size:10.6px;line-height:1.28;padding:5px 8px;margin-top:4px}
   }
 
-  /* Lamina de imagen (Enfoque de seguridad de procesos): la imagen mandaba
-     su alto natural y empujaba el resto fuera. */
-  .apretado .plano{margin-top:12px;background:none;box-shadow:none}
-  .apretado .plano img{width:auto;max-width:100%;max-height:min(52vh,400px);margin:0 auto}
-  .muy-apretado .plano img{max-height:min(45vh,330px)}
 
   /* Listas de verdadero/falso y de seleccion (evaluaciones de modulo). */
   .apretado .evlist,.apretado .mlist{gap:8px;margin-top:10px}
@@ -3169,14 +3154,6 @@
     </div>
   </div>
 </section>
-<section class="slide light nogate-no mint" data-mod="4">
-  <div class="wrap">
-    <div class="eyebrow rv up">HSE-005 · Gestión de seguridad de procesos</div>
-    <h2 class="rv up" style="--d:1">Enfoque de seguridad de procesos</h2>
-    <p class="lead rv up" style="--d:2">Pasa el cursor (o toca) los puntos titilantes del plano para descubrir la información. 👆</p>
-    <div class="plano rv up" id="plano"><div class="plano-ph" id="planoPh">Sube la imagen del plano al repositorio como <b>imagenes/plano.png</b></div></div>
-  </div>
-</section>
 <section class="slide dark teal" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">HSE-006 · Bienestar y limpieza</div><h2 class="rv up" style="--d:1">Cuatro comportamientos clave</h2><p class="lead rv up" style="--d:2">Toca cada comportamiento. 👆</p><div class="accgrid" style="margin-top:16px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1bb4e4"></span><h4>1 · Ojos en el camino</h4><span class="chev">+</span></div><div class="acc-body"><p>Presta atención a dónde caminas: concéntrate con firmeza y seguridad, evita distracciones (no uses el teléfono al caminar) y está atento a tu entorno.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>2 · Mantener 3 puntos de contacto</h4><span class="chev">+</span></div><div class="acc-body"><p>En escaleras y vehículos mantén siempre 3 puntos de contacto (2 manos + 1 pie o 2 pies + 1 mano); asegura una base estable, usa bolsas o cuerdas para transportar objetos, agárrate del pasamanos y usa calzado antideslizante.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#0e2c56"></span><h4>3 · Identificar y alertar</h4><span class="chev">+</span></div><div class="acc-body"><p>Si ves algo mal (obstáculos, derrames, suelos resbaladizos): informa de inmediato a tu supervisor, coloca señales de advertencia visibles y restringe el acceso con cinta de acordonamiento.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>4 · Mantener el lugar de trabajo limpio y seguro</h4><span class="chev">+</span></div><div class="acc-body"><p>¡Actúa! Mantén pasillos limpios y sin obstáculos, asegura cables y herramientas sueltas, y mejora el entorno (5S): repara suelos o plataformas, mejora accesos, pasamanos e iluminación.</p></div></div></div></div>
 </section>
@@ -3753,7 +3730,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-04-m";
+var VERSION_CURSO = "2026-09-04-n";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
@@ -3785,7 +3762,7 @@ var REPORTE_EMAIL = "zuica.german@gmail.com"; // correo de respaldo (modo "abrir
    (con la barra final "/"). Si algún día sirves el HTML directo desde GitHub
    Pages, puedes dejar BASE = "" y funcionará igual con rutas relativas. */
 var BASE = "https://zuicagerman-eng.github.io/Pagina-html-recapacitaciones-Holcim/";
-function asset(ruta){ return BASE + ruta; }   // helper: asset("imagenes/plano.png")
+function asset(ruta){ return BASE + ruta; }   // helper: asset("imagenes/logo-barra.png")
 
 /* ====== LOGOS (sube tus PNG a la carpeta imagenes/) ======
    - logo-esquina.png : logo pequeño de la esquina superior izquierda
@@ -4483,54 +4460,6 @@ function cierraAuto(s){
   s.querySelectorAll('.accgrid.acc-auto .acc').forEach(function(c){ c.classList.remove('open'); });
 }
 
-/* ====== PLANO isométrico (Módulo 4) — sube tu PNG y ajusta puntos ====== */
-// 1) Sube tu imagen del plano al repositorio dentro de la carpeta "imagenes/"
-//    (por ejemplo imagenes/plano.png). Se carga con URL absoluta (variable BASE)
-//    para que funcione también dentro de Apps Script / el portal.
-var PLANO_IMG = asset("imagenes/plano.png");
-// 2) Ajusta x/y (en %) de cada punto según tu imagen. Los textos 3 y 5 edítalos si aplica.
-var PLANO = [
- {x:18, y:55, t:'Combustibles tradicionales (sólidos, líquidos, gas)'},
- {x:40, y:60, t:'Manejo de material caliente'},
- {x:57, y:40, t:'Horno y precalentador'},
- {x:72, y:48, t:'Taludes y canteras'},
- {x:62, y:62, t:'Molienda'},
- {x:82, y:63, t:'Seguridad eléctrica'},
- {x:60, y:82, t:'Gestión de fuego por combustibles'},
- {x:22, y:78, t:'Sistemas de presión'},
- {x:33, y:35, t:'Equipos críticos'}
-];
-(function(){
-  var cont=document.getElementById('plano'); if(!cont) return;
-  var ph=document.getElementById('planoPh');
-
-  // Crea los puntos interactivos SOLO cuando ya existe la imagen del plano.
-  // (Si no hay imagen, no se muestran puntos flotando ni se bloquea el avance.)
-  function addHotspots(){
-    if(cont.querySelector('.hot')) return; // evita duplicados
-    PLANO.forEach(function(p,i){
-      var b=document.createElement('button');
-      b.className='hot gclick req'; b.style.left=p.x+'%'; b.style.top=p.y+'%';
-      b.innerHTML=(i+1)+'<span class="hlabel">'+(i+1)+'. '+p.t+'</span>';
-      b.setAttribute('aria-label',p.t);
-      function t(){ b.classList.toggle('sel'); markDone(b); }
-      b.addEventListener('click',t);
-      b.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){e.preventDefault();t();} });
-      cont.appendChild(b);
-    });
-    refreshNext();
-  }
-
-  if(!PLANO_IMG){ return; }
-  var img=document.createElement('img'); img.loading='lazy'; img.decoding='async'; img.alt='Plano de planta';
-  var intentoLocal=false;
-  img.onload=function(){ ph.style.display='none'; addHotspots(); };
-  img.onerror=function(){
-    if(!intentoLocal){ intentoLocal=true; img.src='imagenes/plano.png'; return; } // respaldo: ruta local
-    img.remove(); ph.style.display=''; // sin imagen: deja el aviso y no crea puntos
-  };
-  img.src=PLANO_IMG; cont.insertBefore(img,ph);
-})();
 /* ====== SECUENCIAL alturas (Módulo 4) ====== */
 (function(){
   var wrap=document.getElementById('seqdots'); if(!wrap) return;
@@ -4545,21 +4474,14 @@ var PLANO = [
   });
 })();
 /* ====== CLICS GATEADOS ======
-   Solo se exige (y se permite) el clic donde el clic REVELA algo nuevo:
-   .hot muestra la etiqueta de su punto en el plano.
    Las fichas .act y .chip3 solo pintaban un ✓ sin aportar información, así que
-   dejan de ser obligatorias y dejan de ser clicables: son texto informativo. */
+   dejan de ser obligatorias y dejan de ser clicables: son texto informativo.
+   Antes se exceptuaban los puntos del plano, que sí revelaban su etiqueta; esa
+   diapositiva se retiró y con ella la excepción. */
 document.querySelectorAll('.gclick').forEach(function(el){
-  var revela = el.classList.contains('hot');
-  if(!revela){
-    el.classList.add('noclick');
-    el.removeAttribute('tabindex'); el.removeAttribute('role');
-    return;
-  }
-  el.classList.add('req');
-  function t(){ el.classList.toggle('sel'); markDone(el); }
-  el.addEventListener('click', t);
-  el.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); t(); } });
+  el.classList.add('noclick');
+  el.removeAttribute('tabindex');
+  el.removeAttribute('role');
 });
 /* Si una diapositiva se quedó sin barrera, su instrucción ya no debe pedir clics. */
 document.querySelectorAll('.slide').forEach(function(s){
