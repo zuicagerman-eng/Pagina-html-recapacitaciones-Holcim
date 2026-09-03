@@ -662,6 +662,74 @@
     .wglobos.izq .wglobo{text-align:left;border-right:0;border-left:5px solid var(--c)}
     .wglobo:after{display:none}
   }
+  /* ===== RUEDA DE ESTÁNDARES =====
+     Misma idea que la rueda del SG-SST: se pasa por cada gajo y su nombre se
+     enciende y ya no se vuelve a apagar. Aqui son hasta once, asi que el
+     nombre completo vive en la lista de al lado y el centro muestra el codigo:
+     alrededor del aro no cabrian once rotulos legibles. */
+  .stdwrap{display:grid;grid-template-columns:auto 1fr;gap:clamp(16px,3vw,34px);
+    align-items:center;margin-top:14px}
+  .stdrueda{position:relative;width:min(330px,66vw);aspect-ratio:1;flex:none}
+  .stdaro{position:absolute;inset:0;border-radius:50%;box-shadow:var(--shadow)}
+  .stdhueco{position:absolute;inset:25%;border-radius:50%;display:grid;place-items:center;
+    text-align:center;padding:8px;background:var(--navy);color:#fff;
+    box-shadow:inset 0 0 0 4px rgba(255,255,255,.12)}
+  .slide.light .stdhueco{background:#fff;color:var(--ink);box-shadow:inset 0 0 0 4px rgba(11,37,69,.08)}
+  /* En bloque: como span quedaban en la misma linea y el codigo se montaba
+     encima del nombre. */
+  .stdhueco .cod{display:block;font-size:19px;font-weight:800;letter-spacing:.4px;
+    color:var(--ca,inherit);line-height:1.12}
+  .stdhueco .nom{display:block;font-size:10.5px;line-height:1.28;margin-top:5px;opacity:.85;
+    overflow-wrap:anywhere}
+  .stdpt{position:absolute;transform:translate(-50%,-50%);width:38px;height:38px;
+    border-radius:50%;border:3px solid #fff;display:grid;place-items:center;cursor:pointer;
+    font-family:var(--font);font-weight:800;font-size:11px;color:#fff;padding:0;
+    box-shadow:0 6px 16px -5px rgba(0,0,0,.55);transition:transform .2s}
+  .stdpt:hover,.stdpt.active{transform:translate(-50%,-50%) scale(1.18);z-index:2}
+  .stdpt:focus-visible{outline:3px solid #fff;outline-offset:2px}
+  /* La lista: apagada hasta que se pasa por su gajo, y ahi se queda encendida. */
+  .stdleyenda{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;min-width:0}
+  .stdleyenda.una{grid-template-columns:1fr}
+  .stdli{display:flex;align-items:center;gap:9px;text-align:left;min-width:0;
+    background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.10);
+    border-left:5px solid var(--c);border-radius:11px;padding:7px 11px;cursor:pointer;
+    font-family:var(--font);opacity:.42;transition:opacity .35s,background .2s,transform .2s}
+  .slide.light .stdli{background:#fff;border-color:rgba(11,37,69,.10);box-shadow:var(--shadow)}
+  .stdli.on{opacity:1}
+  .stdli:hover,.stdli.active{background:rgba(255,255,255,.13);transform:translateX(2px)}
+  .slide.light .stdli:hover,.slide.light .stdli.active{background:#f3f8ff}
+  .stdli .c{font-size:10.5px;font-weight:800;letter-spacing:.4px;color:#fff;flex:none;
+    background:var(--c);border-radius:7px;padding:3px 7px}
+  .stdli .n{font-size:12.6px;font-weight:600;line-height:1.32;color:#eaf1fb;min-width:0;
+    overflow-wrap:anywhere}
+  .slide.light .stdli .n{color:var(--ink)}
+  @media(max-height:820px){
+    .stdrueda{width:min(280px,62vw)} .stdpt{width:33px;height:33px;font-size:10px}
+    .stdli{padding:5px 9px} .stdli .n{font-size:12px}
+    .stdhueco .cod{font-size:17px} .stdhueco .nom{font-size:10px}
+  }
+  .apretado .stdrueda{width:min(240px,58vw)}
+  .apretado .stdli{padding:4px 8px;gap:7px} .apretado .stdli .n{font-size:11.4px;line-height:1.28}
+  .apretado .stdpt{width:29px;height:29px;font-size:9.5px}
+  @media(max-width:900px){
+    .stdwrap{grid-template-columns:1fr;justify-items:center;gap:14px}
+    .stdleyenda{width:100%}
+  }
+  @media(max-width:560px){.stdleyenda{grid-template-columns:1fr}}
+  /* En pantalla tactil ni el gajo ni la fila se encogen: apretar la
+     diapositiva sirve en un portatil, pero en un celular dejaria el blanco
+     por debajo del minimo para el dedo. */
+  @media(pointer:coarse){
+    .stdpt,.apretado .stdpt,.muy-apretado .stdpt{width:42px;height:42px;font-size:11px}
+    .stdli,.apretado .stdli{min-height:42px;padding:9px 12px}
+    .stdli .n,.apretado .stdli .n{font-size:12.6px}
+  }
+  /* Pestañas en fila, encima del contenido: aqui son tres y el menu lateral
+     de 250px le quitaria a la rueda el ancho que necesita. */
+  .tabs3 .tabmenu3{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin:14px 0 4px}
+  .tabs3 .tabbtn{text-align:center;max-width:none;flex:0 1 auto}
+  @media(max-width:640px){.tabs3 .tabmenu3{gap:7px}.tabs3 .tabbtn{flex:1 1 100%}}
+
   /* ===== TÉCNICA / DEFINICIÓN / DEBER (ATS) =====
      Tres columnas con bandas de color y cajas blancas, sin nada que tocar. */
   .tecnicas{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:16px;
@@ -2334,9 +2402,9 @@
     <h2 class="rv up" style="--d:1">¡Así lo hacemos en Holcim!</h2>
     <div class="gline rv up" style="--d:2"></div>
     <div class="ruta3">
-      <div class="rpaso rv up" style="--d:0"><span class="rico" data-foto="investigacion(D27)"><svg viewBox="0 0 40 40"><rect x="6" y="8" width="28" height="19" rx="2.5"/><path d="M16 32h8M20 27v5"/><path d="M17 13l7 7-3 .6-.6 3z"/></svg></span><span class="rhilo"></span><span class="rflecha">Investigación<br>y análisis</span><p>Permanente consulta de fuentes productoras de normas jurídicas externas e internas, y estudio de aplicabilidad y acciones a ejecutar.</p></div>
-      <div class="rpaso rv up" style="--d:1"><span class="rico" data-foto="identificacion(D27)"><svg viewBox="0 0 40 40"><path d="M11 6h12l6 6v22H11z"/><path d="M23 6v6h6"/><circle cx="19" cy="22" r="5"/><path d="M23 26l4 4"/></svg></span><span class="rhilo"></span><span class="rflecha">Identificación</span><p>Alineación del requisito legal con los temas, peligros, aspectos o impactos según sus actividades y procesos.</p></div>
-      <div class="rpaso rv up" style="--d:2"><span class="rico" data-foto="revision(D27)"><svg viewBox="0 0 40 40"><rect x="9" y="8" width="19" height="25" rx="2.5"/><rect x="15" y="5" width="7" height="4.5" rx="1.2"/><path d="M13.5 15h3M13.5 21h3M13.5 27h3M19.5 15h6M19.5 21h4"/><path d="M29 17l4.5 4.5-7 7L23 30l1.5-3.5z"/></svg></span><span class="rhilo"></span><span class="rflecha">Revisión de<br>aplicación normativa</span><p>Acción de verificación por parte del responsable de la Compañía, para determinar la aplicación del requisito.</p></div>
+      <div class="rpaso rv up" style="--d:0"><span class="rico"><svg viewBox="0 0 40 40"><rect x="6" y="8" width="28" height="19" rx="2.5"/><path d="M16 32h8M20 27v5"/><path d="M17 13l7 7-3 .6-.6 3z"/></svg></span><span class="rhilo"></span><span class="rflecha">Investigación<br>y análisis</span><p>Permanente consulta de fuentes productoras de normas jurídicas externas e internas, y estudio de aplicabilidad y acciones a ejecutar.</p></div>
+      <div class="rpaso rv up" style="--d:1"><span class="rico"><svg viewBox="0 0 40 40"><path d="M11 6h12l6 6v22H11z"/><path d="M23 6v6h6"/><circle cx="19" cy="22" r="5"/><path d="M23 26l4 4"/></svg></span><span class="rhilo"></span><span class="rflecha">Identificación</span><p>Alineación del requisito legal con los temas, peligros, aspectos o impactos según sus actividades y procesos.</p></div>
+      <div class="rpaso rv up" style="--d:2"><span class="rico"><svg viewBox="0 0 40 40"><rect x="9" y="8" width="19" height="25" rx="2.5"/><rect x="15" y="5" width="7" height="4.5" rx="1.2"/><path d="M13.5 15h3M13.5 21h3M13.5 27h3M19.5 15h6M19.5 21h4"/><path d="M29 17l4.5 4.5-7 7L23 30l1.5-3.5z"/></svg></span><span class="rhilo"></span><span class="rflecha">Revisión de<br>aplicación normativa</span><p>Acción de verificación por parte del responsable de la Compañía, para determinar la aplicación del requisito.</p></div>
     </div>
     <p class="avisogris rv up" style="--d:2">Ahora, tenemos la <b>Evaluación del Cumplimiento</b> y cómo calificar requisitos mediante acciones clave para garantizar su gestión adecuada.</p>
     <div class="normas dos" style="margin-top:16px">
@@ -2354,9 +2422,25 @@
     </div>
   </div>
 </section>
-<section class="slide nogate dark" data-mod="3"><div class="wrap"><div class="eyebrow rv up">Estándares de salud y seguridad</div><h2 class="rv up" style="--d:1">Estándares de Gestión</h2><p class="lead rv up" style="--d:2">Toca cada estándar para reconocerlos. 👆</p><div class="chipgrid"><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#17868a">HSE-001</span><span class="nm">Sistema de Gestión de Salud y Seguridad</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#97d13b">HSE-002</span><span class="nm">Notificación, clasificación e investigación de incidentes</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#f5b700">HSE-003</span><span class="nm">Equipo de protección personal</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#ef7d00">HSE-004</span><span class="nm">Construcción</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#6a3d9a">HSE-005</span><span class="nm">Gestión de seguridad de procesos</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#0e6e78">HSE-006</span><span class="nm">Bienestar y limpieza</span><span class="tick">✓</span></div></div></div></section>
-<section class="slide nogate light mint" data-mod="3"><div class="wrap"><div class="eyebrow rv up">Estándares de salud y seguridad</div><h2 class="rv up" style="--d:1">Estándares operativos (100)</h2><p class="lead rv up" style="--d:2">Toca cada estándar operativo. 👆</p><div class="chipgrid"><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#17868a">HSE-101</span><span class="nm">Equipo móvil y gestión del tráfico en instalaciones</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#97d13b">HSE-102</span><span class="nm">Trabajo en alturas</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#f5b700">HSE-103</span><span class="nm">Aislamiento de energías (LOTOTO)</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#ef7d00">HSE-104</span><span class="nm">Espacios confinados</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#6a3d9a">HSE-105</span><span class="nm">Seguridad eléctrica</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#0e6e78">HSE-106</span><span class="nm">Protecciones de equipos y guardas</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#1877c4">HSE-107</span><span class="nm">Trabajo en caliente</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#1bb4e4">HSE-108</span><span class="nm">Elevación y soporte de cargas</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#e6007e">HSE-110</span><span class="nm">Trabajo cerca al agua</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#e23b32">HSE-111</span><span class="nm">Seguridad vial</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#3fb559">HSE-112</span><span class="nm">Respuesta de emergencia</span><span class="tick">✓</span></div></div></div></section>
-<section class="slide nogate dark teal" data-mod="3"><div class="wrap"><div class="eyebrow rv up">Estándares de salud y seguridad</div><h2 class="rv up" style="--d:1">Estándares de Salud (200)</h2><p class="lead rv up" style="--d:2">Toca cada estándar de salud. 👆</p><div class="chipgrid"><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#17868a">HSE-201</span><span class="nm">Asbestos</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#97d13b">HSE-202</span><span class="nm">Sustancias químicas peligrosas</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#f5b700">HSE-203</span><span class="nm">Conservación de la audición</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#ef7d00">HSE-204</span><span class="nm">Ergonomía</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#6a3d9a">HSE-205</span><span class="nm">Vibración</span><span class="tick">✓</span></div></div></div></section>
+<section class="slide dark" data-mod="3">
+  <div class="wrap">
+    <div class="eyebrow rv up">Estándares de salud y seguridad</div>
+    <h2 class="rv up" style="--d:1">Estándares de salud y seguridad</h2>
+    <p class="lead rv up" style="--d:2">Abre las tres familias y pasa por cada gajo de la rueda: su nombre se enciende y se queda. 👆</p>
+    <div class="tabs3">
+      <nav class="tabmenu3" aria-label="Familias de estándares">
+        <button type="button" class="tabbtn on" data-vista="0">Gestión</button>
+        <button type="button" class="tabbtn" data-vista="1">Operativos (100)</button>
+        <button type="button" class="tabbtn" data-vista="2">Salud (200)</button>
+      </nav>
+      <div class="tabcont">
+        <div class="vista on" data-vista="0"><div class="stdwrap" id="std0"></div></div>
+        <div class="vista" data-vista="1"><div class="stdwrap" id="std1"></div></div>
+        <div class="vista" data-vista="2"><div class="stdwrap" id="std2"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
 <section class="slide dark" data-mod="3">
   <div class="wrap" style="text-align:center">
     <div class="done-badge rv scale"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg></div>
@@ -3005,7 +3089,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-03-y";
+var VERSION_CURSO = "2026-09-04-a";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
@@ -3526,6 +3610,95 @@ WHEEL.forEach(function(p){
   b.addEventListener('focus',act);
   b.addEventListener('click',act);
   wheelEl.appendChild(b);
+});
+
+/* ====== RUEDAS DE ESTÁNDARES ======
+   Tres familias, una diapositiva. Cada gajo se enciende al pasar por encima
+   —o al tocarlo— y ya no se apaga, igual que la rueda del SG-SST. El nombre
+   completo va en la lista de al lado porque once rótulos alrededor del aro no
+   se leerían. La lista también responde: señalar un nombre resalta su gajo. */
+var STD = [
+ { id:'std0', cols:2, items:[
+   ['HSE-001','Sistema de Gestión de Salud y Seguridad','#00a160'],
+   ['HSE-002','Notificación, clasificación e investigación de incidentes','#97d13b'],
+   ['HSE-003','Equipo de protección personal','#f5b700'],
+   ['HSE-004','Construcción','#ef7d00'],
+   ['HSE-005','Gestión de seguridad de procesos','#6a3d9a'],
+   ['HSE-006','Bienestar y limpieza','#17868a']]},
+ { id:'std1', cols:2, items:[
+   ['HSE-101','Equipo móvil y gestión del tráfico en instalaciones','#17868a'],
+   ['HSE-102','Trabajo en alturas','#97d13b'],
+   ['HSE-103','Aislamiento de energías (LOTOTO)','#f5b700'],
+   ['HSE-104','Espacios confinados','#ef7d00'],
+   ['HSE-105','Seguridad eléctrica','#6a3d9a'],
+   ['HSE-106','Protecciones de equipos y guardas','#0e6e78'],
+   ['HSE-107','Trabajo en caliente','#1877c4'],
+   ['HSE-108','Elevación y soporte de cargas','#1bb4e4'],
+   ['HSE-110','Trabajo cerca al agua','#e6007e'],
+   ['HSE-111','Seguridad vial','#e23b32'],
+   ['HSE-112','Respuesta de emergencia','#3fb559']]},
+ { id:'std2', cols:1, items:[
+   ['HSE-201','Asbestos','#17868a'],
+   ['HSE-202','Sustancias químicas peligrosas','#97d13b'],
+   ['HSE-203','Conservación de la audición','#f5b700'],
+   ['HSE-204','Ergonomía','#ef7d00'],
+   ['HSE-205','Vibración','#6a3d9a']]}
+];
+STD.forEach(function(fam){
+  var caja = document.getElementById(fam.id);
+  if(!caja) return;
+  var n = fam.items.length, paso = 360 / n;
+
+  var rueda = document.createElement('div'); rueda.className = 'stdrueda rv up';
+  var aro = document.createElement('div'); aro.className = 'stdaro';
+  /* Un gajo por estándar, del mismo tamaño; el degradado arranca arriba. */
+  aro.style.background = 'conic-gradient(' + fam.items.map(function(it, i){
+    return it[2] + ' ' + (i * paso).toFixed(3) + 'deg ' + ((i + 1) * paso).toFixed(3) + 'deg';
+  }).join(',') + ')';
+  var hueco = document.createElement('div'); hueco.className = 'stdhueco';
+  hueco.innerHTML = '<div><span class="cod">' + n + ' estándares</span>' +
+                    '<span class="nom">Pasa por cada gajo</span></div>';
+  rueda.appendChild(aro); rueda.appendChild(hueco);
+
+  var ley = document.createElement('div');
+  ley.className = 'stdleyenda rv up' + (fam.cols === 1 ? ' una' : '');
+
+  var puntos = [], filas = [];
+  function encender(i){
+    puntos.forEach(function(p, k){ p.classList.toggle('active', k === i); });
+    filas.forEach(function(f, k){ f.classList.toggle('active', k === i); });
+    filas[i].classList.add('on');
+    var it = fam.items[i];
+    hueco.style.setProperty('--ca', it[2]);
+    hueco.innerHTML = '<div><span class="cod">' + it[0] + '</span>' +
+                      '<span class="nom">' + it[1] + '</span></div>';
+  }
+
+  fam.items.forEach(function(it, i){
+    var ang = (i + 0.5) * paso;                     // centro del gajo
+    var rad = ang * Math.PI / 180;
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'stdpt';
+    b.style.left = (50 + 37 * Math.sin(rad)) + '%';
+    b.style.top  = (50 - 37 * Math.cos(rad)) + '%';
+    b.style.background = it[2];
+    b.textContent = it[0].replace('HSE-', '');
+    b.setAttribute('aria-label', it[0] + ' · ' + it[1]);
+    rueda.appendChild(b); puntos.push(b);
+
+    var f = document.createElement('button');
+    f.type = 'button'; f.className = 'stdli'; f.style.setProperty('--c', it[2]);
+    f.innerHTML = '<span class="c">' + it[0] + '</span><span class="n">' + it[1] + '</span>';
+    ley.appendChild(f); filas.push(f);
+
+    [b, f].forEach(function(el){
+      el.addEventListener('mouseenter', function(){ encender(i); });
+      el.addEventListener('focus',      function(){ encender(i); });
+      el.addEventListener('click',      function(){ encender(i); });
+    });
+  });
+
+  caja.appendChild(rueda); caja.appendChild(ley);
 });
 /* ====== REGLAS HSE (acordeón) ====== */
 var RICON={
@@ -4708,7 +4881,7 @@ document.addEventListener('DOMContentLoaded', function(){
 /* ====== MENÚ LATERAL DE VISTAS ======
    Las cinco vistas comparten diapositiva. Cada botón es una interacción
    obligatoria: así nadie se salta un tema por no abrirlo. */
-document.querySelectorAll('.tabs2').forEach(function(caja){
+document.querySelectorAll('.tabs2, .tabs3').forEach(function(caja){
   var botones = Array.prototype.slice.call(caja.querySelectorAll('.tabbtn'));
   var vistas  = Array.prototype.slice.call(caja.querySelectorAll('.vista'));
   botones.forEach(function(b, i){
