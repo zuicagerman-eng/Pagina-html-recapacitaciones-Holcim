@@ -906,6 +906,21 @@
     .conduc{grid-template-columns:1fr}
     .conducfoto{max-width:340px;margin-inline:auto}
   }
+  /* ===== Lamina a pantalla completa =====
+     Para las diapositivas cuyo contenido es una sola imagen: ocupa todo el
+     alto que sobra bajo el titulo y crece o se encoge con la ventana, sin
+     recortarse ni obligar a desplazar. */
+  .lamgrande{margin:12px 0 0;flex:1;min-height:0;display:flex}
+  .lamgrande .ph{flex:1;min-height:0;display:flex;align-items:center;justify-content:center}
+  .lamgrande .ph img{max-width:100%;max-height:100%;width:auto;height:auto;
+    object-fit:contain;display:block;border-radius:8px}
+  .lamgrande .ph svg{width:100%;max-width:520px;max-height:100%;height:300px;fill:none;
+    stroke:#9fb2c6;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+  /* El .wrap se centra con margin:auto; aqui debe estirarse para que la
+     lamina disponga del alto real de la diapositiva. La clase .lamslide del
+     <section> hace el trabajo en los navegadores sin :has(). */
+  .slide.lamslide .wrap,
+  .slide:has(.lamgrande) .wrap{margin-block:0;flex:1;display:flex;flex-direction:column;min-height:0}
   /* En pantallas tactiles no se encogen los blancos que hay que pulsar. */
   @media(pointer:coarse){
     .slide.ultra .act{min-height:84px;padding:14px 10px}
@@ -4123,12 +4138,13 @@
 <div class="pdfrow rv up" style="grid-template-columns:1fr"><div class="pdfmini"><span>Consulta la <b>guía visual</b> de elevación de cargas.</span><button class="pdfbtn" data-pdf="cargas_guia" data-title="Guía visual · Elevación y soporte de cargas">Ver más</button></div></div>
 </div>
 </section>
-<section class="slide light mint" data-mod="4">
+<section class="slide light mint lamslide" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">HSE-111 · Seguridad vial</div>
 <h2 class="rv up" style="--d:1">Contexto de seguridad vial Holcim</h2>
 <div class="infobanner rv up" style="--d:2">Transporte terrestre por carretera: desde las <b>materias primas</b> hasta la entrega al cliente, incluidos los <b>desplazamientos en misión</b>.</div>
-<p class="lead rv up">Toca cada eslabón de la cadena. 👆</p>
-<div class="acts"><div class="act gclick rv scale" style="background:#97d13b" tabindex="0" role="button"><span style="font-size:22px">●</span><span>Materias primas</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#0e2c56" tabindex="0" role="button"><span style="font-size:22px">●</span><span>Cemento en saco → Clientes</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#1877c4" tabindex="0" role="button"><span style="font-size:22px">●</span><span>Cemento a granel → Clientes</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#1bb4e4" tabindex="0" role="button"><span style="font-size:22px">●</span><span>Agregados</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#17868a" tabindex="0" role="button"><span style="font-size:22px">●</span><span>Concreto</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#e6007e" tabindex="0" role="button"><span style="font-size:22px">●</span><span>Desplazamientos en misión</span><span class="tick">✓</span></div></div>
+<figure class="lamgrande rv up" style="--d:3">
+  <span class="ph" data-foto="contextovial(D58)"><svg viewBox="0 0 200 110" aria-hidden="true"><rect x="6" y="6" width="188" height="98" rx="4"/><path d="M6 78l40-30 30 22 28-24 44 32 46-34"/><circle cx="150" cy="30" r="11"/></svg></span>
+</figure>
 </div>
 </section>
 <section class="slide dark teal" data-mod="4">
@@ -4561,7 +4577,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-05-i";
+var VERSION_CURSO = "2026-09-05-j";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
