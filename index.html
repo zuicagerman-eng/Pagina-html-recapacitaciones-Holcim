@@ -707,6 +707,53 @@
     .bloqfoto>div{order:2}
   }
 
+  /* ===== CUATRO CAUSAS ALREDEDOR DE UNA IMAGEN =====
+     Dos tarjetas a cada lado y la ilustracion al centro, con el aro punteado
+     y un punto de color por causa, como en el impreso. */
+  .orbita{display:grid;grid-template-columns:1fr minmax(190px,290px) 1fr;
+    gap:clamp(10px,2vw,26px);align-items:center;margin-top:12px}
+  .orbcol{display:flex;flex-direction:column;gap:clamp(10px,2.2vh,26px);min-width:0}
+  .orbcard{background:var(--c);color:#fff;border-radius:14px;padding:13px 16px;
+    display:flex;align-items:center;gap:12px;min-width:0;box-shadow:var(--shadow)}
+  .orbcard>div{min-width:0}
+  .orbcard .t{font-size:14.5px;font-weight:800;line-height:1.2;margin-bottom:5px}
+  .orbcard p{font-size:12.8px;line-height:1.45;overflow-wrap:anywhere}
+  .orbico{width:56px;height:56px;flex:none}
+  .orbico svg{width:100%;height:100%;fill:none;stroke:#fff;stroke-width:1.5;
+    stroke-linecap:round;stroke-linejoin:round}
+  /* El centro es un cuadrado: asi el aro es redondo y no un ovalo. */
+  .orbmid{position:relative;aspect-ratio:1;display:grid;place-items:center;min-width:0}
+  .orbaro{position:absolute;inset:0;border-radius:50%;border:2px dashed rgba(11,37,69,.34)}
+  .slide.dark .orbaro{border-color:rgba(255,255,255,.30)}
+  .orbfoto{width:76%;height:76%;display:flex;align-items:center;justify-content:center}
+  .orbfoto img{max-width:100%;max-height:100%;width:auto;height:auto;display:block}
+  .orbfoto svg{width:100%;height:100%;fill:none;stroke:var(--panel);stroke-width:1.6;
+    stroke-linecap:round;stroke-linejoin:round}
+  .slide.dark .orbfoto svg{stroke:#bcd6f0}
+  .orbpt{position:absolute;width:24px;height:24px;border-radius:50%;background:#fff;
+    border:6px solid var(--c);transform:translate(-50%,-50%);box-shadow:var(--shadow)}
+  @media(max-height:820px){
+    .orbcard{padding:10px 13px;gap:10px}
+    .orbcard .t{font-size:13.4px;margin-bottom:3px}
+    .orbcard p{font-size:12.1px;line-height:1.38}
+    .orbico{width:46px;height:46px} .orbpt{width:20px;height:20px;border-width:5px}
+  }
+  .apretado .orbita{gap:9px;margin-top:8px}
+  .apretado .orbcard{padding:8px 11px;gap:8px}
+  .apretado .orbcard .t{font-size:12.6px;margin-bottom:2px}
+  .apretado .orbcard p{font-size:11.5px;line-height:1.33}
+  .apretado .orbico{width:38px;height:38px}
+  .muy-apretado .orbcard p{font-size:11px;line-height:1.3}
+  .muy-apretado .orbico{width:32px;height:32px}
+  /* En pantalla angosta la orbita no cabe: la imagen va primero y las cuatro
+     tarjetas debajo, de dos en dos. */
+  @media(max-width:940px){
+    .orbita{grid-template-columns:repeat(2,1fr);gap:10px}
+    .orbmid{grid-column:1/-1;order:-1;width:min(230px,60vw);margin:0 auto;aspect-ratio:1}
+    .orbcol{gap:10px}
+  }
+  @media(max-width:560px){.orbita{grid-template-columns:1fr}}
+
   /* ===== PASOS EN PASTILLA (HSE-002) =====
      Seis pasos en dos columnas. El icono cambia de lado en cada uno y la
      esquina redonda lo sigue, como en el impreso. */
@@ -2822,8 +2869,34 @@
     <div class="insig aviso rv up"><span><svg viewBox="0 0 24 24"><path d="M12 3l9 16H3z"/><path d="M12 9v5M12 17h0"/></svg></span></div>
   </div>
 </section>
-<section class="slide light" data-mod="4">
-<div class="wrap"><div class="eyebrow rv up">HSE-002 · Reporte y gestión de eventos</div><h2 class="rv up" style="--d:1">Reporte oportuno</h2><p class="lead rv up" style="--d:2">Modelo de causas (referencia):</p><div class="chipgrid" style="grid-template-columns:repeat(4,1fr);margin-top:6px"><div class="chip3"><span class="code" style="background:#97d13b">1</span><span class="nm">Organización</span></div><div class="chip3"><span class="code" style="background:#0e2c56">2</span><span class="nm">Supervisión</span></div><div class="chip3"><span class="code" style="background:#e6007e">3</span><span class="nm">Acto inseguro</span></div><div class="chip3"><span class="code" style="background:#ef7d00">4</span><span class="nm">Precondición</span></div></div><p class="lead rv up" style="margin-top:16px">Beneficios — toca cada uno. 👆</p><div class="accgrid" style="margin-top:12px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>Protege a las personas de forma inmediata</h4><span class="chev">+</span></div><div class="acc-body"><p>Permite activar oportunamente la atención médica, el acompañamiento y las medidas de control, reduciendo riesgos de complicaciones y facilitando la recuperación.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1bb4e4"></span><h4>Evita la repetición de eventos</h4><span class="chev">+</span></div><div class="acc-body"><p>Facilita la identificación de causas y la implementación de acciones correctivas, evitando que otros se expongan a riesgos ya identificados.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Fortalece la cultura de Seguridad y Salud</h4><span class="chev">+</span></div><div class="acc-body"><p>Promueve la confianza, el aprendizaje organizacional y la mejora continua.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>Permite una gestión legal adecuada</h4><span class="chev">+</span></div><div class="acc-body"><p>Garantiza el cumplimiento de las obligaciones ante la ARL y las autoridades, evitando reprocesos y pérdida de credibilidad.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#ef7d00"></span><h4>Enfoque proactivo de recursos</h4><span class="chev">+</span></div><div class="acc-body"><p>Evita desvíos innecesarios de tiempo y presupuesto, enfocando los recursos en capacitación, prevención y mejores condiciones de trabajo.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#e6007e"></span><h4>Genera beneficios reales para todos</h4><span class="chev">+</span></div><div class="acc-body"><p>El reporte oportuno no es una carga ni una sanción: es una acción de corresponsabilidad que protege a las personas y fortalece la organización.</p></div></div></div></div>
+<section class="slide nogate light" data-mod="4">
+  <div class="wrap">
+    <div class="eyebrow rv up">HSE-002 · Reporte y gestión de eventos</div>
+    <h2 class="rv up" style="--d:1">Modelo de causas del evento</h2>
+    <div class="orbita">
+      <div class="orbcol">
+        <div class="orbcard rv up" style="--c:#8bbf3a;--d:0"><div><div class="t">Organización</div><p>Gestiones y decisiones de nivel superior en la organización.</p></div><span class="orbico"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="7"/><path d="M21 24l2.2 2.2 4-4.4"/><circle cx="24" cy="7" r="4"/><circle cx="41" cy="24" r="4"/><circle cx="24" cy="41" r="4"/><circle cx="7" cy="24" r="4"/><path d="M24 11v6M24 31v6M11 24h6M31 24h6"/></svg></span></div>
+        <div class="orbcard rv up" style="--c:#e6007e;--d:2"><div><div class="t">Acto inseguro</div><p>Cuando el individuo conoce la práctica adecuada, pero la ignora y actúa de manera subestándar.</p></div><span class="orbico"><svg viewBox="0 0 48 48"><path d="M13 34a11 11 0 0 1 22 0z"/><path d="M9 38h30"/><path d="M24 20v6M24 30h0"/><path d="M24 8v5M12 12l3 3M36 12l-3 3M5 24h4M39 24h4"/></svg></span></div>
+      </div>
+      <div class="orbmid rv up" style="--d:2">
+        <span class="orbaro"></span><span class="orbpt" style="left:14.6%;top:14.6%;--c:#8bbf3a"></span><span class="orbpt" style="left:85.4%;top:14.6%;--c:#0e2c56"></span><span class="orbpt" style="left:14.6%;top:85.4%;--c:#e6007e"></span><span class="orbpt" style="left:85.4%;top:85.4%;--c:#ef7d00"></span>
+        <span class="orbfoto" data-foto="dominos(D36)"><svg viewBox="0 0 120 120"><rect x="26" y="34" width="26" height="66" rx="3"/><rect x="52" y="30" width="26" height="70" rx="3"/><rect x="78" y="40" width="24" height="60" rx="3"/><path d="M26 67h26M52 65h26M78 70h24"/><circle cx="34" cy="46" r="2.4"/><circle cx="44" cy="55" r="2.4"/><circle cx="39" cy="82" r="2.4"/><circle cx="60" cy="42" r="2.4"/><circle cx="70" cy="52" r="2.4"/><circle cx="65" cy="80" r="2.4"/><circle cx="90" cy="52" r="2.4"/><circle cx="90" cy="82" r="2.4"/><circle cx="34" cy="16" r="7"/><path d="M27 12a7 7 0 0 1 14 0M24 12h20"/><circle cx="62" cy="18" r="7"/><path d="M55 14a7 7 0 0 1 14 0M52 14h20"/></svg></span>
+      </div>
+      <div class="orbcol">
+        <div class="orbcard rv up" style="--c:#0e2c56;--d:1"><div><div class="t">Supervisión</div><p>Influencia en el comportamiento de los colaboradores y de las condiciones de trabajo.</p></div><span class="orbico"><svg viewBox="0 0 48 48"><circle cx="24" cy="9" r="6"/><path d="M24 15v7M9 34v-5h30v5"/><path d="M9 29h30"/><circle cx="9" cy="39" r="5"/><circle cx="24" cy="39" r="5"/><circle cx="39" cy="39" r="5"/></svg></span></div>
+        <div class="orbcard rv up" style="--c:#ef7d00;--d:3"><div><div class="t">Precondición</div><p>Condiciones previas al acto que permitieron la materialización del mismo y del evento.</p></div><span class="orbico"><svg viewBox="0 0 48 48"><circle cx="18" cy="13" r="6"/><path d="M7 40c0-8 5-14 11-14s11 6 11 14"/><path d="M36 18l9 16H27z"/><path d="M36 24v5M36 31h0"/></svg></span></div>
+      </div>
+    </div>
+    <p class="avisogris rv up">Reportar a tiempo, hacer un análisis de causas adecuado y cumplir el plan de acción ayudará a prevenir la ocurrencia de eventos similares.</p>
+  </div>
+</section>
+<section class="slide nogate light mint" data-mod="4">
+  <div class="wrap">
+    <div class="eyebrow rv up">HSE-002 · Reporte y gestión de eventos</div>
+    <h2 class="rv up" style="--d:1">Reporte oportuno</h2>
+    <p class="lead rv up" style="--d:2">Por qué conviene reportar a tiempo:</p>
+    <div class="accgrid" style="margin-top:12px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>Protege a las personas de forma inmediata</h4><span class="chev">+</span></div><div class="acc-body"><p>Permite activar oportunamente la atención médica, el acompañamiento y las medidas de control, reduciendo riesgos de complicaciones y facilitando la recuperación.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1bb4e4"></span><h4>Evita la repetición de eventos</h4><span class="chev">+</span></div><div class="acc-body"><p>Facilita la identificación de causas y la implementación de acciones correctivas, evitando que otros se expongan a riesgos ya identificados.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Fortalece la cultura de Seguridad y Salud</h4><span class="chev">+</span></div><div class="acc-body"><p>Promueve la confianza, el aprendizaje organizacional y la mejora continua.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>Permite una gestión legal adecuada</h4><span class="chev">+</span></div><div class="acc-body"><p>Garantiza el cumplimiento de las obligaciones ante la ARL y las autoridades, evitando reprocesos y pérdida de credibilidad.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#ef7d00"></span><h4>Enfoque proactivo de recursos</h4><span class="chev">+</span></div><div class="acc-body"><p>Evita desvíos innecesarios de tiempo y presupuesto, enfocando los recursos en capacitación, prevención y mejores condiciones de trabajo.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#e6007e"></span><h4>Genera beneficios reales para todos</h4><span class="chev">+</span></div><div class="acc-body"><p>El reporte oportuno no es una carga ni una sanción: es una acción de corresponsabilidad que protege a las personas y fortalece la organización.</p></div></div>
+  </div>
 </section>
 <section class="slide dark teal" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">HSE-003 · Elementos de protección personal</div><h2 class="rv up" style="--d:1">¿Qué son los EPP?</h2><div class="infobanner rv up" style="--d:2">Cualquier equipo o elemento usado por el trabajador como barrera para protegerlo de los posibles daños de los riesgos presentes en sus labores.</div><p class="lead rv up">Los EPP deben cumplir — toca cada requisito. 👆</p><div class="chipgrid" style="grid-template-columns:repeat(2,1fr);margin-top:16px"><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#17868a">1</span><span class="nm">Ser gratuitos</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#1877c4">2</span><span class="nm">Estar fácilmente disponibles</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#97d13b">3</span><span class="nm">Cumplir estándares internacionales (ISO, EN, ANSI, AS)</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#ef7d00">4</span><span class="nm">Ser idóneos y tener un ajuste adecuado</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#e6007e">5</span><span class="nm">Ser compatibles con otros EPP</span><span class="tick">✓</span></div></div><div class="pdfrow rv up" style="grid-template-columns:1fr"><div class="pdfmini"><span>Consulta la <b>guía visual de EPP</b>.</span><button class="pdfbtn" data-pdf="epp_guia" data-title="Guía visual de EPP">Ver más</button></div></div></div>
@@ -3421,7 +3494,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-04-f";
+var VERSION_CURSO = "2026-09-04-g";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
