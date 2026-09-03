@@ -724,6 +724,38 @@
   }
   @media(max-width:700px){.bloqfoto.ancha,.bloqfoto.fotoizq.ancha{grid-template-columns:1fr}}
 
+  /* La ilustracion sobre fondo blanco y completa, no recortada: en estas
+     tarjetas es un dibujo, no una fotografia. */
+  /* Va con mas peso que ".gen8 .g8:nth-child(even) .g8foto", que define un
+     fondo translucido y esta escrita despues: sin esto, las tarjetas cian
+     dejaban el recuadro de la ilustracion en cian y no en blanco. */
+  .gen8 .g8.icono .g8foto,
+  .gen8 .g8.icono:nth-child(even) .g8foto{background:#fff;padding:9px 16px}
+  .gen8 .g8.icono .g8foto img{width:auto;height:100%;max-width:100%;object-fit:contain}
+  .gen8.centrado .g8txt{text-align:center}
+  .gen8 .g8tit{font-size:14.5px;font-weight:800;color:#fff;line-height:1.22;margin-bottom:5px}
+  @media(max-height:820px){.gen8 .g8tit{font-size:13.4px;margin-bottom:3px}}
+  .apretado .gen8 .g8tit{font-size:12.6px;margin-bottom:2px}
+  /* Lista numerada con circulo, para las tres preguntas del PSM. */
+  .numlist{display:flex;flex-direction:column;gap:2px;min-width:0}
+  .numit{display:flex;gap:12px;align-items:flex-start;padding:9px 0;
+    border-bottom:1px dotted rgba(11,37,69,.22)}
+  .slide.dark .numit{border-bottom-color:rgba(255,255,255,.24)}
+  .numit:last-child{border-bottom:0}
+  .numit .n{width:34px;height:34px;flex:none;border-radius:50%;background:var(--grad);
+    color:#062038;font-weight:800;font-size:15px;display:grid;place-items:center}
+  .numit .t{font-size:13.6px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;
+    color:var(--blue);line-height:1.2}
+  .slide.dark .numit .t{color:#7fd3f5}
+  .numit p{font-size:13px;line-height:1.42;margin-top:3px}
+  @media(max-height:820px){
+    .numit{padding:7px 0;gap:10px} .numit .n{width:29px;height:29px;font-size:13.5px}
+    .numit .t{font-size:12.6px} .numit p{font-size:12.2px;line-height:1.38}
+  }
+  .apretado .numit{padding:5px 0} .apretado .numit .n{width:25px;height:25px;font-size:12px}
+  .apretado .numit .t{font-size:11.8px} .apretado .numit p{font-size:11.5px;line-height:1.33}
+  .muy-apretado .numit p{font-size:11px;line-height:1.3}
+
   /* ===== TRES PANELES ENCADENADOS (HSE-004) =====
      Proposito y Alcance en columnas iguales y el Programa de gestion mas
      ancho, con los conectores entre ellos. Todo dibujado: no lleva imagenes. */
@@ -3116,8 +3148,26 @@
     </div>
   </div>
 </section>
-<section class="slide light" data-mod="4">
-<div class="wrap"><div class="eyebrow rv up">HSE-005 · Gestión de seguridad de procesos (PSM)</div><h2 class="rv up" style="--d:1">El propósito del PSM: evitar la severidad catastrófica</h2><div class="infobanner rv up" style="--d:2">El HSE-005 no trata sobre incidentes menores; es un sistema de supervivencia corporativa diseñado para prevenir fallas que resultan en:</div><p class="lead rv up">Toca cada consecuencia y cada pregunta. 👆</p><div class="chipgrid" style="grid-template-columns:repeat(2,1fr);margin-top:14px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#0e2c56"></span><h4>Fatalidades</h4><span class="chev">+</span></div><div class="acc-body"><p>Múltiples fatalidades o diagnósticos terminales relacionados con el trabajo.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1bb4e4"></span><h4>Impacto ambiental</h4><span class="chev">+</span></div><div class="acc-body"><p>Efectos perjudiciales a largo plazo (>6 meses) en el medio ambiente.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#0e2c56"></span><h4>Interrupción operativa</h4><span class="chev">+</span></div><div class="acc-body"><p>Incendios que resulten en más de 1 mes de interrupción del negocio.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1bb4e4"></span><h4>Daño reputacional y pérdidas</h4><span class="chev">+</span></div><div class="acc-body"><p>Cobertura mediática internacional o pérdidas materiales superiores a 10 millones CHF.</p></div></div></div><div class="accgrid" style="margin-top:16px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#17868a"></span><h4>Riesgo</h4><span class="chev">+</span></div><div class="acc-body"><p>¿Qué puede salir mal? ¿Qué tan grave puede ser?</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#17868a"></span><h4>Controles</h4><span class="chev">+</span></div><div class="acc-body"><p>¿Qué sistemas están implementados para prevenirlo?</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#17868a"></span><h4>Aseguramiento</h4><span class="chev">+</span></div><div class="acc-body"><p>¿Estás seguro de que están funcionando de manera efectiva?</p></div></div></div></div>
+<section class="slide nogate light" data-mod="4">
+  <div class="wrap">
+    <div class="eyebrow rv up">HSE-005 · Gestión de seguridad de procesos (PSM)</div>
+    <h2 class="rv up" style="--d:1">El propósito del PSM: evitar la severidad catastrófica</h2>
+    <div class="infobanner rv up" style="--d:2">El HSE-005 no trata sobre incidentes menores; es un sistema de supervivencia corporativa diseñado para prevenir fallas que resultan en:</div>
+    <div class="gen8 centrado">
+      <article class="g8 icono rv up" style="--d:0"><span class="g8foto" data-foto="fatalidades(D42)"><svg viewBox="0 0 80 60"><circle cx="40" cy="28" r="19"/><circle cx="40" cy="26" r="12"/><circle cx="35" cy="24" r="2.6"/><circle cx="45" cy="24" r="2.6"/><path d="M37 32h6M36 36h8"/><path d="M21 40a19 19 0 0 0 38 0"/></svg></span><span class="bar"></span><div class="g8txt"><div class="g8tit">Fatalidades</div><p>Múltiples fatalidades o diagnósticos terminales relacionados con el trabajo.</p></div></article>
+      <article class="g8 icono rv up" style="--d:1"><span class="g8foto" data-foto="ambiental(D42)"><svg viewBox="0 0 80 60"><path d="M6 48h68"/><path d="M20 48V34l8-12 8 12v14"/><path d="M44 48V32l8-11 8 11v16"/><path d="M22 16c2-4 5-5 6-9 3 4 6 6 5 10-1 3-4 4-6 3-2-1-3-2-2-4"/><path d="M50 12c2-3 4-4 5-7 2 3 5 5 4 8-1 2-3 3-5 2"/><path d="M6 48c8-4 14-4 22 0 8-4 14-4 22 0 8-4 14-4 22 0"/></svg></span><span class="bar"></span><div class="g8txt"><div class="g8tit">Impacto ambiental</div><p>Efectos perjudiciales a largo plazo (más de 6 meses) en el medio ambiente.</p></div></article>
+      <article class="g8 icono rv up" style="--d:2"><span class="g8foto" data-foto="interrupcion(D42)"><svg viewBox="0 0 80 60"><path d="M18 6h28l12 12v34H18z"/><path d="M46 6v12h12"/><path d="M25 24h20M25 31h15M25 38h11"/><path d="M46 34l16 16M62 34L46 50" stroke-width="3"/></svg></span><span class="bar"></span><div class="g8txt"><div class="g8tit">Interrupción operativa</div><p>Incendios que resulten en más de 1 mes de interrupción del negocio.</p></div></article>
+      <article class="g8 icono rv up" style="--d:3"><span class="g8foto" data-foto="reputacional(D42)"><svg viewBox="0 0 80 60"><path d="M8 50c0-6 5-10 11-10h30l14-6"/><path d="M20 40V24M29 40V18M38 40V28"/><path d="M46 14l10 8 6-5 8 6"/><path d="M70 17v6h-6"/></svg></span><span class="bar"></span><div class="g8txt"><div class="g8tit">Daño reputacional y pérdidas</div><p>Cobertura mediática internacional o pérdidas materiales superiores a 10 millones CHF.</p></div></article>
+    </div>
+    <div class="bloqfoto fotoizq ancha rv up" style="margin-top:14px">
+      <span class="fotorect gr" data-foto="analista(D42)"><svg viewBox="0 0 90 120"><circle cx="45" cy="26" r="13"/><path d="M29 20a16 16 0 0 1 32 0M25 20h40"/><path d="M18 100c0-16 12-28 27-28s27 12 27 28"/><rect x="40" y="70" width="34" height="42" rx="3"/><path d="M48 80h18M48 90h14"/><path d="M35 46c-3 3-3 7 0 9"/></svg></span>
+      <div class="numlist">
+          <div class="numit"><span class="n">1</span><div><span class="t">Riesgo</span><p>¿Qué puede salir mal? ¿Qué tan grave puede ser?</p></div></div>
+          <div class="numit"><span class="n">2</span><div><span class="t">Controles</span><p>¿Qué sistemas están implementados para prevenirlo?</p></div></div>
+          <div class="numit"><span class="n">3</span><div><span class="t">Aseguramiento</span><p>¿Estás seguro de que están funcionando de manera efectiva?</p></div></div>
+      </div>
+    </div>
+  </div>
 </section>
 <section class="slide light nogate-no mint" data-mod="4">
   <div class="wrap">
@@ -3703,7 +3753,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-04-l";
+var VERSION_CURSO = "2026-09-04-m";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
