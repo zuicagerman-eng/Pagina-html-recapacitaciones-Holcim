@@ -716,7 +716,7 @@
      varios paneles y a 232px no se distinguiria. */
   .bloqfoto.ancha{grid-template-columns:1fr clamp(200px,27vw,360px)}
   .bloqfoto.fotoizq.ancha{grid-template-columns:clamp(200px,27vw,360px) 1fr}
-  .fotorect.gr{width:100%}
+  .fotorect.gr{width:fit-content;padding:0}
   .fotorect.gr img{max-height:320px} .fotorect.gr svg{height:190px}
   @media(max-height:820px){.fotorect.gr img{max-height:270px}.fotorect.gr svg{height:170px}}
   .apretado .fotorect.gr img{max-height:240px} .apretado .fotorect.gr svg{height:150px}
@@ -1114,7 +1114,14 @@
     border-bottom:5px solid;border-image:var(--grad) 1;box-shadow:var(--shadow);
     background:rgba(255,255,255,.06);display:block}
   .slide.light .fotorect{background:#e9f0f8}
-  .fotorect img{width:100%;height:auto;max-height:172px;object-fit:cover;display:block}
+  /* Sin recorte: con "cover" la imagen se cortaba por el centro y se llevaba
+     la cabeza de la figura. Escalando por los dos lados se ve completa.
+     El recuadro se ajusta al ancho de la imagen (width:fit-content) para que
+     la franja de marca del pie mida lo mismo que ella y no queden bandas de
+     fondo a los lados. */
+  .fotorect{display:flex;align-items:center;justify-content:center;
+    width:fit-content;max-width:100%;margin-inline:auto}
+  .fotorect img{width:auto;height:auto;max-width:100%;max-height:172px;display:block}
   .fotorect svg{height:116px;width:auto;max-width:100%;margin:0 auto;padding:12px;
     fill:none;stroke:#9fc0e6;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
   .slide.light .fotorect svg{stroke:var(--panel)}
@@ -3849,7 +3856,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-04-o";
+var VERSION_CURSO = "2026-09-04-p";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
