@@ -960,6 +960,58 @@
     .kpi:nth-child(5){grid-column:1 / -1}
   }
   @media(max-width:560px){ .kpis{grid-template-columns:1fr} .kpi:nth-child(5){grid-column:auto} }
+  /* ===== Carrusel de ejemplos (excavaciones) =====
+     Los tres ejemplos van en una via que se desplaza con las flechas; los
+     paneles alternan azul y cian y llevan su GIF a la derecha. */
+  .carru{position:relative;margin-top:12px;padding:0 46px 26px}
+  .carrventana{overflow:hidden;border-radius:14px}
+  .carrvia{display:flex;transition:transform .45s cubic-bezier(.4,.1,.2,1)}
+  .carrpanel{flex:0 0 100%;margin:0;display:grid;grid-template-columns:1fr auto;
+    gap:18px;align-items:center;padding:16px 20px;background:var(--panel);color:#fff;min-width:0}
+  .carrpanel:nth-child(even){background:#1289bd}
+  .carrtxt{min-width:0}
+  .carrtxt h3{display:flex;align-items:center;gap:9px;font-size:15px;font-weight:800;
+    margin-bottom:7px;line-height:1.2}
+  .carrnum{width:25px;height:25px;border-radius:50%;background:rgba(255,255,255,.9);
+    color:var(--panel);display:grid;place-items:center;font-size:13px;flex:none}
+  .carrtxt ul{list-style:none;display:grid;gap:4px}
+  .carrtxt li{position:relative;padding-left:19px;font-size:12.9px;line-height:1.42}
+  .carrtxt li:before{content:"✦";position:absolute;left:0;top:0;color:var(--green);font-size:11px}
+  .carrfoto{display:flex;align-items:center;justify-content:center;background:#fff;
+    border-radius:8px;padding:7px;width:150px;height:150px;flex:none}
+  .carrfoto img{max-width:100%;max-height:100%;width:auto;height:auto;display:block}
+  .carrfoto svg{width:96px;height:96px;fill:none;stroke:var(--panel);stroke-width:3;
+    stroke-linecap:round;stroke-linejoin:round}
+  .carrflecha{position:absolute;top:calc(50% - 13px);transform:translateY(-50%);
+    width:38px;height:38px;border-radius:50%;border:0;background:var(--panel);color:#fff;
+    display:grid;place-items:center;cursor:pointer;transition:.2s;z-index:2}
+  .carrflecha svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.6;
+    stroke-linecap:round;stroke-linejoin:round}
+  .carrflecha.izq{left:0} .carrflecha.der{right:0}
+  .carrflecha:hover:not(:disabled){background:var(--cyan);transform:translateY(-50%) scale(1.08)}
+  .carrflecha:disabled{opacity:.28;cursor:default}
+  .carrpuntos{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:center;gap:7px}
+  .carrpunto{width:11px;height:11px;border-radius:50%;border:0;padding:0;cursor:pointer;
+    background:rgba(11,37,73,.25);transition:.2s}
+  .slide.dark .carrpunto{background:rgba(255,255,255,.3)}
+  .carrpunto.on{background:var(--green);transform:scale(1.2)}
+  .apretado .carrpanel{padding:13px 17px}
+  .apretado .carrfoto{width:126px;height:126px} .apretado .carrfoto svg{width:82px;height:82px}
+  .apretado .carrtxt li{font-size:12.3px}
+  .muy-apretado .carrfoto{width:106px;height:106px} .muy-apretado .carrfoto svg{width:68px;height:68px}
+  .muy-apretado .carrtxt li{font-size:11.7px;line-height:1.34}
+  .ultra .carrfoto{width:88px;height:88px} .ultra .carrfoto svg{width:56px;height:56px}
+  .ultra .carrtxt li{font-size:11.1px}
+  @media(pointer:coarse){ .carrflecha{width:44px;height:44px} .carrpunto{width:14px;height:14px} }
+  @media(max-width:700px){
+    /* En el telefono las flechas van bajo el panel, junto a los puntos. */
+    .carru{padding:0 0 46px}
+    .carrpanel{grid-template-columns:1fr;justify-items:center;text-align:left}
+    .carrflecha{top:auto;bottom:0;transform:none}
+    .carrflecha:hover:not(:disabled){transform:scale(1.08)}
+    .carrpuntos{bottom:13px}
+  }
+  @media(prefers-reduced-motion:reduce){ .carrvia{transition:none} }
   /* En pantallas tactiles no se encogen los blancos que hay que pulsar. */
   @media(pointer:coarse){
     .slide.ultra .act{min-height:84px;padding:14px 10px}
@@ -4230,8 +4282,56 @@
 <div class="wrap"><div class="eyebrow rv up">Otros controles de seguridad</div>
 <h2 class="rv up" style="--d:1">Trabajo en excavaciones</h2>
 <div class="infobanner rv up" style="--d:2">Es un corte artificial, cavidad, zanja o depresión en la superficie de la tierra formada por el retiro de suelo y roca con una <b>profundidad mayor a 30 centímetros</b>.</div>
-<p class="lead rv up">Toca cada paso para conocer cada ejemplo. 👆</p>
-<div class="accgrid" style="margin-top:12px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#0e2c56"></span><h4>1 · Permisos</h4><span class="chev">+</span></div><div class="acc-body"><p>✦ <b>ATS o ITS</b> y el <b>Permiso de Trabajo</b> de excavaciones.</p><p class="tdd">✦ Solicite permiso de <b>trabajo en alturas</b> si la excavación supera <b>1,8 m</b> y permiso de <b>espacios confinados</b> si supera <b>1,2 m</b>.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1bb4e4"></span><h4>2 · Verifica la existencia de redes</h4><span class="chev">+</span></div><div class="acc-body"><div class="li"><span class="b"></span>Hidráulicas.</div><div class="li"><span class="b"></span>Neumáticas.</div><div class="li"><span class="b"></span>Eléctricas.</div><div class="li"><span class="b"></span>Telefónicas.</div><div class="li"><span class="b"></span>Alcantarillado.</div><div class="li"><span class="b"></span>Red contra incendio en el área de la excavación.</div></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>3 · Apuntalamiento y ventilación</h4><span class="chev">+</span></div><div class="acc-body"><p>✦ Asegura el <b>apuntalamiento</b> y la <b>ventilación</b> de la excavación.</p><p class="tdd">✦ Cuando la excavación tenga más de <b>2 m</b> de profundidad debe apuntalarse.</p></div></div></div>
+<p class="lead rv up">Usa las flechas para conocer cada ejemplo. 👆</p>
+<div class="carru rv up" style="--d:3" id="carruExc">
+  <button type="button" class="carrflecha izq" id="carruAnt" aria-label="Ejemplo anterior">
+    <svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+  <div class="carrventana">
+    <div class="carrvia" id="carruVia">
+      <article class="carrpanel">
+        <div class="carrtxt">
+          <h3><span class="carrnum">1</span>Permisos</h3>
+          <ul>
+            <li><b>ATS o ITS</b> y el <b>Permiso de Trabajo</b> de excavaciones.</li>
+            <li>Solicite permiso de <b>trabajo en alturas</b> si la excavación supera <b>1,8 m</b>, y permiso de <b>espacios confinados</b> si supera <b>1,2 m</b>.</li>
+          </ul>
+        </div>
+        <span class="ph carrfoto" data-foto="excavacion1(D60)"><svg viewBox="0 0 96 96" aria-hidden="true"><path d="M22 10h38l16 16v60a4 4 0 0 1-4 4H22a4 4 0 0 1-4-4V14a4 4 0 0 1 4-4z"/><path d="M60 10v16h16"/><path d="M28 40h32M28 52h32M28 64h20"/><path d="M62 72l10-10 8 8-10 10-10 2z"/></svg></span>
+      </article>
+      <article class="carrpanel">
+        <div class="carrtxt">
+          <h3><span class="carrnum">2</span>Verifica la existencia de redes</h3>
+          <ul>
+            <li>Hidráulicas.</li>
+            <li>Neumáticas.</li>
+            <li>Eléctricas.</li>
+            <li>Telefónicas.</li>
+            <li>Alcantarillado.</li>
+            <li>Red contra incendio en el área de la excavación.</li>
+          </ul>
+        </div>
+        <span class="ph carrfoto" data-foto="excavacion2(D60)"><svg viewBox="0 0 96 96" aria-hidden="true"><circle cx="48" cy="48" r="16"/><path d="M48 40v2M48 48v10"/><circle cx="48" cy="10" r="6"/><circle cx="48" cy="86" r="6"/><circle cx="10" cy="48" r="6"/><circle cx="86" cy="48" r="6"/><circle cx="21" cy="21" r="6"/><circle cx="75" cy="75" r="6"/><circle cx="75" cy="21" r="6"/><circle cx="21" cy="75" r="6"/><path d="M48 16v16M48 64v16M16 48h16M64 48h16M25 25l12 12M59 59l12 12M71 25L59 37M37 59l-12 12"/></svg></span>
+      </article>
+      <article class="carrpanel">
+        <div class="carrtxt">
+          <h3><span class="carrnum">3</span>Apuntalamiento y ventilación</h3>
+          <ul>
+            <li>Asegura el <b>apuntalamiento</b> y la <b>ventilación</b> de la excavación.</li>
+            <li>Cuando la excavación tenga más de <b>2 m</b> de profundidad debe apuntalarse.</li>
+          </ul>
+        </div>
+        <span class="ph carrfoto" data-foto="excavacion3(D60)"><svg viewBox="0 0 96 96" aria-hidden="true"><path d="M6 78h84"/><path d="M14 78V54h24v24"/><path d="M14 54h24"/><rect x="16" y="34" width="20" height="16" rx="3"/><path d="M38 46l26-22" stroke-width="5"/><path d="M64 24l6 5"/><path d="M66 30l8 22"/><path d="M64 52h22l-6 16H70z"/><circle cx="20" cy="84" r="6"/><circle cx="34" cy="84" r="6"/></svg></span>
+      </article>
+    </div>
+  </div>
+  <button type="button" class="carrflecha der" id="carruSig" aria-label="Ejemplo siguiente">
+    <svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+  <div class="carrpuntos" id="carruPuntos">
+    <button type="button" class="carrpunto on" data-i="0" aria-label="Ejemplo 1"></button>
+    <button type="button" class="carrpunto" data-i="1" aria-label="Ejemplo 2"></button>
+    <button type="button" class="carrpunto" data-i="2" aria-label="Ejemplo 3"></button>
+  </div>
+</div>
 <div class="warn rv up" style="--d:2"><svg viewBox="0 0 24 24"><path d="M12 3l9 16H3z"/><path d="M12 9v5M12 17h0"/></svg><span>¡Identifica y asegúrate de <b>no obstaculizar la ruta de evacuación</b> y respuesta ante emergencias!</span></div>
 </div>
 </section>
@@ -4623,7 +4723,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-05-m";
+var VERSION_CURSO = "2026-09-05-n";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
@@ -5389,6 +5489,31 @@ function cierraAuto(s){
     d.addEventListener('click',act);
     d.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){e.preventDefault();act();} });
   });
+})();
+/* ====== CARRUSEL DE EJEMPLOS (excavaciones) ======
+   Los tres ejemplos se recorren con las flechas o con los puntos. Cada punto
+   es barrera: "Siguiente" se libera cuando se han visto los tres. */
+(function(){
+  var caja=document.getElementById('carruExc'); if(!caja) return;
+  var via=document.getElementById('carruVia');
+  var ant=document.getElementById('carruAnt'), sig=document.getElementById('carruSig');
+  var puntos=Array.prototype.slice.call(caja.querySelectorAll('.carrpunto'));
+  var paneles=Array.prototype.slice.call(caja.querySelectorAll('.carrpanel'));
+  var i=0;
+  puntos.forEach(function(p){ p.classList.add('req'); });
+  function pintar(){
+    via.style.transform='translateX(-'+(i*100)+'%)';
+    puntos.forEach(function(p,k){ p.classList.toggle('on', k===i); });
+    paneles.forEach(function(p,k){ p.setAttribute('aria-hidden', k===i?'false':'true'); });
+    ant.disabled = (i===0); sig.disabled = (i===paneles.length-1);
+    markDone(puntos[i]);
+    if(window.revisarScroll) setTimeout(window.revisarScroll, 500);
+  }
+  function ir(n){ if(n<0||n>=paneles.length) return; i=n; pintar(); }
+  ant.addEventListener('click', function(){ ir(i-1); });
+  sig.addEventListener('click', function(){ ir(i+1); });
+  puntos.forEach(function(p,k){ p.addEventListener('click', function(){ ir(k); }); });
+  pintar();
 })();
 /* ====== CLICS GATEADOS ======
    Las fichas .act y .chip3 solo pintaban un ✓ sin aportar información, así que
