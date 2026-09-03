@@ -707,6 +707,54 @@
     .bloqfoto>div{order:2}
   }
 
+  /* ===== PASOS EN PASTILLA (HSE-002) =====
+     Seis pasos en dos columnas. El icono cambia de lado en cada uno y la
+     esquina redonda lo sigue, como en el impreso. */
+  .pasos6{display:grid;grid-template-columns:repeat(2,1fr);gap:11px;margin-top:11px;
+    padding:13px;border:2px solid rgba(255,255,255,.16);border-radius:14px}
+  .slide.light .pasos6{border-color:rgba(11,37,69,.14)}
+  .p6{display:flex;align-items:center;gap:13px;min-width:0;padding:11px 15px;
+    background:var(--c);color:#fff;border-radius:64px 15px 15px 64px}
+  /* Los pares llevan el icono a la derecha: se invierte el orden y la esquina. */
+  .p6.der{flex-direction:row-reverse;border-radius:15px 64px 64px 15px;text-align:right}
+  .p6ico{width:62px;height:62px;flex:none;border-radius:50%;background:#fff;
+    box-shadow:0 0 0 3px rgba(255,255,255,.55);display:grid;place-items:center;padding:8px}
+  .p6ico img{max-width:100%;max-height:100%;width:auto;height:auto;display:block}
+  .p6ico svg{width:100%;height:100%;fill:none;stroke:var(--c);stroke-width:1.7;
+    stroke-linecap:round;stroke-linejoin:round}
+  .p6 p{font-size:12.8px;line-height:1.44;min-width:0;overflow-wrap:anywhere}
+  .p6 b{font-weight:800}
+  /* Insignias dibujadas: la de iCare arriba y la de aviso abajo. */
+  /* La caja crece con lo que lleve dentro: con alto fijo el rotulo "iCare"
+     se salia y se montaba sobre el aviso de abajo. */
+  .insig{display:flex;justify-content:center;margin:12px 0 -2px}
+  .insig span{display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:1px;min-width:52px;padding:7px 10px;border-radius:12px;
+    background:var(--panel);box-shadow:var(--shadow)}
+  .insig.aviso span{background:var(--gold)}
+  .insig svg{width:30px;height:30px;fill:none;stroke:#fff;stroke-width:2;
+    stroke-linecap:round;stroke-linejoin:round}
+  .insig.aviso svg{stroke:#3d2c00}
+  .insig .txt{font-size:10px;font-weight:800;letter-spacing:.4px;color:#fff;margin-top:1px}
+  @media(max-height:820px){
+    .pasos6{gap:9px;padding:10px} .p6{padding:8px 12px;gap:11px}
+    .p6ico{width:52px;height:52px;padding:6px} .p6 p{font-size:12.1px;line-height:1.38}
+    .insig{margin:9px 0 -2px} .insig span{padding:5px 9px} .insig svg{width:25px;height:25px}
+  }
+  .apretado .pasos6{gap:7px;padding:8px;margin-top:8px}
+  .apretado .p6{padding:6px 11px;gap:9px;border-radius:52px 12px 12px 52px}
+  .apretado .p6.der{border-radius:12px 52px 52px 12px}
+  .apretado .p6ico{width:44px;height:44px;padding:5px}
+  .apretado .p6 p{font-size:11.5px;line-height:1.33}
+  .apretado .insig{margin:6px 0 -2px} .apretado .insig span{padding:4px 8px}
+  .apretado .insig svg{width:21px;height:21px}
+  .muy-apretado .p6ico{width:38px;height:38px;padding:4px}
+  .muy-apretado .p6 p{font-size:11px;line-height:1.3}
+  @media(max-width:900px){
+    .pasos6{grid-template-columns:1fr}
+    .p6.der{flex-direction:row;border-radius:64px 15px 15px 64px;text-align:left}
+  }
+
   /* ===== TARJETAS QUE GIRAN AL PASAR EL CURSOR =====
      Cuatro en fila, con la ilustracion en la cara de frente y el texto en el
      reverso. Con raton basta pasar por encima; en pantalla tactil, donde no
@@ -2756,8 +2804,23 @@
     </div>
   </div>
 </section>
-<section class="slide dark" data-mod="4">
-<div class="wrap"><div class="eyebrow rv up">HSE-002 · Reporte y gestión de eventos</div><h2 class="rv up" style="--d:1">Reporte e investigación de accidentes</h2><div class="infobanner rv up" style="--d:2">El reporte inmediato garantiza el registro oportuno en iCare.</div><p class="lead rv up">Toca cada paso. 👆</p><div class="accgrid" style="margin-top:14px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Paso 1</h4><span class="chev">+</span></div><div class="acc-body"><p>El trabajador accidentado reporta inmediatamente lo ocurrido a su jefe directo.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Paso 2</h4><span class="chev">+</span></div><div class="acc-body"><p>Si requiere atención de primeros auxilios se presta de inmediato; tan pronto como sea posible se diligencia el formato de “Descripción del Evento”.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Paso 3</h4><span class="chev">+</span></div><div class="acc-body"><p>Se reporta el evento a la ARL del trabajador, en el software que la compañía ha dispuesto.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Paso 4</h4><span class="chev">+</span></div><div class="acc-body"><p>Luego del reporte se recopilan fotografías, declaraciones y demás evidencia.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Paso 5</h4><span class="chev">+</span></div><div class="acc-body"><p>Se cita al trabajador accidentado, al jefe directo, a un representante del COPASST, analista de H&amp;S y demás personas del análisis causal.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Paso 6</h4><span class="chev">+</span></div><div class="acc-body"><p>Se realiza la investigación para encontrar las causas inmediatas y raíces del evento y generar planes de acción para que no vuelva a ocurrir.</p></div></div></div></div>
+<section class="slide nogate dark" data-mod="4">
+  <div class="wrap">
+    <div class="eyebrow rv up">HSE-002 · Reporte y gestión de eventos en el trabajo</div>
+    <h2 class="rv up" style="--d:1">Reporte e investigación de accidentes</h2>
+    <div class="gline rv up" style="--d:1"></div>
+    <div class="insig rv up" style="--d:2"><span><svg viewBox="0 0 24 24"><path d="M5 4h3l2 5-2 1a10 10 0 0 0 6 6l1-2 5 2v3a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/><path d="M17 3v6M14 6h6"/></svg><span class="txt">iCare</span></span></div>
+    <div class="infobanner rv up" style="--d:2;text-align:center">El reporte inmediato garantiza el registro oportuno en <b>iCare</b>.</div>
+    <div class="pasos6">
+      <div class="p6 rv up" style="--c:#5b2d8e;--d:0"><span class="p6ico" data-foto="reporta(D35)"><svg viewBox="0 0 48 48"><rect x="9" y="7" width="24" height="34" rx="3"/><rect x="17" y="3" width="8" height="6" rx="2"/><path d="M15 17h12M15 24h9"/><path d="M34 20l8 8-9 9-8-8z"/><path d="M27 33l-2 6 6-2"/></svg></span><p><b>1.</b> El trabajador accidentado reporta inmediatamente lo ocurrido a su jefe directo.</p></div>
+      <div class="p6 der rv up" style="--c:#ef7d00;--d:1"><span class="p6ico" data-foto="primeros(D35)"><svg viewBox="0 0 48 48"><rect x="5" y="14" width="38" height="26" rx="4"/><path d="M17 14V9a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v5"/><path d="M24 21v12M18 27h12"/></svg></span><p><b>2.</b> Si requiere atención de primeros auxilios se presta de inmediato. Tan pronto como sea posible se diligencia el formato de “Descripción del Evento”.</p></div>
+      <div class="p6 rv up" style="--c:#00874a;--d:2"><span class="p6ico" data-foto="arl(D35)"><svg viewBox="0 0 48 48"><rect x="5" y="8" width="38" height="26" rx="3"/><path d="M18 40h12M24 34v6"/><path d="M13 26l6-8 5 6 4-5 7 7"/><circle cx="16" cy="15" r="2"/></svg></span><p><b>3.</b> Se reporta el evento a la ARL del trabajador, en el software que la compañía ha dispuesto para tal fin.</p></div>
+      <div class="p6 der rv up" style="--c:#1a9e93;--d:3"><span class="p6ico" data-foto="evidencia(D35)"><svg viewBox="0 0 48 48"><path d="M5 14h13l4 5h21v22H5z"/><rect x="14" y="6" width="18" height="12" rx="2"/><circle cx="24" cy="30" r="5"/><path d="M20 25l2-3h4l2 3"/></svg></span><p><b>4.</b> Luego del reporte del evento se recopilan fotografías, declaraciones y demás evidencia.</p></div>
+      <div class="p6 rv up" style="--c:#12395e;--d:4"><span class="p6ico" data-foto="citacion(D35)"><svg viewBox="0 0 48 48"><circle cx="24" cy="12" r="6"/><circle cx="10" cy="19" r="5"/><circle cx="38" cy="19" r="5"/><path d="M13 34c0-6 5-11 11-11s11 5 11 11"/><path d="M3 36c0-5 3-9 7-9M45 36c0-5-3-9-7-9"/><path d="M8 42h32"/></svg></span><p><b>5.</b> Se cita al trabajador accidentado, al jefe directo, a un representante del COPASST, analista de H&amp;S y demás personas que puedan participar dentro del análisis causal.</p></div>
+      <div class="p6 der rv up" style="--c:#a8112a;--d:5"><span class="p6ico" data-foto="investigacion(D35)"><svg viewBox="0 0 48 48"><path d="M9 5h18l8 8v20H9z"/><path d="M27 5v8h8"/><path d="M14 17h10M14 23h7"/><circle cx="30" cy="32" r="8"/><path d="M36 38l7 7"/></svg></span><p><b>6.</b> Se realiza la investigación con el objetivo de encontrar las causas inmediatas y raíces del evento, y generar planes de acción para que eventos similares no vuelvan a ocurrir.</p></div>
+    </div>
+    <div class="insig aviso rv up"><span><svg viewBox="0 0 24 24"><path d="M12 3l9 16H3z"/><path d="M12 9v5M12 17h0"/></svg></span></div>
+  </div>
 </section>
 <section class="slide light" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">HSE-002 · Reporte y gestión de eventos</div><h2 class="rv up" style="--d:1">Reporte oportuno</h2><p class="lead rv up" style="--d:2">Modelo de causas (referencia):</p><div class="chipgrid" style="grid-template-columns:repeat(4,1fr);margin-top:6px"><div class="chip3"><span class="code" style="background:#97d13b">1</span><span class="nm">Organización</span></div><div class="chip3"><span class="code" style="background:#0e2c56">2</span><span class="nm">Supervisión</span></div><div class="chip3"><span class="code" style="background:#e6007e">3</span><span class="nm">Acto inseguro</span></div><div class="chip3"><span class="code" style="background:#ef7d00">4</span><span class="nm">Precondición</span></div></div><p class="lead rv up" style="margin-top:16px">Beneficios — toca cada uno. 👆</p><div class="accgrid" style="margin-top:12px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>Protege a las personas de forma inmediata</h4><span class="chev">+</span></div><div class="acc-body"><p>Permite activar oportunamente la atención médica, el acompañamiento y las medidas de control, reduciendo riesgos de complicaciones y facilitando la recuperación.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1bb4e4"></span><h4>Evita la repetición de eventos</h4><span class="chev">+</span></div><div class="acc-body"><p>Facilita la identificación de causas y la implementación de acciones correctivas, evitando que otros se expongan a riesgos ya identificados.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Fortalece la cultura de Seguridad y Salud</h4><span class="chev">+</span></div><div class="acc-body"><p>Promueve la confianza, el aprendizaje organizacional y la mejora continua.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>Permite una gestión legal adecuada</h4><span class="chev">+</span></div><div class="acc-body"><p>Garantiza el cumplimiento de las obligaciones ante la ARL y las autoridades, evitando reprocesos y pérdida de credibilidad.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#ef7d00"></span><h4>Enfoque proactivo de recursos</h4><span class="chev">+</span></div><div class="acc-body"><p>Evita desvíos innecesarios de tiempo y presupuesto, enfocando los recursos en capacitación, prevención y mejores condiciones de trabajo.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#e6007e"></span><h4>Genera beneficios reales para todos</h4><span class="chev">+</span></div><div class="acc-body"><p>El reporte oportuno no es una carga ni una sanción: es una acción de corresponsabilidad que protege a las personas y fortalece la organización.</p></div></div></div></div>
@@ -3358,7 +3421,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-04-e";
+var VERSION_CURSO = "2026-09-04-f";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
