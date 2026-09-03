@@ -921,6 +921,45 @@
      <section> hace el trabajo en los navegadores sin :has(). */
   .slide.lamslide .wrap,
   .slide:has(.lamgrande) .wrap{margin-block:0;flex:1;display:flex;flex-direction:column;min-height:0}
+  /* ===== Alcance y requisitos (seguridad vial) ===== */
+  .alcintro{font-size:13px;margin-top:6px;opacity:.9}
+  .alcletras{display:grid;gap:7px;margin-top:8px}
+  .alcitem{display:grid;grid-template-columns:auto 1fr;gap:11px;align-items:start;
+    padding-bottom:7px;border-bottom:1px dotted rgba(255,255,255,.22)}
+  .slide.light .alcitem{border-bottom-color:rgba(11,37,69,.16)}
+  .alcletra{width:28px;height:28px;border-radius:50%;background:var(--grad);color:#04121f;
+    display:grid;place-items:center;font-weight:800;font-size:14px;flex:none}
+  .alcitem p{margin:0;font-size:12.7px;line-height:1.42}
+  .alccuando{margin-top:9px}
+  .alccuando li{font-size:12.7px;padding:6px 0 6px 18px}
+  .alccuando li:before{width:14px;height:14px;top:calc(50% - 7px)}
+  /* Cinco requisitos: tres arriba y dos abajo, centrados, como en el impreso.
+     Antes iban los cinco en fila y el cuarto se salia de la pantalla. */
+  .kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:11px;margin-top:12px}
+  .kpi{margin:0;grid-column:span 2;display:flex;flex-direction:column;border-radius:11px;
+    overflow:hidden;background:#fff;box-shadow:var(--shadow);
+    border-bottom:4px solid;border-image:var(--grad) 1}
+  .kpi:nth-child(4){grid-column:2 / span 2}
+  .kpi:nth-child(5){grid-column:4 / span 2}
+  .kpi h4{margin:0;padding:8px 12px;font-size:11.8px;font-weight:800;text-align:center;
+    line-height:1.24;letter-spacing:.3px}
+  .kpi p{margin:0;padding:9px 12px 11px;font-size:11.8px;line-height:1.38;
+    color:var(--ink);flex:1}
+  .apretado .alcitem p,.apretado .alccuando li{font-size:12.1px}
+  .apretado .alccuando li{padding:4px 0 4px 18px}
+  .apretado .kpi h4{font-size:11.2px;padding:7px 11px}
+  .apretado .kpi p{font-size:11.2px;padding:8px 11px 9px;line-height:1.34}
+  .muy-apretado .alcintro{display:none}
+  .muy-apretado .alcitem p,.muy-apretado .alccuando li{font-size:11.5px;line-height:1.34}
+  .muy-apretado .kpi h4{font-size:10.7px} .muy-apretado .kpi p{font-size:10.7px;line-height:1.3}
+  .ultra .alcitem p,.ultra .alccuando li{font-size:11px}
+  .ultra .kpi h4{font-size:10.2px;padding:6px 10px} .ultra .kpi p{font-size:10.2px}
+  @media(max-width:900px){
+    .kpis{grid-template-columns:1fr 1fr}
+    .kpi,.kpi:nth-child(4),.kpi:nth-child(5){grid-column:auto}
+    .kpi:nth-child(5){grid-column:1 / -1}
+  }
+  @media(max-width:560px){ .kpis{grid-template-columns:1fr} .kpi:nth-child(5){grid-column:auto} }
   /* En pantallas tactiles no se encogen los blancos que hay que pulsar. */
   @media(pointer:coarse){
     .slide.ultra .act{min-height:84px;padding:14px 10px}
@@ -4150,10 +4189,41 @@
 <section class="slide dark teal" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">HSE-111 · Seguridad vial</div>
 <h2 class="rv up" style="--d:1">Alcance y requisitos</h2>
-<p class="lead rv up" style="--d:2">Este documento se aplica a — toca cada punto. 👆</p>
-<div class="accgrid" style="margin-top:12px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#17868a"></span><h4>a · Transporte de personas</h4><span class="chev">+</span></div><div class="acc-body"><p>Transporte proporcionado por la empresa, que traslada a los trabajadores <b>hacia y desde la planta</b>.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>b · Transporte de materiales y minas</h4><span class="chev">+</span></div><div class="acc-body"><p>Todo el transporte por carretera <b>operado o contratado por el Grupo</b>, cubriendo productos, materiales y equipos entrantes y salientes.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#0e2c56"></span><h4>¿Cuándo aplica?</h4><span class="chev">+</span></div><div class="acc-body"><p>Cuando <b>Holcim es propietario o alquila</b> el vehículo; cuando tiene un <b>contrato exclusivo</b> con la empresa de transporte; o con <b>transportistas regulares</b> (más de 30 días, continua o colectiva, en 12 meses consecutivos).</p></div></div></div>
-<p class="lead rv up" style="margin-top:20px">Requisitos clave — toca cada uno. 👆</p>
-<div class="chipgrid"><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#1bb4e4">4.1</span><span class="nm">Conductores aprobados (KPI #1): formación aprobada y actualización periódica.</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#0e2c56">4.2</span><span class="nm">Vehículos con IVMS (KPI #2): equipados y en funcionamiento.</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#1877c4">4.3</span><span class="nm">Retroalimentación del conductor (KPI #3): recompensa, reconocimiento y consecuencias.</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#17868a">5.3</span><span class="nm">Requisitos mínimos del vehículo: plan de cumplimiento (Apéndice II).</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#97d13b">7.1</span><span class="nm">Auditorías de transportadores basadas en el riesgo.</span><span class="tick">✓</span></div></div>
+<h3 class="subverde chico" style="margin-top:10px">Alcance</h3>
+<p class="alcintro">Este documento se aplica a:</p>
+<div class="alcletras">
+  <div class="alcitem"><span class="alcletra">a</span>
+    <p><b>Transporte de personas:</b> transporte proporcionado por la empresa, que traslada a los trabajadores <b>hacia y desde la planta</b>.</p></div>
+  <div class="alcitem"><span class="alcletra">b</span>
+    <p><b>Transporte de materiales y minas:</b> todo el transporte por carretera <b>operado o contratado por el Grupo</b>, cubriendo productos, materiales y equipos entrantes y salientes, cuando:</p></div>
+</div>
+<ul class="lineat alccuando">
+  <li>Holcim <b>es propietario o alquila</b> el vehículo.</li>
+  <li>Holcim tiene un <b>contrato exclusivo</b> con la empresa que presta el servicio de transporte.</li>
+  <li><b>Transportistas regulares</b>: empresas con contrato que transportan de manera regular — más de <b>30 días</b>, continuos o colectivos, en un período de 12 meses consecutivos.</li>
+</ul>
+<div class="kpis">
+  <article class="kpi">
+    <h4 style="background:#1bb4e4;color:#06304a">4.1 CONDUCTORES APROBADOS (KPI #1)</h4>
+    <p>El País se asegurará de que los conductores hayan realizado un <b>curso de formación aprobado</b> y reciban formación de actualización periódica.</p>
+  </article>
+  <article class="kpi">
+    <h4 style="background:#0e2c56;color:#fff">4.2 VEHÍCULOS CON IVMS (KPI #2)</h4>
+    <p>El País se asegurará de que los vehículos incluidos en el estudio estén equipados con un <b>IVMS en funcionamiento</b> que mida los datos necesarios para calcular el cuadro de mando.</p>
+  </article>
+  <article class="kpi">
+    <h4 style="background:#1bb4e4;color:#06304a">4.3 RETROALIMENTACIÓN DEL CONDUCTOR (KPI #3)</h4>
+    <p>El País deberá implementar un proceso de <b>recompensa, reconocimiento y gestión de consecuencias</b> aplicable a todos los conductores y transportistas en el alcance.</p>
+  </article>
+  <article class="kpi">
+    <h4 style="background:#0e2c56;color:#fff">5.3 REQUISITOS MÍNIMOS DEL VEHÍCULO</h4>
+    <p>El País establecerá un <b>plan</b> para garantizar que los vehículos cumplan con los requisitos mínimos, enumerados en el <b>Apéndice II</b>.</p>
+  </article>
+  <article class="kpi">
+    <h4 style="background:#1bb4e4;color:#06304a">7.1 AUDITORÍAS DE TRANSPORTADORES</h4>
+    <p>El País deberá implementar un sistema de <b>auditorías basado en el riesgo</b> para garantizar que los transportistas cumplan o superen los requisitos del Grupo.</p>
+  </article>
+</div>
 </div>
 </section>
 <section class="slide light" data-mod="4">
@@ -4553,7 +4623,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-05-l";
+var VERSION_CURSO = "2026-09-05-m";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
