@@ -1100,6 +1100,24 @@
     .spcard:nth-child(4){grid-column:auto}
   }
   @media(max-width:560px){ .solpro{grid-template-columns:1fr} }
+  /* ===== Asbestos: usos y ejemplos, sin imagenes ===== */
+  .asbintro{font-size:13px;margin-top:8px;opacity:.92}
+  .asbusos{margin-top:8px}
+  .asbusos li{font-size:13.2px;padding:8px 0 8px 18px}
+  .asbusos li:before{width:15px;height:15px;top:calc(50% - 7px)}
+  .asbej{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:8px}
+  .asbcard{border-radius:11px;padding:13px 15px;font-size:12.9px;font-weight:800;
+    line-height:1.3;text-align:center;box-shadow:var(--shadow);
+    border-top:4px solid;border-image:var(--grad) 1;display:flex;align-items:center;
+    justify-content:center;min-height:62px}
+  .apretado .asbusos li{font-size:12.4px;padding:6px 0 6px 18px}
+  .apretado .asbcard{padding:11px 13px;font-size:12.2px;min-height:54px}
+  .muy-apretado .asbintro{display:none}
+  .muy-apretado .asbusos li{font-size:11.8px;padding:5px 0 5px 18px;line-height:1.34}
+  .muy-apretado .asbcard{font-size:11.5px;min-height:48px}
+  .ultra .asbusos li{font-size:11.2px} .ultra .asbcard{font-size:10.9px;min-height:42px}
+  @media(max-width:820px){ .asbej{grid-template-columns:1fr 1fr} }
+  @media(max-width:460px){ .asbej{grid-template-columns:1fr} }
   @media(max-width:820px){
     .prohsol{grid-template-columns:1fr}
     /* En una sola columna el sombreado alterna fila a fila. */
@@ -1157,7 +1175,6 @@
     .flip-in{min-height:230px}
     .videobox{margin-top:16px}
     .nbtn{font-size:13.5px}
-    .conf{padding:20px;gap:16px}.conf .tri{width:72px;height:72px}
     .beh .sign{width:50px;height:50px}
     .beh .sign.foto{height:86px} .beh .sign.foto img{max-height:86px;max-width:min(100%,124px)}
     .slide{padding:28px 16px}
@@ -2178,7 +2195,6 @@
     :root{--hud:56px;--footer:68px}
     h2{font-size:clamp(21px,6.5vw,30px)}
     .slide{padding:28px 16px}
-    .winfo{min-height:auto}
   }
   @media(max-width:400px){.step{display:none}.nbtn{padding:11px 14px}}
   /* barrera: elementos ya explorados */
@@ -2349,7 +2365,7 @@
      ============================================================ */
 
   /* 1) Radios de tarjeta unificados (aspecto estandarizado) */
-  .card,.panel,.eppcard,.cat,.pdfcard,.opt,.s3,.lcard,.act,.beh,.winfo,.videobox,.flip .face{border-radius:var(--radius)}
+  .card,.panel,.eppcard,.cat,.pdfcard,.opt,.s3,.lcard,.act,.beh,.videobox,.flip .face{border-radius:var(--radius)}
   .acc,.chip3,.infobanner,.banner,.warn,.authbanner,.objhero,.jerpanel,.pdfmini{border-radius:var(--radius-sm)}
 
   /* 2) Separación uniforme entre tarjetas */
@@ -2491,7 +2507,6 @@
   .wbslider::-webkit-slider-thumb:hover{transform:scale(1.15)}
   .wbslider::-moz-range-thumb{width:26px;height:26px;border-radius:50%;background:var(--cyan);
     border:3px solid #fff;box-shadow:0 4px 12px -3px rgba(0,0,0,.5);cursor:grab}
-  .wbhint{text-align:center;font-size:12.5px;font-weight:600;margin-top:8px;opacity:.8}
   .wbdots{display:flex;gap:7px;justify-content:center;margin-top:10px}
   .wbdots i{width:9px;height:9px;border-radius:50%;background:rgba(140,160,190,.45);transition:.25s}
   .wbdots i.on{background:var(--cyan);transform:scale(1.35)}
@@ -2558,22 +2573,6 @@
   .mrow.ok .mmark{display:grid;background:var(--ok)} .mrow.bad .mmark{display:grid;background:var(--danger)}
   @media(max-width:700px){.mrow{flex-wrap:wrap}.msel{min-width:100%}}
 
-  /* 15) MÓDULO 6 · Tablas simples */
-  .tbl{width:100%;border-collapse:collapse;margin-top:14px;border-radius:var(--radius-sm);
-    overflow:hidden;box-shadow:var(--shadow)}
-  .tbl th{background:var(--panel);color:#fff;font-size:13px;font-weight:800;padding:11px 14px;text-align:left}
-  .tbl td{background:#fff;color:var(--ink);font-size:13.5px;padding:10px 14px;border-top:1px solid #e6edf5}
-  .slide.dark .tbl td{background:rgba(255,255,255,.06);color:#eaf1fb;border-top-color:rgba(255,255,255,.1)}
-  .tblwrap{overflow-x:auto}
-  /* Columnas de responsabilidades */
-  .rescol{display:flex;flex-direction:column;height:100%}
-  .rescol .rhead{padding:12px 14px;font-size:15px;font-weight:800;color:#fff;text-align:center}
-  .rescol ul{list-style:none;display:flex;flex-direction:column;gap:1px;flex:1}
-  .rescol li{background:#fff;color:var(--ink);font-size:13px;line-height:1.45;padding:10px 14px}
-  .rescol li:nth-child(even){background:#f2f6fb}
-  .slide.dark .rescol li{background:rgba(255,255,255,.06);color:#eaf1fb}
-  .slide.dark .rescol li:nth-child(even){background:rgba(255,255,255,.1)}
-
   /* 16) PORTADA con multimedia a la derecha (solo la primera diapositiva) */
   .heroSplit{display:grid;grid-template-columns:1.05fr .95fr;gap:34px;align-items:center;
     position:relative;z-index:2}
@@ -2631,9 +2630,6 @@
   .wfoot .wlogo svg{width:28px;height:28px}
   .wfoot .wlogo .barlogo-txt{font-size:19px;font-weight:800;letter-spacing:1px;color:var(--ink)}
 
-  /* 19) Diapositiva partida con imagen a la derecha (reutilizable) */
-  .split2{display:grid;grid-template-columns:1.05fr .95fr;gap:30px;align-items:center;position:relative;z-index:2}
-  @media(max-width:900px){.split2{grid-template-columns:1fr;gap:18px}}
   .mediaBox{margin:0;position:relative;border-radius:18px;padding:4px;background:var(--grad);
     box-shadow:0 20px 50px -22px rgba(0,0,0,.8);display:none}
   .mediaBox.ready{display:block}
@@ -2675,9 +2671,6 @@
   .gclick.noclick .tick{display:none!important}
   /* .soft = esquinas redondeadas, para GIF/PNG con fondo blanco propio */
   .mediaBox.plain.soft img,.mediaBox.plain.soft video{border-radius:14px}
-  /* Cuando la imagen es pequeña, su columna ocupa solo lo necesario */
-  .split2-auto{grid-template-columns:1fr auto;justify-items:center}
-  @media(max-width:900px){.split2-auto{grid-template-columns:1fr}}
 
   /* 22) DOS FONDOS ADICIONALES (paleta Holcim, muy sutiles)
          Se usan como modificadores junto a dark/light, de modo que todo el
@@ -2747,7 +2740,7 @@
     .wrap{padding-left:14px;padding-right:14px}
     .step{display:block;font-size:11.5px;white-space:nowrap}
     /* Rejillas de dos columnas que no caben: pasan a una sola */
-    .split2,.split2-auto,.grid3,.epp,.acts,.chipgrid,.accgrid,.behaviors{grid-template-columns:1fr!important}
+    .grid3,.epp,.acts,.chipgrid,.accgrid,.behaviors{grid-template-columns:1fr!important}
     .chipgrid[style],.epp[style],.acts[style]{grid-template-columns:1fr!important}
     /* Nada puede ser más ancho que la pantalla */
     .slide,.slide *{max-width:100%}
@@ -4548,10 +4541,20 @@
 <div class="wrap"><div class="eyebrow rv up">HSE-201 · Asbestos</div>
 <h2 class="rv up" style="--d:1">Asbestos</h2>
 <div class="infobanner rv up" style="--d:2">Es el nombre asignado a un grupo de <b>seis materiales fibrosos</b> (amosita, crisotila, crocidolita y las formas fibrosas de tremolita, actinolita y antofilita) que ocurren de forma natural. Sus fibras son <b>largas, resistentes y flexibles</b>, y resisten altas temperaturas.</div>
-<p class="lead rv up">Se ha usado en muchos productos — toca cada uno. 👆</p>
-<div class="accgrid" style="margin-top:12px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#17868a"></span><h4>Materiales de construcción</h4><span class="chev">+</span></div><div class="acc-body"><p>Tejas para techado, baldosas y azulejos, productos de papel y productos de <b>cemento con asbesto</b>.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Productos de fricción</h4><span class="chev">+</span></div><div class="acc-body"><p>Embrague de automóviles, <b>frenos</b> y componentes de la transmisión.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#ef7d00"></span><h4>Materias textiles</h4><span class="chev">+</span></div><div class="acc-body"><p>Textiles <b>termo resistentes</b>, envases, empaquetaduras y revestimientos.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>Vermiculita y talco</h4><span class="chev">+</span></div><div class="acc-body"><p>Algunos productos de <b>vermiculita</b> o de <b>talco</b> pueden contener asbesto.</p></div></div></div>
-<p class="lead rv up" style="margin-top:18px">Ejemplos frecuentes — toca cada uno. 👆</p>
-<div class="chipgrid"><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#0e2c56">1</span><span class="nm">Aislamiento de tuberías</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#1bb4e4">2</span><span class="nm">Tejas onduladas de fibrocemento</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#ef7d00">3</span><span class="nm">Pastillas de freno</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#6a3d9a">4</span><span class="nm">Baldosas de vinilo para suelos</span><span class="tick">✓</span></div></div>
+<p class="asbintro">El asbesto se ha usado en una gran variedad de productos manufacturados, principalmente:</p>
+<ul class="lineat asbusos rv up" style="--d:3">
+  <li>En <b>materiales de construcción</b>: tejas para techado, baldosas y azulejos, productos de papel y productos de cemento con asbesto.</li>
+  <li><b>Productos de fricción</b>: embrague de automóviles, frenos y componentes de la transmisión.</li>
+  <li><b>Materias textiles termorresistentes</b>, envases, empaquetaduras y revestimientos.</li>
+  <li>Algunos productos de <b>vermiculita o de talco</b> pueden contener asbesto.</li>
+</ul>
+<h3 class="subverde chico" style="margin-top:12px">Ejemplos frecuentes</h3>
+<div class="asbej rv up" style="--d:4">
+  <div class="asbcard" style="background:#0e2c56;color:#fff">Aislamiento de tuberías</div>
+  <div class="asbcard" style="background:#1bb4e4;color:#06304a">Tejas onduladas de fibrocemento</div>
+  <div class="asbcard" style="background:#0e2c56;color:#fff">Pastillas de freno</div>
+  <div class="asbcard" style="background:#1bb4e4;color:#06304a">Baldosas de vinilo para suelos</div>
+</div>
 </div></section>
 <section class="slide dark teal" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">HSE-202 · Sustancias peligrosas</div>
@@ -4909,7 +4912,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-05-r";
+var VERSION_CURSO = "2026-09-05-s";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
