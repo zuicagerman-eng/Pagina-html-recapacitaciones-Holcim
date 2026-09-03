@@ -797,6 +797,53 @@
   .ultra .prof p{font-size:10.7px}
   @media(max-width:900px){ .prohib{grid-template-columns:1fr 1fr} }
   @media(max-width:560px){ .prohib{grid-template-columns:1fr} }
+  /* ===== Trabajo en caliente: dos pestanas =====
+     Aqui el menu de pestanas va arriba, en linea, no en columna como en las
+     otras: son solo dos y el contenido necesita todo el ancho. */
+  .tabs2.arriba{grid-template-columns:1fr;gap:12px}
+  .tabs2.arriba .tabmenu{flex-direction:row;position:static;gap:10px;justify-content:center}
+  .tabs2.arriba .tabbtn{text-align:center;flex:0 1 300px}
+  .calfilas{display:grid;grid-template-columns:1fr 1fr;gap:10px 30px;margin-top:10px}
+  .calfilas .lineat li{font-size:13.2px;padding:8px 0 8px 18px}
+  .calfilas .lineat li:before{width:15px;height:15px;top:calc(50% - 7px)}
+  /* Panel del permiso: la columna de trabajos y la rejilla de informacion,
+     con el borde discontinuo verde del material impreso. */
+  .permiso{display:grid;grid-template-columns:168px 1fr;gap:12px;margin-top:10px;
+    border:2px dashed var(--green);border-radius:12px;padding:10px}
+  .permcol{background:#eef1f4;color:var(--ink);border-radius:9px;padding:9px 10px 11px}
+  .permcol h4{font-size:14px;font-weight:800;color:#5f9e14;text-align:center;
+    margin-bottom:8px;padding-bottom:5px;border-bottom:2px solid rgba(95,158,20,.3)}
+  .trabajo{margin:0 0 8px;display:flex;flex-direction:column;align-items:center;gap:2px}
+  .trabajo:last-child{margin-bottom:0}
+  .trabajo svg{width:62px;height:46px;fill:none;stroke:var(--c);stroke-width:2.6;
+    stroke-linecap:round;stroke-linejoin:round}
+  .trabajo figcaption{font-size:12.4px;font-weight:800;color:var(--c)}
+  .permrej{display:grid;grid-template-columns:repeat(5,1fr);gap:9px 6px}
+  .permito{margin:0;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center}
+  .permico{display:grid;place-items:center;width:50px;height:50px;border-radius:50%;
+    border:2.5px solid var(--panel);background:#fff;flex:none}
+  .permico svg{width:30px;height:30px;fill:none;stroke:var(--panel);stroke-width:2.4;
+    stroke-linecap:round;stroke-linejoin:round}
+  .permito figcaption{font-size:10.6px;font-weight:700;line-height:1.22;color:var(--panel)}
+  .apretado .calfilas .lineat li{font-size:12.4px;padding:6px 0 6px 18px}
+  .apretado .trabajo svg{width:54px;height:40px}
+  .apretado .permico{width:44px;height:44px} .apretado .permico svg{width:26px;height:26px}
+  .muy-apretado .calfilas .lineat li{font-size:11.8px;padding:5px 0 5px 18px}
+  .muy-apretado .trabajo svg{width:46px;height:34px}
+  .muy-apretado .trabajo figcaption{font-size:11.4px}
+  .muy-apretado .permico{width:38px;height:38px} .muy-apretado .permico svg{width:22px;height:22px}
+  .muy-apretado .permito figcaption{font-size:10px;line-height:1.18}
+  .ultra .permico{width:33px;height:33px} .ultra .permico svg{width:19px;height:19px}
+  .ultra .permito figcaption{font-size:9.6px}
+  @media(max-width:900px){
+    .calfilas{grid-template-columns:1fr;gap:0}
+    .permiso{grid-template-columns:1fr}
+    .permcol:first-child{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+    .permcol:first-child h4{grid-column:1/-1}
+    .trabajo{margin-bottom:0}
+    .permrej{grid-template-columns:repeat(3,1fr)}
+  }
+  @media(max-width:520px){ .permrej{grid-template-columns:repeat(2,1fr)} }
   /* En pantallas tactiles no se encogen los blancos que hay que pulsar. */
   @media(pointer:coarse){
     .slide.ultra .act{min-height:84px;padding:14px 10px}
@@ -3903,11 +3950,58 @@
 <section class="slide dark teal" data-mod="4">
 <div class="wrap wrap-ancho"><div class="eyebrow rv up">HSE-107 · Trabajo en caliente</div>
 <h2 class="rv up" style="--d:1">Trabajo en Caliente</h2>
-<div class="infobanner rv up" style="--d:2">Son trabajos que pueden generar una <b>fuente de ignición</b> en el área: esmerilar, cortar, pulir y soldar.</div>
-<p class="lead rv up">Toca cada requisito. 👆</p>
-<div class="accgrid" style="margin-top:12px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#e23b32"></span><h4>ATS y Permiso de Trabajo</h4><span class="chev">+</span></div><div class="acc-body"><p>Diligencie el <b>ATS</b> y el <b>Permiso de Trabajo</b> antes de iniciar.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#ef7d00"></span><h4>Barreras para chispas</h4><span class="chev">+</span></div><div class="acc-body"><p>Ubique <b>barreras para chispas</b> en trabajos en alturas.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#f5b700"></span><h4>Centinela</h4><span class="chev">+</span></div><div class="acc-body"><p>Designe un <b>centinela</b>, el cual debe permanecer durante toda la actividad y al terminarla <b>mínimo 30 minutos</b>.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>Extintor en sitio</h4><span class="chev">+</span></div><div class="acc-body"><p>Debe permanecer un <b>extintor de 20 lbs</b> en el sitio.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#17868a"></span><h4>Acoples y protecciones</h4><span class="chev">+</span></div><div class="acc-body"><p>En las conexiones se deben instalar <b>acoples rápidos y protecciones</b>.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1bb4e4"></span><h4>Inspección de equipos</h4><span class="chev">+</span></div><div class="acc-body"><p>Inspeccione los equipos <b>antes de operarlos</b>.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Cilindros asegurados</h4><span class="chev">+</span></div><div class="acc-body"><p>Los cilindros deben estar <b>asegurados</b>.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#0e2c56"></span><h4>Inspección trimestral</h4><span class="chev">+</span></div><div class="acc-body"><p>Cada <b>tres meses</b> toda la herramienta eléctrica y equipos de oxicorte deben ser inspeccionados por personal competente; garantice el <b>precinto de inspección vigente</b>.</p></div></div></div>
-<p class="lead rv up" style="margin-top:20px">El permiso de trabajo en caliente debe contar con esta información — toca cada una. 👆</p>
-<div class="chipgrid"><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#0e2c56">1</span><span class="nm">Ubicación del trabajo</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#1877c4">2</span><span class="nm">Descripción del trabajo</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#1bb4e4">3</span><span class="nm">Descripción de equipos e inspecciones</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#17868a">4</span><span class="nm">Fecha, hora y duración del permiso (máx. 7 horas)</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#97d13b">5</span><span class="nm">Peligros, riesgos y controles</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#f5b700">6</span><span class="nm">EPP · consultar HSS-003</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#ef7d00">7</span><span class="nm">Métodos de prevención y protección contra incendios</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#e6007e">8</span><span class="nm">Gases / vapores / humo inflamables — confirmar con pruebas</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#e23b32">9</span><span class="nm">Dispositivos de combate a incendios y mantas</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#6a3d9a">10</span><span class="nm">Nombre del vigía de incendios</span><span class="tick">✓</span></div></div>
+<div class="tabs2 arriba rv up" style="--d:2">
+  <nav class="tabmenu" aria-label="Secciones de trabajo en caliente">
+    <button type="button" class="tabbtn on" data-vista="0">1 · Requisitos en el sitio</button>
+    <button type="button" class="tabbtn" data-vista="1">2 · Información del permiso</button>
+  </nav>
+  <div class="tabcuerpo">
+    <section class="vista on">
+      <h3 class="subt">Son trabajos que pueden generar una fuente de ignición en el área</h3>
+      <div class="calfilas">
+        <ul class="lineat">
+          <li>Diligencie el <b>ATS</b> y el <b>Permiso de Trabajo</b>.</li>
+          <li>Ubique <b>barreras para chispas</b> en trabajos en alturas.</li>
+          <li>Designe un <b>centinela</b>, que debe permanecer durante toda la actividad y, al terminarla, <b>mínimo 30 minutos</b>.</li>
+          <li>Debe permanecer un <b>extintor de 20 lbs</b> en el sitio.</li>
+        </ul>
+        <ul class="lineat">
+          <li>En las conexiones se deben instalar <b>acoples rápidos y protecciones</b>.</li>
+          <li><b>Inspeccione los equipos</b> antes de operarlos.</li>
+          <li>Los <b>cilindros</b> deben estar <b>asegurados</b>.</li>
+          <li>Cada <b>tres meses</b> la herramienta eléctrica y los equipos de oxicorte deben ser inspeccionados por personal competente; garantice el <b>precinto de inspección vigente</b>.</li>
+        </ul>
+      </div>
+    </section>
+    <section class="vista">
+      <h3 class="subt">Recuerda que los permisos de trabajo en caliente deben contar con esta información</h3>
+      <div class="permiso">
+        <div class="permcol">
+          <h4>Trabajos</h4>
+          <figure class="trabajo" style="--c:#6b2fa0"><svg viewBox="0 0 64 48"><path d="M6 20h22v10H6z"/><path d="M28 17h12v16H28z"/><circle cx="48" cy="25" r="11"/><circle cx="48" cy="25" r="4"/><path d="M14 20v-6h9v6"/><path d="M40 25h-3"/><path d="M56 14l5-4M58 25h6M56 36l5 4"/></svg><figcaption>Esmerilar</figcaption></figure>
+          <figure class="trabajo" style="--c:#17868a"><svg viewBox="0 0 64 48"><circle cx="42" cy="24" r="15"/><circle cx="42" cy="24" r="5"/><path d="M42 9v4M42 35v4M27 24h4M53 24h4M32 14l3 3M49 31l3 3M52 14l-3 3M35 31l-3 3"/><path d="M4 19h20v10H4z"/><path d="M24 24h4"/></svg><figcaption>Cortar</figcaption></figure>
+          <figure class="trabajo" style="--c:#e6007e"><svg viewBox="0 0 64 48"><path d="M6 30h20v8H6z"/><path d="M26 26h14v14H26z"/><circle cx="46" cy="20" r="9"/><path d="M46 4v6M60 8l-4 5M62 22h-6M58 34l-5-4"/><path d="M40 33l6-4"/></svg><figcaption>Pulir</figcaption></figure>
+          <figure class="trabajo" style="--c:#2fa04e"><svg viewBox="0 0 64 48"><path d="M4 34h18l6-6h8"/><path d="M36 22l10-8 6 6-10 8z"/><path d="M44 32l-6 6"/><path d="M52 6l3-4M58 12l5-3M56 20l6 1"/><path d="M22 40h26"/><path d="M28 40l4-6M40 40l-4-6"/></svg><figcaption>Soldar</figcaption></figure>
+        </div>
+        <div class="permcol ancha">
+          <h4>Información</h4>
+          <div class="permrej">
+            <figure class="permito"><span class="permico"><svg viewBox="0 0 48 48"><path d="M24 8a10 10 0 0 1 10 10c0 7-10 18-10 18S14 25 14 18A10 10 0 0 1 24 8z"/><circle cx="24" cy="18" r="4"/><path d="M8 40l8-4M40 40l-8-4M8 40h32"/></svg></span><figcaption>Ubicación del trabajo</figcaption></figure>
+            <figure class="permito"><span class="permico"><svg viewBox="0 0 48 48"><rect x="10" y="8" width="24" height="32" rx="3"/><path d="M17 6h10v5H17z"/><path d="M16 20h12M16 26h12M16 32h8"/><circle cx="38" cy="34" r="6"/><path d="M38 30v3l2 2"/></svg></span><figcaption>Descripción del trabajo</figcaption></figure>
+            <figure class="permito"><span class="permico"><svg viewBox="0 0 48 48"><rect x="8" y="6" width="24" height="30" rx="3"/><path d="M14 14h12M14 20h12M14 26h7"/><circle cx="34" cy="30" r="6"/><path d="M31 41a5 5 0 0 1 8 0"/><path d="M38 34l6 6"/></svg></span><figcaption>Descripción de equipos e inspecciones</figcaption></figure>
+            <figure class="permito"><span class="permico"><svg viewBox="0 0 48 48"><rect x="8" y="10" width="32" height="30" rx="3"/><path d="M8 20h32M16 6v8M32 6v8"/><path d="M16 27h4M26 27h4M16 34h4M26 34h4"/></svg></span><figcaption>Fecha, hora y duración del permiso (máx. 7 horas)</figcaption></figure>
+            <figure class="permito"><span class="permico"><svg viewBox="0 0 48 48"><path d="M8 32a16 16 0 0 1 32 0"/><path d="M24 32l9-9"/><circle cx="24" cy="32" r="3"/><path d="M24 8v4M10 15l3 3M38 15l-3 3"/><path d="M6 40h36"/></svg></span><figcaption>Peligros, riesgos y controles</figcaption></figure>
+            <figure class="permito"><span class="permico"><svg viewBox="0 0 48 48"><path d="M11 26a13 13 0 0 1 26 0z"/><path d="M7 26h34"/><path d="M18 13a6 6 0 0 1 12 0"/><path d="M12 33h24v6a4 4 0 0 1-4 4H16a4 4 0 0 1-4-4z"/><path d="M18 33v10M30 33v10"/></svg></span><figcaption>EPP · consultar HSS-003</figcaption></figure>
+            <figure class="permito"><span class="permico"><svg viewBox="0 0 48 48"><rect x="16" y="14" width="16" height="26" rx="4"/><path d="M20 14v-3a4 4 0 0 1 8 0v3"/><path d="M28 8h6l3 5"/><path d="M20 22h8M20 28h8"/></svg></span><figcaption>Métodos de prevención y protección contra incendios</figcaption></figure>
+            <figure class="permito"><span class="permico"><svg viewBox="0 0 48 48"><rect x="14" y="14" width="20" height="26" rx="4"/><rect x="19" y="19" width="10" height="8" rx="1"/><circle cx="21" cy="33" r="2"/><circle cx="27" cy="33" r="2"/><path d="M20 14V9M28 14V9"/><path d="M12 10c3-3 3 4 6 1M30 8c3-3 3 4 6 1"/></svg></span><figcaption>Gases, vapores y humo inflamables · confirmar con pruebas</figcaption></figure>
+            <figure class="permito"><span class="permico"><svg viewBox="0 0 48 48"><rect x="12" y="10" width="24" height="30" rx="3"/><path d="M24 18c3 4 6 6 6 11a6 6 0 0 1-12 0c0-3 2-4 3-7 1 3 3 3 3 6"/><path d="M12 34h24"/></svg></span><figcaption>Dispositivos de combate a incendios, pantallas protectoras y mantas</figcaption></figure>
+            <figure class="permito"><span class="permico"><svg viewBox="0 0 48 48"><circle cx="20" cy="15" r="6"/><path d="M14 12a6 6 0 0 1 12 0M11 12h18"/><path d="M20 22v12M12 27h16M20 34l-4 10M20 34l4 10"/><rect x="32" y="22" width="9" height="15" rx="3"/><path d="M34 22v-2a2.5 2.5 0 0 1 5 0v2"/></svg></span><figcaption>Nombre del vigía de incendios</figcaption></figure>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
 </div>
 </section>
 <section class="slide light" data-mod="4">
@@ -4366,7 +4460,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-05-e";
+var VERSION_CURSO = "2026-09-05-f";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
