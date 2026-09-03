@@ -707,6 +707,39 @@
     .bloqfoto>div{order:2}
   }
 
+  /* Columna de imagen mas ancha, para laminas donde la ilustracion lleva
+     varios paneles y a 232px no se distinguiria. */
+  .bloqfoto.ancha{grid-template-columns:1fr clamp(200px,27vw,360px)}
+  .bloqfoto.fotoizq.ancha{grid-template-columns:clamp(200px,27vw,360px) 1fr}
+  .fotorect.gr{width:100%}
+  .fotorect.gr img{max-height:320px} .fotorect.gr svg{height:190px}
+  @media(max-height:820px){.fotorect.gr img{max-height:270px}.fotorect.gr svg{height:170px}}
+  .apretado .fotorect.gr img{max-height:240px} .apretado .fotorect.gr svg{height:150px}
+  .muy-apretado .fotorect.gr img{max-height:210px} .muy-apretado .fotorect.gr svg{height:82px}
+  @media(max-height:760px){
+    .muy-apretado .fotorect.gr img{max-height:186px}
+    .muy-apretado .fotorect.gr svg{height:130px}
+    .muy-apretado .cajazul{padding:7px 11px} .muy-apretado .cajazul p+p{margin-top:4px}
+    .muy-apretado .avisocian{padding:5px 11px}
+  }
+  @media(max-width:700px){.bloqfoto.ancha,.bloqfoto.fotoizq.ancha{grid-template-columns:1fr}}
+
+  /* Aviso en cian, para el que cierra una idea (distinto del azul oscuro). */
+  .avisocian{background:var(--cyan);color:#062a3d;border-radius:12px;padding:12px 18px;
+    font-size:13.6px;line-height:1.45;font-weight:700;margin-top:12px;
+    border-left:6px solid #fff}
+  @media(max-height:820px){.avisocian{padding:9px 15px;font-size:12.8px;margin-top:9px}}
+  .apretado .avisocian{padding:7px 13px;font-size:12.1px;line-height:1.38;margin-top:7px}
+  .muy-apretado .avisocian{padding:6px 12px;font-size:11.6px;line-height:1.32}
+  /* Tarjeta de texto en azul, para el bloque de procedimiento. */
+  .cajazul{background:var(--panel);color:#eaf1fb;border-radius:12px;padding:14px 17px;min-width:0}
+  .cajazul p{font-size:13px;line-height:1.5}
+  .cajazul p+p{margin-top:9px}
+  @media(max-height:820px){.cajazul{padding:11px 14px}.cajazul p{font-size:12.3px;line-height:1.44}}
+  .apretado .cajazul{padding:9px 12px} .apretado .cajazul p{font-size:11.7px;line-height:1.36}
+  .apretado .cajazul p+p{margin-top:6px}
+  .muy-apretado .cajazul p{font-size:11.2px;line-height:1.32}
+
   /* ===== CUATRO CAUSAS ALREDEDOR DE UNA IMAGEN =====
      Dos tarjetas a cada lado y la ilustracion al centro, con el aro punteado
      y un punto de color por causa, como en el impreso. */
@@ -2898,8 +2931,42 @@
     <div class="accgrid" style="margin-top:12px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>Protege a las personas de forma inmediata</h4><span class="chev">+</span></div><div class="acc-body"><p>Permite activar oportunamente la atención médica, el acompañamiento y las medidas de control, reduciendo riesgos de complicaciones y facilitando la recuperación.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1bb4e4"></span><h4>Evita la repetición de eventos</h4><span class="chev">+</span></div><div class="acc-body"><p>Facilita la identificación de causas y la implementación de acciones correctivas, evitando que otros se expongan a riesgos ya identificados.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Fortalece la cultura de Seguridad y Salud</h4><span class="chev">+</span></div><div class="acc-body"><p>Promueve la confianza, el aprendizaje organizacional y la mejora continua.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>Permite una gestión legal adecuada</h4><span class="chev">+</span></div><div class="acc-body"><p>Garantiza el cumplimiento de las obligaciones ante la ARL y las autoridades, evitando reprocesos y pérdida de credibilidad.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#ef7d00"></span><h4>Enfoque proactivo de recursos</h4><span class="chev">+</span></div><div class="acc-body"><p>Evita desvíos innecesarios de tiempo y presupuesto, enfocando los recursos en capacitación, prevención y mejores condiciones de trabajo.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#e6007e"></span><h4>Genera beneficios reales para todos</h4><span class="chev">+</span></div><div class="acc-body"><p>El reporte oportuno no es una carga ni una sanción: es una acción de corresponsabilidad que protege a las personas y fortalece la organización.</p></div></div>
   </div>
 </section>
-<section class="slide dark teal" data-mod="4">
-<div class="wrap"><div class="eyebrow rv up">HSE-003 · Elementos de protección personal</div><h2 class="rv up" style="--d:1">¿Qué son los EPP?</h2><div class="infobanner rv up" style="--d:2">Cualquier equipo o elemento usado por el trabajador como barrera para protegerlo de los posibles daños de los riesgos presentes en sus labores.</div><p class="lead rv up">Los EPP deben cumplir — toca cada requisito. 👆</p><div class="chipgrid" style="grid-template-columns:repeat(2,1fr);margin-top:16px"><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#17868a">1</span><span class="nm">Ser gratuitos</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#1877c4">2</span><span class="nm">Estar fácilmente disponibles</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#97d13b">3</span><span class="nm">Cumplir estándares internacionales (ISO, EN, ANSI, AS)</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#ef7d00">4</span><span class="nm">Ser idóneos y tener un ajuste adecuado</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#e6007e">5</span><span class="nm">Ser compatibles con otros EPP</span><span class="tick">✓</span></div></div><div class="pdfrow rv up" style="grid-template-columns:1fr"><div class="pdfmini"><span>Consulta la <b>guía visual de EPP</b>.</span><button class="pdfbtn" data-pdf="epp_guia" data-title="Guía visual de EPP">Ver más</button></div></div></div>
+<section class="slide nogate dark teal" data-mod="4">
+  <div class="wrap">
+    <div class="eyebrow rv up">HSE-003 · Elementos de protección personal</div>
+    <h2 class="rv up" style="--d:1">¿Qué son los EPP?</h2>
+    <div class="infobanner rv up" style="--d:2">Cualquier equipo o elemento usado por el trabajador como barrera para que le proteja de los posibles daños de los riesgos presentes en sus labores y que pueden amenazar su seguridad o salud.</div>
+    <div class="bloqfoto ancha rv up" style="--d:3;margin-top:14px">
+      <div>
+        <h3 class="subverde">Los EPP deben:</h3>
+        <ul class="lineat">
+          <li>Ser gratuitos.</li>
+          <li>Estar fácilmente disponibles.</li>
+          <li>Cumplir con estándares internacionales, como ISO, EN, ANSI, AS.</li>
+          <li>Ser idóneos y tener un ajuste adecuado.</li>
+          <li>Ser compatibles con otros EPP.</li>
+        </ul>
+      </div>
+      <span class="fotorect gr" data-foto="eppcomic(D38)"><svg viewBox="0 0 120 100"><rect x="3" y="3" width="56" height="46" rx="2"/><rect x="61" y="3" width="56" height="46" rx="2"/><rect x="3" y="51" width="56" height="46" rx="2"/><rect x="61" y="51" width="56" height="46" rx="2"/><circle cx="31" cy="24" r="9"/><path d="M22 20a9 9 0 0 1 18 0M19 20h24"/><circle cx="89" cy="24" r="9"/><path d="M80 20a9 9 0 0 1 18 0M77 20h24"/><path d="M84 24h10"/><circle cx="31" cy="72" r="9"/><path d="M22 68a9 9 0 0 1 18 0M19 68h24"/><circle cx="89" cy="72" r="9"/><path d="M80 68a9 9 0 0 1 18 0M77 68h24"/><path d="M79 70a3 3 0 0 1 0 6M99 70a3 3 0 0 0 0 6"/><path d="M48 40l6 6M54 40l-6 6" stroke-width="2.6"/><path d="M104 38l4 4 7-8" stroke-width="2.6"/><path d="M48 88l6 6M54 88l-6 6" stroke-width="2.6"/><path d="M104 86l4 4 7-8" stroke-width="2.6"/></svg></span>
+    </div>
+    <p class="avisocian rv up">¡En todo caso la autoridad siempre es suspender cualquier actividad donde se ponga en peligro la seguridad y salud del trabajador!</p>
+  </div>
+</section>
+<section class="slide nogate light mint" data-mod="4">
+  <div class="wrap">
+    <div class="eyebrow rv up">HSE-003 · Elementos de protección personal</div>
+    <h2 class="rv up" style="--d:1">Procedimiento y señalización</h2>
+    <div class="bloqfoto fotoizq ancha rv up" style="--d:2;margin-top:14px">
+      <span class="fotorect gr" data-foto="eppsenal(D38)"><svg viewBox="0 0 120 80"><rect x="3" y="3" width="114" height="74" rx="3"/><rect x="3" y="3" width="114" height="20" rx="3"/><path d="M14 10h92M14 16h74"/><circle cx="27" cy="45" r="12"/><circle cx="60" cy="45" r="12"/><circle cx="93" cy="45" r="12"/><path d="M22 44a5 5 0 0 1 10 0v6h-10z"/><path d="M54 47c0-4 3-6 6-6s6 2 6 6c0 3-3 5-6 5s-6-2-6-5z"/><path d="M88 40v10h10V40M91 40v-4M95 40v-4"/><path d="M14 66h26M47 66h26M80 66h26"/></svg></span>
+      <div class="cajazul">
+        <p>Asegurar que se cuente con la <b>señalización de los EPP requeridos</b> en los ingresos a las diferentes áreas operativas (diferentes a oficinas, almacén, portería u otras áreas que no generen riesgo), y requerimientos específicos según aplique.</p>
+        <p>El procedimiento de gestión de elementos de protección personal contempla la <b>evaluación de necesidades de uso de EPP</b> a partir del análisis de los procesos y de los peligros inherentes a las actividades.</p>
+      </div>
+    </div>
+    <div class="pdfrow rv up" style="grid-template-columns:1fr">
+      <div class="pdfmini"><span>Consulta la <b>guía visual de EPP</b>.</span><button class="pdfbtn" data-pdf="epp_guia" data-title="Guía visual de EPP">Ver más</button></div>
+    </div>
+  </div>
 </section>
 <section class="slide light mint" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">HSE-003 · Elementos de protección personal</div><h2 class="rv up" style="--d:1">Generalidades de los EPP</h2><p class="lead rv up" style="--d:2">Toca cada buena práctica. 👆</p><div class="acts"><div class="act gclick rv scale" style="background:#0e2c56" tabindex="0" role="button"><span style="font-size:22px">1</span><span>Capacitar sobre cómo elegir, usar, ajustar, cuidar, mantener y solicitar reposición del EPP.</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#1bb4e4" tabindex="0" role="button"><span style="font-size:22px">2</span><span>Inspeccionar el EPP antes de cada uso, verificando su estado y fecha de vencimiento.</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#97d13b" tabindex="0" role="button"><span style="font-size:22px">3</span><span>Conocer y entender la forma adecuada de colocar, ajustar y retirar el EPP.</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#1877c4" tabindex="0" role="button"><span style="font-size:22px">4</span><span>Establecer y señalizar los EPP requeridos en las áreas de trabajo.</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#e6007e" tabindex="0" role="button"><span style="font-size:22px">5</span><span>No compartir equipos de protección personal (como protección auditiva).</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#ef7d00" tabindex="0" role="button"><span style="font-size:22px">6</span><span>No utilizar pintura ni pegatinas para cubrir EPP dañado.</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#17868a" tabindex="0" role="button"><span style="font-size:22px">7</span><span>Reportar el equipo defectuoso y reemplazarlo.</span><span class="tick">✓</span></div><div class="act gclick rv scale" style="background:#6a3d9a" tabindex="0" role="button"><span style="font-size:22px">8</span><span>Almacenar el EPP correctamente y separar el EPP dañado del resto.</span><span class="tick">✓</span></div></div><div class="pdfrow rv up" style="grid-template-columns:1fr"><div class="pdfmini"><span>Da clic para conocer la <b>guía visual</b>.</span><button class="pdfbtn" data-pdf="epp_guia" data-title="Guía visual de EPP">Ver más</button></div></div></div>
@@ -3494,7 +3561,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-04-g";
+var VERSION_CURSO = "2026-09-04-i";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
