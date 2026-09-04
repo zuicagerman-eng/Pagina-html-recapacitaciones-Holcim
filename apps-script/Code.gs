@@ -1,13 +1,13 @@
 /**
  * Proyecto Apps Script "Reinducción HS Web".
  *
- * Sirve el curso HSE (pegado como archivo index.html en este mismo proyecto)
- * dentro del portal interno, recibe los reportes del botón ⚠️ por correo y
- * guarda los resultados del examen final en una hoja de cálculo.
+ * El curso NO vive aquí: se reparte desde GitHub Pages. Este proyecto es un
+ * solo archivo (este) y hace tres cosas, todas por doPost:
  *
- * Archivos del proyecto:
- *   - Código.gs  → este archivo
- *   - index.html → pega aquí TODO el contenido del index.html de GitHub
+ *   1. Recibe los reportes del botón ⚠️ y te los manda por correo.
+ *   2. Guarda cada intento del examen en la hoja de cálculo.
+ *   3. Archiva en Drive el PDF del certificado de quien aprueba, y deja su
+ *      enlace en la columna "Vinculo" de esa hoja.
  */
 
 // ►► CORREO donde quieres recibir los reportes ◄◄
@@ -51,10 +51,9 @@ function doGet() {
    ¿Dónde queda? En "Mi unidad" de la cuenta con la que despliegas el script.
    Para ver el enlace directo, ejecuta una vez la función verHojaDeResultados().
 
-   Si prefieres usar una hoja que ya tengas, pega su ID abajo (el trozo largo
-   de la URL, entre /d/ y /edit) y el script escribirá en esa.
+   Si prefieres usar una hoja que ya tengas, pega abajo su ID o directamente la
+   URL completa que copiaste del navegador, y el script escribirá en esa.
    ═══════════════════════════════════════════════════════════════════════════ */
-/* Igual que la carpeta: acepta el identificador o la URL completa de la hoja. */
 var ID_HOJA = "";   // opcional: déjalo vacío para que el script la cree solo
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -65,8 +64,7 @@ var ID_HOJA = "";   // opcional: déjalo vacío para que el script la cree solo
    "Vinculo" de la hoja de resultados.
 
    No hay que crear la carpeta a mano: se crea sola la primera vez, en "Mi
-   unidad" de la cuenta que despliega el script. Si prefieres una carpeta que ya
-   tengas, pega su ID abajo (el trozo largo de la URL, despues de /folders/).
+   unidad" de la cuenta que despliega el script.
 
    CERTIFICADOS_PUBLICOS controla quien puede abrir el enlace:
      false (recomendado) → solo quien tenga acceso a la carpeta, es decir tu y
@@ -258,8 +256,11 @@ function borrarPestanaRespuestas() {
 }
 
 /**
- * Llamado desde el curso con google.script.run al calificar el examen.
- * Escribe una fila de resumen del intento y una fila por pregunta respondida.
+ * Llamado desde el curso al calificar el examen. Escribe UNA fila por intento.
+ *
+ * El detalle pregunta por pregunta no se guarda aquí: va dentro del PDF del
+ * certificado, a partir de la hoja 2.
+ *
  * La cédula se guarda con un apóstrofo delante para que la hoja no le quite
  * los ceros de la izquierda.
  */
@@ -268,11 +269,12 @@ function guardarExamen(d) {
   var ss = obtenerHoja_();
   var fecha = d.fecha || new Date().toLocaleString();
 
+  // primero se archiva el PDF: su enlace es uno de los datos de la fila
+  var enlaceCert = guardarCertificado_(d);
+
   /* Un dato por cada nombre de columna posible. Se incluyen también los nombres
      viejos ("Nombre", "Cédula", "Porcentaje", "Aprobado") para que una hoja que
      ya venías usando se siga llenando igual que siempre. */
-  var enlaceCert = guardarCertificado_(d);
-
   var valores = {
     'Fecha': fecha,
     'Tipo_Usuario': d.tipoUsuario || '',
