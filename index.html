@@ -1186,6 +1186,8 @@
   .muy-apretado .audi .lineat li{font-size:11.7px;padding:4px 0 4px 18px;line-height:1.34}
   .ultra .audifoto img{max-height:230px} .ultra .audifoto svg{height:152px}
   .ultra .audi .lineat li{font-size:11.1px}
+  /* Variante con el listado a la izquierda y la lamina a la derecha. */
+  .audi.inv{grid-template-columns:1.1fr 1fr}
   @media(max-width:900px){
     .audi{grid-template-columns:1fr}
     .audifoto{max-width:380px}
@@ -4719,8 +4721,19 @@
 <section class="slide dark teal" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">HSE-203 · Conservación de la audición</div>
 <h2 class="rv up" style="--d:1">Control de hábitos y comportamientos</h2>
-<p class="lead rv up" style="--d:2">Toca cada recomendación. 👆</p>
-<div class="chipgrid"><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#1bb4e4">1</span><span class="nm">Controle el volumen de audífonos, parlantes, TV y reproductores.</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#e23b32">2</span><span class="nm">Evite introducir elementos con punta dentro del oído (copitos, palillos, ganchos, esferos).</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#ef7d00">3</span><span class="nm">Evite compartir los audífonos o auriculares y limite su uso.</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#17868a">4</span><span class="nm">Evite nadar en aguas sucias y muy profundas.</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#6a3d9a">5</span><span class="nm">Controle la asistencia a conciertos, bares o discotecas.</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#0e2c56">6</span><span class="nm">Controle actividades extralaborales: tejo, polígono, deportes de contacto y motocicleta.</span><span class="tick">✓</span></div></div>
+<div class="audi inv rv up" style="--d:2">
+  <div class="audicol">
+    <ul class="lineat">
+      <li>Controle el <b>volumen</b> de audífonos, parlantes, TV, equipos de sonido y reproductores.</li>
+      <li>Evite introducir <b>elementos con punta</b> dentro del oído: copitos, palillos, ganchos de pelo, esferos, alfileres, etc.</li>
+      <li>Evite <b>compartir</b> los audífonos o auriculares y <b>limite su uso</b>.</li>
+      <li>Evite <b>nadar</b> en aguas sucias y muy profundas.</li>
+      <li>Controle la asistencia a <b>conciertos, tiendas, bares o discotecas</b>.</li>
+      <li>Controle actividades <b>extralaborales</b>: juego al tejo, práctica de polígono, deportes de contacto y uso de motocicleta.</li>
+    </ul>
+  </div>
+  <span class="ph audifoto" data-foto="habitos(D69)"><svg viewBox="0 0 200 150" aria-hidden="true"><rect x="6" y="6" width="188" height="138" rx="5"/><circle cx="100" cy="75" r="52" stroke-width="8"/><path d="M63 38l74 74" stroke-width="8"/><circle cx="100" cy="62" r="15"/><path d="M85 55a15 15 0 0 1 30 0"/><path d="M78 62a10 12 0 0 0 0 20M122 62a10 12 0 0 1 0 20"/><path d="M78 62h44"/><path d="M84 108c0-10 7-18 16-18s16 8 16 18"/></svg></span>
+</div>
 </div></section>
 <section class="slide light mint" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">HSE-204 · Ergonomía</div>
@@ -5043,7 +5056,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-05-x";
+var VERSION_CURSO = "2026-09-05-y";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
