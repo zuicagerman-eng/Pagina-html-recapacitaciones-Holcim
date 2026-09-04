@@ -60,6 +60,21 @@ var NOMBRE_HOJA     = "HSE-001 · Resultados examen";
 var PESTANA_RESUMEN = "Resultados";
 var PESTANA_DETALLE = "Respuestas";
 
+/* Columnas de la pestaña de resumen, en este orden.
+   Las cuatro últimas son de diagnóstico: sirven para revisar un intento raro
+   (cuántas acertó, cuánto tardó, con qué navegador). Si no las quieres, bórralas
+   de esta lista y de la hoja; el script no se rompe.
+
+   IMPORTANTE: si la hoja YA existe, el script NO le cambia el orden ni le borra
+   nada. Solo agrega al final las columnas de esta lista que aún no tenga, y
+   escribe cada dato buscando su columna por el nombre del encabezado. Así puedes
+   reordenar las columnas en la hoja a tu gusto sin descuadrar nada. */
+var COLUMNAS_RESUMEN = [
+  'Fecha', 'Tipo_Usuario', 'ID_Identificacion', 'Nombre_Completo', 'Empresa',
+  'Capacitacion', 'Puntaje', 'Resultado', 'Vinculo',
+  'Aciertos', 'Total', 'Duración (s)', 'Navegador'
+];
+
 /** Devuelve la hoja de cálculo, creándola la primera vez si hace falta. */
 function obtenerHoja_() {
   var props = PropertiesService.getScriptProperties();
@@ -88,8 +103,7 @@ function obtenerHoja_() {
 
   var r = ss.getActiveSheet();
   r.setName(PESTANA_RESUMEN);
-  r.appendRow(['Fecha', 'Nombre', 'Cédula', 'Aciertos', 'Total', 'Porcentaje',
-               'Aprobado', 'Duración (s)', 'Navegador']);
+  r.appendRow(COLUMNAS_RESUMEN);
   r.setFrozenRows(1);
 
   var d = ss.insertSheet(PESTANA_DETALLE);
@@ -111,6 +125,29 @@ function pestana_(ss, nombre, encabezados) {
 }
 
 /**
+ * Escribe una fila buscando cada dato por el NOMBRE de su columna, no por su
+ * posición. Si a la hoja le faltan columnas de la lista, se agregan al final.
+ * Las columnas que la hoja tenga y no estén en "valores" quedan vacías.
+ */
+function escribirPorEncabezado_(hoja, columnas, valores) {
+  var ancho = Math.max(1, hoja.getLastColumn());
+  var encabezados = hoja.getRange(1, 1, 1, ancho).getValues()[0].map(String);
+
+  columnas.forEach(function (c) {
+    if (encabezados.indexOf(c) < 0) {
+      encabezados.push(c);
+      hoja.getRange(1, encabezados.length).setValue(c);
+    }
+  });
+
+  var fila = encabezados.map(function (c) {
+    var v = valores[c];
+    return (v === undefined || v === null) ? '' : v;
+  });
+  hoja.appendRow(fila);
+}
+
+/**
  * Llamado desde el curso con google.script.run al calificar el examen.
  * Escribe una fila de resumen del intento y una fila por pregunta respondida.
  * La cédula se guarda con un apóstrofo delante para que la hoja no le quite
@@ -121,11 +158,31 @@ function guardarExamen(d) {
   var ss = obtenerHoja_();
   var fecha = d.fecha || new Date().toLocaleString();
 
-  pestana_(ss, PESTANA_RESUMEN,
-    ['Fecha', 'Nombre', 'Cédula', 'Aciertos', 'Total', 'Porcentaje',
-     'Aprobado', 'Duración (s)', 'Navegador'])
-    .appendRow([fecha, d.nombre || '', "'" + (d.cedula || ''), d.aciertos, d.total,
-                d.porcentaje, d.aprobado, d.segundos, d.navegador || '']);
+  /* Un dato por cada nombre de columna posible. Se incluyen también los nombres
+     viejos ("Nombre", "Cédula", "Porcentaje", "Aprobado") para que una hoja que
+     ya venías usando se siga llenando igual que siempre. */
+  var valores = {
+    'Fecha': fecha,
+    'Tipo_Usuario': d.tipoUsuario || '',
+    'ID_Identificacion': "'" + (d.cedula || ''),
+    'Nombre_Completo': d.nombre || '',
+    'Empresa': d.empresa || '',
+    'Capacitacion': d.capacitacion || '',
+    'Puntaje': d.puntaje || (d.porcentaje + '%'),
+    'Resultado': d.resultado || '',
+    'Vinculo': d.vinculo || '',
+    'Aciertos': d.aciertos,
+    'Total': d.total,
+    'Duración (s)': d.segundos,
+    'Navegador': d.navegador || '',
+    // nombres de la versión anterior de la hoja
+    'Nombre': d.nombre || '',
+    'Cédula': "'" + (d.cedula || ''),
+    'Porcentaje': d.porcentaje,
+    'Aprobado': d.aprobado
+  };
+  escribirPorEncabezado_(pestana_(ss, PESTANA_RESUMEN, COLUMNAS_RESUMEN),
+                         COLUMNAS_RESUMEN, valores);
 
   var respuestas = d.respuestas || [];
   if (respuestas.length) {

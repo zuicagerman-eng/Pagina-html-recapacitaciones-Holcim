@@ -170,11 +170,30 @@
   .exwrap{max-width:820px;margin:0 auto}
   .excampo{margin-top:14px}
   .excampo label{display:block;font-size:12.5px;font-weight:700;color:#bcd3ea;margin-bottom:5px}
-  .excampo input{width:100%;background:rgba(255,255,255,.07);border:2px solid rgba(255,255,255,.16);
+  .excampo input,.excampo select{width:100%;background:rgba(255,255,255,.07);border:2px solid rgba(255,255,255,.16);
     border-radius:11px;padding:12px 14px;color:#fff;font-size:15px;font-family:inherit}
-  .excampo input:focus{outline:0;border-color:var(--cyan)}
-  .excampo input.mal{border-color:var(--danger)}
+  .excampo input:focus,.excampo select:focus{outline:0;border-color:var(--cyan)}
+  .excampo input.mal,.excampo select.mal{border-color:var(--danger)}
+  /* El desplegable nativo se pinta con los colores del sistema: hay que forzar
+     la flecha y, sobre todo, el color de las opciones desplegadas, que en un
+     fondo oscuro salian blancas sobre blanco en Windows. */
+  .excampo select{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:38px;
+    background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%2374c4ec' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 14px center;background-size:12px 8px}
+  .excampo select option{background:#0d2036;color:#fff}
   .exerr{font-size:12.5px;color:#ff9c95;margin-top:6px;min-height:16px}
+  /* Con seis campos, en un portatil de 720px de alto la pantalla de
+     identificacion ya no cabia: se aprieta en los mismos escalones que el
+     resto del curso en vez de obligar a desplazarse antes de empezar. */
+  .apretado .excampo{margin-top:10px}
+  .apretado .excampo input,.apretado .excampo select{padding:9px 13px;font-size:14px}
+  .muy-apretado .excampo{margin-top:7px}
+  .muy-apretado .excampo label{font-size:11.5px;margin-bottom:3px}
+  .muy-apretado .excampo input,.muy-apretado .excampo select{padding:7px 12px;font-size:13.5px}
+  .ultra .excampo{margin-top:5px}
+  .ultra .excampo label{font-size:11px;margin-bottom:2px}
+  .ultra .excampo input,.ultra .excampo select{padding:6px 11px;font-size:13px}
+  .ultra .exerr{min-height:0}
   .exq{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:13px;
     padding:14px 16px;margin-top:12px}
   .exq.sinresp{border-color:rgba(226,59,50,.65)}
@@ -5247,6 +5266,18 @@
         <p class="lead rv up" style="--d:2">Antes de comenzar, identifícate. Las preguntas se toman al azar de un banco de 50 y cambian en cada intento.</p>
         <div class="card rv up" style="--d:3;margin-top:18px">
           <div class="excampo">
+            <label for="exTipo">Tipo de usuario</label>
+            <select id="exTipo"></select>
+          </div>
+          <div class="excampo">
+            <label for="exEmpresa">Empresa o sede</label>
+            <select id="exEmpresa"></select>
+          </div>
+          <div class="excampo" id="exOtraCampo" hidden>
+            <label for="exOtra">Escribe la empresa</label>
+            <input id="exOtra" type="text" autocomplete="organization" placeholder="Nombre de la empresa" maxlength="60">
+          </div>
+          <div class="excampo">
             <label for="exNombre">Nombre y apellidos</label>
             <input id="exNombre" type="text" autocomplete="name" placeholder="David Restrepo" maxlength="80">
           </div>
@@ -5365,12 +5396,25 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-06-w";
+var VERSION_CURSO = "2026-09-06-x";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
    NOTA_MINIMA: porcentaje de aciertos necesario para aprobar.
    EXIGIR_EXAMEN: si es true, la capacitación solo se da por completada al aprobar. */
+/* NOMBRE DE LA CAPACITACION: es lo que queda en la columna "Capacitacion" de la
+   hoja de resultados. Si copias este curso para otra capacitacion, cambialo. */
+var NOMBRE_CAPACITACION = "HSE-001 · Reinducción H&S";
+/* TIPOS DE USUARIO: la lista del primer desplegable de la pantalla del examen. */
+var TIPOS_USUARIO = ['Propio', 'Contratista', 'Temporal', 'Visitante'];
+/* SEDES / EMPRESAS: la lista del segundo desplegable. AÑADE AQUI LAS DEMAS, una
+   por linea y entre comillas, tal como quieres que queden escritas en la hoja.
+   La ultima opcion, "Otra", abre una casilla para escribirla a mano: quitala de
+   la lista cuando tengas todas las sedes cargadas. */
+var SEDES = [
+  'AF-NOBSA',
+  'Otra'
+];
 var PREGUNTAS_EXAMEN = 20;
 var NOTA_MINIMA      = 80;
 var EXIGIR_EXAMEN    = true;
@@ -6848,10 +6892,25 @@ document.addEventListener('DOMContentLoaded', function(){
       elRes=document.getElementById('exRes'), elLista=document.getElementById('exLista');
   if(!elDatos || !elPreg || !elRes) return;
   var inNombre=document.getElementById('exNombre'), inCedula=document.getElementById('exCedula'),
+      inTipo=document.getElementById('exTipo'), inEmpresa=document.getElementById('exEmpresa'),
+      inOtra=document.getElementById('exOtra'), campoOtra=document.getElementById('exOtraCampo'),
       elErr=document.getElementById('exErr'), btnIni=document.getElementById('exIniciar'),
       btnCal=document.getElementById('exCalificar'), btnRep=document.getElementById('exRepetir'),
       elCont=document.getElementById('exCont');
   var persona=null, sorteadas=[], respuestas=[], inicio=0;
+
+  /* Los dos desplegables se arman con las listas de arriba: para cambiarlos no
+     hay que tocar el HTML, solo TIPOS_USUARIO y SEDES. */
+  function llenar(sel, lista, vacio){
+    sel.innerHTML = '<option value="">' + vacio + '</option>' +
+      lista.map(function(v){ return '<option>' + v + '</option>'; }).join('');
+  }
+  llenar(inTipo, TIPOS_USUARIO, '— Elige una opción —');
+  llenar(inEmpresa, SEDES, '— Elige tu empresa o sede —');
+  inEmpresa.addEventListener('change', function(){
+    campoOtra.hidden = (inEmpresa.value !== 'Otra');
+    if(campoOtra.hidden) inOtra.value = '';
+  });
 
   document.getElementById('exReglas').textContent =
     'El examen tiene ' + PREGUNTAS_EXAMEN + ' preguntas y se aprueba con ' + NOTA_MINIMA +
@@ -6861,10 +6920,17 @@ document.addEventListener('DOMContentLoaded', function(){
 
   function validar(){
     var n=inNombre.value.trim().replace(/\s+/g,' '), c=inCedula.value.replace(/\D/g,'');
-    inNombre.classList.remove('mal'); inCedula.classList.remove('mal');
+    var t=inTipo.value, emp=inEmpresa.value, otra=inOtra.value.trim().replace(/\s+/g,' ');
+    [inNombre,inCedula,inTipo,inEmpresa,inOtra].forEach(function(x){ x.classList.remove('mal'); });
+    if(!t){ inTipo.classList.add('mal'); return 'Elige el tipo de usuario.'; }
+    if(!emp){ inEmpresa.classList.add('mal'); return 'Elige tu empresa o sede.'; }
+    if(emp === 'Otra'){
+      if(otra.length < 3){ inOtra.classList.add('mal'); return 'Escribe el nombre de la empresa.'; }
+      emp = otra;
+    }
     if(n.length<5 || n.indexOf(' ')<0){ inNombre.classList.add('mal'); return 'Escribe tu nombre y al menos un apellido.'; }
     if(c.length<6 || c.length>12){ inCedula.classList.add('mal'); return 'La cédula debe tener entre 6 y 12 dígitos, sin puntos ni espacios.'; }
-    persona = { nombre:n, cedula:c };
+    persona = { nombre:n, cedula:c, tipo:t, empresa:emp };
     return '';
   }
 
@@ -6934,7 +7000,9 @@ document.addEventListener('DOMContentLoaded', function(){
     var e = validar(); elErr.textContent = e; if(e) return;
     sorteadas = sortear(); respuestas = new Array(sorteadas.length); inicio = Date.now();
     document.getElementById('exQuien').innerHTML =
-      '<b>' + persona.nombre + '</b> · C.C. ' + persona.cedula + ' — se aprueba con ' + NOTA_MINIMA + '% o más.';
+      '<b>' + persona.nombre + '</b> · C.C. ' + persona.cedula +
+      ' · ' + persona.tipo + ' · ' + persona.empresa +
+      ' — se aprueba con ' + NOTA_MINIMA + '% o más.';
     pintar(); fase('preguntas');
     try{ elPreg.scrollIntoView({block:'start'}); }catch(err){}
   });
@@ -6981,6 +7049,7 @@ document.addEventListener('DOMContentLoaded', function(){
     document.getElementById('exVeredicto').textContent = aprobo ? '¡Aprobado!' : 'No aprobado';
     document.getElementById('exDetalle').innerHTML =
       '<b>' + persona.nombre + '</b> · C.C. ' + persona.cedula + '<br>' +
+      persona.tipo + ' · ' + persona.empresa + '<br>' +
       aciertos + ' de ' + sorteadas.length + ' respuestas correctas · nota mínima ' + NOTA_MINIMA + '%.' +
       (aprobo ? '<br>Ya puedes <b>cerrar esta ventana</b>: tu resultado quedó registrado.'
               : '<br>Revisa abajo las preguntas falladas y presenta el examen de nuevo.');
@@ -7000,6 +7069,11 @@ document.addEventListener('DOMContentLoaded', function(){
     try{ elRes.scrollIntoView({block:'start'}); }catch(e){}
     guardar({
       nombre: persona.nombre, cedula: persona.cedula,
+      tipoUsuario: persona.tipo, empresa: persona.empresa,
+      capacitacion: NOMBRE_CAPACITACION,
+      puntaje: pct + '%', resultado: aprobo ? 'APROBADO' : 'NO APROBADO',
+      /* "Vinculo": el enlace desde donde se presentó el examen. */
+      vinculo: (function(){ try{ return location.href.split('#')[0]; }catch(e){ return ''; } })(),
       fecha: new Date().toLocaleString('es-CO'),
       aciertos: aciertos, total: sorteadas.length, porcentaje: pct,
       tipo: 'examen', aprobado: aprobo ? 'SÍ' : 'NO', segundos: seg,
