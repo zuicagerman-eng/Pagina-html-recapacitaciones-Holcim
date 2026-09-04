@@ -79,6 +79,9 @@ var CERTIFICADOS_PUBLICOS = false;
 
 var NOMBRE_HOJA     = "HSE-001 · Resultados examen";
 var PESTANA_RESUMEN = "Resultados";
+/* El detalle pregunta por pregunta ya NO va en la hoja: va en el PDF del
+   certificado, a partir de la hoja 2. Este nombre queda solo para la funcion
+   borrarPestanaRespuestas(), que limpia la pestana vieja si aun existe. */
 var PESTANA_DETALLE = "Respuestas";
 
 /* Columnas de la pestaña de resumen, en este orden.
@@ -127,10 +130,6 @@ function obtenerHoja_() {
   r.appendRow(COLUMNAS_RESUMEN);
   r.setFrozenRows(1);
 
-  var d = ss.insertSheet(PESTANA_DETALLE);
-  d.appendRow(['Fecha', 'Nombre', 'Cédula', 'N° pregunta', 'Módulo', 'Pregunta',
-               'Respuesta marcada', 'Respuesta correcta', '¿Acertó?']);
-  d.setFrozenRows(1);
   return ss;
 }
 
@@ -212,6 +211,32 @@ function escribirPorEncabezado_(hoja, columnas, valores) {
     return (v === undefined || v === null) ? '' : v;
   });
   hoja.appendRow(fila);
+  return hoja.getLastRow();
+}
+
+/** Convierte en hipervínculo la celda de una columna, buscándola por su nombre. */
+function enlazar_(hoja, fila, columna, url) {
+  try {
+    var encabezados = hoja.getRange(1, 1, 1, hoja.getLastColumn()).getValues()[0].map(String);
+    var col = encabezados.indexOf(columna) + 1;
+    if (!col) return;
+    var texto = SpreadsheetApp.newRichTextValue().setText(url).setLinkUrl(url).build();
+    hoja.getRange(fila, col).setRichTextValue(texto);
+  } catch (e) { /* si no se puede, la celda queda con la URL en texto plano */ }
+}
+
+/**
+ * Ejecútala UNA VEZ desde el editor si quieres borrar la pestaña "Respuestas"
+ * que usaban las versiones anteriores. Ese detalle ahora va en el PDF del
+ * certificado, a partir de la hoja 2. Borra datos: solo córrela si ya no los
+ * necesitas.
+ */
+function borrarPestanaRespuestas() {
+  var ss = obtenerHoja_();
+  var h = ss.getSheetByName(PESTANA_DETALLE);
+  if (!h) { Logger.log('No hay ninguna pestaña "' + PESTANA_DETALLE + '".'); return; }
+  ss.deleteSheet(h);
+  Logger.log('Pestaña "' + PESTANA_DETALLE + '" borrada.');
 }
 
 /**
@@ -250,21 +275,13 @@ function guardarExamen(d) {
     'Porcentaje': d.porcentaje,
     'Aprobado': d.aprobado
   };
-  escribirPorEncabezado_(pestana_(ss, PESTANA_RESUMEN, COLUMNAS_RESUMEN),
-                         COLUMNAS_RESUMEN, valores);
+  var hoja = pestana_(ss, PESTANA_RESUMEN, COLUMNAS_RESUMEN);
+  var fila = escribirPorEncabezado_(hoja, COLUMNAS_RESUMEN, valores);
 
-  var respuestas = d.respuestas || [];
-  if (respuestas.length) {
-    var detalle = pestana_(ss, PESTANA_DETALLE,
-      ['Fecha', 'Nombre', 'Cédula', 'N° pregunta', 'Módulo', 'Pregunta',
-       'Respuesta marcada', 'Respuesta correcta', '¿Acertó?']);
-    var filas = respuestas.map(function (r) {
-      return [fecha, d.nombre || '', "'" + (d.cedula || ''), r.n, r.modulo,
-              r.pregunta, r.respondio, r.correcta, r.acierto ? 'SÍ' : 'NO'];
-    });
-    detalle.getRange(detalle.getLastRow() + 1, 1, filas.length, filas[0].length)
-           .setValues(filas);
-  }
+  /* El enlace del certificado se deja como hipervinculo de verdad: el texto de
+     la celda sigue siendo la direccion, pero es clicable. */
+  if (enlaceCert) enlazar_(hoja, fila, 'Vinculo', enlaceCert);
+
   return { ok: true };
 }
 

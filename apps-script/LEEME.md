@@ -280,3 +280,25 @@ le falten (`Tipo_Usuario`, `ID_Identificacion`, `Nombre_Completo`, `Empresa`,
 su columna **por el nombre del encabezado**. Si quieres el orden del formato
 impreso, reordena las columnas a mano en la hoja: el script las seguirá
 encontrando igual.
+
+### La pestaña "Respuestas" ya no se usa
+
+El detalle pregunta por pregunta **ya no se escribe en la hoja**: va dentro del
+PDF del certificado, a partir de la hoja 2, con lo que marcó la persona y cuál
+era la correcta.
+
+Si en tu hoja todavía existe la pestaña `Respuestas` de las versiones
+anteriores, el script ya no le escribe nada. Para borrarla, ejecuta una vez la
+función **`borrarPestanaRespuestas`** desde el editor (o bórrala a mano). Ojo:
+borra los datos que tenga.
+
+**Ten en cuenta:** quien NO aprueba no genera certificado, así que de esos
+intentos queda la fila del resumen (fecha, nombre, puntaje, resultado) pero ya
+no el detalle de cada pregunta. Si necesitas ese soporte también para los
+reprobados, avísame y lo generamos aparte.
+
+### El enlace del certificado
+
+La celda de `Vinculo` queda como **hipervínculo**: el texto es la dirección del
+PDF y es clicable. Si por permisos no se pudiera aplicar el formato, la celda
+igual conserva la URL en texto plano.
