@@ -5404,7 +5404,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-07-b";
+var VERSION_CURSO = "2026-09-07-c";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
@@ -6926,6 +6926,7 @@ var DIPLOMA = {
   ancho: 1440, alto: 810,
   fondo: 'imagenes/certificado(D95).png',
   escala: 2,                       // el doble de pixeles: se imprime nitido
+  escalaTexto: 1.7, calidadTexto: 0.82,   // las hojas de preguntas pesan menos
   azul: '#041738', cyan: '#04baf0',
   /* La familia se pide asi para que Windows use Arial Black, que es la del
      original, y macOS o Linux caigan en la mas parecida que tengan. */
@@ -7037,17 +7038,25 @@ function dibujarDiploma(datos){
    Es el PDF mas simple que existe: catalogo, paginas, pagina, la imagen y el
    contenido que la coloca. Se construye a mano para no depender de ninguna
    libreria externa. */
-function lienzoAPdf(lienzo, ancho, alto){
-  var jpg;
-  try{
-    jpg = lienzo.toDataURL('image/jpeg', 0.92).split(',')[1];
-  }catch(e){
-    /* Pasa si la plantilla se sirvio desde otro dominio sin permiso CORS. */
-    throw new Error('el navegador no permitió exportar la imagen del certificado');
-  }
-  var bin = atob(jpg);
-  var datosImg = new Uint8Array(bin.length);
-  for(var i = 0; i < bin.length; i++) datosImg[i] = bin.charCodeAt(i);
+/* Arma un PDF con una pagina por lienzo. Es el PDF mas simple que existe:
+   catalogo, paginas, y por cada hoja su imagen y el contenido que la coloca.
+   Se construye a mano para no depender de ninguna libreria externa. */
+function lienzosAPdf(lienzos, ancho, alto){
+  var imagenes = lienzos.map(function(l){
+    var jpg;
+    try{
+      /* Cada lienzo dice con que calidad quiere guardarse: el certificado es una
+         ilustracion a todo color y necesita mas; las hojas de texto son casi
+         todo blanco y con menos quedan igual de legibles y pesan la mitad. */
+      jpg = l.toDataURL('image/jpeg', l.__calidad || 0.9).split(',')[1];
+    }catch(e){
+      /* Pasa si la plantilla se sirvio desde otro dominio sin permiso CORS. */
+      throw new Error('el navegador no permitió exportar la imagen del certificado');
+    }
+    var bin = atob(jpg), bytes = new Uint8Array(bin.length);
+    for(var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return { bytes: bytes, w: l.width, h: l.height };
+  });
 
   var trozos = [], largo = 0, posiciones = [];
   function meter(x){
@@ -7061,34 +7070,156 @@ function lienzoAPdf(lienzo, ancho, alto){
     meter('endobj\n');
   }
 
+  /* Numeracion: 1 catalogo, 2 lista de paginas, y luego tres objetos por hoja
+     (la pagina, su imagen y su contenido). */
+  var n = imagenes.length;
+  function objPagina(i){ return 3 + i * 3; }
+  function objImagen(i){ return 4 + i * 3; }
+  function objContenido(i){ return 5 + i * 3; }
+
   meter('%PDF-1.4\n%\xE2\xE3\xCF\xD3\n');
   objeto(1, '<</Type/Catalog/Pages 2 0 R>>');
-  objeto(2, '<</Type/Pages/Kids[3 0 R]/Count 1>>');
-  objeto(3, '<</Type/Page/Parent 2 0 R/MediaBox[0 0 ' + ancho + ' ' + alto + ']' +
-            '/Resources<</XObject<</I0 4 0 R>>>>/Contents 5 0 R>>');
-  objeto(4, '<</Type/XObject/Subtype/Image/Width ' + lienzo.width +
-            '/Height ' + lienzo.height + '/ColorSpace/DeviceRGB/BitsPerComponent 8' +
-            '/Filter/DCTDecode/Length ' + datosImg.length + '>>', datosImg);
-  var contenido = 'q ' + ancho + ' 0 0 ' + alto + ' 0 0 cm /I0 Do Q';
-  objeto(5, '<</Length ' + contenido.length + '>>', contenido);
+  var hijos = imagenes.map(function(_, i){ return objPagina(i) + ' 0 R'; }).join(' ');
+  objeto(2, '<</Type/Pages/Kids[' + hijos + ']/Count ' + n + '>>');
 
+  imagenes.forEach(function(im, i){
+    objeto(objPagina(i),
+      '<</Type/Page/Parent 2 0 R/MediaBox[0 0 ' + ancho + ' ' + alto + ']' +
+      '/Resources<</XObject<</I0 ' + objImagen(i) + ' 0 R>>>>' +
+      '/Contents ' + objContenido(i) + ' 0 R>>');
+    objeto(objImagen(i),
+      '<</Type/XObject/Subtype/Image/Width ' + im.w + '/Height ' + im.h +
+      '/ColorSpace/DeviceRGB/BitsPerComponent 8/Filter/DCTDecode/Length ' +
+      im.bytes.length + '>>', im.bytes);
+    var contenido = 'q ' + ancho + ' 0 0 ' + alto + ' 0 0 cm /I0 Do Q';
+    objeto(objContenido(i), '<</Length ' + contenido.length + '>>', contenido);
+  });
+
+  var total = 2 + n * 3;
   var inicioXref = largo;
-  var xref = 'xref\n0 6\n0000000000 65535 f \n';
-  for(var n = 1; n <= 5; n++){
-    xref += ('0000000000' + posiciones[n]).slice(-10) + ' 00000 n \n';
+  var xref = 'xref\n0 ' + (total + 1) + '\n0000000000 65535 f \n';
+  for(var k = 1; k <= total; k++){
+    xref += ('0000000000' + posiciones[k]).slice(-10) + ' 00000 n \n';
   }
   meter(xref);
-  meter('trailer\n<</Size 6/Root 1 0 R>>\nstartxref\n' + inicioXref + '\n%%EOF\n');
+  meter('trailer\n<</Size ' + (total + 1) + '/Root 1 0 R>>\nstartxref\n' + inicioXref + '\n%%EOF\n');
 
   return new Blob(trozos, { type: 'application/pdf' });
 }
 
+/* ====== HOJAS DE PREGUNTAS Y RESPUESTAS ======
+   Van despues del certificado, en el mismo PDF. Son el soporte del examen:
+   cada pregunta con lo que marco la persona y, si fallo, cual era la correcta.
+   Se reparten en dos columnas y se pasa de hoja cuando se acaba el alto. */
+
+/* Parte un texto en lineas de un ancho dado, con la fuente ya puesta en cx. */
+function lineasDe(cx, txt, ancho){
+  var palabras = String(txt).split(/\s+/), lineas = [], actual = '';
+  palabras.forEach(function(w){
+    var prueba = actual ? actual + ' ' + w : w;
+    if(cx.measureText(prueba).width <= ancho || !actual) actual = prueba;
+    else { lineas.push(actual); actual = w; }
+  });
+  if(actual) lineas.push(actual);
+  return lineas;
+}
+
+function dibujarRespuestas(datos){
+  var D = DIPLOMA, e = D.escalaTexto, A = D.ancho, H = D.alto;
+  var MARGEN = 60, COLS = 2, HUECO = 34;
+  var anchoCol = (A - MARGEN * 2 - HUECO * (COLS - 1)) / COLS;
+  var ARRIBA = 132, ABAJO = H - 46;
+  var lienzos = [], cx = null, col = 0, y = 0, hoja = 0;
+
+  function nuevaHoja(){
+    var l = document.createElement('canvas');
+    l.width = A * e; l.height = H * e;
+    l.__calidad = D.calidadTexto;
+    cx = l.getContext('2d'); cx.scale(e, e); cx.textBaseline = 'top';
+    lienzos.push(l); hoja++;
+    // franja de encabezado con los datos de la persona
+    cx.fillStyle = '#fff'; cx.fillRect(0, 0, A, H);
+    cx.fillStyle = D.azul; cx.fillRect(0, 0, A, 96);
+    cx.fillStyle = '#fff';
+    cx.font = '900 27px ' + D.negra;
+    cx.fillText('Detalle del examen', MARGEN, 22);
+    cx.font = '700 15px ' + D.gorda;
+    cx.fillStyle = '#bcd8ef';
+    cx.fillText(datos.nombre + '  ·  C.C. ' + datos.cedula + '  ·  ' + datos.empresa +
+                '  ·  ' + datos.fecha, MARGEN, 58);
+    var marca = datos.resultado + '  ·  ' + datos.puntaje +
+                '  (' + datos.aciertos + ' de ' + datos.total + ')';
+    cx.font = '900 17px ' + D.negra;
+    cx.fillStyle = (datos.resultado === 'APROBADO') ? '#8ede9d' : '#ff9c95';
+    cx.textAlign = 'right'; cx.fillText(marca, A - MARGEN, 36); cx.textAlign = 'left';
+    col = 0; y = ARRIBA;
+  }
+
+  /* Calcula cuanto alto ocupa una pregunta antes de decidir si cabe. */
+  function alto(d){
+    cx.font = '700 14.5px ' + D.gorda;
+    var h = lineasDe(cx, d.n + '. ' + d.pregunta, anchoCol).length * 20 + 6;
+    cx.font = '400 13.5px ' + D.gorda;
+    h += lineasDe(cx, 'Tu respuesta: ' + d.respondio, anchoCol - 20).length * 18;
+    if(!d.acierto) h += lineasDe(cx, 'Correcta: ' + d.correcta, anchoCol - 20).length * 18;
+    return h + 16;
+  }
+
+  function escribir(d){
+    var x = MARGEN + col * (anchoCol + HUECO);
+    cx.fillStyle = D.azul; cx.font = '700 14.5px ' + D.gorda;
+    lineasDe(cx, d.n + '. ' + d.pregunta, anchoCol).forEach(function(l){
+      cx.fillText(l, x, y); y += 20;
+    });
+    y += 6;
+    // punto de color: verde si acerto, rojo si no
+    cx.fillStyle = d.acierto ? '#2e9c4e' : '#d0342c';
+    cx.beginPath(); cx.arc(x + 5, y + 7, 5, 0, 6.284); cx.fill();
+    cx.font = '400 13.5px ' + D.gorda;
+    cx.fillStyle = d.acierto ? '#2e7d43' : '#b32b24';
+    lineasDe(cx, (d.acierto ? '' : 'Tu respuesta: ') + d.respondio, anchoCol - 20)
+      .forEach(function(l){ cx.fillText(l, x + 20, y); y += 18; });
+    if(!d.acierto){
+      cx.fillStyle = '#2e7d43';
+      lineasDe(cx, 'Correcta: ' + d.correcta, anchoCol - 20)
+        .forEach(function(l){ cx.fillText(l, x + 20, y); y += 18; });
+    }
+    y += 16;
+  }
+
+  nuevaHoja();
+  (datos.respuestas || []).forEach(function(d){
+    var h = alto(d);
+    if(y + h > ABAJO){
+      col++;
+      if(col >= COLS) nuevaHoja(); else y = ARRIBA;
+    }
+    escribir(d);
+  });
+
+  // pie con la numeracion de hojas
+  lienzos.forEach(function(l, i){
+    var c = l.getContext('2d');
+    c.font = '700 12px ' + DIPLOMA.gorda; c.fillStyle = '#7c8ea3'; c.textAlign = 'right';
+    c.fillText('Hoja ' + (i + 2) + ' de ' + (lienzos.length + 1) + '  ·  ' + datos.capacitacion,
+               (A - MARGEN) , H - 30);
+    c.textAlign = 'left';
+  });
+  return lienzos;
+}
+
 /* Arma el certificado una sola vez y lo deja en memoria: sirve tanto para la
-   descarga como para mandarlo a Drive, sin dibujarlo dos veces. */
+   descarga como para mandarlo a Drive, sin dibujarlo dos veces.
+   Hoja 1: el certificado. Hojas siguientes: el detalle del examen. */
 function prepararDiploma(datos){
   if(datos.__blob) return Promise.resolve(datos.__blob);
   return dibujarDiploma(datos).then(function(lienzo){
-    datos.__blob = lienzoAPdf(lienzo, DIPLOMA.ancho, DIPLOMA.alto);
+    var hojas = [lienzo];
+    if(datos.respuestas && datos.respuestas.length){
+      try{ hojas = hojas.concat(dibujarRespuestas(datos)); }
+      catch(e){ /* si el detalle falla, al menos sale el certificado */ }
+    }
+    datos.__blob = lienzosAPdf(hojas, DIPLOMA.ancho, DIPLOMA.alto);
     return datos.__blob;
   });
 }
@@ -7316,7 +7447,9 @@ document.addEventListener('DOMContentLoaded', function(){
       marcarCompletado();
       datosDip = {
         nombre: persona.nombre, cedula: persona.cedula, empresa: persona.empresa,
-        capacitacion: NOMBRE_CAPACITACION, fecha: fechaLarga(new Date())
+        capacitacion: NOMBRE_CAPACITACION, fecha: fechaLarga(new Date()),
+        resultado: 'APROBADO', puntaje: pct + '%',
+        aciertos: aciertos, total: sorteadas.length, respuestas: detalle
       };
       btnDip.textContent = 'Descargar certificado (PDF)';
       btnDip.disabled = false;
