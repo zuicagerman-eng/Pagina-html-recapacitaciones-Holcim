@@ -2762,26 +2762,6 @@
   .wbdots i{width:9px;height:9px;border-radius:50%;background:rgba(140,160,190,.45);transition:.25s}
   .wbdots i.on{background:var(--cyan);transform:scale(1.35)}
 
-  /* 12) EVALUACIÓN Verdadero / Falso */
-  .evrow{background:#fff;border-radius:var(--radius-sm);box-shadow:var(--shadow);padding:14px 16px;
-    display:flex;align-items:center;gap:14px;border:2px solid transparent;transition:border-color .3s}
-  .slide.dark .evrow{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.09)}
-  .evlist{display:flex;flex-direction:column;gap:10px;margin-top:14px}
-  .evq{flex:1;font-size:13.5px;line-height:1.45;color:var(--ink);font-weight:600}
-  .slide.dark .evq{color:#eaf1fb}
-  .evopts{display:flex;gap:8px;flex:none}
-  .evbtn{border:2px solid #d9e2ee;background:#fff;color:var(--muted);border-radius:999px;
-    padding:7px 15px;font-family:var(--font);font-weight:800;font-size:12.5px;cursor:pointer;transition:.2s}
-  .evbtn:hover{border-color:var(--cyan);color:var(--blue)}
-  .evbtn.sel{background:var(--blue);border-color:var(--blue);color:#fff}
-  .evrow.ok,.slide.dark .evrow.ok{border-color:var(--ok)}
-  .evrow.bad,.slide.dark .evrow.bad{border-color:var(--danger)}
-  .evrow.ok .evbtn.sel{background:var(--ok);border-color:var(--ok)}
-  .evrow.bad .evbtn.sel{background:var(--danger);border-color:var(--danger)}
-  .evmark{flex:none;width:26px;height:26px;border-radius:50%;display:none;place-items:center;
-    color:#fff;font-weight:800;font-size:13px}
-  .evrow.ok .evmark{display:grid;background:var(--ok)}
-  .evrow.bad .evmark{display:grid;background:var(--danger)}
   .evfoot{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:18px;flex-wrap:wrap}
   .evbtn-go{background:var(--grad);color:#062038;border:none;border-radius:999px;padding:12px 32px;
     font-family:var(--font);font-weight:800;font-size:15px;cursor:pointer;transition:.2s}
@@ -3001,8 +2981,6 @@
     .flip{height:auto;min-height:196px}
     .exq .qh{font-size:14px} .exopt{font-size:13px}
     /* Verdadero/Falso: el enunciado y los botones se apilan para que quepan */
-    .evrow{flex-direction:column;align-items:stretch;gap:10px}
-    .evopts{width:100%} .evbtn{flex:1}
     /* La rejilla de la diapositiva 57 y similares tampoco fuerza dos columnas */
     .pr,.jerpanel,.lcard{max-width:100%}
     /* El aviso azul era flex y su texto no podía encogerse: con grid sí ajusta */
@@ -3044,35 +3022,31 @@
 
 
   /* Listas de verdadero/falso y de seleccion (evaluaciones de modulo). */
-  .apretado .evlist,.apretado .mlist{gap:8px;margin-top:10px}
-  .apretado .evrow,.apretado .mrow{padding:10px 13px;gap:10px}
-  .apretado .evq,.apretado .mq{font-size:12.6px;line-height:1.38}
+  .apretado .mlist{gap:8px;margin-top:10px}
+  .apretado .mrow{padding:10px 13px;gap:10px}
+  .apretado .mq{font-size:12.6px;line-height:1.38}
   .apretado .evfoot{margin-top:12px}
-  .muy-apretado .evlist,.muy-apretado .mlist{gap:6px;margin-top:8px}
-  .muy-apretado .evrow,.muy-apretado .mrow{padding:5px 10px;gap:8px}
-  .muy-apretado .evq,.muy-apretado .mq{font-size:12.1px;line-height:1.32}
-  .muy-apretado .evbtn{padding:5px 12px;font-size:11.5px}
+  .muy-apretado .mlist{gap:6px;margin-top:8px}
+  .muy-apretado .mrow{padding:5px 10px;gap:8px}
+  .muy-apretado .mq{font-size:12.1px;line-height:1.32}
   .muy-apretado .evfoot{margin-top:9px}
   .muy-apretado .evbtn-go{padding:9px 26px;font-size:14px}
   @media(max-height:760px){
-    .muy-apretado .evrow,.muy-apretado .mrow{padding:4px 9px}
-    .muy-apretado .evq,.muy-apretado .mq{font-size:11.6px;line-height:1.28}
-    .muy-apretado .evbtn{padding:4px 10px;font-size:11px}
-    .muy-apretado .evlist,.muy-apretado .mlist{gap:5px}
+    .muy-apretado .mrow{padding:4px 9px}
+    .muy-apretado .mq{font-size:11.6px;line-height:1.28}
+    .muy-apretado .mlist{gap:5px}
   }
   /* En pantalla tactil el boton no se encoge: apretar la diapositiva sirve
      para que quepa en un portatil, pero en un celular dejaria el boton por
      debajo del minimo para acertarle con el dedo. Ahi es preferible el
      desplazamiento, que en celular ya es lo normal. */
   @media(pointer:coarse){
-    .muy-apretado .evbtn,.apretado .evbtn{min-height:38px;padding:9px 15px;font-size:12.5px}
-    .muy-apretado .evrow,.apretado .evrow{padding:9px 12px}
   }
   /* Con nueve preguntas en fila no alcanza el alto de un portatil. Solo si
      hace falta, y solo si hay ancho de sobra, se parten en dos columnas:
      en una sola columna se leen mejor, asi que no es el estado normal. */
   @media(min-width:1080px){
-    .apretado .evlist,.apretado .mlist{display:grid;grid-template-columns:repeat(2,1fr);align-content:start}
+    .apretado .mlist{display:grid;grid-template-columns:repeat(2,1fr);align-content:start}
   }
 </style>
 </head>
@@ -5098,13 +5072,6 @@
 </div>
 <div class="banner rv up" style="--d:2">Recuerda que fortalecer tus <b>músculos abdominales</b> puede prevenir y aliviar dolores de espalda.</div>
 </div></section>
-<section class="slide dark teal" data-mod="4">
-<div class="wrap"><div class="eyebrow rv up">Actividad de entrenamiento</div>
-<h2 class="rv up" style="--d:1">Evaluación · Controles Operacionales Complementarios</h2>
-<p class="lead rv up" style="--d:2">Selecciona <b>Verdadero</b> o <b>Falso</b> en cada enunciado y presiona <b>Calificar</b> para conocer tu resultado.</p>
-<div class="evlist" id="evlist"></div>
-<div class="evfoot"><button class="evbtn-go" id="evGo">Calificar</button><div class="evscore" id="evScore"></div></div>
-</div></section>
 <section class="slide dark" data-mod="4">
   <div class="wrap" style="text-align:center">
     <div class="done-badge rv scale"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg></div>
@@ -5360,7 +5327,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-06-f";
+var VERSION_CURSO = "2026-09-06-g";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
@@ -6393,66 +6360,6 @@ function toast(msg){ toastEl.textContent = msg; toastEl.classList.add('show'); c
   ring.classList.add('req');           // barrera: hay que recorrer los 6 pilares
   slider.addEventListener('input', function(){ pintar(+slider.value); });
   pintar(0);
-})();
-
-/* ====== EVALUACIÓN FINAL (Verdadero / Falso) ====== */
-(function(){
-  var cont=document.getElementById('evlist'); if(!cont) return;
-  var Q=[
-   ['La regla del hombre caído busca proteger al peatón cuando se encuentra en el área de riesgo, obligando la detención inmediata del equipo móvil.', true],
-   ['No es necesario garantizar el almacenamiento de sustancias peligrosas según la matriz de compatibilidad.', false],
-   ['El análisis de causas adecuado y el cumplimiento del plan de acción ayudará en la prevención de eventos similares.', true],
-   ['No hacer uso del candado personal de bloqueo es un comportamiento prohibido en la ejecución del procedimiento de aislamiento de energía.', true],
-   ['¿Mejorar la condición osteomuscular de los trabajadores en Holcim a través de prácticas de acondicionamiento físico es el objetivo de ESCALAR?', true],
-   ['Dentro de la protección de máquinas, todos los puntos críticos de atrapamiento deben ser asegurados con guardas.', true],
-   ['Durante las inspecciones, el trabajador debe notificar y reportar las condiciones y actos subestándar, participar y colaborar con la ejecución de inspecciones y acatar las recomendaciones.', true],
-   ['Un trabajador puede detener una actividad ante un riesgo grave inminente.', true],
-   ['¿El cuerpo, la mente, la comunidad, los espacios, las finanzas y la Salud Ocupacional hacen parte de los pilares Wellbeing?', true]
-  ];
-  var resp={}, calificado=false;
-  Q.forEach(function(q,i){
-    var row=document.createElement('div');
-    row.className='evrow rv up';
-    row.innerHTML='<span class="evq">'+(i+1)+'. '+q[0]+'</span>'+
-      '<span class="evopts"><button class="evbtn" data-v="1">Verdadero</button>'+
-      '<button class="evbtn" data-v="0">Falso</button></span><span class="evmark"></span>';
-    row.querySelectorAll('.evbtn').forEach(function(b){
-      b.addEventListener('click', function(){
-        if(calificado) return;
-        row.querySelectorAll('.evbtn').forEach(function(o){o.classList.remove('sel');});
-        b.classList.add('sel'); resp[i]=(b.getAttribute('data-v')==='1');
-      });
-    });
-    cont.appendChild(row);
-  });
-
-  var go=document.getElementById('evGo'), score=document.getElementById('evScore');
-  var lista=Array.prototype.slice.call(cont.children);
-  cont.classList.add('req');           // barrera: hay que calificar para avanzar
-  go.addEventListener('click', function(){
-    if(calificado) return;
-    if(Object.keys(resp).length < Q.length){
-      toast('Responde las '+Q.length+' preguntas antes de calificar');
-      var falta=lista.filter(function(r,i){ return resp[i]===undefined; });
-      falta.forEach(function(r){ r.classList.add('falta'); });
-      setTimeout(function(){ falta.forEach(function(r){ r.classList.remove('falta'); }); }, 3000);
-      try{ falta[0].scrollIntoView({block:'center',behavior:'smooth'}); }catch(e){}
-      return;
-    }
-    calificado=true; var ok=0;
-    Q.forEach(function(q,i){
-      var bien = resp[i]===q[1]; if(bien) ok++;
-      lista[i].classList.add(bien?'ok':'bad');
-      lista[i].querySelector('.evmark').textContent = bien?'✓':'✕';
-    });
-    score.textContent='Resultado: '+ok+' / '+Q.length;
-    score.classList.add('show');
-    score.style.background = (ok>=Math.ceil(Q.length*0.7)) ? 'var(--ok)' : 'var(--danger)';
-    go.textContent='Calificado';
-    go.style.opacity='.6'; go.style.cursor='default';
-    markDone(cont);
-    toast(ok>=Math.ceil(Q.length*0.7) ? '¡Muy bien! '+ok+' de '+Q.length+' correctas' : 'Obtuviste '+ok+' de '+Q.length+'. Repasa lo marcado en rojo.');
-  });
 })();
 
 /* ====== MÓDULO 5 · Controles críticos por PUE ====== */
