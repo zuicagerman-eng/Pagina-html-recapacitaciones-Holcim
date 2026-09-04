@@ -181,8 +181,12 @@ function carpetaCertificados_() {
  * certificado no puede impedir que quede registrado el resultado del examen.
  */
 function guardarCertificado_(d) {
-  if (!d || !d.certificado) return '';
+  if (!d || !d.certificado) {
+    console.warn('El curso no mandó certificado en este intento.');
+    return '';
+  }
   try {
+    console.log('Certificado recibido: ' + Math.round(d.certificado.length * 3 / 4 / 1024) + ' KB');
     var bytes = Utilities.base64Decode(d.certificado);
     var nombre = (d.nombre || 'Sin nombre') + ' - ' + (d.cedula || 's-c') + ' - ' +
                  Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd HHmm') + '.pdf';
@@ -193,8 +197,13 @@ function guardarCertificado_(d) {
         archivo.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
       } catch (e) { /* la organización puede tener prohibido compartir hacia fuera */ }
     }
+    console.log('Certificado guardado: ' + archivo.getUrl());
     return archivo.getUrl();
   } catch (e) {
+    /* Queda en el registro de Ejecuciones, que es donde se puede mirar despues.
+       Se devuelve vacio a proposito: perder el PDF no puede impedir que quede
+       registrado el resultado del examen. */
+    console.error('No se pudo guardar el certificado: ' + e.message);
     return '';
   }
 }
@@ -288,12 +297,7 @@ function guardarExamen(d) {
     'Aciertos': d.aciertos,
     'Total': d.total,
     'Duración (s)': d.segundos,
-    'Navegador': d.navegador || '',
-    // nombres de la versión anterior de la hoja
-    'Nombre': d.nombre || '',
-    'Cédula': "'" + (d.cedula || ''),
-    'Porcentaje': d.porcentaje,
-    'Aprobado': d.aprobado
+    'Navegador': d.navegador || ''
   };
   var hoja = pestana_(ss, PESTANA_RESUMEN, COLUMNAS_RESUMEN);
   var fila = escribirPorEncabezado_(hoja, COLUMNAS_RESUMEN, valores);
@@ -302,7 +306,7 @@ function guardarExamen(d) {
      la celda sigue siendo la direccion, pero es clicable. */
   if (enlaceCert) enlazar_(hoja, fila, 'Vinculo', enlaceCert);
 
-  return { ok: true };
+  return { ok: true, certificado: enlaceCert ? 'guardado' : (d.certificado ? 'falló' : 'no llegó') };
 }
 
 /**

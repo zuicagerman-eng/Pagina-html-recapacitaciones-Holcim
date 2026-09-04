@@ -5404,7 +5404,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-07-d";
+var VERSION_CURSO = "2026-09-07-e";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
@@ -7279,6 +7279,16 @@ document.addEventListener('DOMContentLoaded', function(){
     sel.innerHTML = '<option value="">' + vacio + '</option>' +
       lista.map(function(v){ return '<option>' + v + '</option>'; }).join('');
   }
+  /* La plantilla del certificado pesa unos 400 KB y solo se usa al final. Se
+     pide apenas se abre la pantalla del examen para que, cuando haya que
+     dibujarla, ya este en la cache del navegador y no toque esperarla. */
+  (function(){
+    try{
+      var rutas = candidatos(DIPLOMA.fondo);
+      var previa = new Image(); previa.crossOrigin = 'anonymous'; previa.src = rutas[0];
+    }catch(e){}
+  })();
+
   llenar(inTipo, TIPOS_USUARIO, '— Elige una opción —');
   llenar(inEmpresa, SEDES, '— Elige tu empresa o sede —');
   inEmpresa.addEventListener('change', function(){
@@ -7489,7 +7499,7 @@ document.addEventListener('DOMContentLoaded', function(){
         if(b64) envio.certificado = b64;
         guardar(envio);
       };
-      setTimeout(function(){ seguir(null); }, 12000);
+      setTimeout(function(){ seguir(null); }, 40000);
       diplomaEnBase64(datosDip).then(seguir).catch(function(){ seguir(null); });
     } else {
       guardar(envio);
@@ -7499,15 +7509,23 @@ document.addEventListener('DOMContentLoaded', function(){
   /* Guarda el intento en la hoja de cálculo a través de Apps Script. Si el curso
      no se está sirviendo desde Apps Script (por ejemplo al probarlo suelto), se
      avisa con claridad de que NO quedó registrado, en vez de fingir que sí. */
+  /* Apps Script responde si pudo archivar el certificado en Drive. Solo se
+     dice algo cuando NO se pudo: si todo salio bien no hay nada que avisar. */
+  function avisoCert(r){
+    if(!r || !r.certificado || r.certificado === 'guardado') return '';
+    return ' (el certificado no se pudo archivar: ' + r.certificado + ')';
+  }
+
   function guardar(datos){
     var caja = document.getElementById('exGuardado');
     caja.className = 'exguardado no';
     caja.textContent = 'Guardando el resultado…';
     if(window.google && google.script && google.script.run){
       google.script.run
-        .withSuccessHandler(function(){
+        .withSuccessHandler(function(r){
           caja.className = 'exguardado ok';
-          caja.textContent = '✓ Resultado registrado a nombre de ' + datos.nombre + ' (C.C. ' + datos.cedula + ').';
+          caja.textContent = '✓ Resultado registrado a nombre de ' + datos.nombre +
+                             ' (C.C. ' + datos.cedula + ').' + avisoCert(r);
         })
         .withFailureHandler(function(err){
           caja.className = 'exguardado no';
@@ -7531,7 +7549,8 @@ document.addEventListener('DOMContentLoaded', function(){
       .then(function(r){
         if(r && r.ok){
           caja.className = 'exguardado ok';
-          caja.textContent = '✓ Resultado registrado a nombre de ' + datos.nombre + ' (C.C. ' + datos.cedula + ').';
+          caja.textContent = '✓ Resultado registrado a nombre de ' + datos.nombre +
+                             ' (C.C. ' + datos.cedula + ').' + avisoCert(r);
         } else {
           throw new Error((r && r.error) || 'respuesta inesperada');
         }
