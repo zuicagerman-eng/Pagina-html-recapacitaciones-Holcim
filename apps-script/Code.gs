@@ -54,6 +54,7 @@ function doGet() {
    Si prefieres usar una hoja que ya tengas, pega su ID abajo (el trozo largo
    de la URL, entre /d/ y /edit) y el script escribirá en esa.
    ═══════════════════════════════════════════════════════════════════════════ */
+/* Igual que la carpeta: acepta el identificador o la URL completa de la hoja. */
 var ID_HOJA = "";   // opcional: déjalo vacío para que el script la cree solo
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -73,7 +74,10 @@ var ID_HOJA = "";   // opcional: déjalo vacío para que el script la cree solo
             son datos personales: no conviene dejarlos abiertos a cualquiera.
      true  → cualquiera con el enlace puede verlo, sin iniciar sesion.
    ═══════════════════════════════════════════════════════════════════════════ */
-var ID_CARPETA_CERTIFICADOS = "";   // opcional: dejalo vacio y se crea sola
+/* Pega aqui TU carpeta. Sirve igual el identificador suelto o la URL completa
+   copiada de la barra del navegador; el script se queda con lo que necesita.
+   Dejalo vacio solo si quieres que el script cree una carpeta el solo. */
+var ID_CARPETA_CERTIFICADOS = "";
 var NOMBRE_CARPETA_CERTIFICADOS = "HSE-001 · Certificados";
 var CERTIFICADOS_PUBLICOS = false;
 
@@ -102,7 +106,7 @@ var COLUMNAS_RESUMEN = [
 /** Devuelve la hoja de cálculo, creándola la primera vez si hace falta. */
 function obtenerHoja_() {
   var props = PropertiesService.getScriptProperties();
-  var id = ID_HOJA || props.getProperty('ID_HOJA');
+  var id = soloId_(ID_HOJA) || props.getProperty('ID_HOJA');
   if (id) {
     try { return SpreadsheetApp.openById(id); } catch (e) { /* si ya no existe, se recrea */ }
   }
@@ -144,10 +148,24 @@ function pestana_(ss, nombre, encabezados) {
   return h;
 }
 
+/**
+ * Acepta tanto el identificador suelto como la URL completa pegada del
+ * navegador, que es lo que uno tiene a mano. Devuelve solo el identificador.
+ *   https://drive.google.com/drive/folders/1AbC...  → 1AbC...
+ *   https://docs.google.com/spreadsheets/d/1AbC.../edit → 1AbC...
+ */
+function soloId_(txt) {
+  txt = String(txt || '').trim();
+  if (!txt) return '';
+  var m = txt.match(/\/folders\/([-\w]{20,})/) || txt.match(/\/d\/([-\w]{20,})/) ||
+          txt.match(/[?&]id=([-\w]{20,})/);
+  return m ? m[1] : txt;
+}
+
 /** Devuelve la carpeta de certificados, creándola la primera vez si hace falta. */
 function carpetaCertificados_() {
   var props = PropertiesService.getScriptProperties();
-  var id = ID_CARPETA_CERTIFICADOS || props.getProperty('ID_CARPETA');
+  var id = soloId_(ID_CARPETA_CERTIFICADOS) || props.getProperty('ID_CARPETA');
   if (id) {
     try { return DriveApp.getFolderById(id); } catch (e) { /* si ya no existe, se recrea */ }
   }

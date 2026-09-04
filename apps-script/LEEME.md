@@ -302,3 +302,27 @@ reprobados, avísame y lo generamos aparte.
 La celda de `Vinculo` queda como **hipervínculo**: el texto es la dirección del
 PDF y es clicable. Si por permisos no se pudiera aplicar el formato, la celda
 igual conserva la URL en texto plano.
+
+### Apuntar a una carpeta que ya tienes
+
+1. Abre tu carpeta en Drive y **copia la URL de la barra del navegador**.
+2. Pégala tal cual en `ID_CARPETA_CERTIFICADOS`, dentro de las comillas:
+
+   ```js
+   var ID_CARPETA_CERTIFICADOS = "https://drive.google.com/drive/folders/1AbC...";
+   ```
+
+   No hace falta recortar nada: el script acepta la URL completa o solo el
+   identificador. Lo mismo vale para `ID_HOJA`.
+3. Guarda y publica una **versión nueva** de la implementación.
+
+### Dónde cae la columna del enlace
+
+El script escribe buscando cada dato **por el nombre del encabezado**, así que
+la columna del enlace queda donde tú pongas el rótulo `Vinculo` en la fila 1.
+
+- Si escribes `Vinculo` en **J1**, el enlace se guarda en la columna J.
+- Si no existe esa columna, el script la crea al final de la hoja.
+
+Vale para todas: puedes ordenar los encabezados como quieras y el script los
+sigue encontrando.
