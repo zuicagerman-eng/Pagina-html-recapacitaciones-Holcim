@@ -363,6 +363,51 @@ function guardarFormulario(d) {
   return { ok: true, pestana: nombre };
 }
 
+/**
+ * ═══════════════════════════════════════════════════════════════════════════
+ * DIAGNÓSTICO · ejecútala desde el editor cuando algo no llegue a la hoja
+ *
+ * Responde las tres preguntas que suelen ser el problema:
+ *   1. ¿A qué hoja y a qué carpeta está apuntando este código?
+ *   2. ¿Qué columnas tiene hoy la hoja?
+ *   3. ¿En qué URL /exec está publicado ESTE código?
+ *
+ * La tercera es la importante: esa URL tiene que ser EXACTAMENTE la misma que
+ * está en la variable REPORTE_URL del index.html. Si no coinciden, el curso le
+ * está hablando a una implementación vieja y por eso no ves los cambios.
+ * ═══════════════════════════════════════════════════════════════════════════
+ */
+function diagnostico() {
+  var lineas = [];
+  try {
+    var ss = obtenerHoja_();
+    lineas.push('Hoja de resultados: ' + ss.getUrl());
+    var h = ss.getSheetByName(PESTANA_RESUMEN);
+    if (h) {
+      var enc = h.getRange(1, 1, 1, Math.max(1, h.getLastColumn())).getValues()[0];
+      lineas.push('Columnas hoy (' + enc.length + '): ' + enc.join(' | '));
+      lineas.push('¿Existe la columna "Vinculo"? ' +
+                  (enc.map(String).indexOf('Vinculo') >= 0 ? 'sí' : 'NO'));
+    } else {
+      lineas.push('OJO: no existe la pestaña "' + PESTANA_RESUMEN + '".');
+    }
+  } catch (e) { lineas.push('ERROR con la hoja: ' + e.message); }
+
+  try {
+    lineas.push('Carpeta de certificados: ' + carpetaCertificados_().getUrl());
+  } catch (e) { lineas.push('ERROR con la carpeta: ' + e.message); }
+
+  try {
+    var url = ScriptApp.getService().getUrl();
+    lineas.push('URL /exec de ESTA implementación: ' + (url || '(sin publicar)'));
+    lineas.push('→ Debe ser idéntica a REPORTE_URL en el index.html de GitHub.');
+  } catch (e) { lineas.push('ERROR con la URL: ' + e.message); }
+
+  var txt = lineas.join('\n');
+  Logger.log(txt);
+  return txt;
+}
+
 /** Ejecútala UNA VEZ desde el editor para ver la URL de la hoja de resultados. */
 function verHojaDeResultados() {
   var url = obtenerHoja_().getUrl();
