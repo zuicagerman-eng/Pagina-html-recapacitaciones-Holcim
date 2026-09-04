@@ -1243,6 +1243,32 @@
     .vibra{grid-template-columns:1fr;gap:16px}
     .vibrafoto{margin-inline:auto}
   }
+  /* ===== Componentes de la gestion de salud: la rueda y los cuatro bloques ===== */
+  .gest{display:grid;grid-template-columns:auto 1fr;gap:clamp(16px,3vw,34px);
+    align-items:center;margin-top:10px}
+  .gestrueda{display:flex;align-items:center;justify-content:center;flex:none}
+  .gestrueda img{width:auto;height:auto;max-width:100%;max-height:var(--r,330px);display:block}
+  .gestrueda svg{width:var(--r,330px);height:var(--r,330px);max-width:100%}
+  .gestcol{display:grid;gap:7px;min-width:0}
+  .gestbloque h3{display:flex;align-items:center;gap:8px;font-size:13.8px;font-weight:800;
+    color:#5f9e14;line-height:1.2;margin-bottom:1px}
+  .slide.dark .gestbloque h3{color:var(--green)}
+  .gestnum{width:23px;height:23px;border-radius:50%;background:var(--panel);color:#fff;
+    display:grid;place-items:center;font-size:12.4px;flex:none}
+  .gestbloque .lineat{padding-left:22px}
+  .gestbloque .lineat li{font-size:12.3px;padding:3px 0 3px 15px;border-bottom:0}
+  .gestbloque .lineat li:before{width:11px;height:11px;top:calc(50% - 5px);left:-6px}
+  .gestbloque .lineat:before{left:4px;top:8px;bottom:8px;width:2px}
+  .apretado .gest{--r:280px} .apretado .gestbloque h3{font-size:13px}
+  .apretado .gestbloque .lineat li{font-size:11.7px;padding:2px 0 2px 15px}
+  .muy-apretado .gest{--r:238px} .muy-apretado .gestbloque h3{font-size:12.3px}
+  .muy-apretado .gestbloque .lineat li{font-size:11.1px;line-height:1.34}
+  .ultra .gest{--r:200px} .ultra .gestbloque h3{font-size:11.6px}
+  .ultra .gestbloque .lineat li{font-size:10.5px}
+  @media(max-width:900px){
+    .gest{grid-template-columns:1fr;justify-items:center}
+    .gestcol{width:100%}
+  }
   @media(max-width:900px){
     .audi{grid-template-columns:1fr}
     .audifoto{max-width:380px}
@@ -4829,8 +4855,44 @@
 <section class="slide light" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">Otros controles de salud</div>
 <h2 class="rv up" style="--d:1">Componentes de la Gestión de Salud en el Trabajo</h2>
-<p class="lead rv up" style="--d:2">Toca cada componente para ver su detalle. 👆</p>
-<div class="accgrid" style="margin-top:14px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>1 · Higiene Industrial</h4><span class="chev">+</span></div><div class="acc-body"><div class="li"><span class="b"></span>Diseño y estandarización del Programa de Higiene Industrial.</div><div class="li"><span class="b"></span>Diagnóstico de riesgos higiénicos prioritarios.</div><div class="li"><span class="b"></span>Planes de acción resultantes (jerarquía de controles).</div></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1bb4e4"></span><h4>2 · Exámenes Médicos Ocupacionales</h4><span class="chev">+</span></div><div class="acc-body"><div class="li"><span class="b"></span>Definición de la matriz de exámenes médicos por cargo.</div><div class="li"><span class="b"></span>Tipos de exámenes médicos ocupacionales.</div><div class="li"><span class="b"></span>Condiciones médico-laborales y aptitud médica.</div><div class="li"><span class="b"></span>Diagnóstico de condiciones de salud · análisis epidemiológico.</div></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#5b7fb5"></span><h4>3 · Medicina Preventiva</h4><span class="chev">+</span></div><div class="acc-body"><div class="li"><span class="b"></span>Análisis de ausentismo.</div><div class="li"><span class="b"></span>Sistemas de Vigilancia Médica: osteomuscular, auditivo, respiratorio, psicosocial, visual y cardiovascular.</div><div class="li"><span class="b"></span>Campañas de promoción y prevención.</div><div class="li"><span class="b"></span>Certificación empresa saludable (Fundación Colombiana del Corazón).</div></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#0e2c56"></span><h4>4 · Rehabilitación y Reincorporación Laboral</h4><span class="chev">+</span></div><div class="acc-body"><div class="li"><span class="b"></span>Identificación de casos médicos: exámenes, ausentismo y reportes.</div><div class="li"><span class="b"></span>Implementación del programa y seguimiento.</div></div></div></div>
+<div class="gest rv up" style="--d:2">
+  <span class="ph gestrueda" data-foto="rueda(D72)"><svg viewBox="0 0 200 200" aria-hidden="true"><path d="M100 100V16a84 84 0 0 1 84 84z" fill="#8cc63e" stroke="none"/><path d="M100 100h84a84 84 0 0 1-84 84z" fill="#1bb4e4" stroke="none"/><path d="M100 100v84a84 84 0 0 1-84-84z" fill="#7d868c" stroke="none"/><path d="M100 100H16a84 84 0 0 1 84-84z" fill="#0e2c56" stroke="none"/><circle cx="100" cy="100" r="84" fill="none" stroke="#fff" stroke-width="3"/><path d="M100 16v168M16 100h168" stroke="#fff" stroke-width="3"/></svg></span>
+  <div class="gestcol">
+    <div class="gestbloque">
+      <h3><span class="gestnum">1</span>Higiene Industrial</h3>
+      <ul class="lineat">
+        <li>Diseño y estandarización del <b>Programa de Higiene Industrial</b>.</li>
+        <li>Diagnóstico de <b>riesgos higiénicos prioritarios</b>.</li>
+        <li>Planes de acción resultantes (<b>jerarquía de controles</b>).</li>
+      </ul>
+    </div>
+    <div class="gestbloque">
+      <h3><span class="gestnum">2</span>Exámenes Médicos Ocupacionales</h3>
+      <ul class="lineat">
+        <li>Definición de la <b>matriz de exámenes médicos por cargo</b>.</li>
+        <li>Tipos de exámenes médicos ocupacionales.</li>
+        <li>Definición, condiciones médico-laborales y <b>aptitud médica</b>.</li>
+        <li>Diagnóstico de condiciones de salud · <b>análisis epidemiológico</b>.</li>
+      </ul>
+    </div>
+    <div class="gestbloque">
+      <h3><span class="gestnum">3</span>Medicina Preventiva</h3>
+      <ul class="lineat">
+        <li>Análisis de <b>ausentismo</b>.</li>
+        <li>Sistemas de Vigilancia Médica: <i>osteomuscular, auditivo, respiratorio, psicosocial y cardiovascular</i>.</li>
+        <li>Campañas de <b>promoción y prevención</b>.</li>
+        <li>Certificación <b>empresa saludable</b>: Fundación Colombiana del Corazón.</li>
+      </ul>
+    </div>
+    <div class="gestbloque">
+      <h3><span class="gestnum">4</span>Programa de rehabilitación y Reincorporación Laboral</h3>
+      <ul class="lineat">
+        <li>Identificación de casos médicos: exámenes, ausentismo y reportes.</li>
+        <li>Implementación del <b>programa y seguimiento</b>.</li>
+      </ul>
+    </div>
+  </div>
+</div>
 </div></section>
 <section class="slide dark teal" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">Otros controles de salud</div>
@@ -5133,7 +5195,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-06-b";
+var VERSION_CURSO = "2026-09-06-c";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
