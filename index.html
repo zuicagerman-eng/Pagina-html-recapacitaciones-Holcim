@@ -1310,6 +1310,22 @@
   .ultra .evab{--ico:78px;--is:32px}
   .ultra .evatxt{padding:8px 11px} .ultra .evatxt h3{font-size:11.8px}
   .ultra .evatxt p{font-size:10.6px;line-height:1.3}
+  /* ===== Los doce PUE: senal arriba y franja de color con su nombre ===== */
+  .pues{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;margin-top:12px}
+  .pue{margin:0;display:flex;flex-direction:column;border-radius:10px;overflow:hidden;
+    box-shadow:var(--shadow);min-width:0}
+  .pue .ph{display:flex;align-items:center;justify-content:center;background:#eef1f4;
+    height:var(--ph,104px);padding:5px;flex:none}
+  .pue .ph img{max-width:100%;max-height:100%;width:auto;height:auto;display:block}
+  .pue .ph svg{width:auto;height:100%;max-width:100%}
+  .pue p{margin:0;padding:8px 11px 10px;font-size:12.2px;font-weight:800;line-height:1.26;
+    text-align:center;flex:1;display:block}
+  .apretado .pues{gap:9px} .apretado .pue{--ph:84px}
+  .apretado .pue p{font-size:11.6px;padding:7px 10px 8px}
+  .muy-apretado .pue{--ph:68px} .muy-apretado .pue p{font-size:11px;line-height:1.22}
+  .ultra .pue{--ph:54px} .ultra .pue p{font-size:10.4px;padding:6px 8px 7px}
+  @media(max-width:900px){ .pues{grid-template-columns:repeat(3,1fr)} }
+  @media(max-width:620px){ .pues{grid-template-columns:repeat(2,1fr)} }
   @media(max-width:700px){
     .evab,.evab.inv{grid-template-columns:1fr;gap:7px}
     .evab.inv .evaico{order:0}
@@ -5113,8 +5129,56 @@
 <div class="wrap"><div class="eyebrow rv up">Gestión de Controles Críticos</div>
 <h2 class="rv up" style="--d:1">PUE y CCM</h2>
 <div class="infobanner rv up" style="--d:2"><b>PUE · Evento Prioritario no Deseado.</b> En Holcim, a nivel mundial, aproximadamente el <b>85% de los incidentes críticos y fatalidades</b> están relacionados con los controles críticos. Para evitar los PUE se formulan <b>Controles Críticos</b>.</div>
-<p class="lead rv up">Estos son los <b>12 eventos prioritarios no deseados</b> — toca cada uno. 👆</p>
-<div class="chipgrid"><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#0e2c56">1</span><span class="nm">Caída de Alturas</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#1bb4e4">2</span><span class="nm">Contacto con Energías Peligrosas</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#17868a">3</span><span class="nm">Sepultamiento por Material</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#1877c4">4</span><span class="nm">Fallo de Respuesta a Emergencias</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#e23b32">5</span><span class="nm">Fuego por Combustible Líquido</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#ef7d00">6</span><span class="nm">Colapso Estructural</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#f5b700">7</span><span class="nm">Incidente con Equipo Móvil</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#6a3d9a">8</span><span class="nm">Accidente Fatal de Tráfico</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#97d13b">9</span><span class="nm">Enfermedad Respiratoria</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#e6007e">10</span><span class="nm">Explosión de Molino de Carbón</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#0e6e78">11</span><span class="nm">Contaminación</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#5b7fb5">12</span><span class="nm">Contacto con Harina Caliente</span><span class="tick">✓</span></div></div>
+<div class="pues rv up" style="--d:2">
+  <article class="pue">
+    <span class="ph" data-foto="caida(D80)"><svg viewBox="0 0 90 78" aria-hidden="true"><path d="M45 6l38 66H7z" fill="#f5c400" stroke="#3c4148" stroke-width="4" stroke-linejoin="round"/><path d="M45 20l26 45H19z" fill="#3c4148" stroke="none"/><path d="M45 34v14M45 55h0" stroke="#f5c400" stroke-width="5" stroke-linecap="round"/></svg></span>
+    <p style="background:#0e2c56;color:#fff">Caída de alturas</p>
+  </article>
+  <article class="pue">
+    <span class="ph" data-foto="energias(D80)"><svg viewBox="0 0 90 78" aria-hidden="true"><path d="M45 6l38 66H7z" fill="#f5c400" stroke="#3c4148" stroke-width="4" stroke-linejoin="round"/><path d="M45 20l26 45H19z" fill="#3c4148" stroke="none"/><path d="M45 34v14M45 55h0" stroke="#f5c400" stroke-width="5" stroke-linecap="round"/></svg></span>
+    <p style="background:#1bb4e4;color:#06304a">Contacto con energías peligrosas</p>
+  </article>
+  <article class="pue">
+    <span class="ph" data-foto="sepultamiento(D80)"><svg viewBox="0 0 90 78" aria-hidden="true"><path d="M45 6l38 66H7z" fill="#f5c400" stroke="#3c4148" stroke-width="4" stroke-linejoin="round"/><path d="M45 20l26 45H19z" fill="#3c4148" stroke="none"/><path d="M45 34v14M45 55h0" stroke="#f5c400" stroke-width="5" stroke-linecap="round"/></svg></span>
+    <p style="background:#17868a;color:#fff">Sepultamiento por material</p>
+  </article>
+  <article class="pue">
+    <span class="ph" data-foto="emergencias(D80)"><svg viewBox="0 0 90 78" aria-hidden="true"><path d="M45 6l38 66H7z" fill="#f5c400" stroke="#3c4148" stroke-width="4" stroke-linejoin="round"/><path d="M45 20l26 45H19z" fill="#3c4148" stroke="none"/><path d="M45 34v14M45 55h0" stroke="#f5c400" stroke-width="5" stroke-linecap="round"/></svg></span>
+    <p style="background:#1877c4;color:#fff">Fallo de respuesta a emergencias</p>
+  </article>
+  <article class="pue">
+    <span class="ph" data-foto="combustible(D80)"><svg viewBox="0 0 90 78" aria-hidden="true"><path d="M45 6l38 66H7z" fill="#f5c400" stroke="#3c4148" stroke-width="4" stroke-linejoin="round"/><path d="M45 20l26 45H19z" fill="#3c4148" stroke="none"/><path d="M45 34v14M45 55h0" stroke="#f5c400" stroke-width="5" stroke-linecap="round"/></svg></span>
+    <p style="background:#e23b32;color:#fff">Fuego por combustible líquido</p>
+  </article>
+  <article class="pue">
+    <span class="ph" data-foto="colapso(D80)"><svg viewBox="0 0 90 78" aria-hidden="true"><path d="M45 6l38 66H7z" fill="#f5c400" stroke="#3c4148" stroke-width="4" stroke-linejoin="round"/><path d="M45 20l26 45H19z" fill="#3c4148" stroke="none"/><path d="M45 34v14M45 55h0" stroke="#f5c400" stroke-width="5" stroke-linecap="round"/></svg></span>
+    <p style="background:#ef7d00;color:#fff">Colapso estructural</p>
+  </article>
+  <article class="pue">
+    <span class="ph" data-foto="equipomovil(D80)"><svg viewBox="0 0 90 78" aria-hidden="true"><path d="M45 6l38 66H7z" fill="#f5c400" stroke="#3c4148" stroke-width="4" stroke-linejoin="round"/><path d="M45 20l26 45H19z" fill="#3c4148" stroke="none"/><path d="M45 34v14M45 55h0" stroke="#f5c400" stroke-width="5" stroke-linecap="round"/></svg></span>
+    <p style="background:#f5b700;color:#3a2a00">Incidente con equipo móvil</p>
+  </article>
+  <article class="pue">
+    <span class="ph" data-foto="trafico(D80)"><svg viewBox="0 0 90 78" aria-hidden="true"><path d="M45 6l38 66H7z" fill="#f5c400" stroke="#3c4148" stroke-width="4" stroke-linejoin="round"/><path d="M45 20l26 45H19z" fill="#3c4148" stroke="none"/><path d="M45 34v14M45 55h0" stroke="#f5c400" stroke-width="5" stroke-linecap="round"/></svg></span>
+    <p style="background:#6b2fa0;color:#fff">Accidente fatal de tráfico</p>
+  </article>
+  <article class="pue">
+    <span class="ph" data-foto="respiratoria(D80)"><svg viewBox="0 0 90 78" aria-hidden="true"><path d="M45 6l38 66H7z" fill="#f5c400" stroke="#3c4148" stroke-width="4" stroke-linejoin="round"/><path d="M45 20l26 45H19z" fill="#3c4148" stroke="none"/><path d="M45 34v14M45 55h0" stroke="#f5c400" stroke-width="5" stroke-linecap="round"/></svg></span>
+    <p style="background:#8cc63e;color:#123008">Enfermedad respiratoria</p>
+  </article>
+  <article class="pue">
+    <span class="ph" data-foto="molino(D80)"><svg viewBox="0 0 90 78" aria-hidden="true"><path d="M45 6l38 66H7z" fill="#f5c400" stroke="#3c4148" stroke-width="4" stroke-linejoin="round"/><path d="M45 20l26 45H19z" fill="#3c4148" stroke="none"/><path d="M45 34v14M45 55h0" stroke="#f5c400" stroke-width="5" stroke-linecap="round"/></svg></span>
+    <p style="background:#e6007e;color:#fff">Explosión de molino de carbón</p>
+  </article>
+  <article class="pue">
+    <span class="ph" data-foto="contaminacion(D80)"><svg viewBox="0 0 90 78" aria-hidden="true"><path d="M45 6l38 66H7z" fill="#f5c400" stroke="#3c4148" stroke-width="4" stroke-linejoin="round"/><path d="M45 20l26 45H19z" fill="#3c4148" stroke="none"/><path d="M45 34v14M45 55h0" stroke="#f5c400" stroke-width="5" stroke-linecap="round"/></svg></span>
+    <p style="background:#0f7f86;color:#fff">Contaminación</p>
+  </article>
+  <article class="pue">
+    <span class="ph" data-foto="harina(D80)"><svg viewBox="0 0 90 78" aria-hidden="true"><path d="M45 6l38 66H7z" fill="#f5c400" stroke="#3c4148" stroke-width="4" stroke-linejoin="round"/><path d="M45 20l26 45H19z" fill="#3c4148" stroke="none"/><path d="M45 34v14M45 55h0" stroke="#f5c400" stroke-width="5" stroke-linecap="round"/></svg></span>
+    <p style="background:#5f7fae;color:#fff">Contacto con harina caliente</p>
+  </article>
+</div>
 <div class="banner rv up" style="--d:2"><b>Gestión de Controles Críticos (CCM):</b> método práctico para mejorar la gestión sobre nuestros riesgos más altos, enfocándose en los controles de los mismos.</div>
 </div></section>
 <section class="slide dark" data-mod="5">
@@ -5331,7 +5395,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-06-h";
+var VERSION_CURSO = "2026-09-06-i";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
