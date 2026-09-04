@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HSE-001 · Reinducción H&S · Módulos 1 a 5</title>
+<title>HSE-001 · Reinducción H&S · Módulos 1 a 6</title>
 <script src="https://player.vimeo.com/api/player.js"></script>
 <style>
   :root{
@@ -3054,6 +3054,13 @@
      mas barato poner tres columnas: cinco tarjetas pasan de tres filas a dos
      y caben sin tocarles el alto. */
   .apretado .flips{gap:12px}
+  /* Ocho tarjetas en tres columnas son tres filas y no caben en un portatil.
+     En cuatro columnas son dos filas justas, sin encoger el texto. */
+  @media(min-width:1000px){ .flips.flips8{grid-template-columns:repeat(4,1fr)} }
+  .apretado .flips8 .flip{height:206px}
+  .muy-apretado .flips8 .flip{height:180px}
+  .slide.ultra .flips8 .flip{height:158px}
+  .slide.ultra .flips8 .face{padding:13px}
   .apretado .flip,.apretado .flip.conFoto,.apretado .flips-foto .flip.conFoto{height:186px}
   @media(min-width:1180px){
     .muy-apretado .flips{grid-template-columns:repeat(3,1fr)}
@@ -5259,18 +5266,116 @@
 <section class="slide dark teal" data-mod="5">
   <div class="wrap" style="text-align:center">
     <div class="done-badge rv scale"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg></div>
-    <div class="eyebrow rv up" style="--d:1">Reinducción H&amp;S completada</div>
-    <h2 class="rv up" style="--d:2">¡Felicitaciones! Terminaste la reinducción.</h2>
-    <p class="lead rv up" style="--d:3;max-width:58ch;margin:14px auto 0">Completaste los <b>Módulos 1 a 5</b> de la Reinducción en Salud y Seguridad. Solo falta el <b>examen final</b>: presiona <b>Siguiente →</b> para presentarlo.</p>
-    <div class="recap rv up" style="--d:4"><span class="chip">Módulo 1</span><span class="chip">Módulo 2</span><span class="chip">Módulo 3</span><span class="chip">Módulo 4</span><span class="chip">Módulo 5</span><span class="chip">¡Cero daños!</span></div>
+    <div class="eyebrow rv up" style="--d:1">Módulo 5 completado</div>
+    <h2 class="rv up" style="--d:2">¡Excelente! Terminaste los controles críticos.</h2>
+    <p class="lead rv up" style="--d:3;max-width:58ch;margin:14px auto 0">Continúa con el <b>Módulo 6: Comunicación, participación y consulta</b> usando el botón <b>Siguiente →</b>.</p>
+    <div class="recap rv up" style="--d:4"><span class="chip">Módulo 1</span><span class="chip">Módulo 2</span><span class="chip">Módulo 3</span><span class="chip">Módulo 4</span><span class="chip">Módulo 5</span></div>
   </div>
 </section>
-<section class="slide dark nogate" data-mod="EX">
+<section class="slide dark" data-mod="6">
+  <div class="blob b1"></div><div class="blob b2"></div>
+  <div class="wrap">
+    <div class="heroSplit portadaMod">
+      <div class="heroTxt">
+    <div class="eyebrow rv up">Salud &amp; Seguridad · 2026 · Módulo 6</div>
+    <div class="hero-code rv up" style="--d:1">HSE-001</div>
+    <div class="hero-title rv up" style="--d:2">Comunicación, participación<br>y consulta en SST</div>
+    <div class="gline rv up" style="--d:3"></div>
+    <div class="tag rv up" style="--d:4"><span class="pill">COPASST · Convivencia</span><span class="pill">Brigada</span><span class="pill">Responsabilidades</span></div>
+    <p class="lead rv up" style="--d:5">Último módulo del curso. Explora cada mecanismo para avanzar.</p>
+  </div>
+      <figure class="mediaBox heroMedia rv right" data-media="imagenes/m6-portada" style="--d:3"></figure>
+    </div>
+  
+</section>
+<section class="slide light" data-mod="6">
+<div class="wrap"><div class="eyebrow rv up">Comunicación, participación y consulta</div>
+<h2 class="rv up" style="--d:1">Promoción y mecanismos</h2>
+<div class="infobanner rv up" style="--d:2">Para <b>promover la participación</b> y proporcionar y recibir <b>información oportuna</b> sobre Seguridad y Salud en el Trabajo, ambiente y calidad, Holcim cuenta con mecanismos que pueden ser utilizados por todas las partes interesadas.</div>
+<p class="lead rv up">Toca cada mecanismo. 👆</p>
+<div class="accgrid" style="margin-top:12px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>¿Qué comunicar?</h4><span class="chev">+</span></div><div class="acc-body"><div class="li"><span class="b"></span>Implementación SG-SST</div><div class="li"><span class="b"></span>Política y Objetivos H&amp;S</div><div class="li"><span class="b"></span>Peligros, riesgos y controles</div><div class="li"><span class="b"></span>Requisitos legales</div><div class="li"><span class="b"></span>Roles y responsabilidades</div><div class="li"><span class="b"></span>Rendición de cuentas</div><div class="li"><span class="b"></span>Plan de capacitación</div><div class="li"><span class="b"></span>Planes y acciones de mejora</div><div class="li"><span class="b"></span>Plan y Brigada de Emergencias</div><div class="li"><span class="b"></span>Gestión del cambio</div><div class="li"><span class="b"></span>Lecciones aprendidas</div><div class="li"><span class="b"></span>COPASST</div><div class="li"><span class="b"></span>COCOLAB</div><div class="li"><span class="b"></span>SVE</div><div class="li"><span class="b"></span>Otros aspectos de Higiene, Salud y Seguridad</div></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1bb4e4"></span><h4>¿Cómo comunicar?</h4><span class="chev">+</span></div><div class="acc-body"><p><b>Medio virtual:</b> correos electrónicos, encuestas, redes sociales, WhatsApp, Connect intranet Holcim, herramientas colaborativas Gsuite, capacitaciones y reuniones por Zoom o Meet.</p><p class="tdd"><b>Medio físico:</b> publicaciones, cartas, quejas y reclamos, formatos de reporte de interacciones y condiciones de seguridad, salud y ambiente.</p><p class="tdd"><b>Speak up.</b></p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>¿Cómo participar y consultar?</h4><span class="chev">+</span></div><div class="acc-body"><div class="li"><span class="b"></span>COPASST o Vigía SST</div><div class="li"><span class="b"></span>Comité de Convivencia Laboral</div><div class="li"><span class="b"></span>Brigada de Emergencias</div><div class="li"><span class="b"></span>Capacitaciones</div><div class="li"><span class="b"></span>Entrenamientos</div><div class="li"><span class="b"></span>(Re)Inducciones</div><div class="li"><span class="b"></span>Actividades que promueven la Salud y Seguridad en el Trabajo</div><div class="li"><span class="b"></span>Reporte de Peligros, VPCs y C.PVCs</div><div class="li"><span class="b"></span>Repositorio documental</div><div class="li"><span class="b"></span>Investigación de eventos</div></div></div></div>
+</div></section>
+<section class="slide dark teal" data-mod="6">
+<div class="wrap"><div class="eyebrow rv up">COPASST / Vigía SST</div>
+<h2 class="rv up" style="--d:1">COPASST / Vigía SST</h2>
+<div class="two" style="margin-top:16px">
+ <div class="panel rv left" style="background:linear-gradient(160deg,#e6007e,#b8005f);color:#fff"><h3>¿Qué es?</h3><p style="font-size:14px;line-height:1.55">El <b>Comité Paritario de Seguridad y Salud en el Trabajo</b> (Vigía SST) es un canal de comunicación entre el empleado y su empleador. Tiene como objetivo la <b>promoción y vigilancia</b> de las normas y reglamentos de SST.</p></div>
+ <div class="panel rv right" style="background:linear-gradient(160deg,#ef7d00,#c96400);color:#fff"><h3>¿Cómo se conforma?</h3><p style="font-size:14px;line-height:1.55">Incluye <b>convocatoria, elección, conformación, capacitación, reuniones y rendición de cuentas</b>. Cada comité está compuesto por un número igual de representantes del empleador y de los trabajadores, con sus respectivos suplentes.</p></div>
+</div>
+<div class="tblwrap rv up"><table class="tbl">
+<tr><th>Número de trabajadores</th><th>Representantes del comité</th></tr>
+<tr><td>De 10 a 50 trabajadores</td><td>Uno (1) por cada una de las partes</td></tr>
+<tr><td>De 50 a 499 trabajadores</td><td>Dos (2) por cada una de las partes</td></tr>
+<tr><td>De 500 a 999 trabajadores</td><td>Tres (3) por cada una de las partes</td></tr>
+<tr><td>Desde 1000 trabajadores</td><td>Cuatro (4) por cada una de las partes</td></tr>
+</table></div>
+</div></section>
+<section class="slide light mint" data-mod="6">
+<div class="wrap"><div class="eyebrow rv up">COPASST / Vigía SST</div>
+<h2 class="rv up" style="--d:1">Conoce más sobre el COPASST</h2>
+<p class="lead rv up" style="--d:2">Voltea cada tarjeta para ver la respuesta. 👆</p>
+<div class="flips flips8" style="margin-top:14px"><div class="flip rv up" tabindex="0" role="button"><div class="flip-in"><div class="face front"><div class="n">1</div><h3>¿Qué se requiere para ser elegido miembro?</h3><div class="hint">Toca para ver ↺</div></div><div class="face back"><h4>Requisitos</h4><p>Ser <b>trabajador de la empresa</b>, ser elegido por los trabajadores o designado por el empleador.</p></div></div></div><div class="flip rv up" tabindex="0" role="button"><div class="flip-in"><div class="face front"><div class="n">2</div><h3>¿Quién nombra a los representantes de los trabajadores?</h3><div class="hint">Toca para ver ↺</div></div><div class="face back"><h4>Representantes de los trabajadores</h4><p>Los trabajadores mediante <b>votación libre</b> eligen a sus representantes en el comité.</p></div></div></div><div class="flip rv up" tabindex="0" role="button"><div class="flip-in"><div class="face front"><div class="n">3</div><h3>¿Quién nombra a los representantes del empleador?</h3><div class="hint">Toca para ver ↺</div></div><div class="face back"><h4>Representantes del empleador</h4><p>El <b>empleador</b> designa a sus representantes.</p></div></div></div><div class="flip rv up" tabindex="0" role="button"><div class="flip-in"><div class="face front"><div class="n">4</div><h3>¿Quién elige al secretario?</h3><div class="hint">Toca para ver ↺</div></div><div class="face back"><h4>Secretario</h4><p>El comité <b>en pleno</b> elige al secretario, entre la totalidad de los miembros que conforman el comité.</p></div></div></div><div class="flip rv up" tabindex="0" role="button"><div class="flip-in"><div class="face front"><div class="n">5</div><h3>¿Quién elige al presidente?</h3><div class="hint">Toca para ver ↺</div></div><div class="face back"><h4>Presidente</h4><p>El <b>empleador</b> designa a uno de sus representantes como presidente.</p></div></div></div><div class="flip rv up" tabindex="0" role="button"><div class="flip-in"><div class="face front"><div class="n">6</div><h3>¿Cada cuánto se reúnen?</h3><div class="hint">Toca para ver ↺</div></div><div class="face back"><h4>Reuniones</h4><p>Por lo menos <b>una vez al mes</b>, en las instalaciones de la empresa y durante el horario de trabajo. Si la situación lo requiere, se pueden citar de forma extraordinaria.</p></div></div></div><div class="flip rv up" tabindex="0" role="button"><div class="flip-in"><div class="face front"><div class="n">7</div><h3>¿Cuál es el periodo de los miembros?</h3><div class="hint">Toca para ver ↺</div></div><div class="face back"><h4>Periodo</h4><p>El periodo de los miembros del comité es de <b>dos años</b>.</p></div></div></div><div class="flip rv up" tabindex="0" role="button"><div class="flip-in"><div class="face front"><div class="n">8</div><h3>¿Debo tener COPASST con menos de 10 trabajadores?</h3><div class="hint">Toca para ver ↺</div></div><div class="face back"><h4>Menos de 10 trabajadores</h4><p>Se debe tener un <b>Vigía SST</b>, asignado por el empleador, que cumplirá las mismas funciones del comité. En lugar de actas, deberá emitir <b>informes mensuales</b>.</p></div></div></div></div>
+</div></section>
+<section class="slide dark" data-mod="6">
+<div class="wrap"><div class="eyebrow rv up">Comité de Convivencia Laboral</div>
+<h2 class="rv up" style="--d:1">Comité de Convivencia Laboral</h2>
+<div class="infobanner rv up" style="--d:2">Es una instancia <b>preventiva de acoso laboral</b>, independiente en su funcionamiento, que contribuye a proteger a los trabajadores contra los riesgos psicosociales. Su rol es <b>preventivo, orientador, conciliador y canalizador</b>; por lo anterior, el comité <b>no determina si hay acoso laboral</b>.</div>
+<p class="lead rv up">¿Cómo se conforma? Incluye <b>convocatoria abierta, voto secreto y dirigido, y escrutinio público</b>.</p>
+<div class="tblwrap rv up"><table class="tbl">
+<tr><th>Tamaño de la empresa</th><th>Composición</th></tr>
+<tr><td>Menos de 5 trabajadores</td><td>1 representante del empleador y 1 de los trabajadores (con suplentes)</td></tr>
+<tr><td>Entre 5 y 20 trabajadores</td><td>1 representante por cada parte con sus respectivos suplentes</td></tr>
+<tr><td>20 o más trabajadores</td><td>2 representantes por cada parte con sus respectivos suplentes</td></tr>
+</table></div>
+<div class="banner rv up" style="--d:2">Las empresas <b>multisede</b> requieren un comité central y un comité adicional por cada centro de trabajo.</div>
+</div></section>
+<section class="slide light" data-mod="6">
+<div class="wrap"><div class="eyebrow rv up">Comité de Convivencia Laboral</div>
+<h2 class="rv up" style="--d:1">Conoce más sobre el Comité de Convivencia</h2>
+<p class="lead rv up" style="--d:2">Presiona los números para conocer cada respuesta. 👆</p>
+<div class="pueBox rv up" data-pue="convivencia"></div>
+</div></section>
+<section class="slide dark teal" data-mod="6">
+<div class="wrap"><div class="eyebrow rv up">Brigada de emergencias</div>
+<h2 class="rv up" style="--d:1">Brigada de emergencias</h2>
+<div class="infobanner rv up" style="--d:2">Grupo de empleados que, de acuerdo con las actividades económicas de la empresa y según sus capacidades, tienen la responsabilidad de realizar <b>actividades preventivas y de control de emergencias</b> ante eventualidades de riesgo, siniestro o desastre. Su objetivo primordial es <b>salvaguardar la vida, los bienes y el entorno</b>, actuando como <b>primeros respondedores</b>.</div>
+<p class="lead rv up">Toca cada clase de brigada. 👆</p>
+<div class="accgrid" style="margin-top:12px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>Básica o clase I</h4><span class="chev">+</span></div><div class="acc-body"><p>Formadas, capacitadas y entrenadas para la <b>prevención y atención inicial</b> de emergencias que puedan suscitarse al interior o exterior de la empresa y que estén relacionadas con la misma.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#f5b700"></span><h4>Intermedia o clase II</h4><span class="chev">+</span></div><div class="acc-body"><p>Además de la prevención y atención inicial, están <b>dotadas de todos los elementos, herramientas, equipos y accesorios</b> necesarios para la atención de las emergencias en las primeras etapas de su desarrollo, de acuerdo al riesgo existente.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#e23b32"></span><h4>Especializada o clase III</h4><span class="chev">+</span></div><div class="acc-body"><p>Formadas para la prevención y atención de emergencias en sectores de <b>alto riesgo</b> (petrolero, minero, portuario, químico, eléctrico, hidroeléctrico y otros), dotadas de los elementos y equipos necesarios para el tipo de riesgo específico.</p></div></div></div>
+</div></section>
+<section class="slide light mint" data-mod="6">
+<div class="wrap"><div class="eyebrow rv up">Responsabilidades legales</div>
+<h2 class="rv up" style="--d:1">Responsabilidades legales</h2>
+<p class="lead rv up" style="--d:2">Cada parte tiene responsabilidades definidas en el SG-SST.</p>
+<div class="grid3" style="margin-top:14px"><div class="card rv up" style="padding:0;overflow:hidden"><div class="rescol"><div class="rhead" style="background:#8bbf3a">Trabajador</div><ul><li>Procurar el cuidado integral de su salud.</li><li>Suministrar información clara, completa y veraz sobre su estado de salud.</li><li>Conocer, entender y cumplir las normas, políticas, reglas, procedimientos y reglamentos SST.</li><li>Informar oportunamente los peligros y riesgos latentes del sitio de trabajo.</li><li>Participar en las actividades que promuevan la Salud y Seguridad en el Trabajo.</li><li>Conocer y contribuir al cumplimiento de la política y los objetivos del SG-SST.</li></ul></div></div><div class="card rv up" style="padding:0;overflow:hidden"><div class="rescol"><div class="rhead" style="background:#1bb4e4">Empleador</div><ul><li>Definir, firmar y divulgar la política.</li><li>Asignar y comunicar las responsabilidades en SST.</li><li>Rendición de cuentas al interior de la empresa.</li><li>Definir y asignar los recursos para SST.</li><li>Cumplir con los requisitos normativos.</li><li>Gestionar los peligros y riesgos.</li><li>Involucrar la SST en procesos, procedimientos y decisiones.</li><li>Diseñar y desarrollar un SG-SST y su plan de trabajo anual.</li><li>Prevención y promoción de riesgos laborales.</li><li>Promover la participación de todos los miembros.</li></ul></div></div><div class="card rv up" style="padding:0;overflow:hidden"><div class="rescol"><div class="rhead" style="background:#e6007e">ARL</div><ul><li>Capacitar al COPASST.</li><li>Prestar servicios asistenciales y prestacionales derivados de accidentes de trabajo o enfermedades laborales.</li><li>Prestar asesoría y asistencia técnica a la empresa.</li><li>Recaudar las cotizaciones que hacen las empresas por sus trabajadores.</li></ul></div></div></div>
+</div></section>
+<section class="slide dark" data-mod="6">
+<div class="wrap"><div class="eyebrow rv up">Responsabilidades en un accidente de trabajo</div>
+<h2 class="rv up" style="--d:1">Responsabilidades en un A.T.</h2>
+<p class="lead rv up" style="--d:2">Toca cada tipo de responsabilidad. 👆</p>
+<div class="accgrid" style="margin-top:12px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#17868a"></span><h4>Laboral</h4><span class="chev">+</span></div><div class="acc-body"><div class="li"><span class="b"></span>Prestaciones de atención de la salud de los trabajadores.</div><div class="li"><span class="b"></span>Prestaciones económicas por incapacidad.</div><div class="li"><span class="b"></span>Pensión de invalidez.</div><div class="li"><span class="b"></span>Pensión de sobrevivencia.</div></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Civil</h4><span class="chev">+</span></div><div class="acc-body"><div class="li"><span class="b"></span>Reparar daños, hasta 1000 SMMLV.</div><div class="li"><span class="b"></span><b>Daño moral</b> (dolor, angustia, sentimiento de pérdida).</div><div class="li"><span class="b"></span><b>Daño emergente</b> (gastos fúnebres, traslados y egresos que afectaron el patrimonio familiar).</div><div class="li"><span class="b"></span><b>Lucro cesante</b> (ganancia que deja de reportarse a consecuencia del accidente).</div></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#ef7d00"></span><h4>Administrativa</h4><span class="chev">+</span></div><div class="acc-body"><div class="li"><span class="b"></span>Sanciones por autoridades: cierre temporal o permanente.</div><div class="li"><span class="b"></span>Sanción por autoridad: desde 400 hasta 1000 SMMLV.</div></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#e23b32"></span><h4>Penal</h4><span class="chev">+</span></div><div class="acc-body"><p><b>Culpa:</b> infracción al deber objetivo de cuidado; debió haberse previsto por ser previsible, o habiéndolo previsto confió en poder evitarlo.</p><p class="tdd"><b>Dolo:</b> cuando conoce los hechos constitutivos de la infracción penal y quiere su realización.</p><p class="tdd"><b>Preterintención:</b> a pesar de conocer que la conducta es ilegal o punible quiere cometer un acto que no sea de gravedad, pero que al final resulta mucho más grave de lo que pensó.</p><p class="tdd">El causante del accidente —gerente, jefe inmediato, compañero de trabajo o supervisor— <b>puede ser privado de su libertad</b>.</p></div></div></div>
+</div></section>
+<section class="slide light" data-mod="6">
+<div class="wrap"><div class="eyebrow rv up">Mejora continua</div>
+<h2 class="rv up" style="--d:1">Mejora continua</h2>
+<div class="infobanner rv up" style="--d:2">El cumplimiento de los lineamientos internos y de la normativa nacional exigida para la industria en Colombia, así como la requerida a nivel mundial por organismos internacionales, nos ha permitido ser <b>certificados por ICONTEC</b>.</div>
+<p class="lead rv up">Toca cada certificación y reconocimiento. 👆</p>
+<div class="chipgrid"><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#a01e28">ISO 9001</span><span class="nm">Sistema de Gestión de la Calidad</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#4b2a6b">ISO 14001</span><span class="nm">Sistema de Gestión Ambiental</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#17868a">ISO 45001</span><span class="nm">Sistema de Gestión de la Seguridad y Salud en el Trabajo</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#0e2c56">ISO 39001</span><span class="nm">Sistema de Gestión de la Seguridad Vial</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#e23b32">Saludable</span><span class="nm">Organización Saludable Certificada · Fundación Colombiana del Corazón</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#e6007e">HSE Gold</span><span class="nm">Country Gold · primero en recibir Oro en 2023 y repitió en 2024</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#17a2a2">Sostenibilidad</span><span class="nm">Distinciones Gold y Silver de sostenibilidad</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#ef7d00">CCS · RUC</span><span class="nm">Consejo Colombiano de Seguridad · Registro Uniforme para Contratistas</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#1bb4e4">GCCA</span><span class="nm">Asociación Global del Cemento y el Concreto</span><span class="tick">✓</span></div></div>
+</div></section>
+<section class="slide dark teal" data-mod="6">
+  <div class="wrap" style="text-align:center">
+    <div class="done-badge rv scale"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg></div>
+    <div class="eyebrow rv up" style="--d:1">Reinducción H&amp;S completada</div>
+    <h2 class="rv up" style="--d:2">¡Felicitaciones! Terminaste la reinducción.</h2>
+    <p class="lead rv up" style="--d:3;max-width:58ch;margin:14px auto 0">Completaste los <b>Módulos 1 a 6</b> de la Reinducción en Salud y Seguridad. Solo falta el <b>examen final</b>: presiona <b>Siguiente →</b> para presentarlo.</p>
+    <div class="recap rv up" style="--d:4"><span class="chip">Módulo 1</span><span class="chip">Módulo 2</span><span class="chip">Módulo 3</span><span class="chip">Módulo 4</span><span class="chip">Módulo 5</span><span class="chip">Módulo 6</span><span class="chip">¡Cero daños!</span></div>
+  </div>
+</section>
+  <section class="slide dark nogate" data-mod="EX">
     <div class="wrap exwrap">
       <div id="exDatos">
         <div class="eyebrow rv up">Evaluación final</div>
         <h2 class="rv up" style="--d:1">Examen final &middot; HSE-001</h2>
-        <p class="lead rv up" style="--d:2">Antes de comenzar, identifícate. Las preguntas se toman al azar de un banco de 50 y cambian en cada intento.</p>
+        <p class="lead rv up" style="--d:2">Antes de comenzar, identifícate. Las preguntas se toman al azar de un banco de 56 y cambian en cada intento.</p>
         <div class="card rv up" style="--d:3;margin-top:18px">
           <div class="excampo">
             <label for="exTipo">Tipo de usuario</label>
@@ -5404,10 +5509,10 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-07-e";
+var VERSION_CURSO = "2026-09-07-f";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
-   PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
+   PREGUNTAS_EXAMEN: cuántas se sortean del banco de 56 en cada intento.
    NOTA_MINIMA: porcentaje de aciertos necesario para aprobar.
    EXIGIR_EXAMEN: si es true, la capacitación solo se da por completada al aprobar. */
 /* NOMBRE DE LA CAPACITACION: es lo que queda en la columna "Capacitacion" de la
@@ -5746,7 +5851,7 @@ var MODULOS = {
  '3':{c:'#1877c4', t:'Control operacional'},
  '4':{c:'#17868a', t:'Controles complementarios'},
  '5':{c:'#ef7d00', t:'Controles críticos'},
-
+ '6':{c:'#e6007e', t:'Comunicación y consulta'},
  'EX':{c:'#e23b32', t:'Examen final'}
 };
 function modDe(i){ return slides[i].getAttribute('data-mod') || '1'; }
@@ -5762,7 +5867,7 @@ function tituloDe(i){
   var t = d.textContent.replace(/\s+/g,' ').trim();
   return t || 'Diapositiva ' + (i+1);
 }
-/* Puntos de navegación: cada módulo abre con una banderita (M1…M5) y sus puntos
+/* Puntos de navegación: cada módulo abre con una banderita (M1…M6) y sus puntos
    llevan el color del módulo, apagados, para que agrupen sin llenar de ruido. */
 var pipEls = [], pipFlags = [];
 (function(){
@@ -5808,7 +5913,7 @@ function markDone(el){ if(!el.classList.contains('req')||el.classList.contains('
 function chrome(){
   cargarMediosCercanos();
   guardarAvance();
-  elCur.textContent = idx+1; var ml=document.getElementById('modlabel'); if(ml){var mm=slides[idx].getAttribute('data-mod'); ml.textContent=(mm==='EX')?'Examen final':(mm==='5')?'Módulo 5 · Controles críticos':(mm==='4')?'Módulo 4 · Controles complementarios':(mm==='3')?'Módulo 3 · Control operacional':(mm==='2')?'Módulo 2 · Planeación':'Módulo 1';}
+  elCur.textContent = idx+1; var ml=document.getElementById('modlabel'); if(ml){var mm=slides[idx].getAttribute('data-mod'); ml.textContent=(mm==='EX')?'Examen final':(mm==='6')?'Módulo 6 · Comunicación y consulta':(mm==='5')?'Módulo 5 · Controles críticos':(mm==='4')?'Módulo 4 · Controles complementarios':(mm==='3')?'Módulo 3 · Control operacional':(mm==='2')?'Módulo 2 · Planeación':'Módulo 1';}
   fill.style.width = ((idx+1)/N*100)+'%';
   prevBtn.disabled = (idx===0);
   var gate = slides[idx].getAttribute('data-gate');
@@ -6548,6 +6653,9 @@ document.querySelectorAll('.pueBox').forEach(function(box){
   /* El simbolo del PUE es el mismo archivo que ya usa la diapositiva de los
      doce PUE, asi que no hay que subirlo dos veces. */
   var SIMBOLO = {incendio:'combustible', movil:'equipomovil', carbon:'molino'};
+  /* El Comite de Convivencia usa esta misma caja de numeros, pero no es un
+     PUE: ponerle el triangulo de peligro seria decir algo que no es. */
+  var SIN_SIMBOLO = { convivencia: 1 };
   var clave = box.getAttribute('data-pue');
   var simb = document.createElement('span');
   simb.className = 'puesimb';
@@ -6558,7 +6666,8 @@ document.querySelectorAll('.pueBox').forEach(function(box){
     + '<path d="M45 34v14M45 55h0" stroke="#f5c400" stroke-width="5" stroke-linecap="round"/></svg>';
   /* El simbolo va a la izquierda del titulo de la diapositiva. */
   var caja = box.closest('.wrap'), tit = caja && caja.querySelector('h2');
-  if(tit){
+  if(SIN_SIMBOLO[clave]){ /* sin triangulo */ }
+  else if(tit){
     var cab = document.createElement('div'); cab.className = 'puehead';
     tit.parentNode.insertBefore(cab, tit);
     cab.appendChild(simb); cab.appendChild(tit);
@@ -6584,7 +6693,10 @@ document.querySelectorAll('.pueBox').forEach(function(box){
     setTimeout(function(){ panel.style.opacity=1; panel.style.transform='none'; }, 20);
     vistos[i] = true; nums.children[i].classList.add('vis');
     var n = Object.keys(vistos).length;
-    hint.textContent = 'Control ' + (i+1) + ' de ' + lista.length + ' · explorados ' + n + '/' + lista.length;
+    /* En los PUE cada numero es un control critico; en el Comite de Convivencia
+       la misma caja sirve para preguntas frecuentes, y ahi "control" no aplica. */
+    var etiqueta = SIN_SIMBOLO[clave] ? 'Respuesta ' : 'Control ';
+    hint.textContent = etiqueta + (i+1) + ' de ' + lista.length + ' · explorados ' + n + '/' + lista.length;
     if(n === lista.length) markDone(box);
   }
   lista.forEach(function(_,i){
@@ -6800,7 +6912,7 @@ cargarMediosCercanos();
 })();
 
 /* ====== BANCO DE PREGUNTAS DEL EXAMEN FINAL ======
-   50 preguntas tomadas del contenido real del curso.
+   56 preguntas tomadas del contenido real del curso.
    m = módulo · p = enunciado · o = opciones · r = índice de la opción correcta.
    Las de dos opciones son de Verdadero/Falso; las demás, de selección múltiple.
    Para añadir o cambiar preguntas basta con editar esta lista. */
@@ -6822,6 +6934,8 @@ var BANCO = [
 {m:'2',p:'El frente de Mejora Continua de la hoja de ruta hacia la ambición «Cero» busca:',o:['Lograr la excelencia en HSE mediante la implementación de acciones priorizadas','Renovar la maquinaria cada año','Reemplazar las auditorías internas','Ampliar el horario de la operación'],r:0},
 {m:'2',p:'El Programa de Controles Críticos, dentro de la hoja de ruta hacia la ambición «Cero», busca eliminar fatalidades y lesiones graves.',o:['Verdadero','Falso'],r:0},
 {m:'2',p:'Las políticas y declaraciones de Holcim otorgan autoridad para detener trabajos inseguros.',o:['Verdadero','Falso'],r:0},
+{m:'2',p:'Los cinco frentes de la hoja de ruta hacia la ambición «Cero» son Compromiso, Mejora Continua, Bienestar, Seguridad Vial y Programa de Controles Críticos.',o:['Verdadero','Falso'],r:0},
+{m:'2',p:'El indicador C-VPC corresponde al abordaje a trabajadores en labores relacionadas con:',o:['Los Controles Críticos','La dotación de EPP','El pago de la nómina','Las auditorías financieras'],r:0},
 /* ---------- Módulo 3 · Control operacional ---------- */
 {m:'3',p:'El ATS (Análisis de Trabajo Seguro) se utiliza para tareas:',o:['No estándar: no planificadas, impredecibles o por primera vez','Rutinarias que se repiten todos los días','Exclusivamente administrativas','Solo de mantenimiento eléctrico'],r:0},
 {m:'3',p:'¿Cuál es la vigencia de un ATS?',o:['Un turno de trabajo','Una semana','Un mes','Un año'],r:0},
@@ -6832,6 +6946,8 @@ var BANCO = [
 {m:'3',p:'La NTC ISO 39001, dentro de las normas que aplican en Holcim, corresponde a la seguridad vial.',o:['Verdadero','Falso'],r:0},
 {m:'3',p:'El Decreto 1072 de 2015 corresponde a:',o:['El SG-SST (Sistema de Gestión de Seguridad y Salud en el Trabajo)','Los estándares mínimos del SG-SST','La guía de organización saludable','La norma de seguridad vial'],r:0},
 {m:'3',p:'El estándar HSE-103 corresponde a:',o:['Aislamiento de energías (LOTOTO)','Trabajo en alturas','Espacios confinados','Trabajo en caliente'],r:0},
+{m:'3',p:'Las tres técnicas del ATS son definir el paso de la tarea, identificar peligros, riesgos y consecuencias, y formular y cumplir controles.',o:['Verdadero','Falso'],r:0},
+{m:'3',p:'Dentro del ITS, el Análisis de Riesgo Personal sirve para:',o:['Identificar peligros y controles que no se contemplaron ni documentaron en el ITS','Reemplazar el permiso de trabajo','Calificar el desempeño del trabajador','Programar el mantenimiento de los equipos'],r:0},
 /* ---------- Módulo 4 · Controles complementarios ---------- */
 {m:'4',p:'La “autoridad para detener trabajos” (Stop Work Authority) significa que:',o:['Todo trabajador está facultado y obligado a detener una tarea que considere insegura','Solo el gerente de planta puede detener una tarea','Solo el personal de HSE puede detener una tarea','Solo se puede detener si ya ocurrió un accidente'],r:0},
 {m:'4',p:'Ante un accidente de trabajo, el primer paso es:',o:['Que el trabajador accidentado reporte inmediatamente lo ocurrido a su jefe directo','Diligenciar el informe de investigación','Esperar el resultado de la incapacidad','Notificar primero al cliente'],r:0},
@@ -6854,13 +6970,15 @@ var BANCO = [
 {m:'5',p:'A nivel mundial en Holcim, aproximadamente ¿qué porcentaje de los incidentes críticos y fatalidades está relacionado con los controles críticos?',o:['85%','50%','25%','100%'],r:0},
 {m:'5',p:'En el PUE de fallo en respuesta a emergencias, la respuesta de los brigadistas debe tardar menos de:',o:['5 minutos','15 minutos','30 minutos','1 hora'],r:0},
 {m:'5',p:'El control crítico “barreras, barandas y cubiertas en aperturas y bordes de caída” pertenece al PUE:',o:['Caída de Alturas','Contacto con Energías Peligrosas','Sepultamiento por Material','Contaminación'],r:0},
-/* ---------- Reemplazan a las del módulo 6, que se retiró del curso ---------- */
-{m:'2',p:'Los cinco frentes de la hoja de ruta hacia la ambición «Cero» son Compromiso, Mejora Continua, Bienestar, Seguridad Vial y Programa de Controles Críticos.',o:['Verdadero','Falso'],r:0},
-{m:'2',p:'El indicador C-VPC corresponde al abordaje a trabajadores en labores relacionadas con:',o:['Los Controles Críticos','La dotación de EPP','El pago de la nómina','Las auditorías financieras'],r:0},
-{m:'3',p:'Las tres técnicas del ATS son definir el paso de la tarea, identificar peligros, riesgos y consecuencias, y formular y cumplir controles.',o:['Verdadero','Falso'],r:0},
-{m:'3',p:'Dentro del ITS, el Análisis de Riesgo Personal sirve para:',o:['Identificar peligros y controles que no se contemplaron ni documentaron en el ITS','Reemplazar el permiso de trabajo','Calificar el desempeño del trabajador','Programar el mantenimiento de los equipos'],r:0},
 {m:'5',p:'¿Cuántos Eventos Prioritarios no Deseados (PUE) tiene definidos Holcim?',o:['12','5','8','20'],r:0},
-{m:'5',p:'El «Contacto con Harina Caliente» es uno de los PUE definidos por Holcim.',o:['Verdadero','Falso'],r:0}
+{m:'5',p:'El «Contacto con Harina Caliente» es uno de los PUE definidos por Holcim.',o:['Verdadero','Falso'],r:0},
+/* ---------- Módulo 6 · Comunicación y consulta ---------- */
+{m:'6',p:'El COPASST está compuesto por:',o:['Igual número de representantes del empleador y de los trabajadores','Solo representantes de los trabajadores','Solo representantes del empleador','Únicamente personal del área de HSE'],r:0},
+{m:'6',p:'El Comité de Convivencia Laboral determina si existe o no acoso laboral.',o:['Falso','Verdadero'],r:0},
+{m:'6',p:'La brigada especializada o clase III está formada para la prevención y atención de emergencias en sectores de:',o:['Alto riesgo (petrolero, minero, químico, eléctrico, entre otros)','Riesgo administrativo únicamente','Comercio y oficinas','Transporte urbano de pasajeros'],r:0},
+{m:'6',p:'En la responsabilidad civil derivada de un accidente de trabajo, la reparación de daños puede llegar hasta:',o:['1000 SMMLV','100 SMMLV','10 SMMLV','No tiene límite definido'],r:0},
+{m:'6',p:'La norma ISO 45001 corresponde al sistema de gestión de:',o:['Seguridad y Salud en el Trabajo','Calidad','Ambiental','Seguridad Vial'],r:0},
+{m:'6',p:'Es responsabilidad del trabajador procurar el cuidado integral de su salud e informar oportunamente los peligros del sitio de trabajo.',o:['Verdadero','Falso'],r:0}
 ];
 
 /* ====== ENVIAR CUALQUIER FORMULARIO A LA HOJA DE CÁLCULO ======

@@ -1,6 +1,6 @@
 # Banco de preguntas · Examen final HSE-001
 
-Estas son las **50 preguntas** del examen. Cada intento sortea 20 al azar,
+Estas son las **56 preguntas** del examen. Cada intento sortea 20 al azar,
 repartidas por módulo, y baraja el orden de las opciones (salvo en las de
 Verdadero/Falso). La respuesta correcta va marcada con **✔**.
 
@@ -8,6 +8,7 @@ Verdadero/Falso). La respuesta correcta va marcada con **✔**.
 > pregunta: `m` es el módulo, `p` el enunciado, `o` las opciones y `r` la
 > posición de la correcta (empezando en 0). Añadir o quitar preguntas no
 > requiere ningún otro cambio.
+
 
 
 ## Módulo 1 · Generalidades y conceptos básicos
@@ -72,6 +73,7 @@ Verdadero/Falso). La respuesta correcta va marcada con **✔**.
 - &nbsp;&nbsp;&nbsp; Fenómenos naturales
 
 
+
 ## Módulo 2 · Planeación estratégica H&S
 
 **10. Según las Reglas HSE, ¿en qué plazo máximo se deben reportar los incidentes?**  <br>_Selección múltiple_
@@ -112,167 +114,193 @@ Verdadero/Falso). La respuesta correcta va marcada con **✔**.
 - **✔** Verdadero
 - &nbsp;&nbsp;&nbsp; Falso
 
+**16. Los cinco frentes de la hoja de ruta hacia la ambición «Cero» son Compromiso, Mejora Continua, Bienestar, Seguridad Vial y Programa de Controles Críticos.**  <br>_Verdadero / Falso_
+
+- **✔** Verdadero
+- &nbsp;&nbsp;&nbsp; Falso
+
+**17. El indicador C-VPC corresponde al abordaje a trabajadores en labores relacionadas con:**  <br>_Selección múltiple_
+
+- **✔** Los Controles Críticos
+- &nbsp;&nbsp;&nbsp; La dotación de EPP
+- &nbsp;&nbsp;&nbsp; El pago de la nómina
+- &nbsp;&nbsp;&nbsp; Las auditorías financieras
+
+
 
 ## Módulo 3 · Control operacional
 
-**16. El ATS (Análisis de Trabajo Seguro) se utiliza para tareas:**  <br>_Selección múltiple_
+**18. El ATS (Análisis de Trabajo Seguro) se utiliza para tareas:**  <br>_Selección múltiple_
 
 - **✔** No estándar: no planificadas, impredecibles o por primera vez
 - &nbsp;&nbsp;&nbsp; Rutinarias que se repiten todos los días
 - &nbsp;&nbsp;&nbsp; Exclusivamente administrativas
 - &nbsp;&nbsp;&nbsp; Solo de mantenimiento eléctrico
 
-**17. ¿Cuál es la vigencia de un ATS?**  <br>_Selección múltiple_
+**19. ¿Cuál es la vigencia de un ATS?**  <br>_Selección múltiple_
 
 - **✔** Un turno de trabajo
 - &nbsp;&nbsp;&nbsp; Una semana
 - &nbsp;&nbsp;&nbsp; Un mes
 - &nbsp;&nbsp;&nbsp; Un año
 
-**18. El ITS (Instructivo de Trabajo Seguro) define la forma estandarizada y segura de ejecutar una tarea estándar.**  <br>_Verdadero / Falso_
+**20. El ITS (Instructivo de Trabajo Seguro) define la forma estandarizada y segura de ejecutar una tarea estándar.**  <br>_Verdadero / Falso_
 
 - **✔** Verdadero
 - &nbsp;&nbsp;&nbsp; Falso
 
-**19. La matriz IPVR se actualiza:**  <br>_Selección múltiple_
+**21. La matriz IPVR se actualiza:**  <br>_Selección múltiple_
 
 - **✔** Cada año, o ante accidente mortal, evento catastrófico o cambios en procesos
 - &nbsp;&nbsp;&nbsp; Solo cuando lo pida la ARL
 - &nbsp;&nbsp;&nbsp; Cada cinco años
 - &nbsp;&nbsp;&nbsp; Únicamente al cambiar de contratista
 
-**20. ¿Cuál de las siguientes actividades NO requiere permiso de trabajo?**  <br>_Selección múltiple_
+**22. ¿Cuál de las siguientes actividades NO requiere permiso de trabajo?**  <br>_Selección múltiple_
 
 - **✔** Labores administrativas de oficina
 - &nbsp;&nbsp;&nbsp; Trabajo en alturas
 - &nbsp;&nbsp;&nbsp; Trabajo en caliente
 - &nbsp;&nbsp;&nbsp; Aislamiento de energías (LOTOTO)
 
-**21. La Resolución 0312 de 2019, que aplica en Holcim, corresponde a:**  <br>_Selección múltiple_
+**23. La Resolución 0312 de 2019, que aplica en Holcim, corresponde a:**  <br>_Selección múltiple_
 
 - **✔** Los estándares mínimos del SG-SST
 - &nbsp;&nbsp;&nbsp; La norma de seguridad vial
 - &nbsp;&nbsp;&nbsp; La guía de organización saludable
 - &nbsp;&nbsp;&nbsp; El reglamento de higiene industrial
 
-**22. La NTC ISO 39001, dentro de las normas que aplican en Holcim, corresponde a la seguridad vial.**  <br>_Verdadero / Falso_
+**24. La NTC ISO 39001, dentro de las normas que aplican en Holcim, corresponde a la seguridad vial.**  <br>_Verdadero / Falso_
 
 - **✔** Verdadero
 - &nbsp;&nbsp;&nbsp; Falso
 
-**23. El Decreto 1072 de 2015 corresponde a:**  <br>_Selección múltiple_
+**25. El Decreto 1072 de 2015 corresponde a:**  <br>_Selección múltiple_
 
 - **✔** El SG-SST (Sistema de Gestión de Seguridad y Salud en el Trabajo)
 - &nbsp;&nbsp;&nbsp; Los estándares mínimos del SG-SST
 - &nbsp;&nbsp;&nbsp; La guía de organización saludable
 - &nbsp;&nbsp;&nbsp; La norma de seguridad vial
 
-**24. El estándar HSE-103 corresponde a:**  <br>_Selección múltiple_
+**26. El estándar HSE-103 corresponde a:**  <br>_Selección múltiple_
 
 - **✔** Aislamiento de energías (LOTOTO)
 - &nbsp;&nbsp;&nbsp; Trabajo en alturas
 - &nbsp;&nbsp;&nbsp; Espacios confinados
 - &nbsp;&nbsp;&nbsp; Trabajo en caliente
 
+**27. Las tres técnicas del ATS son definir el paso de la tarea, identificar peligros, riesgos y consecuencias, y formular y cumplir controles.**  <br>_Verdadero / Falso_
+
+- **✔** Verdadero
+- &nbsp;&nbsp;&nbsp; Falso
+
+**28. Dentro del ITS, el Análisis de Riesgo Personal sirve para:**  <br>_Selección múltiple_
+
+- **✔** Identificar peligros y controles que no se contemplaron ni documentaron en el ITS
+- &nbsp;&nbsp;&nbsp; Reemplazar el permiso de trabajo
+- &nbsp;&nbsp;&nbsp; Calificar el desempeño del trabajador
+- &nbsp;&nbsp;&nbsp; Programar el mantenimiento de los equipos
+
+
 
 ## Módulo 4 · Controles complementarios
 
-**25. La “autoridad para detener trabajos” (Stop Work Authority) significa que:**  <br>_Selección múltiple_
+**29. La “autoridad para detener trabajos” (Stop Work Authority) significa que:**  <br>_Selección múltiple_
 
 - **✔** Todo trabajador está facultado y obligado a detener una tarea que considere insegura
 - &nbsp;&nbsp;&nbsp; Solo el gerente de planta puede detener una tarea
 - &nbsp;&nbsp;&nbsp; Solo el personal de HSE puede detener una tarea
 - &nbsp;&nbsp;&nbsp; Solo se puede detener si ya ocurrió un accidente
 
-**26. Ante un accidente de trabajo, el primer paso es:**  <br>_Selección múltiple_
+**30. Ante un accidente de trabajo, el primer paso es:**  <br>_Selección múltiple_
 
 - **✔** Que el trabajador accidentado reporte inmediatamente lo ocurrido a su jefe directo
 - &nbsp;&nbsp;&nbsp; Diligenciar el informe de investigación
 - &nbsp;&nbsp;&nbsp; Esperar el resultado de la incapacidad
 - &nbsp;&nbsp;&nbsp; Notificar primero al cliente
 
-**27. Los elementos de protección personal (EPP) deben ser suministrados de forma gratuita al trabajador.**  <br>_Verdadero / Falso_
+**31. Los elementos de protección personal (EPP) deben ser suministrados de forma gratuita al trabajador.**  <br>_Verdadero / Falso_
 
 - **✔** Verdadero
 - &nbsp;&nbsp;&nbsp; Falso
 
-**28. Está permitido compartir elementos de protección personal como la protección auditiva.**  <br>_Verdadero / Falso_
+**32. Está permitido compartir elementos de protección personal como la protección auditiva.**  <br>_Verdadero / Falso_
 
 - **✔** Falso
 - &nbsp;&nbsp;&nbsp; Verdadero
 
-**29. ¿Cuál es la vigencia de la tarjeta de inspección de un andamio?**  <br>_Selección múltiple_
+**33. ¿Cuál es la vigencia de la tarjeta de inspección de un andamio?**  <br>_Selección múltiple_
 
 - **✔** 7 días
 - &nbsp;&nbsp;&nbsp; 24 horas
 - &nbsp;&nbsp;&nbsp; 30 días
 - &nbsp;&nbsp;&nbsp; Un turno
 
-**30. En el sistema de tarjetas de andamios, la tarjeta roja indica:**  <br>_Selección múltiple_
+**34. En el sistema de tarjetas de andamios, la tarjeta roja indica:**  <br>_Selección múltiple_
 
 - **✔** NO USAR: el andamio está en montaje o desmontaje
 - &nbsp;&nbsp;&nbsp; El andamio es seguro y puede usarse
 - &nbsp;&nbsp;&nbsp; El andamio requiere solo revisión visual
 - &nbsp;&nbsp;&nbsp; El andamio está autorizado para alturas
 
-**31. En LOTOTO, el candado rojo corresponde a:**  <br>_Selección múltiple_
+**35. En LOTOTO, el candado rojo corresponde a:**  <br>_Selección múltiple_
 
 - **✔** El ejecutor de la actividad
 - &nbsp;&nbsp;&nbsp; El punto de bloqueo del equipo
 - &nbsp;&nbsp;&nbsp; La estación o caja de bloqueo
 - &nbsp;&nbsp;&nbsp; El supervisor del área
 
-**32. La primera de las 5 Reglas de Oro de seguridad eléctrica es:**  <br>_Selección múltiple_
+**36. La primera de las 5 Reglas de Oro de seguridad eléctrica es:**  <br>_Selección múltiple_
 
 - **✔** Efectuar el corte visible de todas las fuentes de tensión
 - &nbsp;&nbsp;&nbsp; Instalar la puesta a tierra
 - &nbsp;&nbsp;&nbsp; Verificar la ausencia de tensión
 - &nbsp;&nbsp;&nbsp; Señalizar la zona de trabajo
 
-**33. Únicamente un eléctrico autorizado puede hacer instalación, inspección, prueba y mantenimiento de instalaciones y equipos eléctricos.**  <br>_Verdadero / Falso_
+**37. Únicamente un eléctrico autorizado puede hacer instalación, inspección, prueba y mantenimiento de instalaciones y equipos eléctricos.**  <br>_Verdadero / Falso_
 
 - **✔** Verdadero
 - &nbsp;&nbsp;&nbsp; Falso
 
-**34. En trabajo en caliente, el centinela debe permanecer durante toda la actividad y al terminarla, como mínimo:**  <br>_Selección múltiple_
+**38. En trabajo en caliente, el centinela debe permanecer durante toda la actividad y al terminarla, como mínimo:**  <br>_Selección múltiple_
 
 - **✔** 30 minutos
 - &nbsp;&nbsp;&nbsp; 5 minutos
 - &nbsp;&nbsp;&nbsp; 1 hora
 - &nbsp;&nbsp;&nbsp; El resto del turno
 
-**35. En trabajo en caliente debe permanecer en el sitio un extintor de:**  <br>_Selección múltiple_
+**39. En trabajo en caliente debe permanecer en el sitio un extintor de:**  <br>_Selección múltiple_
 
 - **✔** 20 libras
 - &nbsp;&nbsp;&nbsp; 5 libras
 - &nbsp;&nbsp;&nbsp; 10 libras
 - &nbsp;&nbsp;&nbsp; 50 libras
 
-**36. Se considera excavación un corte, cavidad, zanja o depresión con una profundidad mayor a:**  <br>_Selección múltiple_
+**40. Se considera excavación un corte, cavidad, zanja o depresión con una profundidad mayor a:**  <br>_Selección múltiple_
 
 - **✔** 30 centímetros
 - &nbsp;&nbsp;&nbsp; 1,2 metros
 - &nbsp;&nbsp;&nbsp; 1,8 metros
 - &nbsp;&nbsp;&nbsp; 1 metro
 
-**37. ¿Cuál de las siguientes actividades está prohibida en trabajo en solitario?**  <br>_Selección múltiple_
+**41. ¿Cuál de las siguientes actividades está prohibida en trabajo en solitario?**  <br>_Selección múltiple_
 
 - **✔** Trabajo en espacios confinados
 - &nbsp;&nbsp;&nbsp; Labores de oficina
 - &nbsp;&nbsp;&nbsp; Recorridos peatonales por zonas administrativas
 - &nbsp;&nbsp;&nbsp; Reuniones de equipo
 
-**38. Los daños producidos en el oído por exposición a ruido son irreversibles: nunca se recuperan.**  <br>_Verdadero / Falso_
+**42. Los daños producidos en el oído por exposición a ruido son irreversibles: nunca se recuperan.**  <br>_Verdadero / Falso_
 
 - **✔** Verdadero
 - &nbsp;&nbsp;&nbsp; Falso
 
-**39. Está permitido operar un equipo al que se le retiraron las guardas de seguridad si la tarea es corta.**  <br>_Verdadero / Falso_
+**43. Está permitido operar un equipo al que se le retiraron las guardas de seguridad si la tarea es corta.**  <br>_Verdadero / Falso_
 
 - **✔** Falso
 - &nbsp;&nbsp;&nbsp; Verdadero
 
-**40. En elevación y soporte de cargas, ¿cuál es una conducta prohibida?**  <br>_Selección múltiple_
+**44. En elevación y soporte de cargas, ¿cuál es una conducta prohibida?**  <br>_Selección múltiple_
 
 - **✔** Colocarse debajo de cargas suspendidas
 - &nbsp;&nbsp;&nbsp; Verificar el peso exacto de la carga
@@ -280,62 +308,36 @@ Verdadero/Falso). La respuesta correcta va marcada con **✔**.
 - &nbsp;&nbsp;&nbsp; Usar terreno firme y nivelado
 
 
+
 ## Módulo 5 · Controles críticos
 
-**41. PUE significa:**  <br>_Selección múltiple_
+**45. PUE significa:**  <br>_Selección múltiple_
 
 - **✔** Evento Prioritario no Deseado
 - &nbsp;&nbsp;&nbsp; Plan Único de Emergencias
 - &nbsp;&nbsp;&nbsp; Procedimiento Unificado de Ejecución
 - &nbsp;&nbsp;&nbsp; Permiso Único de Entrada
 
-**42. A nivel mundial en Holcim, aproximadamente ¿qué porcentaje de los incidentes críticos y fatalidades está relacionado con los controles críticos?**  <br>_Selección múltiple_
+**46. A nivel mundial en Holcim, aproximadamente ¿qué porcentaje de los incidentes críticos y fatalidades está relacionado con los controles críticos?**  <br>_Selección múltiple_
 
 - **✔** 85%
 - &nbsp;&nbsp;&nbsp; 50%
 - &nbsp;&nbsp;&nbsp; 25%
 - &nbsp;&nbsp;&nbsp; 100%
 
-**43. En el PUE de fallo en respuesta a emergencias, la respuesta de los brigadistas debe tardar menos de:**  <br>_Selección múltiple_
+**47. En el PUE de fallo en respuesta a emergencias, la respuesta de los brigadistas debe tardar menos de:**  <br>_Selección múltiple_
 
 - **✔** 5 minutos
 - &nbsp;&nbsp;&nbsp; 15 minutos
 - &nbsp;&nbsp;&nbsp; 30 minutos
 - &nbsp;&nbsp;&nbsp; 1 hora
 
-**44. El control crítico “barreras, barandas y cubiertas en aperturas y bordes de caída” pertenece al PUE:**  <br>_Selección múltiple_
+**48. El control crítico “barreras, barandas y cubiertas en aperturas y bordes de caída” pertenece al PUE:**  <br>_Selección múltiple_
 
 - **✔** Caída de Alturas
 - &nbsp;&nbsp;&nbsp; Contacto con Energías Peligrosas
 - &nbsp;&nbsp;&nbsp; Sepultamiento por Material
 - &nbsp;&nbsp;&nbsp; Contaminación
-
-
-## Reemplazan a las del módulo 6, retirado del curso
-
-**45. Los cinco frentes de la hoja de ruta hacia la ambición «Cero» son Compromiso, Mejora Continua, Bienestar, Seguridad Vial y Programa de Controles Críticos.**  <br>_Verdadero / Falso_
-
-- **✔** Verdadero
-- &nbsp;&nbsp;&nbsp; Falso
-
-**46. El indicador C-VPC corresponde al abordaje a trabajadores en labores relacionadas con:**  <br>_Selección múltiple_
-
-- **✔** Los Controles Críticos
-- &nbsp;&nbsp;&nbsp; La dotación de EPP
-- &nbsp;&nbsp;&nbsp; El pago de la nómina
-- &nbsp;&nbsp;&nbsp; Las auditorías financieras
-
-**47. Las tres técnicas del ATS son definir el paso de la tarea, identificar peligros, riesgos y consecuencias, y formular y cumplir controles.**  <br>_Verdadero / Falso_
-
-- **✔** Verdadero
-- &nbsp;&nbsp;&nbsp; Falso
-
-**48. Dentro del ITS, el Análisis de Riesgo Personal sirve para:**  <br>_Selección múltiple_
-
-- **✔** Identificar peligros y controles que no se contemplaron ni documentaron en el ITS
-- &nbsp;&nbsp;&nbsp; Reemplazar el permiso de trabajo
-- &nbsp;&nbsp;&nbsp; Calificar el desempeño del trabajador
-- &nbsp;&nbsp;&nbsp; Programar el mantenimiento de los equipos
 
 **49. ¿Cuántos Eventos Prioritarios no Deseados (PUE) tiene definidos Holcim?**  <br>_Selección múltiple_
 
@@ -345,6 +347,48 @@ Verdadero/Falso). La respuesta correcta va marcada con **✔**.
 - &nbsp;&nbsp;&nbsp; 20
 
 **50. El «Contacto con Harina Caliente» es uno de los PUE definidos por Holcim.**  <br>_Verdadero / Falso_
+
+- **✔** Verdadero
+- &nbsp;&nbsp;&nbsp; Falso
+
+
+
+## Módulo 6 · Comunicación y consulta
+
+**51. El COPASST está compuesto por:**  <br>_Selección múltiple_
+
+- **✔** Igual número de representantes del empleador y de los trabajadores
+- &nbsp;&nbsp;&nbsp; Solo representantes de los trabajadores
+- &nbsp;&nbsp;&nbsp; Solo representantes del empleador
+- &nbsp;&nbsp;&nbsp; Únicamente personal del área de HSE
+
+**52. El Comité de Convivencia Laboral determina si existe o no acoso laboral.**  <br>_Verdadero / Falso_
+
+- **✔** Falso
+- &nbsp;&nbsp;&nbsp; Verdadero
+
+**53. La brigada especializada o clase III está formada para la prevención y atención de emergencias en sectores de:**  <br>_Selección múltiple_
+
+- **✔** Alto riesgo (petrolero, minero, químico, eléctrico, entre otros)
+- &nbsp;&nbsp;&nbsp; Riesgo administrativo únicamente
+- &nbsp;&nbsp;&nbsp; Comercio y oficinas
+- &nbsp;&nbsp;&nbsp; Transporte urbano de pasajeros
+
+**54. En la responsabilidad civil derivada de un accidente de trabajo, la reparación de daños puede llegar hasta:**  <br>_Selección múltiple_
+
+- **✔** 1000 SMMLV
+- &nbsp;&nbsp;&nbsp; 100 SMMLV
+- &nbsp;&nbsp;&nbsp; 10 SMMLV
+- &nbsp;&nbsp;&nbsp; No tiene límite definido
+
+**55. La norma ISO 45001 corresponde al sistema de gestión de:**  <br>_Selección múltiple_
+
+- **✔** Seguridad y Salud en el Trabajo
+- &nbsp;&nbsp;&nbsp; Calidad
+- &nbsp;&nbsp;&nbsp; Ambiental
+- &nbsp;&nbsp;&nbsp; Seguridad Vial
+
+**56. Es responsabilidad del trabajador procurar el cuidado integral de su salud e informar oportunamente los peligros del sitio de trabajo.**  <br>_Verdadero / Falso_
 
 - **✔** Verdadero
 - &nbsp;&nbsp;&nbsp; Falso
