@@ -1326,7 +1326,9 @@
   .ultra .pue{--ph:54px} .ultra .pue p{font-size:10.4px;padding:6px 8px 7px}
   @media(max-width:900px){ .pues{grid-template-columns:repeat(3,1fr)} }
   /* ===== PUE: simbolo arriba y lamina dentro del panel del control ===== */
-  .puesimb{display:block;width:var(--ps,86px);height:var(--ps,86px);margin:0 auto 6px}
+  .puehead{display:flex;align-items:center;gap:14px}
+  .puehead h2{flex:1;min-width:0}
+  .puesimb{flex:none;display:block;width:var(--ps,86px);height:var(--ps,86px)}
   .puesimb img{width:100%;height:100%;object-fit:contain;display:block}
   .puesimb svg{width:100%;height:100%}
   .puefoto{display:flex;align-items:center;justify-content:center;margin-top:10px;
@@ -1340,7 +1342,7 @@
   .apretado .puefoto svg{height:150px}
   .muy-apretado .puesimb{--ps:58px} .muy-apretado .puefoto{--pf:162px}
   .muy-apretado .puefoto svg{height:122px}
-  .ultra .puesimb{--ps:48px} .ultra .puefoto{--pf:130px}
+  .ultra .puesimb{--ps:48px} .ultra .puefoto{--pf:116px}
   .ultra .puefoto svg{height:98px}
   @media(max-width:620px){ .pues{grid-template-columns:repeat(2,1fr)} }
   @media(max-width:700px){
@@ -5412,7 +5414,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-06-j";
+var VERSION_CURSO = "2026-09-06-k";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
@@ -6455,9 +6457,9 @@ var PUES = {
   ['Equipos certificados para realizar el trabajo','Las estructuras, plataformas y equipos de acceso a alturas (permanentes, temporales o móviles) deben estar certificados y diseñados, instalados, inspeccionados y aprobados para su uso por una persona autorizada y competente.','caida3(D82)'],
   ['Sistema de protección personal contra caídas','Cualquier persona que trabaje a menos de 2 metros de aberturas o bordes desprotegidos (a 1,8 metros o más de altura) debe utilizar un sistema de protección personal contra caídas (restricción/suspensión) sujeto a un punto de anclaje autorizado.','caida4(D82)']]},
  energias:{n:'Contacto con Energías Peligrosas', c:[
-  ['Barreras físicas','Las barreras físicas evitan que cualquier persona entre en contacto con los peligros de la energía en movimiento.'],
-  ['Aislamiento de energía','Todas las fuentes de energía deben ser controladas a través del bloqueo, etiquetado y prueba.'],
-  ['Paradas de emergencia','Parada de emergencia del movimiento de la maquinaria mediante una sola acción manual.']]},
+  ['Barreras físicas','Las barreras físicas evitan que cualquier persona entre en contacto con los peligros de la energía en movimiento.','energias1(D82)'],
+  ['Aislamiento de energía','Todas las fuentes de energía deben ser controladas a través del bloqueo, etiquetado y prueba.','energias2(D82)'],
+  ['Paradas de emergencia','Parada de emergencia del movimiento de la maquinaria mediante una sola acción manual.','energias3(D82)']]},
  sepultamiento:{n:'Sepultamiento por Material', c:[
   ['Sistemas de detección temprana, prevención y mantenimiento','Inspección, mantenimiento y limpieza periódica para evitar el ingreso de personas.'],
   ['Control y aislamiento de las fuentes de energía','Aislamiento de todas las fuentes de energía relacionadas con el espacio al que se ingresa: de procesos anteriores y posteriores.'],
@@ -6535,7 +6537,13 @@ document.querySelectorAll('.pueBox').forEach(function(box){
     + '<path d="M45 6l38 66H7z" fill="#f5c400" stroke="#3c4148" stroke-width="4" stroke-linejoin="round"/>'
     + '<path d="M45 20l26 45H19z" fill="#3c4148" stroke="none"/>'
     + '<path d="M45 34v14M45 55h0" stroke="#f5c400" stroke-width="5" stroke-linecap="round"/></svg>';
-  box.appendChild(simb);
+  /* El simbolo va a la izquierda del titulo de la diapositiva. */
+  var caja = box.closest('.wrap'), tit = caja && caja.querySelector('h2');
+  if(tit){
+    var cab = document.createElement('div'); cab.className = 'puehead';
+    tit.parentNode.insertBefore(cab, tit);
+    cab.appendChild(simb); cab.appendChild(tit);
+  } else { box.insertBefore(simb, box.firstChild); }
   var nums = document.createElement('div'); nums.className = 'puenums';
   var panel = document.createElement('div'); panel.className = 'puepanel';
   var hint = document.createElement('div'); hint.className = 'puehint';
@@ -6551,6 +6559,9 @@ document.querySelectorAll('.pueBox').forEach(function(box){
         + '<svg viewBox="0 0 160 110" aria-hidden="true"><rect x="4" y="4" width="152" height="102" rx="4"/>'
         + '<path d="M4 76l34-26 26 20 24-18 40 30" /><circle cx="118" cy="30" r="10"/></svg></span>' : '');
     if(window.activarFotos) activarFotos();   /* engancha el hueco recien creado */
+    /* El hueco nace despues de que la diapositiva ya esta abierta, asi que hay
+       que pedir la carga aqui mismo: si no, la lamina esperaria al siguiente paso. */
+    if(window.cargarMediosCercanos) cargarMediosCercanos();
     setTimeout(function(){ panel.style.opacity=1; panel.style.transform='none'; }, 20);
     vistos[i] = true; nums.children[i].classList.add('vis');
     var n = Object.keys(vistos).length;
