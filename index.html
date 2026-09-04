@@ -182,6 +182,13 @@
     background-repeat:no-repeat;background-position:right 14px center;background-size:12px 8px}
   .excampo select option{background:#0d2036;color:#fff}
   .exerr{font-size:12.5px;color:#ff9c95;margin-top:6px;min-height:16px}
+  /* Pista del modo administrador: la respuesta correcta se señala, no se
+     marca. Fuera del modo administrador no existe visualmente. */
+  body.admin .exopt[data-ok]{border-color:var(--ok);background:rgba(46,178,94,.13)}
+  body.admin .exopt[data-ok] span:after{content:"correcta";display:inline-block;
+    margin-left:8px;font-size:10.5px;font-weight:800;letter-spacing:.6px;
+    text-transform:uppercase;color:#04121f;background:var(--ok);
+    border-radius:4px;padding:1px 6px;vertical-align:2px}
   /* Con seis campos, en un portatil de 720px de alto la pantalla de
      identificacion ya no cabia: se aprieta en los mismos escalones que el
      resto del curso en vez de obligar a desplazarse antes de empezar. */
@@ -5308,6 +5315,7 @@
         <p class="lead" style="text-align:center;max-width:56ch;margin:12px auto 0" id="exDetalle"></p>
         <div class="exguardado" id="exGuardado"></div>
         <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:18px">
+          <button class="exbtn" id="exDiploma" type="button" hidden>Descargar certificado (PDF)</button>
           <button class="exbtn sec" id="exRepetir" type="button">Presentar de nuevo</button>
         </div>
         <div class="exrevi" id="exRevision"></div>
@@ -5396,7 +5404,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-06-x";
+var VERSION_CURSO = "2026-09-06-z";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
@@ -6885,6 +6893,204 @@ function enviarASheet(pestana, datos){
   });
 }
 
+/* ====== CERTIFICADO EN PDF ======
+   Al aprobar el examen, el curso arma el certificado y lo descarga como PDF.
+   Todo pasa en el navegador: no hay servidor ni librerias externas de por medio,
+   asi que funciona igual desde GitHub Pages, desde el portal o sin conexion una
+   vez cargada la pagina.
+
+   El fondo (la cuña azul, la planta dibujada, el logo y el icono del casco) es
+   una sola imagen, la misma plantilla del certificado impreso. Encima se
+   escriben los datos de la persona en las posiciones exactas del original.
+
+   Las coordenadas van en puntos sobre una hoja de 1440 x 810, que es el tamano
+   de la plantilla. Se dibuja todo en un lienzo al doble de resolucion y esa
+   imagen se mete en un PDF de una pagina. */
+var DIPLOMA = {
+  ancho: 1440, alto: 810,
+  fondo: 'imagenes/certificado(D95).png',
+  escala: 2,                       // el doble de pixeles: se imprime nitido
+  azul: '#041738', cyan: '#04baf0',
+  /* La familia se pide asi para que Windows use Arial Black, que es la del
+     original, y macOS o Linux caigan en la mas parecida que tengan. */
+  negra: '"Arial Black","Arial Bold",Arial,Helvetica,sans-serif',
+  gorda: 'Arial,Helvetica,sans-serif'
+};
+
+var MESES = ['enero','febrero','marzo','abril','mayo','junio','julio',
+             'agosto','septiembre','octubre','noviembre','diciembre'];
+function fechaLarga(d){
+  d = d || new Date();
+  return d.getDate() + ' de ' + MESES[d.getMonth()] + ' de ' + d.getFullYear();
+}
+
+/* Escribe una linea encogiendo la letra si no cabe en el ancho dado. */
+function textoAjustado(cx, txt, x, y, tam, familia, color, anchoMax){
+  var t = tam;
+  cx.fillStyle = color;
+  while(t > 8){
+    cx.font = '900 ' + t + 'px ' + familia;
+    if(cx.measureText(txt).width <= anchoMax) break;
+    t -= 1;
+  }
+  cx.fillText(txt, x, y);
+  return t;
+}
+
+/* Parte un texto en lineas que quepan en anchoMax. La primera linea puede
+   arrancar mas a la derecha, porque va despues de una etiqueta. */
+function partirEnLineas(cx, txt, anchoPrimera, anchoResto){
+  var palabras = txt.split(/\s+/), lineas = [], actual = '', limite = anchoPrimera;
+  palabras.forEach(function(w){
+    var prueba = actual ? actual + ' ' + w : w;
+    if(cx.measureText(prueba).width <= limite || !actual){ actual = prueba; }
+    else { lineas.push(actual); actual = w; limite = anchoResto; }
+  });
+  if(actual) lineas.push(actual);
+  return lineas;
+}
+
+/* Dibuja el certificado en un lienzo y devuelve una promesa con ese lienzo. */
+function dibujarDiploma(datos){
+  var D = DIPLOMA, e = D.escala;
+  var lienzo = document.createElement('canvas');
+  lienzo.width = D.ancho * e; lienzo.height = D.alto * e;
+  var cx = lienzo.getContext('2d');
+  cx.scale(e, e);
+  cx.textBaseline = 'top';
+
+  return new Promise(function(listo, falla){
+    /* Se prueban las mismas rutas que usa el resto del curso. Se pide con
+       crossOrigin porque si el curso se sirve desde Apps Script, la plantilla
+       viene de otro dominio y sin permiso CORS el lienzo queda "manchado" y el
+       navegador no deja exportarlo. */
+    var rutas = (typeof candidatos === 'function' ? candidatos(D.fondo) : [D.fondo]);
+    var i = 0;
+    (function intentar(){
+      if(i >= rutas.length){
+        falla(new Error('no se encontró la plantilla del certificado'));
+        return;
+      }
+      var img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = function(){ pintar(img); listo(lienzo); };
+      img.onerror = function(){ i++; intentar(); };
+      img.src = rutas[i];
+    })();
+
+    function pintar(fondo){
+      cx.drawImage(fondo, 0, 0, D.ancho, D.alto);
+
+      // titulo sobre la cuña oscura
+      cx.fillStyle = '#fff';
+      cx.font = '900 52px ' + D.negra;
+      cx.fillText('Certificado de', 35, 32);
+      cx.fillText('capacitación', 35, 81);
+
+      // nombre
+      textoAjustado(cx, datos.nombre, 532, 253, 69, D.negra, D.azul, 860);
+
+      // capacitacion: etiqueta azul + valor cyan, que puede ocupar dos lineas
+      cx.font = '900 26.4px ' + D.negra;
+      cx.fillStyle = D.azul;
+      cx.fillText('Capacitación:', 532, 401);
+      var sangria = 741 - 532;
+      var lineas = partirEnLineas(cx, datos.capacitacion, 1385 - 741, 1385 - 532);
+      cx.fillStyle = D.cyan;
+      lineas.forEach(function(l, i){
+        cx.fillText(l, i === 0 ? 741 : 532, 397 + i * 50.7);
+      });
+
+      cx.fillStyle = D.azul;
+      cx.font = '900 32px ' + D.negra;
+      cx.fillText('Empresa:', 799, 542);
+      textoAjustado(cx, datos.empresa, 1020, 542, 33, D.negra, D.azul, 380);
+
+      cx.font = '900 20px ' + D.negra;
+      cx.fillStyle = D.azul;
+      cx.fillText('Identificación:', 799, 626);
+      cx.fillText(datos.cedula, 1020, 626);
+      cx.fillText('Fecha de', 799, 683);
+      cx.fillText('realización:', 799, 707);
+      cx.fillText(datos.fecha, 1020, 683);
+    }
+  });
+}
+
+/* Arma un PDF de una pagina con la imagen del certificado dentro.
+   Es el PDF mas simple que existe: catalogo, paginas, pagina, la imagen y el
+   contenido que la coloca. Se construye a mano para no depender de ninguna
+   libreria externa. */
+function lienzoAPdf(lienzo, ancho, alto){
+  var jpg;
+  try{
+    jpg = lienzo.toDataURL('image/jpeg', 0.92).split(',')[1];
+  }catch(e){
+    /* Pasa si la plantilla se sirvio desde otro dominio sin permiso CORS. */
+    throw new Error('el navegador no permitió exportar la imagen del certificado');
+  }
+  var bin = atob(jpg);
+  var datosImg = new Uint8Array(bin.length);
+  for(var i = 0; i < bin.length; i++) datosImg[i] = bin.charCodeAt(i);
+
+  var trozos = [], largo = 0, posiciones = [];
+  function meter(x){
+    var b = (typeof x === 'string') ? new TextEncoder().encode(x) : x;
+    trozos.push(b); largo += b.length;
+  }
+  function objeto(n, cuerpo, flujo){
+    posiciones[n] = largo;
+    meter(n + ' 0 obj\n' + cuerpo + '\n');
+    if(flujo){ meter('stream\n'); meter(flujo); meter('\nendstream\n'); }
+    meter('endobj\n');
+  }
+
+  meter('%PDF-1.4\n%\xE2\xE3\xCF\xD3\n');
+  objeto(1, '<</Type/Catalog/Pages 2 0 R>>');
+  objeto(2, '<</Type/Pages/Kids[3 0 R]/Count 1>>');
+  objeto(3, '<</Type/Page/Parent 2 0 R/MediaBox[0 0 ' + ancho + ' ' + alto + ']' +
+            '/Resources<</XObject<</I0 4 0 R>>>>/Contents 5 0 R>>');
+  objeto(4, '<</Type/XObject/Subtype/Image/Width ' + lienzo.width +
+            '/Height ' + lienzo.height + '/ColorSpace/DeviceRGB/BitsPerComponent 8' +
+            '/Filter/DCTDecode/Length ' + datosImg.length + '>>', datosImg);
+  var contenido = 'q ' + ancho + ' 0 0 ' + alto + ' 0 0 cm /I0 Do Q';
+  objeto(5, '<</Length ' + contenido.length + '>>', contenido);
+
+  var inicioXref = largo;
+  var xref = 'xref\n0 6\n0000000000 65535 f \n';
+  for(var n = 1; n <= 5; n++){
+    xref += ('0000000000' + posiciones[n]).slice(-10) + ' 00000 n \n';
+  }
+  meter(xref);
+  meter('trailer\n<</Size 6/Root 1 0 R>>\nstartxref\n' + inicioXref + '\n%%EOF\n');
+
+  return new Blob(trozos, { type: 'application/pdf' });
+}
+
+/* Junta las dos piezas y le entrega el archivo a la persona. */
+function descargarDiploma(datos, avisar){
+  return dibujarDiploma(datos).then(function(lienzo){
+    var blob = lienzoAPdf(lienzo, DIPLOMA.ancho, DIPLOMA.alto);
+    var nombreArchivo = 'Certificado ' + datos.capacitacion + ' - ' + datos.nombre + '.pdf';
+    nombreArchivo = nombreArchivo.replace(/[\\/:*?"<>|]/g, '-').replace(/\s+/g, ' ');
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    if('download' in a){
+      a.href = url; a.download = nombreArchivo;
+      a.style.display = 'none';
+      document.body.appendChild(a); a.click();
+      /* El enlace se quita despues, no en la misma linea: algunos navegadores
+         pierden el nombre del archivo si desaparece durante la descarga. */
+      setTimeout(function(){ a.remove(); }, 2000);
+    } else {
+      window.open(url, '_blank');       // navegadores viejos de iPhone
+    }
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 60000);
+  }).catch(function(err){
+    if(avisar) avisar(err);
+  });
+}
+
 /* ====== EXAMEN FINAL · lógica ====== */
 window.EXAMEN_APROBADO = false;
 document.addEventListener('DOMContentLoaded', function(){
@@ -6966,7 +7172,11 @@ document.addEventListener('DOMContentLoaded', function(){
               '<div class="qh"><span class="qn">'+(i+1)+'.</span><span>'+it.q.p+'</span><span class="qm">'+etq+'</span></div>' +
               '<div class="exopts">';
       it.orden.forEach(function(oi,k){
-        html += '<label class="exopt"><input type="radio" name="exq'+i+'" value="'+k+'"><span>'+it.q.o[oi]+'</span></label>';
+        /* La opcion correcta se marca en el HTML, pero SOLO se ve si el modo
+           administrador esta activo (lo decide el CSS con body.admin). No se
+           selecciona: se señala, para poder revisar el banco sin responder. */
+        var pista = (k === it.correcta) ? ' data-ok="1"' : '';
+        html += '<label class="exopt"'+pista+'><input type="radio" name="exq'+i+'" value="'+k+'"><span>'+it.q.o[oi]+'</span></label>';
       });
       html += '</div></div>';
     });
@@ -7051,7 +7261,7 @@ document.addEventListener('DOMContentLoaded', function(){
       '<b>' + persona.nombre + '</b> · C.C. ' + persona.cedula + '<br>' +
       persona.tipo + ' · ' + persona.empresa + '<br>' +
       aciertos + ' de ' + sorteadas.length + ' respuestas correctas · nota mínima ' + NOTA_MINIMA + '%.' +
-      (aprobo ? '<br>Ya puedes <b>cerrar esta ventana</b>: tu resultado quedó registrado.'
+      (aprobo ? '<br>Tu resultado quedó registrado. Descarga tu <b>certificado</b> y ya puedes cerrar esta ventana.'
               : '<br>Revisa abajo las preguntas falladas y presenta el examen de nuevo.');
 
     document.getElementById('exRevision').innerHTML = aprobo ? '' :
@@ -7061,9 +7271,25 @@ document.addEventListener('DOMContentLoaded', function(){
                '<span class="exopt bien">Respuesta correcta: '+d.correcta+'</span></div></div>';
       }).join('');
 
+    var btnDip = document.getElementById('exDiploma');
+    btnDip.hidden = !aprobo;
     if(aprobo){
       window.EXAMEN_APROBADO = true;
       marcarCompletado();
+      var datosDip = {
+        nombre: persona.nombre, cedula: persona.cedula, empresa: persona.empresa,
+        capacitacion: NOMBRE_CAPACITACION, fecha: fechaLarga(new Date())
+      };
+      btnDip.textContent = 'Descargar certificado (PDF)';
+      btnDip.disabled = false;
+      btnDip.onclick = function(){
+        btnDip.disabled = true; btnDip.textContent = 'Preparando el certificado…';
+        descargarDiploma(datosDip, function(err){
+          toast('No se pudo generar el certificado: ' + (err && err.message ? err.message : err));
+        }).then(function(){
+          btnDip.disabled = false; btnDip.textContent = 'Descargar certificado (PDF)';
+        });
+      };
     }
     fase('resultado');
     try{ elRes.scrollIntoView({block:'start'}); }catch(e){}
@@ -7298,7 +7524,7 @@ document.addEventListener('DOMContentLoaded', function(){
       <button id="admcerrar" type="button">Cerrar</button>
     </div>
     <div class="admlist" id="admlist"></div>
-    <p class="admnota">Con el modo activo se quitan las barreras: puedes ir a cualquier diapositiva sin completar las interacciones ni el video.</p>
+    <p class="admnota">Con el modo activo se quitan las barreras: puedes ir a cualquier diapositiva sin completar las interacciones ni el video. En el examen se señala cuál es la respuesta correcta de cada pregunta, sin marcarla.</p>
   </div>
 </div>
 </body>
