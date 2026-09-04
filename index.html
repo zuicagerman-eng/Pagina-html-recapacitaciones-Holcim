@@ -1269,6 +1269,22 @@
     .gest{grid-template-columns:1fr;justify-items:center}
     .gestcol{width:100%}
   }
+  /* ===== Peligros higienicos: nueve iconos con su linea de degradado ===== */
+  .higi{display:grid;grid-template-columns:repeat(3,1fr);gap:12px 10px;margin-top:8px;
+    max-width:760px;margin-inline:auto}
+  .higit{margin:0;display:flex;flex-direction:column;align-items:center;gap:5px;text-align:center}
+  .higit .ph{display:flex;align-items:center;justify-content:center;height:var(--hi,60px)}
+  .higit .ph img{max-width:100%;max-height:100%;width:auto;height:auto;display:block}
+  .higit .ph svg{width:var(--hi,60px);height:var(--hi,60px);fill:none;stroke:currentColor;
+    stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+  .higilinea{width:74px;height:5px;border-radius:3px;background:var(--grad)}
+  .higit figcaption{font-size:12.6px;font-weight:700;line-height:1.2}
+  .apretado .higi{--hi:46px;gap:8px 10px} .apretado .higit figcaption{font-size:12px}
+  .muy-apretado .higi{--hi:42px;gap:7px 10px} .muy-apretado .higit figcaption{font-size:11.4px}
+  .muy-apretado .higilinea{width:60px;height:4px}
+  .ultra .higi{--hi:34px;gap:5px 9px} .ultra .higit figcaption{font-size:10.7px}
+  .ultra .higilinea{width:48px;height:3px}
+  @media(max-width:560px){ .higi{grid-template-columns:repeat(2,1fr)} }
   @media(max-width:900px){
     .audi{grid-template-columns:1fr}
     .audifoto{max-width:380px}
@@ -4898,8 +4914,18 @@
 <div class="wrap"><div class="eyebrow rv up">Otros controles de salud</div>
 <h2 class="rv up" style="--d:1">Higiene Industrial y Medicina Preventiva</h2>
 <div class="infobanner rv up" style="--d:2">La higiene industrial busca <b>reconocer las condiciones ambientales peligrosas</b>, evaluarlas y proponer medidas de control para que estén en los <b>menores niveles posibles</b> y conservar la salud de todos los trabajadores.</div>
-<p class="lead rv up">Peligros higiénicos en Holcim — toca cada uno. 👆</p>
-<div class="chipgrid"><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#17868a">1</span><span class="nm">Material particulado</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#1bb4e4">2</span><span class="nm">Vibraciones</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#e6007e">3</span><span class="nm">Biomecánico</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#6a3d9a">4</span><span class="nm">Psicosocial</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#ef7d00">5</span><span class="nm">Ruido</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#f5b700">6</span><span class="nm">Radiaciones ionizantes</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#e23b32">7</span><span class="nm">Cardiovascular</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#97d13b">8</span><span class="nm">Iluminación</span><span class="tick">✓</span></div><div class="chip3 gclick rv up" tabindex="0" role="button"><span class="code" style="background:#1877c4">9</span><span class="nm">Altas temperaturas</span><span class="tick">✓</span></div></div>
+<h3 class="subt chico" style="margin-top:12px">Peligros higiénicos en Holcim</h3>
+<div class="higi rv up" style="--d:3">
+  <figure class="higit"><span class="ph" data-foto="particulado(D73)"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="13"/><circle cx="24" cy="24" r="4"/><circle cx="24" cy="8" r="3"/><circle cx="38" cy="16" r="3"/><circle cx="38" cy="32" r="3"/><circle cx="24" cy="40" r="3"/><circle cx="10" cy="32" r="3"/><circle cx="10" cy="16" r="3"/><path d="M24 11v10M35 18l-8 4M35 30l-8-4M24 37V27M13 30l8-4M13 18l8 4"/></svg></span><span class="higilinea"></span><figcaption>Material particulado</figcaption></figure>
+  <figure class="higit"><span class="ph" data-foto="vibraciones(D73)"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="17" y="8" width="14" height="32" rx="3"/><circle cx="24" cy="34" r="2"/><path d="M20 15h8"/><path d="M8 18c-3 4-3 8 0 12M12 21c-1.5 2-1.5 4 0 6M40 18c3 4 3 8 0 12M36 21c1.5 2 1.5 4 0 6"/></svg></span><span class="higilinea"></span><figcaption>Vibraciones</figcaption></figure>
+  <figure class="higit"><span class="ph" data-foto="biomecanico(D73)"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="9" r="5"/><path d="M24 14v18"/><path d="M12 20h24"/><path d="M24 32l-7 12M24 32l7 12"/><path d="M14 20l-4 10M34 20l4 10"/></svg></span><span class="higilinea"></span><figcaption>Biomecánico</figcaption></figure>
+  <figure class="higit"><span class="ph" data-foto="psicosocial(D73)"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M34 40V30a14 14 0 1 0-20-12v6l-4 6h4v6a4 4 0 0 0 4 4h4"/><path d="M24 12l-5 9h7l-4 8"/></svg></span><span class="higilinea"></span><figcaption>Psicosocial</figcaption></figure>
+  <figure class="higit"><span class="ph" data-foto="ruido(D73)"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M10 20h7l10-8v24l-10-8h-7z"/><path d="M32 17c4 4 4 10 0 14M38 12c7 7 7 17 0 24"/></svg></span><span class="higilinea"></span><figcaption>Ruido</figcaption></figure>
+  <figure class="higit"><span class="ph" data-foto="radiaciones(D73)"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="17"/><circle cx="24" cy="24" r="4"/><path d="M24 20a13 13 0 0 1 11 6M24 20a13 13 0 0 0-11 6M20 27a13 13 0 0 0 8 10M28 27a13 13 0 0 1-8 10"/></svg></span><span class="higilinea"></span><figcaption>Radiaciones ionizantes</figcaption></figure>
+  <figure class="higit"><span class="ph" data-foto="cardiovascular(D73)"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 40S8 30 8 19a8 8 0 0 1 16-3 8 8 0 0 1 16 3c0 11-16 21-16 21z"/><path d="M11 23h7l3-6 4 12 3-6h9"/></svg></span><span class="higilinea"></span><figcaption>Cardiovascular</figcaption></figure>
+  <figure class="higit"><span class="ph" data-foto="iluminacion(D73)"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M12 22a12 12 0 0 1 24 0z"/><path d="M8 22h32"/><path d="M24 10V4"/><path d="M24 28v6"/><path d="M14 30l-3 4M34 30l3 4"/></svg></span><span class="higilinea"></span><figcaption>Iluminación</figcaption></figure>
+  <figure class="higit"><span class="ph" data-foto="temperaturas(D73)"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M20 8a4 4 0 0 1 8 0v20a7 7 0 1 1-8 0z"/><path d="M24 20v10"/><path d="M34 12h6M34 18h6M34 24h4"/></svg></span><span class="higilinea"></span><figcaption>Altas temperaturas</figcaption></figure>
+</div>
 <div class="pdfrow rv up" style="grid-template-columns:1fr"><div class="pdfmini"><span>Conoce más sobre los <b>peligros higiénicos</b>.</span><button class="pdfbtn" data-pdf="higiene_guia" data-title="Higiene y medicina preventiva">Ver más</button></div></div>
 </div></section>
 <section class="slide light mint" data-mod="4">
@@ -5195,7 +5221,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-06-c";
+var VERSION_CURSO = "2026-09-06-d";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
