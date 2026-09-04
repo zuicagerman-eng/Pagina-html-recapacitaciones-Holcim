@@ -1285,6 +1285,36 @@
   .ultra .higi{--hi:34px;gap:5px 9px} .ultra .higit figcaption{font-size:10.7px}
   .ultra .higilinea{width:48px;height:3px}
   @media(max-width:560px){ .higi{grid-template-columns:repeat(2,1fr)} }
+  /* ===== Evaluaciones medicas: bloques alternos con su placa de color ===== */
+  .eva{display:grid;gap:11px;margin-top:12px}
+  .evab{display:grid;grid-template-columns:var(--ico,132px) 1fr;gap:12px;align-items:stretch;min-width:0}
+  .evab.inv{grid-template-columns:1fr var(--ico,132px)}
+  .evab.inv .evaico{order:2}
+  .evaico{background:var(--c);color:var(--t);border-radius:11px;display:grid;place-items:center;
+    padding:10px;box-shadow:var(--shadow)}
+  .evaico svg{width:var(--is,52px);height:var(--is,52px);fill:none;stroke:currentColor;
+    stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+  .evatxt{border:2px solid var(--c);border-radius:11px;padding:11px 15px;background:#fff;min-width:0}
+  .slide.dark .evatxt{background:rgba(255,255,255,.05)}
+  .evatxt h3{font-size:14.2px;font-weight:800;color:var(--c);text-transform:uppercase;
+    letter-spacing:.4px;margin-bottom:5px}
+  .slide.light .evatxt h3,.slide.light .evatxt p{color:var(--c)}
+  .evatxt p{margin:0;font-size:12.4px;line-height:1.42;color:var(--ink)}
+  .slide.light .evatxt p{color:var(--ink)}
+  .evatxt p+p{margin-top:6px}
+  .apretado .eva{gap:9px} .apretado .evab{--ico:112px;--is:44px}
+  .apretado .evatxt{padding:9px 13px} .apretado .evatxt h3{font-size:13.4px}
+  .apretado .evatxt p{font-size:11.8px;line-height:1.38}
+  .muy-apretado .evab{--ico:94px;--is:38px}
+  .muy-apretado .evatxt h3{font-size:12.6px} .muy-apretado .evatxt p{font-size:11.2px;line-height:1.34}
+  .ultra .evab{--ico:78px;--is:32px}
+  .ultra .evatxt{padding:8px 11px} .ultra .evatxt h3{font-size:11.8px}
+  .ultra .evatxt p{font-size:10.6px;line-height:1.3}
+  @media(max-width:700px){
+    .evab,.evab.inv{grid-template-columns:1fr;gap:7px}
+    .evab.inv .evaico{order:0}
+    .evaico{padding:8px}
+  }
   @media(max-width:900px){
     .audi{grid-template-columns:1fr}
     .audifoto{max-width:380px}
@@ -4931,8 +4961,57 @@
 <section class="slide light mint" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">Otros controles de salud</div>
 <h2 class="rv up" style="--d:1">Evaluaciones médicas ocupacionales</h2>
-<p class="lead rv up" style="--d:2">Toca cada tipo de evaluación. 👆</p>
-<div class="accgrid" style="margin-top:14px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>Pre-ingreso</h4><span class="chev">+</span></div><div class="acc-body"><p>Determinar, <b>antes de la contratación</b>, la condición de salud física, mental y social del trabajador para desempeñar las labores sin perjuicio de su salud o la de terceros; establecer restricciones e identificar condiciones que puedan agravarse con el trabajo.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1bb4e4"></span><h4>Periódicas · A. Programadas</h4><span class="chev">+</span></div><div class="acc-body"><p>Monitorear la exposición a factores de riesgo e identificar de forma <b>precoz</b> posibles alteraciones temporales, permanentes o agravadas del estado de salud ocasionadas por la labor.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Periódicas · B. Cambios de ocupación</h4><span class="chev">+</span></div><div class="acc-body"><p>Garantizar que el trabajador se mantenga en condiciones acordes con los requerimientos de las <b>nuevas tareas</b>. Se realizan cada vez que cambie de ocupación e implique cambio de ambiente laboral, funciones o exposición a nuevos o mayores factores de riesgo.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#0e2c56"></span><h4>Egreso</h4><span class="chev">+</span></div><div class="acc-body"><p>Valorar y registrar las condiciones de salud con las que el trabajador <b>se retira</b> de las tareas asignadas. Se realizan al terminar la relación laboral.</p></div></div></div>
+<div class="eva rv up" style="--d:2">
+  <article class="evab" style="--c:#8cc63e;--t:#123008">
+    <div class="evaico"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M10 6h20v36H10z"/><path d="M22 24h18"/><path d="M34 18l6 6-6 6"/><circle cx="16" cy="24" r="2"/></svg></div>
+    <div class="evatxt">
+      <h3>PRE-INGRESO</h3>
+      <p>Determinar, <b>antes de la contratación</b>, la condición de salud física, mental y social del trabajador para desempeñar en forma eficiente las labores sin perjuicio de su salud o la de terceros; establecer la existencia de <b>restricciones</b> que ameriten alguna condición sujeta a modificación, e identificar condiciones de salud que, estando presentes en el trabajador, puedan <b>agravarse</b> en desarrollo del trabajo.</p>
+    </div>
+  </article>
+  <article class="evab inv" style="--c:#1bb4e4;--t:#06304a">
+    <div class="evaico"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="25" r="16"/><path d="M24 15v10l7 5"/><path d="M36 9l5-4M12 9L7 5"/></svg></div>
+    <div class="evatxt">
+      <h3>PERIÓDICAS</h3>
+      <p><b>A. Programadas.</b> Monitorear la exposición a factores de riesgo e identificar en forma <b>precoz</b> posibles alteraciones temporales, permanentes o agravadas del estado de salud del trabajador, ocasionadas por la labor o por la exposición al medio ambiente de trabajo.</p>
+      <p><b>B. Cambios de ocupación.</b> Garantizar que el trabajador se mantenga en condiciones de salud física, mental y social acordes con los requerimientos de las <b>nuevas tareas</b>, y sin que las nuevas condiciones de exposición afecten su salud. Se realizan cada vez que cambie de ocupación e implique cambio de medio ambiente laboral, de funciones, tareas o exposición a nuevos o mayores factores de riesgo.</p>
+    </div>
+  </article>
+  <article class="evab" style="--c:#0e2c56;--t:#fff">
+    <div class="evaico"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M16 40V22a3 3 0 0 1 6 0v-4a3 3 0 0 1 6 0v2a3 3 0 0 1 6 0v3a3 3 0 0 1 5 0v9c0 6-4 12-11 12h-3c-5 0-9-3-9-4z"/><path d="M8 12c2-2 4-2 6 0M6 20c3-1 5 0 7 2"/></svg></div>
+    <div class="evatxt">
+      <h3>EGRESO</h3>
+      <p>Valorar y registrar las condiciones de salud en las que el trabajador <b>se retira</b> de las tareas o funciones asignadas. Se deben realizar cuando <b>se termina la relación laboral</b>.</p>
+    </div>
+  </article>
+</div>
+</div></section>
+<section class="slide light" data-mod="4">
+<div class="wrap"><div class="eyebrow rv up">Otros controles de salud</div>
+<h2 class="rv up" style="--d:1">Evaluaciones médicas · retorno y seguimiento</h2>
+<div class="eva rv up" style="--d:2">
+  <article class="evab inv" style="--c:#8cc63e;--t:#123008">
+    <div class="evaico"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="14" y="20" width="20" height="15" rx="2"/><path d="M20 20v-3a4 4 0 0 1 8 0v3"/><path d="M12 14a16 16 0 0 1 24 0"/><path d="M36 8v7h-7"/><path d="M36 41a16 16 0 0 1-24 0"/><path d="M12 47v-7h7"/></svg></div>
+    <div class="evatxt">
+      <h3>RETORNO LABORAL</h3>
+      <p>Deberá realizarse cuando el trabajador haya estado <b>ausente por causas no médicas</b> durante un período igual o superior a <b>noventa (90) días</b> calendario, y antes de su retorno efectivo a la labor. Su objetivo es determinar si las condiciones funcionales del trabajador al momento del reintegro son <b>compatibles con las exigencias</b> físicas, mentales y ambientales del cargo.</p>
+    </div>
+  </article>
+  <article class="evab" style="--c:#1bb4e4;--t:#06304a">
+    <div class="evaico"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="12" y="8" width="24" height="32" rx="3"/><path d="M19 6h10v5H19z"/><path d="M24 18v10M19 23h10"/><path d="M17 34h14"/></svg></div>
+    <div class="evatxt">
+      <h3>POST-INCAPACIDAD</h3>
+      <p>Son los exámenes clínicos y paraclínicos que se deben practicar a todo trabajador <b>inmediatamente después</b> de finalizar un periodo de incapacidad médica <b>igual o mayor a treinta (30) días</b> calendario, o antes si su condición de salud lo hace pertinente o necesario.</p>
+    </div>
+  </article>
+  <article class="evab inv" style="--c:#0e2c56;--t:#fff">
+    <div class="evaico"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M12 8h18l8 8v26H12z"/><path d="M30 8v8h8"/><path d="M17 24h12M17 31h8"/><path d="M33 28l6 6-7 3 1-7z"/></svg></div>
+    <div class="evatxt">
+      <h3>SEGUIMIENTO O CONTROL</h3>
+      <p>Se aplicará cuando se determine la necesidad de <b>verificar la evolución</b> de una condición de salud previamente identificada, valorar la <b>efectividad de las medidas</b> adoptadas, o reconsiderar las restricciones y recomendaciones emitidas, especialmente cuando estas hayan sido <b>temporales</b>.</p>
+    </div>
+  </article>
+</div>
 </div></section>
 <section class="slide dark" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">Otros controles de salud</div>
@@ -5221,7 +5300,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-06-d";
+var VERSION_CURSO = "2026-09-06-e";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
