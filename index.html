@@ -1159,8 +1159,17 @@
     align-items:center;gap:2px;text-align:center;box-shadow:var(--shadow);min-width:0}
   .etiqchip b{font-size:17px;line-height:1}
   .etiqchip span{font-size:11.4px;font-weight:700;line-height:1.24}
-  /* La lamina ocupa lo que sobra, pero deja sitio a la fila del PDF. */
-  .etiqfoto{margin-top:10px}
+  /* La etiqueta va enmarcada y centrada, ocupando el ancho que se le
+     permita: con la caja estirada quedaba diminuta en medio de un hueco. */
+  .etiqlam{margin:14px auto 0;padding:5px;border-radius:11px;background:var(--grad);
+    width:min(100%,660px);box-shadow:var(--shadow)}
+  .etiqlam .ph{display:block}
+  .etiqlam img{width:100%;height:auto;display:block;border-radius:7px;background:#fff}
+  .etiqlam svg{width:100%;height:auto;display:block;border-radius:7px;background:#fff;
+    fill:none;stroke:#9fb2c6;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+  .apretado .etiqlam{width:min(100%,520px);margin-top:10px}
+  .muy-apretado .etiqlam{width:min(100%,430px)}
+  .ultra .etiqlam{width:min(100%,330px)}
   .apretado .etiqchip{padding:6px 9px 7px} .apretado .etiqchip b{font-size:15px}
   .apretado .etiqchip span{font-size:10.9px}
   .muy-apretado .etiqchip span{font-size:10.4px;line-height:1.2}
@@ -4683,7 +4692,7 @@
   </div>
 </div>
 </div></section>
-<section class="slide dark lamslide" data-mod="4">
+<section class="slide dark" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">HSE-202 · Sustancias peligrosas</div>
 <h2 class="rv up" style="--d:1">Etiqueta de seguridad</h2>
 <div class="infobanner rv up" style="--d:2">Estos son los <b>6 requisitos mínimos</b> que debe contener una etiqueta que cumple SGA.</div>
@@ -4695,7 +4704,7 @@
   <div class="etiqchip" style="background:#8cc63e;color:#123008"><b>5</b><span>Pictogramas</span></div>
   <div class="etiqchip" style="background:#ef7d00;color:#fff"><b>6</b><span>Palabra de advertencia</span></div>
 </div>
-<figure class="lamgrande etiqfoto rv up" style="--d:4">
+<figure class="etiqlam rv up" style="--d:4">
   <span class="ph" data-foto="etiqueta(D67)"><svg viewBox="0 0 240 150" aria-hidden="true"><rect x="4" y="4" width="232" height="142" rx="4"/><path d="M120 4v142"/><path d="M128 24h100v26H128z"/><path d="M14 20h84M14 30h70M14 40h84M14 50h60"/><path d="M128 62h100M128 72h84"/><path d="M150 88l14 22h-28zM186 88l14 22h-28z"/><path d="M14 100h84M14 112h84M14 124h60"/><path d="M128 122h100M128 132h72"/></svg></span>
 </figure>
 <div class="pdfrow rv up" style="grid-template-columns:1fr"><div class="pdfmini"><span>Conoce cómo <b>almacenar de acuerdo a la compatibilidad</b>.</span><button class="pdfbtn" data-pdf="etiqueta_guia" data-title="Almacenamiento por compatibilidad">Ver más</button></div></div>
@@ -5056,7 +5065,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-05-y";
+var VERSION_CURSO = "2026-09-05-z";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
