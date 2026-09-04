@@ -1219,6 +1219,30 @@
   .ultra .ergocaja p{font-size:11.2px}
   @media(max-width:760px){ .ergo{grid-template-columns:1fr;gap:14px} }
   @media(prefers-reduced-motion:reduce){ .ergoflecha{animation:none} }
+  /* ===== Vibracion: dos tipos, cada uno con su lamina ===== */
+  .vibra{display:grid;grid-template-columns:1fr 1fr;gap:clamp(18px,4vw,40px);margin-top:12px;
+    align-items:start}
+  .vibracol{display:flex;flex-direction:column;min-width:0}
+  .vibracol .subt{margin-bottom:8px}
+  .vibracol p{font-size:12.9px;line-height:1.45;margin-bottom:6px}
+  /* La lamina queda abajo y a la misma altura en las dos columnas, aunque una
+     tenga un parrafo mas que la otra. */
+  .vibrafoto{margin-top:auto;padding:4px;border-radius:9px;background:var(--grad);
+    display:flex;align-items:center;justify-content:center;width:fit-content;max-width:100%}
+  .vibrafoto img{width:auto;height:auto;max-width:100%;max-height:300px;display:block;
+    border-radius:5px;background:#fff}
+  .vibrafoto svg{width:100%;max-width:300px;height:220px;fill:none;stroke:#fff;
+    stroke-width:3;stroke-linecap:round;stroke-linejoin:round;opacity:.6}
+  .apretado .vibracol p{font-size:12.3px}
+  .apretado .vibrafoto img{max-height:252px} .apretado .vibrafoto svg{height:186px}
+  .muy-apretado .vibracol p{font-size:11.7px;line-height:1.38}
+  .muy-apretado .vibrafoto img{max-height:212px} .muy-apretado .vibrafoto svg{height:156px}
+  .ultra .vibracol p{font-size:11.1px}
+  .ultra .vibrafoto img{max-height:176px} .ultra .vibrafoto svg{height:130px}
+  @media(max-width:820px){
+    .vibra{grid-template-columns:1fr;gap:16px}
+    .vibrafoto{margin-inline:auto}
+  }
   @media(max-width:900px){
     .audi{grid-template-columns:1fr}
     .audifoto{max-width:380px}
@@ -4788,8 +4812,19 @@
 <div class="wrap"><div class="eyebrow rv up">HSE-205 · Vibración</div>
 <h2 class="rv up" style="--d:1">Vibración</h2>
 <div class="infobanner rv up" style="--d:2">Fenómeno mecánico <b>rápido, oscilatorio o repetitivo</b> de un objeto alrededor de una posición de equilibrio. Hay exposición cuando el movimiento oscilante de una estructura (el suelo, una empuñadura o un asiento) se transmite a alguna parte del cuerpo.</div>
-<p class="lead rv up">Toca cada tipo de vibración. 👆</p>
-<div class="accgrid" style="margin-top:12px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Vibraciones de cuerpo completo</h4><span class="chev">+</span></div><div class="acc-body"><p>Se producen cuando <b>gran parte del peso del cuerpo</b> descansa sobre una superficie vibrante.</p><p class="tdd">Se transmiten generalmente a través de los <b>asientos o los pies</b>.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1bb4e4"></span><h4>Vibraciones mano-brazo</h4><span class="chev">+</span></div><div class="acc-body"><p>Se transmiten por las <b>manos</b> del trabajador, generalmente a través del agarre de <b>herramientas mecánicas</b>.</p></div></div></div>
+<div class="vibra rv up" style="--d:2">
+  <div class="vibracol">
+    <h3 class="subt chico">Vibraciones de cuerpo completo</h3>
+    <p>Se producen cuando <b>gran parte del peso del cuerpo</b> descansa sobre una superficie vibrante.</p>
+    <p>Se transmiten generalmente a través de los <b>asientos o los pies</b>.</p>
+    <span class="ph vibrafoto" data-foto="cuerpocompleto(D71)"><svg viewBox="0 0 180 140" aria-hidden="true"><rect x="4" y="4" width="172" height="132" rx="4"/><path d="M4 106h172"/><circle cx="72" cy="36" r="12"/><path d="M60 30a12 12 0 0 1 24 0M57 30h30"/><path d="M72 48v30M58 56h28M72 78l-8 28M72 78l8 28"/><path d="M86 60l26 10"/><rect x="108" y="62" width="34" height="18" rx="3"/><path d="M142 70h14"/><path d="M150 60l4 4-4 4M150 76l4 4-4 4"/></svg></span>
+  </div>
+  <div class="vibracol">
+    <h3 class="subt chico">Vibraciones mano-brazo</h3>
+    <p>Se transmiten por las <b>manos</b> del trabajador, generalmente a través del agarre de <b>herramientas mecánicas</b>.</p>
+    <span class="ph vibrafoto" data-foto="manobrazo(D71)"><svg viewBox="0 0 180 140" aria-hidden="true"><rect x="4" y="4" width="172" height="132" rx="4"/><path d="M4 106h172"/><circle cx="72" cy="36" r="12"/><path d="M60 30a12 12 0 0 1 24 0M57 30h30"/><path d="M72 48v30M58 56h28M72 78l-8 28M72 78l8 28"/><path d="M86 60l26 10"/><rect x="108" y="62" width="34" height="18" rx="3"/><path d="M142 70h14"/><path d="M150 60l4 4-4 4M150 76l4 4-4 4"/></svg></span>
+  </div>
+</div>
 </div></section>
 <section class="slide light" data-mod="4">
 <div class="wrap"><div class="eyebrow rv up">Otros controles de salud</div>
@@ -5098,7 +5133,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-06-a";
+var VERSION_CURSO = "2026-09-06-b";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
