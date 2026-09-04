@@ -43,7 +43,7 @@
   .slide.dark{background:radial-gradient(900px 520px at 80% 6%,rgba(27,180,228,.15),transparent 60%),radial-gradient(760px 520px at 4% 96%,rgba(151,209,59,.13),transparent 55%),var(--navy);color:#fff}
   .slide.light{background:var(--light);color:var(--ink)}
   .wrap{width:100%;max-width:1080px;margin:auto}
-  .eyebrow{display:inline-block;font-size:12px;font-weight:800;letter-spacing:2.2px;text-transform:uppercase;
+  .eyebrow{display:inline-block;font-size:13.5px;font-weight:800;letter-spacing:2.2px;text-transform:uppercase;
     background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:12px}
   h1{font-size:clamp(30px,5.2vw,58px);line-height:1.04;font-weight:800;letter-spacing:-.5px}
   h2{font-size:clamp(22px,3.5vw,38px);line-height:1.12;font-weight:800;letter-spacing:-.3px}
@@ -51,6 +51,24 @@
   .slide.dark .lead{color:#b9c7dc}
   .gline{height:5px;width:110px;border-radius:4px;background:var(--grad);margin:16px 0 2px}
   /* reveal */
+  /* ===== Distintivo de tema nuevo =====
+     Se pone al lado del rotulo cuando esa diapositiva estrena tema, para que se
+     note de un vistazo que ya no se sigue hablando de lo mismo. El destello es
+     lento a proposito: tiene que llamar la atencion sin distraer de la lectura.
+     Quien tenga desactivadas las animaciones del sistema lo ve quieto. */
+  .nuevotag{display:inline-flex;align-items:center;gap:5px;margin-left:11px;vertical-align:3px;
+    background:var(--grad);color:#04121f;border-radius:999px;padding:4px 11px 4px 9px;
+    font-size:10.5px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;line-height:1;
+    box-shadow:0 4px 14px -6px rgba(0,0,0,.55);animation:nuevoLate 2.8s ease-in-out 1.1s infinite}
+  .nuevotag svg{width:12px;height:12px;fill:#04121f;flex:none;
+    animation:nuevoBrilla 2.8s ease-in-out 1.1s infinite}
+  @keyframes nuevoLate{
+    0%,68%,100%{box-shadow:0 4px 14px -6px rgba(0,0,0,.55)}
+    82%{box-shadow:0 0 0 5px rgba(151,209,59,.22),0 4px 14px -6px rgba(0,0,0,.55)}}
+  @keyframes nuevoBrilla{0%,68%,100%{transform:none} 78%{transform:rotate(18deg) scale(1.18)}}
+  @media(prefers-reduced-motion:reduce){
+    .nuevotag,.nuevotag svg{animation:none}}
+
   .rv{opacity:0;transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1);transition-delay:calc(var(--d,0)*80ms)}
   .rv.up{transform:translateY(30px)} .rv.left{transform:translateX(-40px)}
   .rv.right{transform:translateX(40px)} .rv.scale{transform:scale(.9)}
@@ -2781,7 +2799,7 @@
     :root{--gap:12px; --footer:66px; --bar2:52px}
     .slide{padding-top:20px;padding-bottom:20px}
     h2{font-size:clamp(20px,2.7vw,29px)}
-    .eyebrow{font-size:11px;letter-spacing:1.8px;margin-bottom:8px}
+    .eyebrow{font-size:12.5px;letter-spacing:1.8px;margin-bottom:8px}
     .lead{font-size:14px;margin-top:8px;line-height:1.5}
     .infobanner{padding:11px 16px;font-size:13px;margin-top:10px}
     .banner,.warn,.authbanner{padding:11px 16px;font-size:13px;margin-top:12px}
@@ -3479,7 +3497,6 @@
   </section>
 <section class="slide dark teal" data-mod="2">
     <div class="wrap wrap-ancho">
-      <div class="eyebrow rv up">Modelo operativo de H&amp;S</div>
       <h2 class="rv up" style="--d:1">Hoja de ruta hacia la ambición “Cero”</h2>
       <p class="lead rv up" style="--d:2">Los cinco frentes con los que llegamos a cero daños.</p>
       <div class="ruta">
@@ -5509,7 +5526,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-07-f";
+var VERSION_CURSO = "2026-09-07-g";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 56 en cada intento.
@@ -5895,6 +5912,31 @@ var pipEls = [], pipFlags = [];
     })(i,m);
   }
 })();
+/* ====== DISTINTIVO DE TEMA NUEVO ======
+   Recorre las diapositivas en orden y compara el rotulo de cada una con el
+   ultimo que se haya visto. Cuando cambia, esa diapositiva estrena tema y se le
+   pone el distintivo. Las que repiten rotulo son continuacion y no lo llevan.
+   Se calcula una sola vez al cargar; despues es solo marcado. */
+(function(){
+  var anterior = null;
+  slides.forEach(function(s){
+    var rot = s.querySelector('.eyebrow');
+    if(!rot) return;
+    var txt = (rot.textContent || '').replace(/\s+/g,' ').trim().toLowerCase();
+    if(!txt) return;
+    if(txt === anterior) return;
+    anterior = txt;
+    var tag = document.createElement('span');
+    /* "rv scale" lo engancha al mismo aparecer que usa el resto: asi entra cada
+       vez que se abre la diapositiva, no solo la primera. */
+    tag.className = 'nuevotag rv scale';
+    tag.setAttribute('style', '--d:1');
+    tag.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true">' +
+      '<path d="M12 1.8l2.5 6 6 2.5-6 2.5-2.5 6-2.5-6-6-2.5 6-2.5z"/></svg>Nuevo';
+    rot.insertAdjacentElement('afterend', tag);
+  });
+})();
+
 function reveal(s){ s.querySelectorAll('.rv').forEach(function(el){ el.classList.remove('in'); void el.offsetWidth; el.classList.add('in'); }); if(window.despliegaAuto) despliegaAuto(s); }
 function clearReveal(s){ s.querySelectorAll('.rv').forEach(function(el){ el.classList.remove('in'); }); if(window.cierraAuto) cierraAuto(s); }
 /* ====== BARRERA DE INTERACCIÓN ====== */
