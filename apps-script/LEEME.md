@@ -226,3 +226,57 @@ El primer parámetro es el nombre de la pestaña. Lo que pasa del otro lado:
 
 Requisito único: tener `REPORTE_URL` con la URL `/exec`. Si el curso corre
 dentro de Apps Script, funciona igual sin configurar nada.
+
+## 10. Certificados guardados en una carpeta de Drive
+
+Cuando alguien **aprueba**, el curso arma el certificado en PDF y lo manda junto
+con el resultado. El script lo archiva en Drive y deja su enlace en la columna
+**`Vinculo`** de la hoja. Quien no aprueba no genera certificado.
+
+### Qué hay que hacer
+
+1. En `Code.gs` no hace falta tocar nada: la carpeta **`HSE-001 · Certificados`**
+   se crea sola, en "Mi unidad" de la cuenta que despliega el script.
+   Si prefieres una carpeta tuya, pega su ID en `ID_CARPETA_CERTIFICADOS`
+   (el trozo de la URL que va después de `/folders/`).
+2. En el editor, elige la función **`verCarpetaDeCertificados`** y presiona
+   **Ejecutar**. Google pedirá autorizar **Drive**; acepta.
+   En el *Registro de ejecución* saldrá el enlace de la carpeta.
+3. **Implementar → Administrar implementaciones → ✏️ Editar → Versión: Nueva
+   versión → Implementar.** Sin este paso la implementación sigue con los
+   permisos y el código viejos.
+
+### Quién puede abrir el enlace
+
+`CERTIFICADOS_PUBLICOS` está en **`false`**, que es lo recomendado: el enlace
+solo lo abre quien tenga acceso a la carpeta (tú y con quien la compartas). El
+certificado lleva **nombre y número de cédula**, que son datos personales, así
+que no conviene dejarlos abiertos a cualquiera con el enlace.
+
+Si de todas formas necesitas que el enlace lo abra cualquiera, ponlo en `true`
+y publica una versión nueva. Si la organización tiene prohibido compartir hacia
+fuera, el archivo se guarda igual y el enlace seguirá sirviendo dentro de Holcim.
+
+### Nombre de los archivos
+
+`Nombre Apellido - 12025044 - 2026-05-05 1057.pdf`
+
+Lleva la fecha y la hora porque una misma persona puede presentar el examen
+varias veces: así quedan todos los intentos aprobados, sin pisarse.
+
+### Si el certificado no llega
+
+El resultado del examen **siempre** se guarda, aunque el certificado falle: son
+dos cosas separadas a propósito. Si en la hoja ves la fila pero la columna
+`Vinculo` trae la dirección del curso en vez de un enlace de Drive, es que el
+PDF no se pudo archivar. Revisa que hayas autorizado Drive (paso 2) y que la
+implementación esté en la versión nueva (paso 3).
+
+### Columnas nuevas en una hoja que ya venías usando
+
+La hoja no se reordena ni se borra: el script agrega al final las columnas que
+le falten (`Tipo_Usuario`, `ID_Identificacion`, `Nombre_Completo`, `Empresa`,
+`Capacitacion`, `Puntaje`, `Resultado`, `Vinculo`) y escribe cada dato buscando
+su columna **por el nombre del encabezado**. Si quieres el orden del formato
+impreso, reordena las columnas a mano en la hoja: el script las seguirá
+encontrando igual.

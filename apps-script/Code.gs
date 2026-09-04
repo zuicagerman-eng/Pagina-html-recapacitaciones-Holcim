@@ -56,6 +56,27 @@ function doGet() {
    ═══════════════════════════════════════════════════════════════════════════ */
 var ID_HOJA = "";   // opcional: déjalo vacío para que el script la cree solo
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   CARPETA DE CERTIFICADOS EN DRIVE
+
+   Cuando alguien aprueba, el curso manda tambien el PDF del certificado y el
+   script lo guarda en esta carpeta. El enlace al archivo queda en la columna
+   "Vinculo" de la hoja de resultados.
+
+   No hay que crear la carpeta a mano: se crea sola la primera vez, en "Mi
+   unidad" de la cuenta que despliega el script. Si prefieres una carpeta que ya
+   tengas, pega su ID abajo (el trozo largo de la URL, despues de /folders/).
+
+   CERTIFICADOS_PUBLICOS controla quien puede abrir el enlace:
+     false (recomendado) → solo quien tenga acceso a la carpeta, es decir tu y
+            con quien la compartas. El certificado lleva nombre y cedula, que
+            son datos personales: no conviene dejarlos abiertos a cualquiera.
+     true  → cualquiera con el enlace puede verlo, sin iniciar sesion.
+   ═══════════════════════════════════════════════════════════════════════════ */
+var ID_CARPETA_CERTIFICADOS = "";   // opcional: dejalo vacio y se crea sola
+var NOMBRE_CARPETA_CERTIFICADOS = "HSE-001 · Certificados";
+var CERTIFICADOS_PUBLICOS = false;
+
 var NOMBRE_HOJA     = "HSE-001 · Resultados examen";
 var PESTANA_RESUMEN = "Resultados";
 var PESTANA_DETALLE = "Respuestas";
@@ -124,6 +145,52 @@ function pestana_(ss, nombre, encabezados) {
   return h;
 }
 
+/** Devuelve la carpeta de certificados, creándola la primera vez si hace falta. */
+function carpetaCertificados_() {
+  var props = PropertiesService.getScriptProperties();
+  var id = ID_CARPETA_CERTIFICADOS || props.getProperty('ID_CARPETA');
+  if (id) {
+    try { return DriveApp.getFolderById(id); } catch (e) { /* si ya no existe, se recrea */ }
+  }
+  // por si ya existe una con ese nombre (por ejemplo, de un despliegue anterior)
+  var iguales = DriveApp.getFoldersByName(NOMBRE_CARPETA_CERTIFICADOS);
+  var carpeta = iguales.hasNext() ? iguales.next()
+                                  : DriveApp.createFolder(NOMBRE_CARPETA_CERTIFICADOS);
+  props.setProperty('ID_CARPETA', carpeta.getId());
+  return carpeta;
+}
+
+/**
+ * Guarda el PDF que mandó el curso y devuelve su enlace.
+ * Nunca lanza error: si algo falla se devuelve cadena vacía, porque perder el
+ * certificado no puede impedir que quede registrado el resultado del examen.
+ */
+function guardarCertificado_(d) {
+  if (!d || !d.certificado) return '';
+  try {
+    var bytes = Utilities.base64Decode(d.certificado);
+    var nombre = (d.nombre || 'Sin nombre') + ' - ' + (d.cedula || 's-c') + ' - ' +
+                 Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd HHmm') + '.pdf';
+    var blob = Utilities.newBlob(bytes, 'application/pdf', nombre);
+    var archivo = carpetaCertificados_().createFile(blob);
+    if (CERTIFICADOS_PUBLICOS) {
+      try {
+        archivo.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+      } catch (e) { /* la organización puede tener prohibido compartir hacia fuera */ }
+    }
+    return archivo.getUrl();
+  } catch (e) {
+    return '';
+  }
+}
+
+/** Ejecútala UNA VEZ desde el editor para ver la URL de la carpeta. */
+function verCarpetaDeCertificados() {
+  var url = carpetaCertificados_().getUrl();
+  Logger.log('Carpeta de certificados: ' + url);
+  return url;
+}
+
 /**
  * Escribe una fila buscando cada dato por el NOMBRE de su columna, no por su
  * posición. Si a la hoja le faltan columnas de la lista, se agregan al final.
@@ -161,6 +228,8 @@ function guardarExamen(d) {
   /* Un dato por cada nombre de columna posible. Se incluyen también los nombres
      viejos ("Nombre", "Cédula", "Porcentaje", "Aprobado") para que una hoja que
      ya venías usando se siga llenando igual que siempre. */
+  var enlaceCert = guardarCertificado_(d);
+
   var valores = {
     'Fecha': fecha,
     'Tipo_Usuario': d.tipoUsuario || '',
@@ -170,7 +239,7 @@ function guardarExamen(d) {
     'Capacitacion': d.capacitacion || '',
     'Puntaje': d.puntaje || (d.porcentaje + '%'),
     'Resultado': d.resultado || '',
-    'Vinculo': d.vinculo || '',
+    'Vinculo': enlaceCert || d.vinculo || '',
     'Aciertos': d.aciertos,
     'Total': d.total,
     'Duración (s)': d.segundos,

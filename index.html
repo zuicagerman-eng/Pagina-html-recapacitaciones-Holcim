@@ -5404,7 +5404,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-06-z";
+var VERSION_CURSO = "2026-09-07-a";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 50 en cada intento.
@@ -7067,10 +7067,31 @@ function lienzoAPdf(lienzo, ancho, alto){
   return new Blob(trozos, { type: 'application/pdf' });
 }
 
+/* Arma el certificado una sola vez y lo deja en memoria: sirve tanto para la
+   descarga como para mandarlo a Drive, sin dibujarlo dos veces. */
+function prepararDiploma(datos){
+  if(datos.__blob) return Promise.resolve(datos.__blob);
+  return dibujarDiploma(datos).then(function(lienzo){
+    datos.__blob = lienzoAPdf(lienzo, DIPLOMA.ancho, DIPLOMA.alto);
+    return datos.__blob;
+  });
+}
+
+/* El PDF en base64, que es como viaja a Apps Script. */
+function diplomaEnBase64(datos){
+  return prepararDiploma(datos).then(function(blob){
+    return new Promise(function(listo, falla){
+      var lector = new FileReader();
+      lector.onload = function(){ listo(String(lector.result).split(',')[1]); };
+      lector.onerror = function(){ falla(new Error('no se pudo leer el certificado')); };
+      lector.readAsDataURL(blob);
+    });
+  });
+}
+
 /* Junta las dos piezas y le entrega el archivo a la persona. */
 function descargarDiploma(datos, avisar){
-  return dibujarDiploma(datos).then(function(lienzo){
-    var blob = lienzoAPdf(lienzo, DIPLOMA.ancho, DIPLOMA.alto);
+  return prepararDiploma(datos).then(function(blob){
     var nombreArchivo = 'Certificado ' + datos.capacitacion + ' - ' + datos.nombre + '.pdf';
     nombreArchivo = nombreArchivo.replace(/[\\/:*?"<>|]/g, '-').replace(/\s+/g, ' ');
     var url = URL.createObjectURL(blob);
@@ -7273,10 +7294,11 @@ document.addEventListener('DOMContentLoaded', function(){
 
     var btnDip = document.getElementById('exDiploma');
     btnDip.hidden = !aprobo;
+    var datosDip = null;
     if(aprobo){
       window.EXAMEN_APROBADO = true;
       marcarCompletado();
-      var datosDip = {
+      datosDip = {
         nombre: persona.nombre, cedula: persona.cedula, empresa: persona.empresa,
         capacitacion: NOMBRE_CAPACITACION, fecha: fechaLarga(new Date())
       };
@@ -7293,18 +7315,36 @@ document.addEventListener('DOMContentLoaded', function(){
     }
     fase('resultado');
     try{ elRes.scrollIntoView({block:'start'}); }catch(e){}
-    guardar({
+    var envio = {
       nombre: persona.nombre, cedula: persona.cedula,
       tipoUsuario: persona.tipo, empresa: persona.empresa,
       capacitacion: NOMBRE_CAPACITACION,
       puntaje: pct + '%', resultado: aprobo ? 'APROBADO' : 'NO APROBADO',
-      /* "Vinculo": el enlace desde donde se presentó el examen. */
+      /* "Vinculo": si el certificado llega a guardarse en Drive, Apps Script
+         reemplaza esto por el enlace del PDF. Si no, queda la direccion desde
+         donde se presento el examen. */
       vinculo: (function(){ try{ return location.href.split('#')[0]; }catch(e){ return ''; } })(),
       fecha: new Date().toLocaleString('es-CO'),
       aciertos: aciertos, total: sorteadas.length, porcentaje: pct,
       tipo: 'examen', aprobado: aprobo ? 'SÍ' : 'NO', segundos: seg,
       navegador: navigator.userAgent, respuestas: detalle
-    });
+    };
+
+    /* Al aprobar, el certificado viaja con el resultado para que Apps Script lo
+       archive en Drive. Si tarda o falla, se guarda igual el resultado sin el
+       PDF: perder el certificado no puede costarle a nadie su registro. */
+    if(aprobo){
+      var yaFue = false;
+      var seguir = function(b64){
+        if(yaFue) return; yaFue = true;
+        if(b64) envio.certificado = b64;
+        guardar(envio);
+      };
+      setTimeout(function(){ seguir(null); }, 12000);
+      diplomaEnBase64(datosDip).then(seguir).catch(function(){ seguir(null); });
+    } else {
+      guardar(envio);
+    }
   }
 
   /* Guarda el intento en la hoja de cálculo a través de Apps Script. Si el curso
