@@ -1564,8 +1564,11 @@
     background:rgba(255,255,255,.07);padding:6px}
   .qcarr-foto img{max-width:100%;max-height:100%;width:auto;height:auto;display:block;
     border-radius:8px;object-fit:contain}
-  .qcarr-foto svg{width:70%;height:auto;fill:none;stroke:rgba(255,255,255,.45);
-    stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+  /* Se dibuja en vez de cargar una imagen: asi se ve igual de nitido en
+     cualquier pantalla y no hay archivos que mantener. */
+  .qcarr-foto svg{width:76%;height:auto;fill:none;stroke:#bcd8f0;
+    stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+  .qcarr-foto svg .ac{stroke:var(--green)}
   /* El cambio de panel entra deslizando: es lo que le dice a la persona que
      hay mas contenido al lado y no que la pagina se recargo. */
   .qcarr-caja .qcarr-tit,.qcarr-caja .qcarr-cuerpo{transition:opacity .3s ease,transform .3s ease}
@@ -5753,7 +5756,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-07-n";
+var VERSION_CURSO = "2026-09-07-o";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 56 en cada intento.
@@ -6848,13 +6851,13 @@ function toast(msg){ toastEl.textContent = msg; toastEl.classList.add('show'); c
    [pregunta, respuesta, nombre de la ilustracion]. */
 var CARRUSELES = {
  convivencia: [
-  ['¿Qué se requiere para ser elegido como miembro?','Las y los integrantes podrán contar con competencias actitudinales y comportamentales como respeto, imparcialidad, tolerancia, serenidad, confidencialidad, reserva en el manejo de información y ética; así mismo habilidades de comunicación asertiva, liderazgo y resolución de conflictos. No podrá conformarse con trabajadoras o trabajadores a los que se les haya formulado una queja de acoso laboral, o que hayan sido víctimas de acoso laboral, en el año anterior a su conformación.','conv1(D100)'],
-  ['¿Quién nombra a los representantes de los trabajadores?','El empleador designará directamente a sus representantes, y las y los trabajadores elegirán los suyos a través de votación secreta que represente la expresión libre, espontánea y auténtica de todas y todos, mediante escrutinio público, cuyo procedimiento deberá ser adoptado por cada empresa o entidad pública e incluirse en la respectiva convocatoria de la elección.','conv2(D100)'],
-  ['¿Quién nombra a los representantes del empleador?','El empleador designa directamente a sus representantes.','conv3(D100)'],
-  ['¿Quién elige al secretario?','Se deberá elegir por mutuo acuerdo entre sus miembros.','conv4(D100)'],
-  ['¿Quién elige al presidente?','Se deberá elegir por mutuo acuerdo entre sus miembros.','conv5(D100)'],
-  ['¿Cada cuánto se reúne?','Se reunirá ordinariamente cada mes y sesionará con la mitad más uno de sus integrantes. Extraordinariamente, cuando se presenten casos que requieran de su inmediata intervención; igualmente podrá ser convocado por cualquiera de sus integrantes.','conv6(D100)'],
-  ['¿Cuál es el periodo de los miembros?','El periodo de los miembros del comité es de dos años.','conv7(D100)']
+  ['¿Qué se requiere para ser elegido como miembro?','Las y los integrantes podrán contar con competencias actitudinales y comportamentales como respeto, imparcialidad, tolerancia, serenidad, confidencialidad, reserva en el manejo de información y ética; así mismo habilidades de comunicación asertiva, liderazgo y resolución de conflictos. No podrá conformarse con trabajadoras o trabajadores a los que se les haya formulado una queja de acoso laboral, o que hayan sido víctimas de acoso laboral, en el año anterior a su conformación.','<circle cx="50" cy="40" r="17"/><path d="M20 94c0-16 13-27 30-27s30 11 30 27"/><circle class="ac" cx="88" cy="80" r="18"/><path class="ac" d="M79 80l6 7 12-14"/>'],
+  ['¿Quién nombra a los representantes de los trabajadores?','El empleador designará directamente a sus representantes, y las y los trabajadores elegirán los suyos a través de votación secreta que represente la expresión libre, espontánea y auténtica de todas y todos, mediante escrutinio público, cuyo procedimiento deberá ser adoptado por cada empresa o entidad pública e incluirse en la respectiva convocatoria de la elección.','<path d="M24 60h72l-7 44H31z"/><path d="M38 60V50h44v10"/><path d="M42 74h36"/><path class="ac" d="M44 16h32v30H44z"/><path class="ac" d="M52 26h16M52 36h10"/>'],
+  ['¿Quién nombra a los representantes del empleador?','El empleador designa directamente a sus representantes.','<path d="M14 48h46v42H14z"/><path d="M28 48v-9a6 6 0 016-6h6a6 6 0 016 6v9"/><path d="M14 66h46"/><circle class="ac" cx="94" cy="50" r="12"/><path class="ac" d="M76 92c0-11 8-18 18-18s18 7 18 18"/><path d="M66 69h12m-6-6l6 6-6 6"/>'],
+  ['¿Quién elige al secretario?','Se deberá elegir por mutuo acuerdo entre sus miembros.','<path d="M30 26h44a6 6 0 016 6v62a6 6 0 01-6 6H30a6 6 0 01-6-6V32a6 6 0 016-6z"/><path d="M44 19h16v13H44z"/><path d="M36 52h32M36 66h32M36 80h20"/><path class="ac" d="M97 44l11 11-27 27-15 4 4-15z"/>'],
+  ['¿Quién elige al presidente?','Se deberá elegir por mutuo acuerdo entre sus miembros.','<path d="M40 16l16 32M80 16L64 48"/><circle cx="60" cy="76" r="28"/><path class="ac" d="M60 60l6 12 13 2-9 9 2 13-12-7-12 7 2-13-9-9 13-2z"/>'],
+  ['¿Cada cuánto se reúne?','Se reunirá ordinariamente cada mes y sesionará con la mitad más uno de sus integrantes. Extraordinariamente, cuando se presenten casos que requieran de su inmediata intervención; igualmente podrá ser convocado por cualquiera de sus integrantes.','<path d="M16 32h64v62H16z"/><path d="M16 50h64"/><path d="M32 22v16M64 22v16"/><path d="M30 64h10M52 64h10M30 80h10"/><circle class="ac" cx="88" cy="82" r="20"/><path class="ac" d="M88 70v13l9 6"/>'],
+  ['¿Cuál es el periodo de los miembros?','El periodo de los miembros del comité es de dos años.','<path d="M32 16h56M32 104h56"/><path d="M40 16v14c0 13 20 20 20 30s-20 17-20 30v14"/><path d="M80 16v14c0 13-20 20-20 30s20 17 20 30v14"/><path class="ac" d="M46 94c0-9 14-13 14-13s14 4 14 13z"/>']
  ]
 };
 
@@ -6944,10 +6947,6 @@ document.querySelectorAll('.qcarr').forEach(function(caja){
   caja.appendChild(puntos); caja.appendChild(pie);
   caja.classList.add('req');
 
-  var DIBUJO = '<svg viewBox="0 0 120 76" aria-hidden="true">' +
-    '<rect x="4" y="6" width="112" height="56" rx="7"/>' +
-    '<path d="M4 50l30-22 22 17 20-14 40 27"/><circle cx="90" cy="24" r="8"/></svg>';
-
   function pintar(i, dir){
     var it = lista[i];
     panel.style.setProperty('--dir', (dir||0) >= 0 ? '18px' : '-18px');
@@ -6955,9 +6954,8 @@ document.querySelectorAll('.qcarr').forEach(function(caja){
     setTimeout(function(){
       panel.innerHTML = '<div class="qcarr-tit">' + it[0] + '</div>' +
         '<div class="qcarr-cuerpo"><p>' + it[1] + '</p>' +
-        '<span class="ph qcarr-foto" data-foto="' + it[2] + '">' + DIBUJO + '</span></div>';
-      if(window.activarFotos) activarFotos();
-      if(window.cargarMediosCercanos) cargarMediosCercanos();
+        '<span class="qcarr-foto"><svg viewBox="0 0 120 120" aria-hidden="true">' +
+        it[2] + '</svg></span></div>';
       panel.style.setProperty('--dir', (dir||0) >= 0 ? '-18px' : '18px');
       void panel.offsetWidth;
       panel.classList.remove('mov');
