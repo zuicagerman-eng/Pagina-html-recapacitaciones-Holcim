@@ -1471,6 +1471,60 @@
     .slide.ultra .act{min-height:84px;padding:14px 10px}
     .slide.ultra .chip3{padding:10px}
   }
+  /* ===== Tablas simples (Modulo 6) =====
+     Encabezado azul oscuro y filas alternas, como en el material impreso.
+     Se centra todo: son dos columnas de datos cortos, no un texto corrido. */
+  .tbl{width:100%;border-collapse:collapse;margin-top:14px;border-radius:var(--radius-sm);
+    overflow:hidden;box-shadow:var(--shadow)}
+  /* La franja verde bajo el encabezado es lo que de verdad lo separa de las
+     filas: en una diapositiva oscura el azul del encabezado y el de las filas
+     quedan demasiado parecidos para distinguirse solo por el color. */
+  .tbl th{background:var(--panel);color:#fff;font-size:13.5px;font-weight:800;
+    padding:12px 16px;text-align:center;letter-spacing:.2px;
+    box-shadow:inset 0 -3px 0 var(--green)}
+  .tbl td{background:#fff;color:var(--ink);font-size:13.5px;padding:11px 16px;text-align:center}
+  .tbl tr:nth-child(even) td{background:#eaf1f9}
+  .tbl td:first-child{border-right:1px solid #dbe4ee}
+  .slide.dark .tbl th{background:#071628}
+  .slide.dark .tbl td{background:rgba(255,255,255,.12);color:#eaf1fb}
+  .slide.dark .tbl tr:nth-child(even) td{background:rgba(255,255,255,.04)}
+  .slide.dark .tbl td:first-child{border-right-color:rgba(255,255,255,.16)}
+  .tblwrap{overflow-x:auto}
+  .apretado .tbl th{padding:9px 14px;font-size:12.6px}
+  .apretado .tbl td{padding:8px 14px;font-size:12.6px}
+  .muy-apretado .tbl th,.muy-apretado .tbl td{padding:6px 12px;font-size:12px}
+  .slide.ultra .tbl th,.slide.ultra .tbl td{padding:5px 11px;font-size:11.4px}
+
+  /* ===== Columnas de responsabilidades (Modulo 6) ===== */
+  .rescol{display:flex;flex-direction:column;height:100%}
+  .rescol .rhead{padding:12px 14px;font-size:15px;font-weight:800;color:#fff;text-align:center}
+  .rescol ul{list-style:none;display:flex;flex-direction:column;gap:1px;flex:1}
+  .rescol li{background:#fff;color:var(--ink);font-size:13px;line-height:1.45;padding:10px 14px}
+  .rescol li:nth-child(even){background:#f2f6fb}
+  .slide.dark .rescol li{background:rgba(255,255,255,.06);color:#eaf1fb}
+  .slide.dark .rescol li:nth-child(even){background:rgba(255,255,255,.1)}
+  .apretado .rescol .rhead{padding:9px 12px;font-size:14px}
+  .apretado .rescol li{padding:7px 12px;font-size:12.3px;line-height:1.36}
+  .muy-apretado .rescol li{padding:5px 11px;font-size:11.6px;line-height:1.3}
+
+  /* ===== COPASST: lamina arriba y tarjeta de color debajo ===== */
+  .copcol{display:flex;flex-direction:column;gap:0;min-width:0}
+  .copfoto{display:flex;align-items:center;justify-content:center;
+    height:var(--ch,236px);border-radius:12px 12px 0 0;overflow:hidden;
+    background:var(--grad);padding:3px 3px 0}
+  .copfoto img{width:100%;height:100%;object-fit:cover;display:block;
+    border-radius:10px 10px 0 0;background:#fff}
+  .copfoto svg{width:auto;height:60%;fill:none;stroke:rgba(255,255,255,.6);
+    stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+  .copcard{border-radius:0 0 12px 12px;padding:15px 18px 17px;color:#fff;flex:1}
+  .copcard h3{font-size:17px;font-weight:800;margin-bottom:7px;text-align:center}
+  .copcard p{font-size:13.6px;line-height:1.5}
+  .apretado .copfoto{--ch:190px} .apretado .copcard{padding:12px 15px 14px}
+  .apretado .copcard h3{font-size:15.5px} .apretado .copcard p{font-size:12.8px;line-height:1.44}
+  .muy-apretado .copfoto{--ch:150px} .muy-apretado .copcard p{font-size:12.2px;line-height:1.38}
+  .slide.ultra .copfoto{--ch:112px} .slide.ultra .copcard{padding:10px 13px 12px}
+  .slide.ultra .copcard h3{font-size:14px} .slide.ultra .copcard p{font-size:11.6px;line-height:1.34}
+
   /* ===== Tres mecanismos de comunicacion (Modulo 6) =====
      Tres columnas del mismo alto, cada una con su lamina arriba y su lista
      debajo. Antes eran acordeones: al abrirlos los tres quedaban de alturas
@@ -5379,12 +5433,18 @@
 <section class="slide dark teal" data-mod="6">
 <div class="wrap"><div class="eyebrow rv up">COPASST / Vigía SST</div>
 <h2 class="rv up" style="--d:1">COPASST / Vigía SST</h2>
-<div class="two" style="margin-top:16px">
- <div class="panel rv left" style="background:linear-gradient(160deg,#e6007e,#b8005f);color:#fff"><h3>¿Qué es?</h3><p style="font-size:14px;line-height:1.55">El <b>Comité Paritario de Seguridad y Salud en el Trabajo</b> (Vigía SST) es un canal de comunicación entre el empleado y su empleador. Tiene como objetivo la <b>promoción y vigilancia</b> de las normas y reglamentos de SST.</p></div>
- <div class="panel rv right" style="background:linear-gradient(160deg,#ef7d00,#c96400);color:#fff"><h3>¿Cómo se conforma?</h3><p style="font-size:14px;line-height:1.55">Incluye <b>convocatoria, elección, conformación, capacitación, reuniones y rendición de cuentas</b>. Cada comité está compuesto por un número igual de representantes del empleador y de los trabajadores, con sus respectivos suplentes.</p></div>
+<div class="two" style="margin-top:14px;align-items:stretch">
+ <div class="copcol rv left">
+  <span class="ph copfoto" data-foto="copasst1(D97)"><svg viewBox="0 0 120 76" aria-hidden="true"><rect x="4" y="6" width="112" height="56" rx="7"/><path d="M4 50l30-22 22 17 20-14 40 27"/><circle cx="90" cy="24" r="8"/></svg></span>
+  <div class="copcard" style="background:linear-gradient(160deg,#e6007e,#b8005f)"><h3>¿Qué es?</h3><p>El <b>Comité Paritario de Seguridad y Salud en el Trabajo</b> (Vigía SST) es un canal de comunicación entre el empleado y su empleador. Tiene como objetivo la <b>promoción y vigilancia</b> de las normas y reglamentos de SST.</p></div>
+ </div>
+ <div class="copcol rv right">
+  <span class="ph copfoto" data-foto="copasst2(D97)"><svg viewBox="0 0 120 76" aria-hidden="true"><rect x="4" y="6" width="112" height="56" rx="7"/><path d="M4 50l30-22 22 17 20-14 40 27"/><circle cx="90" cy="24" r="8"/></svg></span>
+  <div class="copcard" style="background:linear-gradient(160deg,#ef7d00,#c96400)"><h3>¿Cómo se conforma?</h3><p>Incluye <b>convocatoria, elección, conformación, capacitación, reuniones y rendición de cuentas</b>. Cada comité está compuesto por un número igual de representantes del empleador y de los trabajadores, con sus respectivos suplentes, así:</p></div>
+ </div>
 </div>
-<div class="tblwrap rv up"><table class="tbl">
-<tr><th>Número de trabajadores</th><th>Representantes del comité</th></tr>
+<div class="tblwrap rv up" style="--d:2"><table class="tbl">
+<tr><th>Número de trabajadores</th><th>Número de representantes del comité</th></tr>
 <tr><td>De 10 a 50 trabajadores</td><td>Uno (1) por cada una de las partes</td></tr>
 <tr><td>De 50 a 499 trabajadores</td><td>Dos (2) por cada una de las partes</td></tr>
 <tr><td>De 500 a 999 trabajadores</td><td>Tres (3) por cada una de las partes</td></tr>
@@ -5590,7 +5650,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-07-i";
+var VERSION_CURSO = "2026-09-07-j";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 56 en cada intento.
