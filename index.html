@@ -1542,6 +1542,40 @@
      celdas llevan texto de varias lineas y no un dato corto. */
   .tbl td{vertical-align:top}
 
+  /* ===== Clases de brigada (Modulo 6) =====
+     Tres franjas, la del medio en amarillo y con la lamina al otro lado, igual
+     que el material impreso. Antes eran acordeones: al abrirlos quedaban de
+     alturas distintas y el tercero se iba solo a una fila aparte. */
+  .brigs{display:flex;flex-direction:column;gap:11px;margin-top:12px}
+  .brig{display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:center;
+    background:#eef2f7;border-radius:14px;padding:14px 22px}
+  .brig.der{grid-template-columns:1fr auto}
+  .brig.amarilla{background:#f5c400}
+  .brigfoto{display:flex;align-items:center;justify-content:center;flex:none;
+    width:var(--bh,124px);height:var(--bh,124px)}
+  .brigfoto img{max-width:100%;max-height:100%;width:auto;height:auto;display:block;
+    object-fit:contain}
+  .brigfoto svg{width:74%;height:auto;fill:none;stroke:#9db4cc;
+    stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+  /* El verde de marca sobre la banda clara solo da 1.94 de contraste: los
+     titulos van en un verde mas oscuro, y el de la banda amarilla en azul
+     oscuro, como en el impreso. */
+  .brig h4{font-size:16px;font-weight:800;color:var(--c);margin-bottom:5px}
+  .brig p{font-size:13.6px;line-height:1.5;color:#33465c}
+  .brig p b{color:#0b2036}
+  .brig.amarilla p{color:#3d2f00} .brig.amarilla p b{color:#241c00}
+  .apretado .brigs{gap:9px} .apretado .brig{padding:11px 18px;gap:18px}
+  .apretado .brigfoto{--bh:100px} .apretado .brig h4{font-size:15px}
+  .apretado .brig p{font-size:12.8px;line-height:1.44}
+  .muy-apretado .brigfoto{--bh:82px} .muy-apretado .brig{padding:9px 15px;gap:15px}
+  .muy-apretado .brig h4{font-size:14px} .muy-apretado .brig p{font-size:12.1px;line-height:1.38}
+  .slide.ultra .brigfoto{--bh:64px} .slide.ultra .brig{padding:7px 13px;gap:12px}
+  .slide.ultra .brig h4{font-size:13px} .slide.ultra .brig p{font-size:11.4px;line-height:1.32}
+  @media(max-width:700px){
+    .brig,.brig.der{grid-template-columns:1fr;justify-items:center;text-align:center;gap:10px}
+    .brig.der .brigtxt{order:2}
+  }
+
   /* ===== Carrusel de respuestas (Modulo 6) =====
      Prefijo propio "qcarr": el carrusel de vias del modulo 4 ya usaba
      .carrflecha y .carrpuntos, y esos van posicionados en absoluto. Con el
@@ -5586,8 +5620,17 @@
 <div class="wrap"><div class="eyebrow rv up">Brigada de emergencias</div>
 <h2 class="rv up" style="--d:1">Brigada de emergencias</h2>
 <div class="infobanner rv up" style="--d:2">Grupo de empleados que, de acuerdo con las actividades económicas de la empresa y según sus capacidades, tienen la responsabilidad de realizar <b>actividades preventivas y de control de emergencias</b> ante eventualidades de riesgo, siniestro o desastre. Su objetivo primordial es <b>salvaguardar la vida, los bienes y el entorno</b>, actuando como <b>primeros respondedores</b>.</div>
-<p class="lead rv up">Toca cada clase de brigada. 👆</p>
-<div class="accgrid" style="margin-top:12px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>Básica o clase I</h4><span class="chev">+</span></div><div class="acc-body"><p>Formadas, capacitadas y entrenadas para la <b>prevención y atención inicial</b> de emergencias que puedan suscitarse al interior o exterior de la empresa y que estén relacionadas con la misma.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#f5b700"></span><h4>Intermedia o clase II</h4><span class="chev">+</span></div><div class="acc-body"><p>Además de la prevención y atención inicial, están <b>dotadas de todos los elementos, herramientas, equipos y accesorios</b> necesarios para la atención de las emergencias en las primeras etapas de su desarrollo, de acuerdo al riesgo existente.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#e23b32"></span><h4>Especializada o clase III</h4><span class="chev">+</span></div><div class="acc-body"><p>Formadas para la prevención y atención de emergencias en sectores de <b>alto riesgo</b> (petrolero, minero, portuario, químico, eléctrico, hidroeléctrico y otros), dotadas de los elementos y equipos necesarios para el tipo de riesgo específico.</p></div></div></div>
+<div class="brigs">
+  <article class="brig  rv up" style="--c:#4e7a10">
+    <span class="ph brigfoto" data-foto="brigada1(D101)"><svg viewBox="0 0 120 120" aria-hidden="true"><rect x="8" y="14" width="104" height="80" rx="9"/><path d="M8 78l28-22 22 17 20-14 34 24"/><circle cx="88" cy="40" r="9"/></svg></span><div class="brigtxt"><h4>Básica o clase I</h4><p>Formadas, capacitadas y entrenadas para la <b>prevención y atención inicial</b> de emergencias que puedan suscitarse al interior o exterior de la empresa y que estén relacionadas con la misma.</p></div>
+  </article>
+  <article class="brig der amarilla rv up" style="--c:#12304f">
+    <div class="brigtxt"><h4>Intermedia o clase II</h4><p>Además de la prevención y atención inicial, están <b>dotadas de todos los elementos, herramientas, equipos y accesorios</b> necesarios para la atención de las emergencias en las primeras etapas de su desarrollo, de acuerdo al riesgo existente.</p></div><span class="ph brigfoto" data-foto="brigada2(D101)"><svg viewBox="0 0 120 120" aria-hidden="true"><rect x="8" y="14" width="104" height="80" rx="9"/><path d="M8 78l28-22 22 17 20-14 34 24"/><circle cx="88" cy="40" r="9"/></svg></span>
+  </article>
+  <article class="brig  rv up" style="--c:#4e7a10">
+    <span class="ph brigfoto" data-foto="brigada3(D101)"><svg viewBox="0 0 120 120" aria-hidden="true"><rect x="8" y="14" width="104" height="80" rx="9"/><path d="M8 78l28-22 22 17 20-14 34 24"/><circle cx="88" cy="40" r="9"/></svg></span><div class="brigtxt"><h4>Especializada o clase III</h4><p>Formadas para la prevención y atención de emergencias en sectores de <b>alto riesgo</b> (petrolero, minero, portuario, químico, eléctrico, hidroeléctrico y otros), dotadas de los elementos y equipos necesarios para el tipo de riesgo específico.</p></div>
+  </article>
+</div>
 </div></section>
 <section class="slide light mint" data-mod="6">
 <div class="wrap"><div class="eyebrow rv up">Responsabilidades legales</div>
@@ -5756,7 +5799,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-07-o";
+var VERSION_CURSO = "2026-09-07-p";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 56 en cada intento.
