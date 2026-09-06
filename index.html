@@ -1525,6 +1525,21 @@
   .slide.ultra .copfoto{--ch:112px} .slide.ultra .copcard{padding:10px 13px 12px}
   .slide.ultra .copcard h3{font-size:14px} .slide.ultra .copcard p{font-size:11.6px;line-height:1.34}
 
+  /* La lamina suelta, sin tarjeta debajo: se redondea por los cuatro lados y
+     toma el alto de su pareja de al lado. */
+  /* Conserva el alto por escalones de .copfoto: con "auto" el dibujo de
+     reserva, que se mide en porcentaje, no tenia contra que resolverse y
+     estiraba la fila entera. */
+  .copfoto.fotosola{border-radius:12px;padding:3px}
+  .copfoto.fotosola img{border-radius:10px}
+  /* Banner verde, como el aviso de multisede del material impreso. */
+  .banner.verde{background:linear-gradient(150deg,#8bbf3a,#6da22b);color:#fff;box-shadow:none}
+  .banner.verde:before{display:none}
+  .slide.dark .banner.verde{color:#fff}
+  /* En la tabla del Comite cada columna es un tamano de empresa, asi que las
+     celdas llevan texto de varias lineas y no un dato corto. */
+  .tbl td{vertical-align:top}
+
   /* ===== Tres mecanismos de comunicacion (Modulo 6) =====
      Tres columnas del mismo alto, cada una con su lamina arriba y su lista
      debajo. Antes eran acordeones: al abrirlos los tres quedaban de alturas
@@ -5484,15 +5499,17 @@
 <section class="slide dark" data-mod="6">
 <div class="wrap"><div class="eyebrow rv up">Comité de Convivencia Laboral</div>
 <h2 class="rv up" style="--d:1">Comité de Convivencia Laboral</h2>
-<div class="infobanner rv up" style="--d:2">Es una instancia <b>preventiva de acoso laboral</b>, independiente en su funcionamiento, que contribuye a proteger a los trabajadores contra los riesgos psicosociales. Su rol es <b>preventivo, orientador, conciliador y canalizador</b>; por lo anterior, el comité <b>no determina si hay acoso laboral</b>.</div>
-<p class="lead rv up">¿Cómo se conforma? Incluye <b>convocatoria abierta, voto secreto y dirigido, y escrutinio público</b>.</p>
-<div class="tblwrap rv up"><table class="tbl">
-<tr><th>Tamaño de la empresa</th><th>Composición</th></tr>
-<tr><td>Menos de 5 trabajadores</td><td>1 representante del empleador y 1 de los trabajadores (con suplentes)</td></tr>
-<tr><td>Entre 5 y 20 trabajadores</td><td>1 representante por cada parte con sus respectivos suplentes</td></tr>
-<tr><td>20 o más trabajadores</td><td>2 representantes por cada parte con sus respectivos suplentes</td></tr>
+<div class="two ccl rv up" style="--d:2;margin-top:14px;align-items:stretch">
+ <div class="copcard ccl-que" style="background:linear-gradient(160deg,#1bb4e4,#1481c4);border-radius:12px"><h3>¿Qué es?</h3><p>Es una instancia <b>preventiva de acoso laboral</b>, independiente en su funcionamiento, que contribuye a proteger a los trabajadores contra los riesgos psicosociales que afectan la salud en los lugares de trabajo. Su rol es <b>preventivo, orientador, conciliador y canalizador</b>; por lo anterior, el comité <b>no determina si hay acoso laboral</b>.</p></div>
+ <span class="ph copfoto fotosola" data-foto="convivencia1(D99)"><svg viewBox="0 0 120 76" aria-hidden="true"><rect x="4" y="6" width="112" height="56" rx="7"/><path d="M4 50l30-22 22 17 20-14 40 27"/><circle cx="90" cy="24" r="8"/></svg></span>
+</div>
+<h3 class="subverde rv up" style="--d:3;margin-top:16px">¿Cómo se conforma?</h3>
+<p class="lead rv up" style="--d:3;margin-top:2px;max-width:none">Incluye <b>convocatoria abierta, voto secreto y dirigido, y escrutinio público</b>. Cada comité está compuesto por un número igual de representantes del empleador y de los trabajadores, con sus respectivos suplentes, así:</p>
+<div class="tblwrap rv up" style="--d:4"><table class="tbl">
+<tr><th>Menos de 5 trabajadores</th><th>Entre 5 y 20 trabajadores</th><th>20 o más trabajadores</th></tr>
+<tr><td>1 representante del empleador y 1 de los trabajadores, con suplentes</td><td>1 representante por cada parte con sus respectivos suplentes</td><td>2 representantes por cada parte con sus respectivos suplentes</td></tr>
 </table></div>
-<div class="banner rv up" style="--d:2">Las empresas <b>multisede</b> requieren un comité central y un comité adicional por cada centro de trabajo.</div>
+<div class="banner verde rv up" style="--d:5">Las empresas <b>multisede</b> requieren un comité central y un comité adicional por cada centro de trabajo.</div>
 </div></section>
 <section class="slide light" data-mod="6">
 <div class="wrap"><div class="eyebrow rv up">Comité de Convivencia Laboral</div>
@@ -5674,7 +5691,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-07-k";
+var VERSION_CURSO = "2026-09-07-l";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 56 en cada intento.
