@@ -3178,10 +3178,34 @@
   /* Ocho tarjetas en tres columnas son tres filas y no caben en un portatil.
      En cuatro columnas son dos filas justas, sin encoger el texto. */
   @media(min-width:1000px){ .flips.flips8{grid-template-columns:repeat(4,1fr)} }
-  .apretado .flips8 .flip{height:206px}
-  .muy-apretado .flips8 .flip{height:180px}
-  .slide.ultra .flips8 .flip{height:158px}
-  .slide.ultra .flips8 .face{padding:13px}
+  /* El frente lleva la ilustracion y la pregunta, sobre fondo claro alternado,
+     como en el material impreso. El numero grande sobra: con la imagen dentro,
+     la tarjeta se lee sola. */
+  .flips8 .front{background:#dbe8f8;color:var(--panel);border:2px solid var(--blue);
+    justify-content:center;align-items:center;text-align:center;gap:11px;padding:15px 13px}
+  .flips8 .flip:nth-child(even) .front{background:#dcedb4;border-color:#8bbf3a}
+  .flips8 .front h3{font-size:14.5px;font-weight:800;line-height:1.25;color:var(--panel)}
+  .flips8 .front .n{display:none}
+  .flips8 .front .hint{font-size:11px;color:#3c5876}
+  .flips8 .front .flipfoto{margin-bottom:0}
+  .flips8 .front .flipfoto svg{stroke:var(--panel)}
+  .flips8 .flipfoto img{max-height:96px}
+  .flips8 .back{border:2px solid var(--blue);padding:16px 15px;justify-content:center}
+  .flips8 .flip:nth-child(even) .back{border-color:#8bbf3a}
+  .flips8 .back h4{font-size:14px;line-height:1.22}
+  .flips8 .back p{font-size:12.6px;line-height:1.46}
+  .apretado .flips8 .flip{height:236px}
+  .apretado .flips8 .flipfoto img{max-height:74px} .apretado .flips8 .flipfoto svg{height:60px}
+  .apretado .flips8 .front h3{font-size:13.4px}
+  .muy-apretado .flips8 .flip{height:206px}
+  .muy-apretado .flips8 .flipfoto img{max-height:62px}
+  .muy-apretado .flips8 .flipfoto svg{height:50px}
+  .muy-apretado .flips8 .front h3{font-size:12.6px;line-height:1.2}
+  .slide.ultra .flips8 .flip{height:178px}
+  .slide.ultra .flips8 .face{padding:11px}
+  .slide.ultra .flips8 .flipfoto img{max-height:50px}
+  .slide.ultra .flips8 .flipfoto svg{height:42px}
+  .slide.ultra .flips8 .front h3{font-size:11.8px;line-height:1.18}
   .apretado .flip,.apretado .flip.conFoto,.apretado .flips-foto .flip.conFoto{height:186px}
   @media(min-width:1180px){
     .muy-apretado .flips{grid-template-columns:repeat(3,1fr)}
@@ -5455,7 +5479,7 @@
 <div class="wrap"><div class="eyebrow rv up">COPASST / Vigía SST</div>
 <h2 class="rv up" style="--d:1">Conoce más sobre el COPASST</h2>
 <p class="lead rv up" style="--d:2">Voltea cada tarjeta para ver la respuesta. 👆</p>
-<div class="flips flips8" style="margin-top:14px"><div class="flip rv up" tabindex="0" role="button"><div class="flip-in"><div class="face front"><div class="n">1</div><h3>¿Qué se requiere para ser elegido miembro?</h3><div class="hint">Toca para ver ↺</div></div><div class="face back"><h4>Requisitos</h4><p>Ser <b>trabajador de la empresa</b>, ser elegido por los trabajadores o designado por el empleador.</p></div></div></div><div class="flip rv up" tabindex="0" role="button"><div class="flip-in"><div class="face front"><div class="n">2</div><h3>¿Quién nombra a los representantes de los trabajadores?</h3><div class="hint">Toca para ver ↺</div></div><div class="face back"><h4>Representantes de los trabajadores</h4><p>Los trabajadores mediante <b>votación libre</b> eligen a sus representantes en el comité.</p></div></div></div><div class="flip rv up" tabindex="0" role="button"><div class="flip-in"><div class="face front"><div class="n">3</div><h3>¿Quién nombra a los representantes del empleador?</h3><div class="hint">Toca para ver ↺</div></div><div class="face back"><h4>Representantes del empleador</h4><p>El <b>empleador</b> designa a sus representantes.</p></div></div></div><div class="flip rv up" tabindex="0" role="button"><div class="flip-in"><div class="face front"><div class="n">4</div><h3>¿Quién elige al secretario?</h3><div class="hint">Toca para ver ↺</div></div><div class="face back"><h4>Secretario</h4><p>El comité <b>en pleno</b> elige al secretario, entre la totalidad de los miembros que conforman el comité.</p></div></div></div><div class="flip rv up" tabindex="0" role="button"><div class="flip-in"><div class="face front"><div class="n">5</div><h3>¿Quién elige al presidente?</h3><div class="hint">Toca para ver ↺</div></div><div class="face back"><h4>Presidente</h4><p>El <b>empleador</b> designa a uno de sus representantes como presidente.</p></div></div></div><div class="flip rv up" tabindex="0" role="button"><div class="flip-in"><div class="face front"><div class="n">6</div><h3>¿Cada cuánto se reúnen?</h3><div class="hint">Toca para ver ↺</div></div><div class="face back"><h4>Reuniones</h4><p>Por lo menos <b>una vez al mes</b>, en las instalaciones de la empresa y durante el horario de trabajo. Si la situación lo requiere, se pueden citar de forma extraordinaria.</p></div></div></div><div class="flip rv up" tabindex="0" role="button"><div class="flip-in"><div class="face front"><div class="n">7</div><h3>¿Cuál es el periodo de los miembros?</h3><div class="hint">Toca para ver ↺</div></div><div class="face back"><h4>Periodo</h4><p>El periodo de los miembros del comité es de <b>dos años</b>.</p></div></div></div><div class="flip rv up" tabindex="0" role="button"><div class="flip-in"><div class="face front"><div class="n">8</div><h3>¿Debo tener COPASST con menos de 10 trabajadores?</h3><div class="hint">Toca para ver ↺</div></div><div class="face back"><h4>Menos de 10 trabajadores</h4><p>Se debe tener un <b>Vigía SST</b>, asignado por el empleador, que cumplirá las mismas funciones del comité. En lugar de actas, deberá emitir <b>informes mensuales</b>.</p></div></div></div></div>
+<div class="flips flips8" style="margin-top:14px"><div class="flip rv up" tabindex="0" role="button"><div class="flip-in"><div class="face front"><div class="n">1</div><span class="ph flipfoto" data-foto="cop1(D98)"><svg viewBox="0 0 64 52" aria-hidden="true"><rect x="3" y="4" width="58" height="38" rx="5"/><path d="M3 33l16-12 12 9 10-7 20 14"/><circle cx="46" cy="15" r="5"/></svg></span><h3>¿Qué se requiere para ser elegido miembro?</h3><div class="hint">Toca para ver ↺</div></div><div class="face back"><h4>Requisitos</h4><p>Ser <b>trabajador de la empresa</b>, ser elegido por los trabajadores o designado por el empleador.</p></div></div></div><div class="flip rv up" tabindex="0" role="button"><div class="flip-in"><div class="face front"><div class="n">2</div><span class="ph flipfoto" data-foto="cop2(D98)"><svg viewBox="0 0 64 52" aria-hidden="true"><rect x="3" y="4" width="58" height="38" rx="5"/><path d="M3 33l16-12 12 9 10-7 20 14"/><circle cx="46" cy="15" r="5"/></svg></span><h3>¿Quién nombra a los representantes de los trabajadores?</h3><div class="hint">Toca para ver ↺</div></div><div class="face back"><h4>Representantes de los trabajadores</h4><p>Los trabajadores mediante <b>votación libre</b> eligen a sus representantes en el comité.</p></div></div></div><div class="flip rv up" tabindex="0" role="button"><div class="flip-in"><div class="face front"><div class="n">3</div><span class="ph flipfoto" data-foto="cop3(D98)"><svg viewBox="0 0 64 52" aria-hidden="true"><rect x="3" y="4" width="58" height="38" rx="5"/><path d="M3 33l16-12 12 9 10-7 20 14"/><circle cx="46" cy="15" r="5"/></svg></span><h3>¿Quién nombra a los representantes del empleador?</h3><div class="hint">Toca para ver ↺</div></div><div class="face back"><h4>Representantes del empleador</h4><p>El <b>empleador</b> designa a sus representantes.</p></div></div></div><div class="flip rv up" tabindex="0" role="button"><div class="flip-in"><div class="face front"><div class="n">4</div><span class="ph flipfoto" data-foto="cop4(D98)"><svg viewBox="0 0 64 52" aria-hidden="true"><rect x="3" y="4" width="58" height="38" rx="5"/><path d="M3 33l16-12 12 9 10-7 20 14"/><circle cx="46" cy="15" r="5"/></svg></span><h3>¿Quién elige al secretario?</h3><div class="hint">Toca para ver ↺</div></div><div class="face back"><h4>Secretario</h4><p>El comité <b>en pleno</b> elige al secretario, entre la totalidad de los miembros que conforman el comité.</p></div></div></div><div class="flip rv up" tabindex="0" role="button"><div class="flip-in"><div class="face front"><div class="n">5</div><span class="ph flipfoto" data-foto="cop5(D98)"><svg viewBox="0 0 64 52" aria-hidden="true"><rect x="3" y="4" width="58" height="38" rx="5"/><path d="M3 33l16-12 12 9 10-7 20 14"/><circle cx="46" cy="15" r="5"/></svg></span><h3>¿Quién elige al presidente?</h3><div class="hint">Toca para ver ↺</div></div><div class="face back"><h4>Presidente</h4><p>El <b>empleador</b> designa a uno de sus representantes como presidente.</p></div></div></div><div class="flip rv up" tabindex="0" role="button"><div class="flip-in"><div class="face front"><div class="n">6</div><span class="ph flipfoto" data-foto="cop6(D98)"><svg viewBox="0 0 64 52" aria-hidden="true"><rect x="3" y="4" width="58" height="38" rx="5"/><path d="M3 33l16-12 12 9 10-7 20 14"/><circle cx="46" cy="15" r="5"/></svg></span><h3>¿Cada cuánto se reúnen?</h3><div class="hint">Toca para ver ↺</div></div><div class="face back"><h4>Reuniones</h4><p>Por lo menos <b>una vez al mes</b>, en las instalaciones de la empresa y durante el horario de trabajo. Si la situación lo requiere, se pueden citar de forma extraordinaria.</p></div></div></div><div class="flip rv up" tabindex="0" role="button"><div class="flip-in"><div class="face front"><div class="n">7</div><span class="ph flipfoto" data-foto="cop7(D98)"><svg viewBox="0 0 64 52" aria-hidden="true"><rect x="3" y="4" width="58" height="38" rx="5"/><path d="M3 33l16-12 12 9 10-7 20 14"/><circle cx="46" cy="15" r="5"/></svg></span><h3>¿Cuál es el periodo de los miembros?</h3><div class="hint">Toca para ver ↺</div></div><div class="face back"><h4>Periodo</h4><p>El periodo de los miembros del comité es de <b>dos años</b>.</p></div></div></div><div class="flip rv up" tabindex="0" role="button"><div class="flip-in"><div class="face front"><div class="n">8</div><span class="ph flipfoto" data-foto="cop8(D98)"><svg viewBox="0 0 64 52" aria-hidden="true"><rect x="3" y="4" width="58" height="38" rx="5"/><path d="M3 33l16-12 12 9 10-7 20 14"/><circle cx="46" cy="15" r="5"/></svg></span><h3>¿Debo tener COPASST con menos de 10 trabajadores?</h3><div class="hint">Toca para ver ↺</div></div><div class="face back"><h4>Menos de 10 trabajadores</h4><p>Se debe tener un <b>Vigía SST</b>, asignado por el empleador, que cumplirá las mismas funciones del comité. En lugar de actas, deberá emitir <b>informes mensuales</b>.</p></div></div></div></div>
 </div></section>
 <section class="slide dark" data-mod="6">
 <div class="wrap"><div class="eyebrow rv up">Comité de Convivencia Laboral</div>
@@ -5650,7 +5674,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-07-j";
+var VERSION_CURSO = "2026-09-07-k";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 56 en cada intento.
