@@ -1471,6 +1471,44 @@
     .slide.ultra .act{min-height:84px;padding:14px 10px}
     .slide.ultra .chip3{padding:10px}
   }
+  /* ===== Tres mecanismos de comunicacion (Modulo 6) =====
+     Tres columnas del mismo alto, cada una con su lamina arriba y su lista
+     debajo. Antes eran acordeones: al abrirlos los tres quedaban de alturas
+     distintas y el tercero se iba solo a una fila aparte. */
+  .mecs{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:12px;align-items:stretch}
+  .mec{background:#fff;border-radius:14px;box-shadow:var(--shadow);overflow:hidden;min-width:0;
+    display:flex;flex-direction:column;padding-bottom:13px;border-top:4px solid var(--c)}
+  .slide.dark .mec{background:rgba(255,255,255,.06);box-shadow:none;
+    border:1px solid rgba(255,255,255,.1);border-top:4px solid var(--c)}
+  .mec h4{font-size:14.5px;font-weight:800;color:var(--blue);line-height:1.25;padding:11px 15px 9px}
+  .slide.dark .mec h4{color:#8fd6f2}
+  .mecfoto{display:flex;align-items:center;justify-content:center;flex:none;
+    height:var(--mh,120px);margin:0 15px 11px;border-radius:10px;background:var(--grad);
+    padding:4px;overflow:hidden}
+  .mecfoto img{max-width:100%;max-height:100%;width:auto;height:auto;
+    border-radius:7px;background:#fff;display:block;object-fit:contain}
+  .mecfoto svg{width:auto;height:78%;fill:none;stroke:rgba(255,255,255,.6);
+    stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+  .mec ul{list-style:none;margin:0;padding:0 15px;display:grid;gap:4px}
+  .mec li{position:relative;padding-left:15px;font-size:12.6px;line-height:1.38;color:var(--muted)}
+  .mec li:before{content:"";position:absolute;left:0;top:6px;width:6px;height:6px;
+    border-radius:50%;background:var(--c)}
+  .mec .mectxt{padding:0 15px}
+  .mec .mectxt p{font-size:12.6px;line-height:1.42;color:var(--muted);margin:0 0 8px}
+  .mec .mectxt p b{color:var(--ink)}
+  .slide.dark .mec li,.slide.dark .mec .mectxt p{color:#c2d0e6}
+  .slide.dark .mec .mectxt p b{color:#eaf1fb}
+  .mec .mecsub{color:var(--blue);font-weight:800}
+  .apretado .mecs{gap:11px} .apretado .mecfoto{--mh:96px;margin-bottom:9px}
+  .apretado .mec h4{font-size:13.6px;padding:9px 13px 7px}
+  .apretado .mec li,.apretado .mec .mectxt p{font-size:12px;line-height:1.32}
+  .muy-apretado .mecfoto{--mh:78px} .muy-apretado .mec li,.muy-apretado .mec .mectxt p{font-size:11.5px;line-height:1.28}
+  .muy-apretado .mec ul{gap:3px}
+  .slide.ultra .mecfoto{--mh:62px} .slide.ultra .mec h4{font-size:12.8px}
+  .slide.ultra .mec li,.slide.ultra .mec .mectxt p{font-size:11px;line-height:1.25}
+  @media(max-width:900px){.mecs{grid-template-columns:1fr 1fr}}
+  @media(max-width:620px){.mecs{grid-template-columns:1fr}}
+
   /* ===== Dos grupos rotulados (Reglas HSE) =====
      Una columna para lo que hay que hacer y otra para lo prohibido. */
   .dosgrupos{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:14px;align-items:stretch}
@@ -5320,8 +5358,23 @@
 <div class="wrap"><div class="eyebrow rv up">Comunicación, participación y consulta</div>
 <h2 class="rv up" style="--d:1">Promoción y mecanismos</h2>
 <div class="infobanner rv up" style="--d:2">Para <b>promover la participación</b> y proporcionar y recibir <b>información oportuna</b> sobre Seguridad y Salud en el Trabajo, ambiente y calidad, Holcim cuenta con mecanismos que pueden ser utilizados por todas las partes interesadas.</div>
-<p class="lead rv up">Toca cada mecanismo. 👆</p>
-<div class="accgrid" style="margin-top:12px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>¿Qué comunicar?</h4><span class="chev">+</span></div><div class="acc-body"><div class="li"><span class="b"></span>Implementación SG-SST</div><div class="li"><span class="b"></span>Política y Objetivos H&amp;S</div><div class="li"><span class="b"></span>Peligros, riesgos y controles</div><div class="li"><span class="b"></span>Requisitos legales</div><div class="li"><span class="b"></span>Roles y responsabilidades</div><div class="li"><span class="b"></span>Rendición de cuentas</div><div class="li"><span class="b"></span>Plan de capacitación</div><div class="li"><span class="b"></span>Planes y acciones de mejora</div><div class="li"><span class="b"></span>Plan y Brigada de Emergencias</div><div class="li"><span class="b"></span>Gestión del cambio</div><div class="li"><span class="b"></span>Lecciones aprendidas</div><div class="li"><span class="b"></span>COPASST</div><div class="li"><span class="b"></span>COCOLAB</div><div class="li"><span class="b"></span>SVE</div><div class="li"><span class="b"></span>Otros aspectos de Higiene, Salud y Seguridad</div></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1bb4e4"></span><h4>¿Cómo comunicar?</h4><span class="chev">+</span></div><div class="acc-body"><p><b>Medio virtual:</b> correos electrónicos, encuestas, redes sociales, WhatsApp, Connect intranet Holcim, herramientas colaborativas Gsuite, capacitaciones y reuniones por Zoom o Meet.</p><p class="tdd"><b>Medio físico:</b> publicaciones, cartas, quejas y reclamos, formatos de reporte de interacciones y condiciones de seguridad, salud y ambiente.</p><p class="tdd"><b>Speak up.</b></p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>¿Cómo participar y consultar?</h4><span class="chev">+</span></div><div class="acc-body"><div class="li"><span class="b"></span>COPASST o Vigía SST</div><div class="li"><span class="b"></span>Comité de Convivencia Laboral</div><div class="li"><span class="b"></span>Brigada de Emergencias</div><div class="li"><span class="b"></span>Capacitaciones</div><div class="li"><span class="b"></span>Entrenamientos</div><div class="li"><span class="b"></span>(Re)Inducciones</div><div class="li"><span class="b"></span>Actividades que promueven la Salud y Seguridad en el Trabajo</div><div class="li"><span class="b"></span>Reporte de Peligros, VPCs y C.PVCs</div><div class="li"><span class="b"></span>Repositorio documental</div><div class="li"><span class="b"></span>Investigación de eventos</div></div></div></div>
+<div class="mecs rv up" style="--d:3">
+  <article class="mec" style="--c:#97d13b">
+    <h4>¿Qué comunicar?</h4>
+    <span class="ph mecfoto" data-foto="quecomunicar(D96)"><svg viewBox="0 0 120 76" aria-hidden="true"><rect x="4" y="6" width="112" height="56" rx="7"/><path d="M4 50l30-22 22 17 20-14 40 27"/><circle cx="90" cy="24" r="8"/></svg></span>
+    <ul><li>Implementación SG-SST</li><li>Política y Objetivos H&amp;S</li><li>Peligros, riesgos y controles</li><li>Requisitos legales</li><li>Roles y responsabilidades</li><li>Rendición de cuentas</li><li>Plan de capacitación</li><li>Planes y acciones de mejora</li><li>Plan y Brigada de Emergencias</li><li>Gestión del cambio</li><li>Lecciones aprendidas</li><li>COPASST</li><li>COCOLAB</li><li>SVE</li><li>Otros aspectos de Higiene, Salud y Seguridad</li></ul>
+  </article>
+  <article class="mec" style="--c:#1bb4e4">
+    <h4>¿Cómo comunicar?</h4>
+    <span class="ph mecfoto" data-foto="comocomunicar(D96)"><svg viewBox="0 0 120 76" aria-hidden="true"><rect x="4" y="6" width="112" height="56" rx="7"/><path d="M4 50l30-22 22 17 20-14 40 27"/><circle cx="90" cy="24" r="8"/></svg></span>
+    <div class="mectxt"><p><b>Medio virtual:</b> correos electrónicos, encuestas, redes sociales, WhatsApp, Connect intranet Holcim, herramientas colaborativas Gsuite, capacitaciones y reuniones por Zoom o Meet.</p><p><b>Medio físico:</b> publicaciones, cartas, quejas y reclamos, formatos de reporte de interacciones y condiciones de seguridad, salud y ambiente.</p><p class="mecsub"><b>Speak up.</b></p></div>
+  </article>
+  <article class="mec" style="--c:#1877c4">
+    <h4>¿Cómo participar y consultar?</h4>
+    <span class="ph mecfoto" data-foto="participar(D96)"><svg viewBox="0 0 120 76" aria-hidden="true"><rect x="4" y="6" width="112" height="56" rx="7"/><path d="M4 50l30-22 22 17 20-14 40 27"/><circle cx="90" cy="24" r="8"/></svg></span>
+    <ul><li>COPASST o Vigía SST</li><li>Comité de Convivencia Laboral</li><li>Brigada de Emergencias</li><li>Capacitaciones</li><li>Entrenamientos</li><li>(Re)Inducciones</li><li>Actividades que promueven la Salud y Seguridad en el Trabajo</li><li>Reporte de Peligros, VPCs y C.PVCs</li><li>Repositorio documental</li><li>Investigación de eventos</li></ul>
+  </article>
+</div>
 </div></section>
 <section class="slide dark teal" data-mod="6">
 <div class="wrap"><div class="eyebrow rv up">COPASST / Vigía SST</div>
@@ -5537,7 +5590,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-07-h";
+var VERSION_CURSO = "2026-09-07-i";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 56 en cada intento.
