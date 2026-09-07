@@ -573,6 +573,18 @@
   .mc-card .mc-pie{width:100%;height:5px;background:linear-gradient(90deg,#8bbf3a,#1bb4e4);flex:none}
   .mc-card.claro .mc-nm{color:#0b2036}
 
+  /* Tarjetas con DOS logos (Gold y Silver de sostenibilidad; CCS y RUC).
+     Van uno al lado del otro y cada uno conserva el alto completo de la fila:
+     apilados quedarian a la mitad y no se leerian. */
+  .mc-card .mc-logo.mc-duo{display:flex;gap:8px}
+  .mc-card .mc-sub{flex:1;height:100%;min-width:0;display:flex;
+    align-items:center;justify-content:center}
+  .mc-card .mc-sub svg{width:100%;height:100%;display:block}
+  .mc-card .mc-sub.foto img{max-width:100%;max-height:100%;width:auto;height:auto;
+    display:block;object-fit:contain;background:#fff;border-radius:8px;padding:3px}
+  .mc-card.claro .mc-sub.foto img{background:none;padding:0}
+  .slide.muy-apretado .mc-card .mc-logo.mc-duo{gap:6px}
+
   /* Respaldo de las cuatro normas: una insignia blanca con el codigo, parecida
      al sello impreso. Desaparece sola en cuanto subas el logo de verdad. */
   .mc-sello{background:#fff;border-radius:9px;padding:6px 10px;display:flex;
@@ -590,7 +602,7 @@
   .mc-band .mc-band-t{font-size:13px;font-weight:800;color:#0b2036;flex:none;
     border-right:2px solid #cdd8e4;padding-right:16px}
   .mc-band .mc-band-l{flex:1;display:flex;align-items:center;justify-content:space-around;gap:12px}
-  .mc-band .mc-mini{height:52px;flex:1;display:flex;align-items:center;justify-content:center}
+  .mc-band .mc-mini{height:70px;flex:1;display:flex;align-items:center;justify-content:center}
 
   .mc-logo svg,.mc-mini svg{width:100%;height:100%;display:block}
   .mc-logo.foto,.mc-mini.foto{background:none}
@@ -607,7 +619,7 @@
     .mc-card .mc-logo{height:52px;margin-bottom:6px}
     .mc-card .mc-nm{font-size:11.8px}
     .mc-band{padding:7px 12px;margin-top:9px}
-    .mc-band .mc-mini{height:44px}}
+    .mc-band .mc-mini{height:55px}}
   .slide.apretado .mc-card .mc-logo{height:46px}
   .slide.apretado .mc-card .mc-nm{font-size:11.4px}
   .slide.apretado .mc-band .mc-mini{height:40px}
@@ -5755,7 +5767,7 @@
 <p class="lead rv up">Revisa la información y continúa con <b>Siguiente →</b>.</p>
 <div class="mc-iso rv up" style="--d:3"><div class="mc-card" style="--c:#a01e28"><span class="mc-logo" data-foto="iso9001(D104)"><span class="mc-sello" style="color:#a01e28"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="#a01e28" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="#a01e28" stroke-width="2"/><circle cx="12" cy="12" r="1.4" fill="#a01e28"/></svg><b>ISO 9001</b></span></span><span class="mc-nm">Sistema de Gestión de la Calidad</span><span class="mc-pie"></span></div><div class="mc-card" style="--c:#4b2a6b"><span class="mc-logo" data-foto="iso14001(D104)"><span class="mc-sello" style="color:#4b2a6b"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="#4b2a6b" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="#4b2a6b" stroke-width="2"/><circle cx="12" cy="12" r="1.4" fill="#4b2a6b"/></svg><b>ISO 14001</b></span></span><span class="mc-nm">Sistema de Gestión Ambiental</span><span class="mc-pie"></span></div><div class="mc-card" style="--c:#157a7e"><span class="mc-logo" data-foto="iso45001(D104)"><span class="mc-sello" style="color:#157a7e"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="#157a7e" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="#157a7e" stroke-width="2"/><circle cx="12" cy="12" r="1.4" fill="#157a7e"/></svg><b>ISO 45001</b></span></span><span class="mc-nm">Sistema de Gestión de la Seguridad y Salud en el Trabajo</span><span class="mc-pie"></span></div><div class="mc-card" style="--c:#0e2c56"><span class="mc-logo" data-foto="iso39001(D104)"><span class="mc-sello" style="color:#0e2c56"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="#0e2c56" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="#0e2c56" stroke-width="2"/><circle cx="12" cy="12" r="1.4" fill="#0e2c56"/></svg><b>ISO 39001</b></span></span><span class="mc-nm">Sistema de Gestión de la Seguridad Vial</span><span class="mc-pie"></span></div></div>
 <div class="mc-band rv up" style="--d:4"><div class="mc-band-t">Organización Saludable<br>Certificada</div><div class="mc-band-l"><span class="mc-mini" data-foto="corazon(D104)"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="#c0392b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M32 52C17 42 10 34 10 25a11 11 0 0 1 22-3 11 11 0 0 1 22 3c0 9-7 17-22 27z"/></g></svg></span><span class="mc-mini" data-foto="corazones(D104)"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="#c0392b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M23 44C12 37 7 31 7 24a8.5 8.5 0 0 1 16-3 8.5 8.5 0 0 1 16 3c0 7-5 13-16 20z"/><path d="M43 25a8.5 8.5 0 0 1 14 3c0 6-4 11-13 17"/></g></svg></span><span class="mc-mini" data-foto="saludables(D104)"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="#c0392b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M27 47C15 39 9 32 9 24a9.5 9.5 0 0 1 18-3 9.5 9.5 0 0 1 15-1"/><circle cx="45" cy="41" r="9"/><path d="M45 29v-3M45 56v-3M57 41h3M30 41h3M53.5 32.5l2-2M34.5 49.5l2-2"/></g></svg></span></div></div>
-<div class="mc-rec rv up" style="--d:5"><div class="mc-card" style="--c:#e6007e"><span class="mc-logo" data-foto="countrygold(D104)"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="38" r="14"/><path d="M32 30l3 6 6 .8-4.4 4.3 1.1 6.1L32 44.3 26.3 47.2l1.1-6.1L23 36.8l6-.8z"/><path d="M22 24l-6-14h12l4 10M42 24l6-14H36l-4 10"/></g></svg></span><span class="mc-nm">Country Gold · primero en recibir Oro en 2023 y repitió en 2024</span><span class="mc-pie"></span></div><div class="mc-card" style="--c:#157a7e"><span class="mc-logo" data-foto="sostenibilidad(D104)"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="22" cy="36" r="11"/><circle cx="44" cy="42" r="11"/><path d="M16 26l-4-10h10l3 7M50 32l4-10H44l-3 7"/></g></svg></span><span class="mc-nm">Distinciones Gold y Silver de sostenibilidad</span><span class="mc-pie"></span></div><div class="mc-card claro" style="--c:#eef2f7"><span class="mc-logo" data-foto="ccsruc(D104)"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="#0b2036" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M32 8l20 7v16c0 13-9 21-20 25-11-4-20-12-20-25V15z"/><path d="M23 32l6 6 12-13"/></g></svg></span><span class="mc-nm">Consejo Colombiano de Seguridad · Registro Uniforme para Contratistas</span><span class="mc-pie"></span></div><div class="mc-card" style="--c:#1877c4"><span class="mc-logo" data-foto="gcca(D104)"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="32" r="22"/><path d="M10 32h44M32 10c6 7 6 37 0 44M32 10c-6 7-6 37 0 44"/></g></svg></span><span class="mc-nm">Asociación Global del Cemento y el Concreto</span><span class="mc-pie"></span></div></div>
+<div class="mc-rec rv up" style="--d:5"><div class="mc-card" style="--c:#e6007e"><span class="mc-logo" data-foto="countrygold(D104)"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="38" r="14"/><path d="M32 30l3 6 6 .8-4.4 4.3 1.1 6.1L32 44.3 26.3 47.2l1.1-6.1L23 36.8l6-.8z"/><path d="M22 24l-6-14h12l4 10M42 24l6-14H36l-4 10"/></g></svg></span><span class="mc-nm">Country Gold · primero en recibir Oro en 2023 y repitió en 2024</span><span class="mc-pie"></span></div><div class="mc-card" style="--c:#157a7e"><span class="mc-logo mc-duo"><span class="mc-sub" data-foto="gold(D104)"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="40" r="15"/><path d="M32 31l3.2 6.5 7.2 1-5.2 5.1 1.2 7.1L32 47.4l-6.4 3.3 1.2-7.1-5.2-5.1 7.2-1z"/><path d="M20 22l-7-16h13l5 11M44 22l7-16H38l-5 11"/></g></svg></span><span class="mc-sub" data-foto="silver(D104)"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="40" r="15"/><path d="M22 40c0 7 5 11 10 11s10-4 10-11"/><path d="M27 34v6M37 34v6"/><path d="M20 22l-7-16h13l5 11M44 22l7-16H38l-5 11"/></g></svg></span></span><span class="mc-nm">Distinciones Gold y Silver de sostenibilidad</span><span class="mc-pie"></span></div><div class="mc-card claro" style="--c:#eef2f7"><span class="mc-logo mc-duo"><span class="mc-sub" data-foto="ccs(D104)"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="#0b2036" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M32 8l20 7v16c0 13-9 21-20 25-11-4-20-12-20-25V15z"/><path d="M23 32l6 6 12-13"/></g></svg></span><span class="mc-sub" data-foto="ruc(D104)"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="#0b2036" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8h22l10 10v38H16z"/><path d="M38 8v10h10"/><path d="M23 30h18M23 38h18M23 46h11"/></g></svg></span></span><span class="mc-nm">Consejo Colombiano de Seguridad · Registro Uniforme para Contratistas</span><span class="mc-pie"></span></div><div class="mc-card" style="--c:#1877c4"><span class="mc-logo" data-foto="gcca(D104)"><svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="32" r="22"/><path d="M10 32h44M32 10c6 7 6 37 0 44M32 10c-6 7-6 37 0 44"/></g></svg></span><span class="mc-nm">Asociación Global del Cemento y el Concreto</span><span class="mc-pie"></span></div></div>
 </div></section>
 <section class="slide dark teal" data-mod="6">
   <div class="wrap" style="text-align:center">
@@ -5905,7 +5917,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-07-u";
+var VERSION_CURSO = "2026-09-07-v";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 56 en cada intento.
