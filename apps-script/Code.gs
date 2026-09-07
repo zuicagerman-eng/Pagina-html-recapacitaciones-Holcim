@@ -1152,6 +1152,108 @@ function olvidarLoRecordado() {
   return 'olvidado';
 }
 
+/**
+ * CREA LA HOJA EN HOLCIM, CON LOS ENCABEZADOS EXACTOS
+ *
+ * Le pasas la URL de la carpeta de Drive donde quieres que viva y la crea allí
+ * con las columnas correctas, en el orden correcto. Te devuelve su URL para
+ * pegarla en ID_HOJA.
+ *
+ * Se hace así y no a mano porque los encabezados tienen que coincidir letra por
+ * letra: si dice "Centro de trabajo" en vez de "Centro_Trabajo", el script
+ * añadirá una columna nueva y esa quedará vacía para siempre.
+ *
+ * Uso, desde el editor:
+ *   crearHojaEnHolcim("https://drive.google.com/drive/folders/1AbC...")
+ */
+function crearHojaEnHolcim(urlCarpeta) {
+  var id = soloId_(urlCarpeta);
+  if (!id) { Logger.log('Pásame la URL de la carpeta de Drive donde debe quedar la hoja.'); return 'falta la carpeta'; }
+
+  var carpeta;
+  try { carpeta = DriveApp.getFolderById(id); }
+  catch (e) { Logger.log('No se pudo abrir esa carpeta: ' + e.message); return 'carpeta inaccesible'; }
+
+  var ss = SpreadsheetApp.create(NOMBRE_HOJA);
+  var hoja = ss.getActiveSheet();
+  hoja.setName(PESTANA_RESUMEN);
+  hoja.appendRow(COLUMNAS_RESUMEN);
+  hoja.setFrozenRows(1);
+  hoja.getRange(1, 1, 1, COLUMNAS_RESUMEN.length).setFontWeight('bold');
+
+  /* Se crea en "Mi unidad" y de ahi se mueve: no hay forma de crearla
+     directamente dentro de una carpeta. */
+  try { DriveApp.getFileById(ss.getId()).moveTo(carpeta); }
+  catch (e) {
+    Logger.log('La hoja se creó pero NO se pudo mover a esa carpeta: ' + e.message +
+               '\nEstá en "Mi unidad" con el nombre "' + NOMBRE_HOJA + '"; muévela a mano.');
+  }
+
+  var txt = 'Hoja creada:\n  ' + ss.getUrl() +
+            '\n\nPégala en ID_HOJA y ejecuta probarTodo.' +
+            '\n\nColumnas: ' + COLUMNAS_RESUMEN.join(' | ');
+  Logger.log(txt);
+  return txt;
+}
+
+/**
+ * TRAE LAS FILAS DE LA HOJA ANTERIOR
+ *
+ * Copia a la hoja de ahora (la de ID_HOJA) las filas de la hoja vieja cuya URL
+ * le pases, emparejando por el NOMBRE de cada columna. Así no importa que
+ * estuvieran en otro orden.
+ *
+ * Traduce los nombres que cambiaron: la columna "Empresa" de la hoja vieja era
+ * el centro de trabajo, y ahora esa se llama "Centro_Trabajo" —"Empresa" pasó a
+ * ser la razón social del contratista—. Copiarlas a mano es justo donde ese
+ * cambio se cuela sin que nadie lo note.
+ *
+ * No borra nada de la hoja vieja. Si la ejecutas dos veces, duplicas filas.
+ */
+function copiarFilasDeHojaVieja(urlHojaVieja) {
+  var id = soloId_(urlHojaVieja);
+  if (!id) { Logger.log('Pásame la URL de la hoja vieja.'); return 'falta la hoja'; }
+
+  var vieja;
+  try { vieja = SpreadsheetApp.openById(id); }
+  catch (e) { Logger.log('No se pudo abrir la hoja vieja: ' + e.message); return 'inaccesible'; }
+  if (vieja.getId() === obtenerHoja_().getId()) { Logger.log('Esa es la hoja de ahora, no la vieja.'); return 'es la misma'; }
+
+  var hv = vieja.getSheetByName(PESTANA_RESUMEN) || vieja.getSheets()[0];
+  var datos = hv.getDataRange().getValues();
+  if (datos.length < 2) { Logger.log('La hoja vieja no tiene filas que copiar.'); return 'vacia'; }
+
+  var encViejos = datos[0].map(String);
+  /* Nombre de antes → nombre de ahora. Lo demas se empareja tal cual. */
+  var EQUIVALENCIAS = { 'Empresa': 'Centro_Trabajo', 'Nombre': 'Nombre_Completo', 'Cédula': 'ID_Identificacion' };
+
+  var hoja = pestana_(obtenerHoja_(), PESTANA_RESUMEN, COLUMNAS_RESUMEN);
+  var copiadas = 0;
+  for (var f = 1; f < datos.length; f++) {
+    var fila = datos[f];
+    if (fila.join('').trim() === '') continue;   // filas en blanco
+    var valores = {};
+    for (var c = 0; c < encViejos.length; c++) {
+      var nombre = EQUIVALENCIAS[encViejos[c]] || encViejos[c];
+      if (fila[c] !== '' && fila[c] !== null && fila[c] !== undefined) valores[nombre] = fila[c];
+    }
+    var filaNueva = escribirPorEncabezado_(hoja, COLUMNAS_RESUMEN, valores);
+    /* El vinculo se vuelve a marcar como enlace: al leer la hoja vieja solo
+       llega el texto, y sin esto quedaria como URL suelta sin clic. */
+    var v = String(valores['Vinculo'] || '');
+    if (v.indexOf('http') === 0) enlazar_(hoja, filaNueva, 'Vinculo', v);
+    copiadas++;
+  }
+
+  var txt = 'Filas copiadas: ' + copiadas +
+            '\nDe: ' + vieja.getName() +
+            '\nA:  ' + obtenerHoja_().getUrl() +
+            '\n\nLa hoja vieja no se toco. Revisala y bórrala tú cuando estés conforme.' +
+            '\nOJO: si ejecutas esto dos veces, duplicas las filas.';
+  Logger.log(txt);
+  return txt;
+}
+
 /** Ejecútala UNA VEZ desde el editor para ver la URL de la hoja de resultados. */
 function verHojaDeResultados() {
   var url = obtenerHoja_().getUrl();

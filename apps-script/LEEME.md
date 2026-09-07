@@ -953,3 +953,94 @@ OK  Contratista / NOBSA CEM    → OTROS
 OK  Visitante / TELEPORT CORP  → OTROS
 OK  Propio / Otra              → OTROS
 ```
+
+---
+
+## Pasar la hoja de resultados a una hoja de Holcim
+
+La hoja donde caen los resultados sigue siendo la personal. Mudarla es más
+fácil que mudar los certificados, porque la hoja la abre el script —no el
+navegador de la gente—, así que da igual en qué dominio viva: no hay que
+publicar nada de nuevo ni tocar la dirección del curso.
+
+Lo único delicado son los encabezados. El script escribe **buscando el nombre
+de cada columna**, no su posición. Si un encabezado dice `Centro de trabajo` en
+vez de `Centro_Trabajo`, el script no falla: añade una columna nueva al final y
+la tuya se queda vacía para siempre, sin avisar. Por eso la hoja no se crea a
+mano.
+
+### Paso a paso
+
+**1. Crear la hoja en la carpeta de Holcim.** En el editor del script, elige
+`crearHojaEnHolcim` en el desplegable de funciones... pero antes escribe la URL
+de la carpeta dentro de la llamada. Lo más cómodo es pegar esto en una línea
+suelta al final del archivo, ejecutarlo y luego borrarlo:
+
+```js
+function unaVez() {
+  crearHojaEnHolcim("https://drive.google.com/drive/folders/PON_AQUI_LA_CARPETA");
+}
+```
+
+Ejecuta `unaVez`. En el registro sale la URL de la hoja recién creada, ya con
+las 14 columnas correctas, la primera fila congelada y en negrita.
+
+**2. Pegar esa URL en `ID_HOJA`**, arriba del todo del `Code.gs`:
+
+```js
+var ID_HOJA = "https://docs.google.com/spreadsheets/d/....../edit";
+```
+
+Y ejecuta `olvidarLoRecordado()` una vez. Si no, el script sigue usando la hoja
+vieja que tiene apuntada en sus propiedades y el cambio no se nota.
+
+**3. Traer lo que ya hay.** Igual que antes, con la URL de la hoja **vieja**:
+
+```js
+function unaVez() {
+  copiarFilasDeHojaVieja("https://docs.google.com/spreadsheets/d/LA_VIEJA/edit");
+}
+```
+
+Copia las filas emparejando por nombre de columna, así que no importa que en la
+hoja vieja estuvieran en otro orden. Traduce sola los nombres que cambiaron
+—`Empresa` de antes era el centro de trabajo y ahora se llama `Centro_Trabajo`,
+porque `Empresa` pasó a ser la razón social del contratista— y vuelve a dejar
+los enlaces de la columna *Vínculo* como enlaces, no como texto.
+
+No toca la hoja vieja. **Si la ejecutas dos veces, duplicas las filas**: si te
+pasa, deshaz con Ctrl+Z en la hoja nueva o bórrala y empieza por el paso 1.
+
+**4. Comprobar.** Ejecuta `probarTodo`. El paso 1 tiene que mostrar la URL de la
+hoja **nueva**, y el paso 5 tiene que dejar una fila de prueba con su enlace en
+*Vínculo*. Bórrala a mano después.
+
+**5. Borra la función `unaVez`** que creaste, para no ejecutarla sin querer.
+
+### Los enlaces de los PDF
+
+No hay que hacerles nada. El enlace que se guarda en *Vínculo* se lee **después**
+de mover el certificado a la carpeta de su centro de trabajo, y el
+identificador de un archivo de Drive no cambia al moverlo. Así que cada enlace
+de la hoja ya apunta al archivo donde de verdad está, en la carpeta que le
+toca.
+
+Los certificados **anteriores** al cambio de carpetas siguen donde estaban;
+para esos está `moverPendientes()`, y sus enlaces de la hoja tampoco se rompen
+por la misma razón.
+
+### De quién es la hoja nueva
+
+La crea el script, que corre con la cuenta personal, y luego la mueve a la
+carpeta de Holcim. Vive dentro de Holcim y la ve quien tenga acceso a esa
+carpeta, pero el propietario sigue siendo la cuenta personal —lo mismo que
+pasa con los certificados—. Si la carpeta es de una **unidad compartida**, al
+moverla el propietario pasa a ser la unidad y el asunto queda resuelto del
+todo. Si no, el día que haga falta, se cede la propiedad desde *Compartir →
+Transferir propiedad*.
+
+### La hoja vieja
+
+Déjala unos días, comprueba que la nueva se está llenando y bórrala tú cuando
+estés conforme. El script no la vuelve a tocar en cuanto `ID_HOJA` apunta a la
+nueva.
