@@ -74,10 +74,22 @@ var CARPETAS_POR_CENTRO = {
   'VALLE'               : ""
 };
 
-/* 5b) OPCIONAL — Alternativa a la tabla de arriba: la carpeta que CONTIENE las
-       de los centros, para que el script busque la que se llame igual que el
-       centro. Solo se usa para los centros que dejaste vacíos arriba. Sirve si
-       algún día todas cuelgan del mismo sitio. */
+/* 6) LOS QUE NO SON DE PLANTA
+      Contratistas, visitantes y quien elija "Otra" como centro de trabajo no
+      van a la carpeta de una planta: van todos aquí.
+
+      Se decide ANTES que la carpeta del centro. Es decir, un contratista de
+      NOBSA CEM acaba aquí, no en NOBSA CEM. */
+var CARPETA_OTROS = "";
+
+/* Tipos de usuario que van a CARPETA_OTROS, sean del centro que sean. Tiene
+   que coincidir con los tipos del desplegable del curso. */
+var TIPOS_A_OTROS = ['Contratista', 'Visitante'];
+
+/* 6b) OPCIONAL — Alternativa a la tabla del punto 5: la carpeta que CONTIENE
+       las de los centros, para que el script busque la que se llame igual que
+       el centro. Solo se usa para los centros que dejaste vacíos arriba. Sirve
+       si algún día todas cuelgan del mismo sitio. */
 var CARPETA_RAIZ_CENTROS = "";
 
 /* 6) OPCIONAL — Ruta DENTRO de la carpeta de cada centro, si los certificados
@@ -307,6 +319,41 @@ function normaliza_(t) {
 }
 
 /**
+ * Decide en qué carpeta acaba un certificado, y por qué.
+ *
+ * El orden importa: primero se mira si la persona NO es de planta —contratista,
+ * visitante, o centro "Otra"— porque en ese caso el centro que haya elegido no
+ * decide nada. Solo si es de planta se busca la carpeta de su centro.
+ *
+ * Devuelve { carpeta, motivo }. La carpeta puede ser null: entonces manda la
+ * cascada de trasladar_ y acaba en ID_CARPETA_FINAL.
+ */
+function destinoDelCertificado_(d) {
+  d = d || {};
+  var tipo = String(d.tipoUsuario || '').trim();
+  var centro = String(d.empresa || '').trim();
+
+  var esDeOtros = normaliza_(centro) === 'OTRA';
+  for (var i = 0; i < TIPOS_A_OTROS.length; i++) {
+    if (normaliza_(TIPOS_A_OTROS[i]) === normaliza_(tipo)) { esDeOtros = true; break; }
+  }
+
+  if (esDeOtros) {
+    var id = soloId_(CARPETA_OTROS);
+    if (!id) return { carpeta: null, motivo: 'no es de planta y CARPETA_OTROS esta vacia' };
+    try { return { carpeta: DriveApp.getFolderById(id), motivo: 'no es de planta (' + (tipo || centro) + ')' }; }
+    catch (e) {
+      console.error('CARPETA_OTROS no se pudo abrir: ' + e.message);
+      return { carpeta: null, motivo: 'CARPETA_OTROS no se pudo abrir' };
+    }
+  }
+
+  var f = carpetaDelCentro_(centro);
+  return f ? { carpeta: f, motivo: 'centro ' + centro }
+           : { carpeta: null, motivo: 'el centro "' + centro + '" no tiene carpeta' };
+}
+
+/**
  * Devuelve la carpeta que le toca a un centro de trabajo, o null.
  *
  * Busca dentro de CARPETA_RAIZ_CENTROS la subcarpeta que se llame igual que el
@@ -427,6 +474,20 @@ function verCarpetasDeCentros() {
       lineas.push('FALTA  ' + pad_(c, 20) + ' → iria a la carpeta general');
     }
   });
+  /* Y los casos que NO son de planta, que son justo los que mas se olvidan al
+     revisar: un contratista, un visitante y alguien con centro "Otra". */
+  lineas.push('');
+  lineas.push('--- los que no son de planta ---');
+  [{ tipoUsuario: 'Contratista', empresa: 'NOBSA CEM' },
+   { tipoUsuario: 'Visitante',   empresa: 'TELEPORT CORP' },
+   { tipoUsuario: 'Propio',      empresa: 'Otra' }].forEach(function (caso) {
+    var r = { carpeta: null, motivo: '' };
+    try { r = destinoDelCertificado_(caso); } catch (e) { r.motivo = e.message; }
+    var quien = caso.tipoUsuario + ' / ' + caso.empresa;
+    lineas.push((r.carpeta ? 'OK  ' : 'FALTA  ') + pad_(quien, 26) + ' → ' +
+                (r.carpeta ? r.carpeta.getName() : 'carpeta general (' + r.motivo + ')'));
+  });
+
   var txt = 'Centros con carpeta propia: ' + bien + ' de ' + CENTROS.length +
             (bien < CENTROS.length ? '\n(los que faltan van a ID_CARPETA_FINAL, no se pierden)' : '') +
             '\n\n' + lineas.join('\n');
@@ -448,12 +509,16 @@ function carpetaFinal_() {
  * válido, así que un fallo aquí no puede tumbar el registro del examen. El
  * archivo se queda donde está y moverPendientes() lo recoge después.
  */
-function trasladar_(archivo, centro) {
-  var destino = null;
-  /* Primero la carpeta del centro de trabajo; si no la hay, la general. Que
-     falle el reparto no puede costar el certificado. */
-  try { destino = carpetaDelCentro_(centro); } catch (e) {
-    console.error('No se pudo resolver la carpeta del centro: ' + e.message);
+function trasladar_(archivo, d) {
+  var destino = null, motivo = '';
+  /* Contratistas, visitantes y "Otra" van a la carpeta de otros; el resto, a la
+     de su centro. Si no sale ninguna, la general: que falle el reparto no puede
+     costar el certificado. */
+  try {
+    var r = destinoDelCertificado_(d);
+    destino = r.carpeta; motivo = r.motivo;
+  } catch (e) {
+    console.error('No se pudo decidir la carpeta: ' + e.message);
   }
   var porCentro = !!destino;
   if (!destino) {
@@ -468,8 +533,8 @@ function trasladar_(archivo, centro) {
   try {
     archivo.moveTo(destino);
     console.log('Certificado trasladado a ' + destino.getName() +
-                (porCentro ? ' (carpeta del centro)' : ' (carpeta general: el centro no tenia la suya)'));
-    return porCentro ? 'trasladado al centro' : 'trasladado a la general';
+                (porCentro ? ' — ' + motivo : ' (carpeta general: ' + motivo + ')'));
+    return porCentro ? 'trasladado' : 'trasladado a la general';
   } catch (e) {
     /* Lo mas comun: la cuenta que ejecuta no tiene permiso de escritura en esa
        carpeta, o la unidad compartida no admite mover archivos desde fuera. */
@@ -535,7 +600,7 @@ function guardarCertificado_(d) {
     /* Se traslada a la carpeta de Holcim si esta configurada. El enlace se lee
        DESPUES del traslado: el identificador no cambia al mover, pero asi se
        devuelve lo que de verdad quedo. */
-    trasladar_(archivo, d.empresa);
+    trasladar_(archivo, d);
     console.log('Certificado guardado: ' + archivo.getUrl());
     return archivo.getUrl();
   } catch (e) {
@@ -929,11 +994,11 @@ function probarTodo() {
 
       /* Donde acabo de verdad el PDF: es lo que dice si el traslado a la
          carpeta de Holcim funciono o si se quedo en la de origen. */
-      if (soloId_(ID_CARPETA_FINAL) || soloId_(CARPETA_RAIZ_CENTROS)) {
+      if (soloId_(ID_CARPETA_FINAL) || soloId_(CARPETA_RAIZ_CENTROS) || soloId_(CARPETA_OTROS)) {
         try {
           var padres = archivo.getParents();
           var donde = padres.hasNext() ? padres.next() : null;
-          var esperada = carpetaDelCentro_(d.empresa) || carpetaFinal_();
+          var esperada = (destinoDelCertificado_(d).carpeta) || carpetaFinal_();
           var ok = donde && esperada && donde.getId() === esperada.getId();
           lineas.push('3b. Traslado a Holcim ...... ' + (ok ? 'OK' : 'NO se traslado'));
           lineas.push('    quedo en: ' + (donde ? donde.getName() : '(no se pudo leer)'));

@@ -882,3 +882,51 @@ convivir.
 El orden es: carpeta del centro → `ID_CARPETA_FINAL` → si tampoco, se queda en
 la carpeta de paso y lo recoge `moverPendientes()`. Cada salto queda anotado
 en el registro de Ejecuciones.
+
+
+---
+
+## Las cuatro carpetas, y quién acaba en cada una
+
+Es lo que más se confunde, así que aquí está entero:
+
+| Variable | Qué es | Quién acaba ahí |
+|---|---|---|
+| `ID_CARPETA_CERTIFICADOS` | **De paso.** El PDF se crea aquí y sale enseguida | nadie se queda |
+| `CARPETAS_POR_CENTRO` | Las 15 carpetas de las plantas | personal propio y temporal de esa planta |
+| `CARPETA_OTROS` | **Los que no son de planta** | contratistas, visitantes y quien elija "Otra" |
+| `ID_CARPETA_FINAL` | **De repuesto** | todo lo que no encajó arriba |
+
+### El orden en que se decide
+
+1. **¿No es de planta?** Contratista, visitante, o centro "Otra" → `CARPETA_OTROS`.
+   Esto se mira **primero**: un contratista de NOBSA CEM acaba en la carpeta de
+   otros, **no** en la de NOBSA CEM. El centro que haya elegido no decide.
+2. **¿Es de planta?** → la carpeta de su centro, según `CARPETAS_POR_CENTRO`.
+3. **¿No salió ninguna?** → `ID_CARPETA_FINAL`.
+4. **¿Tampoco?** → se queda en la carpeta de paso y lo recoge
+   `moverPendientes()`.
+
+Cada salto queda anotado en el registro de Ejecuciones, con el motivo. Así, si
+un certificado no está donde se esperaba, el registro dice por qué.
+
+### Qué tipos van a "otros"
+
+```js
+var TIPOS_A_OTROS = ['Contratista', 'Visitante'];
+```
+
+Si mañana cambia la lista de tipos del curso, esto es lo único que hay que
+revisar. Los nombres tienen que coincidir con los del desplegable.
+
+### Compruébalo
+
+`verCarpetasDeCentros()` termina con los tres casos que no son de planta, que
+son justo los que se olvidan al revisar:
+
+```
+--- los que no son de planta ---
+OK  Contratista / NOBSA CEM    → OTROS
+OK  Visitante / TELEPORT CORP  → OTROS
+OK  Propio / Otra              → OTROS
+```
