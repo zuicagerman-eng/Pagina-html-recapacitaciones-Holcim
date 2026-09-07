@@ -5821,12 +5821,12 @@
             <select id="exTipo"></select>
           </div>
           <div class="excampo">
-            <label for="exEmpresa">Empresa o sede</label>
+            <label for="exEmpresa">Centro de trabajo</label>
             <select id="exEmpresa"></select>
           </div>
           <div class="excampo" id="exOtraCampo" hidden>
-            <label for="exOtra">Escribe la empresa</label>
-            <input id="exOtra" type="text" autocomplete="organization" placeholder="Nombre de la empresa" maxlength="60">
+            <label for="exOtra">Escribe el centro de trabajo</label>
+            <input id="exOtra" type="text" autocomplete="organization" placeholder="Nombre del centro de trabajo" maxlength="60">
           </div>
           <div class="excampo">
             <label for="exApe1">Primer apellido</label>
@@ -5984,7 +5984,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-08-i";
+var VERSION_CURSO = "2026-09-08-j";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 52 en cada intento.
@@ -6000,23 +6000,21 @@ var TIPOS_USUARIO = ['Propio', 'Contratista', 'Temporal', 'Visitante'];
    La ultima opcion, "Otra", abre una casilla para escribirla a mano: quitala de
    la lista cuando tengas todas las sedes cargadas. */
 var SEDES = [
-  'HC-NOBSA CEMENTO',
-  'HC-PUENTE ARANDA',
-  'HC-TELEPORT',
-  'HC-TQC',
-  'HC-CHIA',
-  'HC-BELLO',
-  'HC-PALMIRA',
-  'HC-MONDOÑEDO',
-  'HC-NOBSA CONCRETO',
-  'HC-CALI',
-  'HC-SIBATE',
-  'TR-NOBSA',
-  'AF-NOBSA',
-  'AF-TELEPORT',
-  'TR-TELEPORT',
-  'HC-MEDELLIN',
-  'CJ-TELEPORT',
+  'BARRANCA GEO',
+  'BELLO RMX',
+  'CHIA RMX',
+  'FUNDACION',
+  'GEOCYCLE - AF NOBSA',
+  'MEDELLIN',
+  'MONDOÑEDO AGG',
+  'NOBSA - TUNJA RMX',
+  'NOBSA CEM',
+  'PUENTE ARANDA RMX',
+  'SIBATE RMX',
+  'TELEPORT CORP',
+  'TOCANCIPA TQC',
+  'TRANSCEM',
+  'VALLE',
   'Otra'
 ];
 var PREGUNTAS_EXAMEN = 20;
@@ -7867,8 +7865,12 @@ function dibujarDiploma(datos){
       });
 
       cx.fillStyle = D.azul;
-      cx.font = '900 32px ' + D.negra;
-      cx.fillText('Empresa:', 799, 542);
+      /* "Centro de trabajo:" es mas del doble de largo que "Empresa:", que iba a
+         32 px: a ese tamaño se metia debajo del valor, que empieza en x=1020.
+         Baja a 20 px, el mismo de "Identificacion:" y "Fecha de" justo debajo,
+         con lo que ademas las tres etiquetas quedan por fin iguales. */
+      cx.font = '900 20px ' + D.negra;
+      cx.fillText('Centro de trabajo:', 799, 542);
       textoAjustado(cx, datos.empresa, 1020, 542, 33, D.negra, D.azul, 380);
 
       cx.font = '900 20px ' + D.negra;
@@ -8145,7 +8147,7 @@ document.addEventListener('DOMContentLoaded', function(){
   })();
 
   llenar(inTipo, TIPOS_USUARIO, '— Elige una opción —');
-  llenar(inEmpresa, SEDES, '— Elige tu empresa o sede —');
+  llenar(inEmpresa, SEDES, '— Elige tu centro de trabajo —');
   inEmpresa.addEventListener('change', function(){
     campoOtra.hidden = (inEmpresa.value !== 'Otra');
     if(campoOtra.hidden) inOtra.value = '';
@@ -8178,9 +8180,9 @@ document.addEventListener('DOMContentLoaded', function(){
     var n=[a1, a2, no].filter(function(x){ return x; }).join(' ');
     [inApe1,inApe2,inNombres,inCedula,inTipo,inEmpresa,inOtra].forEach(function(x){ x.classList.remove('mal'); });
     if(!t){ inTipo.classList.add('mal'); return 'Elige el tipo de usuario.'; }
-    if(!emp){ inEmpresa.classList.add('mal'); return 'Elige tu empresa o sede.'; }
+    if(!emp){ inEmpresa.classList.add('mal'); return 'Elige tu centro de trabajo.'; }
     if(emp === 'Otra'){
-      if(otra.length < 3){ inOtra.classList.add('mal'); return 'Escribe el nombre de la empresa.'; }
+      if(otra.length < 3){ inOtra.classList.add('mal'); return 'Escribe el nombre del centro de trabajo.'; }
       emp = otra;
     }
     if(a1.length<2){ inApe1.classList.add('mal'); return 'Escribe tu primer apellido.'; }

@@ -135,7 +135,7 @@ var PESTANA_DETALLE = "Respuestas";
    escribe cada dato buscando su columna por el nombre del encabezado. Así puedes
    reordenar las columnas en la hoja a tu gusto sin descuadrar nada. */
 var COLUMNAS_RESUMEN = [
-  'Fecha', 'Tipo_Usuario', 'ID_Identificacion', 'Nombre_Completo', 'Empresa',
+  'Fecha', 'Tipo_Usuario', 'ID_Identificacion', 'Nombre_Completo', 'Centro_Trabajo',
   'Capacitacion', 'Puntaje', 'Resultado', 'Vinculo',
   'Aciertos', 'Total', 'Duración (s)', 'Navegador'
 ];
@@ -386,7 +386,7 @@ function enviarCopiaCertificado_(d, enlaceDrive) {
       '• Nombre: '    + (d.nombre || '-') + '\n' +
       '• Documento: ' + (d.cedula || '-') + '\n' +
       '• Tipo: '      + (d.tipoUsuario || '-') + '\n' +
-      '• Empresa: '   + (d.empresa || '-') + '\n' +
+      '• Centro de trabajo: ' + (d.empresa || '-') + '\n' +
       '• Puntaje: '   + (d.puntaje || '-') + '\n' +
       '• Resultado: ' + (d.resultado || '-') + '\n' +
       '• Fecha: '     + (d.fecha || new Date().toLocaleString()) + '\n\n' +
@@ -549,7 +549,7 @@ function guardarExamen(d) {
     'Tipo_Usuario': d.tipoUsuario || '',
     'ID_Identificacion': "'" + (d.cedula || ''),
     'Nombre_Completo': d.nombre || '',
-    'Empresa': d.empresa || '',
+    'Centro_Trabajo': d.empresa || '',
     'Capacitacion': d.capacitacion || '',
     'Puntaje': d.puntaje || (d.porcentaje + '%'),
     'Resultado': d.resultado || '',
