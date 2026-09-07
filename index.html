@@ -907,7 +907,15 @@
   .rotexto{flex:1;min-width:0;margin-left:-13px;padding:8px 26px 8px 22px;
     font-size:12.6px;font-weight:800;line-height:1.28;text-align:center;
     clip-path:polygon(0 0,calc(100% - 15px) 0,100% 50%,calc(100% - 15px) 100%,0 100%)}
-  .conosvg{display:block;width:clamp(150px,17vw,232px);height:100%}
+  /* El cono era un dibujo; ahora es un hueco de imagen del mismo tamano.
+     Mientras no este el archivo se ve el dibujo de respaldo, con las mismas
+     cinco bandas frente a cada regla. */
+  .conofoto{display:block;width:clamp(150px,17vw,232px);height:100%;
+    align-self:stretch;line-height:0}
+  .conofoto>svg{display:block;width:100%;height:100%}
+  .conofoto.foto{display:flex;align-items:center;justify-content:center}
+  .conofoto.foto img{max-width:100%;max-height:100%;width:auto;height:auto;
+    display:block;object-fit:contain}
   .rolado{display:flex;flex-direction:column;align-items:center;gap:10px}
   .rocaja{margin:0;font-size:12.8px;line-height:1.45;text-align:center;
     border-radius:10px;padding:12px 16px}
@@ -929,7 +937,7 @@
     .rolado{max-width:620px;margin-inline:auto}
   }
   @media(max-width:520px){
-    .conosvg{width:96px}
+    .conofoto{width:96px}
     .rotexto{font-size:11.4px;padding:6px 20px 6px 18px}
   }
   /* ===== Proteccion en maquinaria: cuatro fichas 2x2 =====
@@ -4429,19 +4437,6 @@
 <section class="slide nogate light mint" data-mod="4">
   <div class="wrap">
     <div class="eyebrow rv up">HSE-003 · Elementos de protección personal</div>
-    <h2 class="rv up" style="--d:1">Procedimiento y señalización</h2>
-    <div class="bloqfoto fotoizq ancha rv up" style="--d:2;margin-top:14px">
-      <span class="fotorect gr" data-foto="eppsenal(D38)"><svg viewBox="0 0 120 80"><rect x="3" y="3" width="114" height="74" rx="3"/><rect x="3" y="3" width="114" height="20" rx="3"/><path d="M14 10h92M14 16h74"/><circle cx="27" cy="45" r="12"/><circle cx="60" cy="45" r="12"/><circle cx="93" cy="45" r="12"/><path d="M22 44a5 5 0 0 1 10 0v6h-10z"/><path d="M54 47c0-4 3-6 6-6s6 2 6 6c0 3-3 5-6 5s-6-2-6-5z"/><path d="M88 40v10h10V40M91 40v-4M95 40v-4"/><path d="M14 66h26M47 66h26M80 66h26"/></svg></span>
-      <div class="cajazul">
-        <p>Asegurar que se cuente con la <b>señalización de los EPP requeridos</b> en los ingresos a las diferentes áreas operativas (diferentes a oficinas, almacén, portería u otras áreas que no generen riesgo), y requerimientos específicos según aplique.</p>
-        <p>El procedimiento de gestión de elementos de protección personal contempla la <b>evaluación de necesidades de uso de EPP</b> a partir del análisis de los procesos y de los peligros inherentes a las actividades.</p>
-      </div>
-    </div>
-  </div>
-</section>
-<section class="slide nogate light mint" data-mod="4">
-  <div class="wrap">
-    <div class="eyebrow rv up">HSE-003 · Elementos de protección personal</div>
     <h2 class="rv up" style="--d:1">Generalidades de los EPP</h2>
     <div class="gen8">
       <article class="g8 rv up" style="--d:0"><span class="g8foto" data-foto="capacitar(D40)"><svg viewBox="0 0 90 60"><circle cx="16" cy="16" r="7"/><path d="M6 40c0-7 4.5-12 10-12s10 5 10 12"/><circle cx="40" cy="14" r="6"/><path d="M31 38c0-6 4-10 9-10s9 4 9 10"/><circle cx="62" cy="16" r="6"/><path d="M53 40c0-6 4-10 9-10s9 4 9 10"/><rect x="72" y="12" width="14" height="18" rx="2"/><path d="M76 18h6M76 23h4"/></svg></span><span class="bar"></span><div class="g8txt"><p>Capacitar a los colaboradores sobre cómo elegir, usar, ajustar, cuidar, mantener y solicitar reposición del EPP.</p></div></article>
@@ -4772,7 +4767,7 @@
       <div class="roregla"><span class="ronum">4</span><div class="rotexto" style="background:#f5b700;color:#10233d">Instalar <b>puesta a tierra</b> y poner en <b>cortocircuito</b>.</div></div>
       <div class="roregla"><span class="ronum">5</span><div class="rotexto" style="background:#1877c4;color:#fff"><b>Señalizar y delimitar</b> la zona de trabajo.</div></div>
     </div>
-    <svg class="conosvg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M0.0 0 H100.0 L93.2 20 H6.8 Z" fill="#ced4da"/><ellipse cx="50" cy="0" rx="50.0" ry="3" fill="rgba(255,255,255,.3)"/><path d="M6.8 20 H93.2 L86.4 40 H13.6 Z" fill="#1bb4e4"/><ellipse cx="50" cy="20" rx="43.2" ry="3" fill="rgba(255,255,255,.3)"/><path d="M13.6 40 H86.4 L79.6 60 H20.4 Z" fill="#98a2ab"/><ellipse cx="50" cy="40" rx="36.4" ry="3" fill="rgba(255,255,255,.3)"/><path d="M20.4 60 H79.6 L72.8 80 H27.2 Z" fill="#f5b700"/><ellipse cx="50" cy="60" rx="29.6" ry="3" fill="rgba(255,255,255,.3)"/><path d="M27.2 80 H72.8 L66.0 100 H34.0 Z" fill="#0e2c56"/><ellipse cx="50" cy="80" rx="22.8" ry="3" fill="rgba(255,255,255,.3)"/><ellipse cx="50" cy="100" rx="16" ry="3" fill="rgba(0,0,0,.22)"/></svg>
+    <span class="conofoto" data-foto="cono(D52)"><svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M0 0 H100 L93.2 20 H6.8 Z" fill="#ced4da"/><path d="M6.8 20 H93.2 L86.4 40 H13.6 Z" fill="#1bb4e4"/><path d="M13.6 40 H86.4 L79.6 60 H20.4 Z" fill="#c8ced4"/><path d="M20.4 60 H79.6 L72.8 80 H27.2 Z" fill="#f5b700"/><path d="M27.2 80 H72.8 L66 100 H34 Z" fill="#0e2c56"/></svg></span>
   </div>
   <div class="rolado">
     <p class="rocaja verde">Únicamente un <b>eléctrico autorizado</b> puede hacer la instalación, inspección, prueba y mantenimiento de instalaciones y equipos eléctricos.</p>
@@ -5961,7 +5956,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-08-a";
+var VERSION_CURSO = "2026-09-08-b";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 52 en cada intento.
