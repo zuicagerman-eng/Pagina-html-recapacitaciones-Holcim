@@ -165,9 +165,25 @@ function carpetaCertificados_() {
   var props = PropertiesService.getScriptProperties();
   var id = soloId_(ID_CARPETA_CERTIFICADOS) || props.getProperty('ID_CARPETA');
   if (id) {
-    try { return DriveApp.getFolderById(id); } catch (e) { /* si ya no existe, se recrea */ }
+    try {
+      return DriveApp.getFolderById(id);
+    } catch (e) {
+      /* Antes este catch se tragaba CUALQUIER fallo y seguia de largo a buscar
+         por nombre, asi que un problema de permisos aparecia despues y parecia
+         otra cosa; y con un identificador mal copiado el script creaba una
+         carpeta nueva en silencio. Ahora solo se sigue de largo si la carpeta
+         de verdad no esta; lo demas se cuenta tal cual. */
+      var msg = String(e && e.message || e);
+      if (/permission|permis|autoriza|scope|access/i.test(msg)) {
+        throw new Error('Falta autorizar el acceso a Drive. Abre el editor, ejecuta ' +
+          'probarTodo y acepta los permisos que pida Google. Detalle: ' + msg);
+      }
+      throw new Error('No se pudo abrir la carpeta con ese identificador. Revisa ' +
+        'ID_CARPETA_CERTIFICADOS: pega la URL completa de la carpeta, tal cual la ' +
+        'copias de la barra del navegador. Detalle: ' + msg);
+    }
   }
-  // por si ya existe una con ese nombre (por ejemplo, de un despliegue anterior)
+  // sin identificador configurado: se busca por nombre y, si no esta, se crea
   var iguales = DriveApp.getFoldersByName(NOMBRE_CARPETA_CERTIFICADOS);
   var carpeta = iguales.hasNext() ? iguales.next()
                                   : DriveApp.createFolder(NOMBRE_CARPETA_CERTIFICADOS);
@@ -522,11 +538,23 @@ function probarTodo() {
   lineas.push('6. Limpieza ................ hecha (fila y PDF de prueba borrados)');
 
   try {
-    var url = ScriptApp.getService().getUrl();
+    var url = ScriptApp.getService().getUrl() || '';
     lineas.push('');
-    lineas.push('URL /exec de ESTA implementación:');
-    lineas.push('  ' + (url || '(sin publicar)'));
-    lineas.push('Tiene que ser IDÉNTICA a REPORTE_URL en el index.html.');
+    if (/\/dev$/.test(url)) {
+      /* Ejecutando desde el editor, Google devuelve la direccion de PRUEBAS
+         (termina en /dev), que lleva otro codigo distinto al de la publicada.
+         Compararla con REPORTE_URL no sirve de nada y solo confunde. */
+      lineas.push('Direccion de PRUEBAS (la del editor, termina en /dev):');
+      lineas.push('  ' + url);
+      lineas.push('No la compares con REPORTE_URL: la publicada es otra y termina');
+      lineas.push('en /exec. La ves en Implementar → Administrar implementaciones.');
+    } else if (url) {
+      lineas.push('URL publicada de esta implementación:');
+      lineas.push('  ' + url);
+      lineas.push('Tiene que ser IDÉNTICA a REPORTE_URL en el index.html.');
+    } else {
+      lineas.push('Todavía no hay ninguna implementación publicada.');
+    }
   } catch (e) {}
 
   var txt = lineas.join('\n');

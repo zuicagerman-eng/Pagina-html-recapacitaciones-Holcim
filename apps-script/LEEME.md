@@ -418,3 +418,55 @@ Ahora cada examen aprobado gasta uno, más otro si la persona responde la
 encuesta de satisfacción: hasta 2 por persona. Con unas 100 personas al mes
 (≈3 al día) sobra de largo, pero si algún día citas a más de 50 el mismo día,
 conviene apagar la copia por correo ese día.
+
+
+---
+
+## Si `probarTodo` dice «FALLÓ: You do not have permission to call DriveApp»
+
+No es la carpeta ni el identificador: **es que el script todavía no tiene
+permiso para tocar Drive**. Pasa cuando la autorización se dio antes de que el
+script tuviera la parte de Drive: el permiso que Google guardó entonces no la
+incluía, y no se amplía solo.
+
+Se ve así en el registro:
+
+```
+1. Hoja de resultados ...... OK
+2-3. Drive ................. FALLÓ: You do not have permission to call
+     DriveApp.getFoldersByName. Required permissions: .../auth/drive
+4. Copia por correo ........ OK
+5. Escribir la fila ........ OK
+```
+
+Fíjate en que los pasos 1, 4 y 5 sí funcionan: la hoja y el correo ya estaban
+autorizados desde antes. Solo falta Drive.
+
+### Cómo arreglarlo
+
+1. En el editor, arriba a la izquierda, abre **`appsscript.json`**. Si no lo
+   ves: ⚙️ **Configuración del proyecto → “Mostrar el archivo de manifiesto
+   appsscript.json en el editor”**.
+2. Pega encima el `appsscript.json` de este repositorio. Lo que importa es que
+   la lista `oauthScopes` incluya:
+   ```
+   "https://www.googleapis.com/auth/drive"
+   ```
+3. Guarda 💾.
+4. Vuelve a ejecutar **`probarTodo`**. Ahora Google mostrará la pantalla de
+   permisos otra vez, y esta vez pedirá también el acceso a Drive: **acéptala**.
+   Si aparece «Google no ha verificado esta aplicación», entra en
+   **Configuración avanzada → Ir a (nombre del proyecto)**. Es tu propio
+   script, en tu propia cuenta.
+5. El paso 2-3 debe quedar en OK, con la URL de tu carpeta.
+
+Comprueba que esa URL sea **la misma** de tu carpeta *Certificados
+Reinducciones*. Si sale otra distinta, el identificador no coincidió; a partir
+de ahora el script lo dice en vez de crear una carpeta nueva en silencio.
+
+### La URL que sale al final de `probarTodo`
+
+Ejecutando desde el editor, Google devuelve la dirección de **pruebas**, que
+termina en **`/dev`**. Esa lleva un código distinto al de la publicada y **no
+hay que compararla** con `REPORTE_URL`. La publicada termina en `/exec` y la
+ves en **Implementar → Administrar implementaciones**.
