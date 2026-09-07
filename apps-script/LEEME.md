@@ -560,3 +560,84 @@ var ID_CARPETA_CERTIFICADOS = "https://drive.google.com/drive/folders/TU_CARPETA
 Y recuerda cuál va en cuál: `ID_HOJA` lleva el enlace de
 **docs.google.com/spreadsheets/**, y `ID_CARPETA_CERTIFICADOS` el de
 **drive.google.com/drive/folders/**.
+
+
+---
+
+## Mudar los datos al dominio Holcim
+
+Los certificados y la hoja llevan nombre y número de documento de 870 personas.
+Eso no debería vivir en una cuenta personal: si un día se pierde el acceso a
+esa cuenta, se van con ella. El curso en sí (GitHub) no tiene datos personales
+y puede quedarse donde está.
+
+### El punto que decide si funciona
+
+El script escribe **con la identidad de la cuenta que publicó la
+implementación** (está desplegado como `USER_DEPLOYING`). Hoy esa cuenta es la
+personal. Así que hay dos caminos, y conviene elegir a conciencia:
+
+**Camino A — mover solo los datos.** La carpeta y la hoja se crean en el Drive
+de Holcim y se **comparten con la cuenta personal como Editor**. Se cambian dos
+líneas y listo.
+- A favor: son 10 minutos.
+- En contra: muchas organizaciones **bloquean compartir con cuentas de fuera**.
+  Y si un día TI cierra esa compartición, el curso deja de guardar sin avisar.
+
+**Camino B — mover también el script.** El proyecto se recrea en la cuenta de
+Holcim y se publica desde ahí. Entonces la carpeta y la hoja no necesitan
+compartirse con nadie de fuera.
+- A favor: nada depende ya de la cuenta personal, y el límite de correos sube
+  de 100 a 1.500 al día.
+- En contra: cambia la URL `/exec`, así que hay que actualizar `REPORTE_URL`
+  en `index.html` y volver a publicar el curso.
+
+**Recomendación:** si TI permite compartir hacia fuera, empieza por A —
+funciona hoy mismo. Pero deja B previsto: es el único que quita de verdad la
+dependencia de una cuenta personal.
+
+### Camino A, paso a paso
+
+1. Con la cuenta **Holcim**, crea en su Drive la carpeta
+   `HSE-001 · Certificados` y una hoja `HSE-001 · Resultados examen`.
+2. Comparte **las dos** con la cuenta personal, con permiso de **Editor**.
+   Si Google no deja añadir esa dirección, el camino A está bloqueado: ve al B.
+3. Copia los datos que ya tienes: pega las filas de la hoja vieja en la nueva
+   (respetando los encabezados) y arrastra los certificados ya emitidos a la
+   carpeta nueva.
+4. En el script, cambia las dos direcciones por las nuevas:
+   ```js
+   var ID_HOJA = "URL de la hoja de Holcim";
+   var ID_CARPETA_CERTIFICADOS = "URL de la carpeta de Holcim";
+   ```
+5. Ejecuta `probarTodo` y mira las dos líneas de **dueño**:
+   ```
+   1. Hoja de resultados ...... OK  ...
+      dueño: german.zuica@holcim.com      ← tiene que ser la de Holcim
+   2. Carpeta de Drive ........ OK  ...
+      dueño: german.zuica@holcim.com
+   ```
+   Si ahí sigue saliendo la cuenta de gmail, **los datos no se movieron**: solo
+   se cambió el enlace y siguen en el Drive personal.
+6. Publica una **versión nueva** de la implementación.
+
+### Camino B, si hace falta
+
+1. Con la cuenta **Holcim**, crea un proyecto nuevo en script.google.com.
+2. Pega `Code.gs` y `appsscript.json` de este repositorio.
+3. Pon `CORREO_REPORTES`, `ID_HOJA` e `ID_CARPETA_CERTIFICADOS` con los de
+   Holcim (ya no hace falta compartir nada hacia fuera).
+4. Ejecuta `probarTodo` y acepta los permisos.
+5. Implementa como aplicación web: **Ejecutar como: yo**, **Quién tiene
+   acceso: cualquier persona**.
+6. Copia la URL `/exec` nueva y pégala en `REPORTE_URL` dentro de `index.html`.
+   Súbelo a GitHub. **Sin este paso el curso seguiría hablándole al script
+   viejo.**
+7. Cuando el nuevo funcione, apaga la implementación vieja.
+
+### Lo que NO hay que mover
+
+El repositorio de GitHub. Solo tiene el material del curso —ni un nombre, ni
+una cédula— y si pasara a una organización de Holcim en modo privado, GitHub
+Pages dejaría de publicarlo salvo con GitHub Enterprise: el curso dejaría de
+abrirse para los 870.

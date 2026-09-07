@@ -488,6 +488,20 @@ function guardarFormulario(d) {
  * ═══════════════════════════════════════════════════════════════════════════
  */
 /**
+ * De quién es un archivo o una carpeta. Al mudar los datos al dominio Holcim
+ * esto es lo que hay que mirar: si el dueño sigue siendo la cuenta personal,
+ * los datos NO se movieron, solo se cambió el enlace.
+ */
+function duenio_(archivoOCarpeta) {
+  try {
+    var d = archivoOCarpeta.getOwner();
+    return d ? d.getEmail() : '(sin dueño visible: unidad compartida)';
+  } catch (e) {
+    return '(no se pudo leer: ' + e.message + ')';
+  }
+}
+
+/**
  * PRUEBA COMPLETA — ejecútala UNA VEZ desde el editor antes de soltar el curso.
  *
  * Hace de verdad todo el recorrido con una persona inventada: escribe una fila
@@ -534,12 +548,14 @@ function probarTodo() {
     var ss = obtenerHoja_();
     hoja = pestana_(ss, PESTANA_RESUMEN, COLUMNAS_RESUMEN);
     lineas.push('1. Hoja de resultados ...... OK  ' + ss.getUrl());
+    lineas.push('   dueño: ' + duenio_(DriveApp.getFileById(ss.getId())));
   } catch (e) { lineas.push('1. Hoja de resultados ...... FALLÓ: ' + e.message); }
 
   var enlace = '';
   try {
     var carpeta = carpetaCertificados_();
     lineas.push('2. Carpeta de Drive ........ OK  ' + carpeta.getUrl());
+    lineas.push('   dueño: ' + duenio_(carpeta));
     enlace = guardarCertificado_(d);
     if (enlace) {
       lineas.push('3. Guardar el PDF .......... OK  ' + enlace);
