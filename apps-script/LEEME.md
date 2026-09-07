@@ -641,3 +641,94 @@ El repositorio de GitHub. Solo tiene el material del curso —ni un nombre, ni
 una cédula— y si pasara a una organización de Holcim en modo privado, GitHub
 Pages dejaría de publicarlo salvo con GitHub Enterprise: el curso dejaría de
 abrirse para los 870.
+
+
+---
+
+## Mudanza completa a Holcim (camino B) — lista de pasos
+
+Decidido: todo en el dominio Holcim, nada en la cuenta personal. La carpeta de
+destino está en una **unidad compartida**, que es lo mejor que podía pasar: los
+archivos pertenecen a la unidad y no a una persona, así que no se van con nadie
+que cambie de rol.
+
+### 1. Crear el proyecto en la cuenta Holcim
+
+- Entra a **script.google.com con la cuenta de Holcim** (comprueba la foto de
+  arriba a la derecha antes de nada) y crea un proyecto nuevo.
+- Pega `Code.gs` de este repositorio, encima de todo.
+- Muestra el manifiesto (⚙️ Configuración del proyecto → «Mostrar
+  appsscript.json») y pega también el `appsscript.json` de aquí. Sin él vuelve
+  a faltar el permiso de Drive.
+
+### 2. Poner las tres direcciones
+
+```js
+var CORREO_REPORTES        = "german.zuica@holcim.com";
+var ID_HOJA                = "URL de la hoja en Drive de Holcim";
+var ID_CARPETA_CERTIFICADOS = "URL de la carpeta en la unidad compartida";
+```
+
+Pega las URL completas copiadas de la barra del navegador; el script extrae lo
+que necesita. Y recuerda cuál va en cuál: la de `docs.google.com/spreadsheets`
+en `ID_HOJA`, la de `drive.google.com/drive/folders` en la otra.
+
+### 3. Probar antes de publicar
+
+Ejecuta `probarTodo` y acepta los permisos. Fíjate en las líneas de **dueño**:
+
+```
+1. Hoja de resultados ...... OK  ...
+   dueño: german.zuica@holcim.com
+2. Carpeta de Drive ........ OK  ...
+   dueño: (sin dueño visible: unidad compartida)   ← correcto en unidad compartida
+```
+
+En una unidad compartida no hay dueño personal: ese mensaje es la señal de que
+está bien puesto. Lo que NO debe aparecer es una dirección de gmail.
+
+### 4. Publicar — el paso donde puede aparecer el obstáculo
+
+**Implementar → Nueva implementación → Aplicación web**, con:
+
+- **Ejecutar como:** Yo
+- **Quién tiene acceso: Cualquier persona** ← imprescindible
+
+⚠️ **Muchas organizaciones bloquean esa última opción.** El curso vive en
+GitHub Pages y le habla al script sin iniciar sesión, así que si solo se puede
+elegir «Cualquier usuario de Holcim», el script no recibirá nada y no se
+guardará ningún resultado.
+
+Si «Cualquier persona» no aparece, no sigas: hay que pedirle a TI que permita
+el acceso anónimo para este proyecto. Es una configuración de Workspace
+(«Apps Script → acceso a aplicaciones web»), no algo que se arregle desde aquí.
+
+### 5. Cambiar la dirección en el curso
+
+Copia la URL `/exec` nueva y ponla en `index.html`:
+
+```js
+var REPORTE_URL = "la nueva URL /exec";
+```
+
+Sin este paso el curso seguiría hablándole al script viejo y todo iría a parar
+a la cuenta personal.
+
+### 6. Llevarse lo que ya hay
+
+- Pega en la hoja nueva las filas de la vieja, respetando los encabezados.
+- Mueve a la carpeta nueva los certificados ya emitidos.
+
+### 7. Apagar lo viejo
+
+Cuando el nuevo funcione de punta a punta, en el proyecto personal:
+**Implementar → Administrar implementaciones → Inhabilitar**. Así, si algún
+enlace viejo sigue por ahí, no seguirá guardando en la cuenta personal.
+
+### Lo que se gana
+
+- Ningún dato personal en una cuenta particular.
+- Los archivos pertenecen a la unidad compartida, no a una persona.
+- El límite de correos pasa de 100 a 1.500 al día, con lo que la copia del
+  certificado y la encuesta dejan de ser una preocupación aunque se cite a
+  mucha gente el mismo día.
