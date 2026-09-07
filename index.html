@@ -62,6 +62,11 @@
   h2{font-size:clamp(22px,3.5vw,38px);line-height:1.12;font-weight:800;letter-spacing:-.3px}
   .lead{font-size:clamp(14px,1.6vw,17px);line-height:1.6;color:var(--muted);max-width:62ch;margin-top:12px}
   .slide.dark .lead{color:#b9c7dc}
+  /* Las negritas de la linea de instrucciones son lo que hay que hacer para
+     poder avanzar ("Siguiente", "Ver mas", "toca cada tarjeta"...). En negro
+     sobre gris se perdian; con color se leen de un vistazo sin gritar. */
+  .lead b,.lead strong{color:#155e91;font-weight:800}
+  .slide.dark .lead b,.slide.dark .lead strong{color:#7fd4f5}
   .gline{height:5px;width:110px;border-radius:4px;background:var(--grad);margin:16px 0 2px}
   /* reveal */
   /* ===== Distintivo de tema nuevo =====
@@ -196,7 +201,7 @@
   /* El video se ajusta al alto disponible para que la vista quepa sin scroll */
   .vista .videobox{padding-top:0;width:auto;max-width:100%;aspect-ratio:16/9;
     height:calc(100vh - 372px);max-height:546px;min-height:190px;margin:18px auto 0}
-  .vista .vhint{justify-content:center;text-align:center}
+  .vista .vhint{justify-content:center;text-align:center;margin-left:auto;margin-right:auto}
   /* En pantallas angostas el menú va arriba, en dos columnas: los cinco botones
      quedan a la vista. Antes era una fila desplazable y los últimos se salían de
      la pantalla, aunque hay que pasar por todos para poder continuar. */
@@ -322,8 +327,17 @@
   .videobox{margin-top:22px;border-radius:16px;overflow:hidden;box-shadow:var(--shadow);background:#000;
     position:relative;padding-top:56.25%}
   .videobox iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
-  .vhint{margin-top:14px;display:flex;align-items:center;gap:10px;font-size:14px;color:#b9c7dc}
-  .vhint.done{color:var(--green)}
+  /* Aviso de que hay que ver el video entero. Iba en #b9c7dc, un gris azulado
+     pensado para fondo oscuro: sobre una diapositiva clara daba 1,52 de
+     contraste y practicamente no se veia; en las pruebas la gente no se
+     enteraba de que el boton solo se abre al terminar el video. Ahora es una
+     pastilla ambar, el color de "atencion" que ya usa el boton Reportar. */
+  .vhint{margin-top:14px;display:flex;width:fit-content;align-items:center;gap:9px;font-size:14.5px;
+    font-weight:700;color:#8a4b00;background:#fff4e0;border:1px solid #f0cd95;
+    border-radius:999px;padding:8px 16px 8px 13px}
+  .slide.dark .vhint{color:#ffd79a;background:rgba(245,183,0,.14);border-color:rgba(245,183,0,.4)}
+  .vhint.done{color:#1f6b2e;background:#e8f7ec;border-color:#a8dcb6}
+  .slide.dark .vhint.done{color:#b6f0c4;background:rgba(63,181,89,.16);border-color:rgba(63,181,89,.45)}
   .vhint svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2.2}
   .vskip{margin-top:8px;font-size:12.5px;color:#7f93b0;background:none;border:none;text-decoration:underline;cursor:pointer;font-family:var(--font)}
   /* ===== cards / generic ===== */
@@ -3826,7 +3840,7 @@
     <div class="wrap">
       <div class="eyebrow rv up">Lineamientos organizacionales</div>
       <h2 class="rv up" style="--d:1">Políticas y declaraciones</h2>
-      <div class="infobanner rv up" style="--d:2">Establecen nuestro enfoque en la seguridad de los empleados y la protección del medio ambiente, buscando prevenir riesgos y cumplir con las normativas locales.</div>
+      <div class="infobanner rv up" style="--d:2">Establecen nuestro enfoque en la seguridad de los empleados y la protección del medio ambiente, buscando prevenir riesgos y cumplir con las normativas locales. Reflejan el compromiso con la Salud y Seguridad en todos los niveles y <b>otorgan autoridad para detener trabajos inseguros</b>.</div>
       <p class="lead rv up" style="--d:3">Lee estos tres documentos importantes. Haz clic en <b>“Ver más”</b> para abrirlos aquí mismo.</p>
       <div class="pdfcards">
         <div class="pdfcard rv up" style="--d:0">
@@ -3845,7 +3859,6 @@
           <button class="pdfbtn" data-pdf="vial" data-title="Política de Seguridad Vial">Ver más</button>
         </div>
       </div>
-      <div class="authbanner rv up" style="--d:2">Reflejan el compromiso con la Salud y Seguridad de nuestros trabajadores en todos los niveles y <b>otorgan autoridad para detener trabajos inseguros</b>.</div>
     </div>
   </section>
 <section class="slide dark" data-mod="2">
@@ -5938,7 +5951,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-07-x";
+var VERSION_CURSO = "2026-09-07-y";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 56 en cada intento.
