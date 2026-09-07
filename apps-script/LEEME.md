@@ -966,35 +966,40 @@ publicar nada de nuevo ni tocar la dirección del curso.
 Lo único delicado son los encabezados. El script escribe **buscando el nombre
 de cada columna**, no su posición. Si un encabezado dice `Centro de trabajo` en
 vez de `Centro_Trabajo`, el script no falla: añade una columna nueva al final y
-la tuya se queda vacía para siempre, sin avisar. Por eso la hoja no se crea a
-mano.
+la tuya se queda vacía para siempre, sin avisar. Y a ojo no se ve: los
+nombres se parecen demasiado. Por eso hay una función que los revisa.
 
-### Paso a paso
+### Si la hoja de Holcim ya está creada
 
-**1. Crear la hoja en la carpeta de Holcim.** En el editor del script, elige
-`crearHojaEnHolcim` en el desplegable de funciones... pero antes escribe la URL
-de la carpeta dentro de la llamada. Lo más cómodo es pegar esto en una línea
-suelta al final del archivo, ejecutarlo y luego borrarlo:
+Es el caso normal: la hoja ya la hiciste tú. No hace falta crear otra. Solo hay
+que dejarle los encabezados exactos y decirle al script que use esa.
+
+En el editor, al final del archivo, escribe esta función auxiliar —es solo para
+poder pasarle la URL— y ejecútala:
 
 ```js
 function unaVez() {
-  crearHojaEnHolcim("https://drive.google.com/drive/folders/PON_AQUI_LA_CARPETA");
+  prepararHojaExistente("https://docs.google.com/spreadsheets/d/LA_DE_HOLCIM/edit");
 }
 ```
 
-Ejecuta `unaVez`. En el registro sale la URL de la hoja recién creada, ya con
-las 14 columnas correctas, la primera fila congelada y en negrita.
+Deja la pestaña `Resultados` con las 14 columnas, en negrita y con la primera
+fila congelada, y te dice qué había antes. Si la hoja **ya tiene filas
+escritas** no toca nada: te enseña los encabezados que no cuadran y lo decides
+tú, porque reescribirlos ahí movería los datos de sitio.
 
-**2. Pegar esa URL en `ID_HOJA`**, arriba del todo del `Code.gs`:
+Después pega esa URL en `ID_HOJA`, arriba del todo del `Code.gs`:
 
 ```js
 var ID_HOJA = "https://docs.google.com/spreadsheets/d/....../edit";
 ```
 
-Y ejecuta `olvidarLoRecordado()` una vez. Si no, el script sigue usando la hoja
-vieja que tiene apuntada en sus propiedades y el cambio no se nota.
+Y ejecuta **`olvidarLoRecordado()`** una vez. Si no, el script sigue usando la
+hoja vieja que tiene apuntada en sus propiedades y el cambio no se nota.
 
-**3. Traer lo que ya hay.** Igual que antes, con la URL de la hoja **vieja**:
+### Traer lo que ya hay en la hoja vieja
+
+Con la URL de la hoja **personal**, una sola vez:
 
 ```js
 function unaVez() {
@@ -1009,13 +1014,22 @@ porque `Empresa` pasó a ser la razón social del contratista— y vuelve a deja
 los enlaces de la columna *Vínculo* como enlaces, no como texto.
 
 No toca la hoja vieja. **Si la ejecutas dos veces, duplicas las filas**: si te
-pasa, deshaz con Ctrl+Z en la hoja nueva o bórrala y empieza por el paso 1.
+pasa, deshaz con Ctrl+Z en la hoja nueva.
 
-**4. Comprobar.** Ejecuta `probarTodo`. El paso 1 tiene que mostrar la URL de la
-hoja **nueva**, y el paso 5 tiene que dejar una fila de prueba con su enlace en
+### Comprobar y limpiar
+
+Ejecuta `probarTodo`. El paso 1 tiene que mostrar la URL de la hoja **de
+Holcim**, y el paso 5 tiene que dejar una fila de prueba con su enlace en
 *Vínculo*. Bórrala a mano después.
 
-**5. Borra la función `unaVez`** que creaste, para no ejecutarla sin querer.
+Y borra la función `unaVez` que creaste, para no ejecutarla sin querer.
+
+### Si prefieres empezar de cero
+
+`crearHojaEnHolcim("URL de la carpeta")` crea una hoja nueva ya con las
+columnas correctas dentro de la carpeta que le digas. Sirve si la que tienes
+quedó con datos de prueba o con los encabezados revueltos y prefieres no
+arreglarla.
 
 ### Los enlaces de los PDF
 

@@ -1153,6 +1153,78 @@ function olvidarLoRecordado() {
 }
 
 /**
+ * PREPARA UNA HOJA QUE YA EXISTE
+ *
+ * Para cuando la hoja de Holcim ya está creada a mano. Le pasas su URL y deja
+ * la pestaña "Resultados" con los encabezados exactos.
+ *
+ * Existe porque el script escribe buscando cada dato por el NOMBRE de su
+ * columna: si el encabezado dice "Centro de trabajo" en vez de
+ * "Centro_Trabajo", no falla —agrega una columna nueva al final y la de la
+ * hoja se queda vacía para siempre—. Comprobarlo a ojo es justo lo que no
+ * funciona, porque los nombres se parecen.
+ *
+ * Si la hoja ya tiene filas escritas NO toca nada: te dice qué encabezados no
+ * cuadran y lo decides tú, porque reescribirlos ahí movería los datos de sitio.
+ *
+ * Uso, desde el editor:
+ *   prepararHojaExistente("https://docs.google.com/spreadsheets/d/1AbC.../edit")
+ */
+function prepararHojaExistente(urlHoja) {
+  var id = soloId_(urlHoja);
+  if (!id) { Logger.log('Pásame la URL de la hoja de Holcim.'); return 'falta la hoja'; }
+
+  var ss;
+  try { ss = SpreadsheetApp.openById(id); }
+  catch (e) { Logger.log('No se pudo abrir esa hoja: ' + e.message); return 'inaccesible'; }
+
+  var hoja = ss.getSheetByName(PESTANA_RESUMEN);
+  var creada = false;
+  if (!hoja) {
+    /* Si la hoja esta recien hecha y solo tiene la pestaña por defecto vacia,
+       se reaprovecha en vez de dejar una "Hoja 1" suelta al lado. */
+    var todas = ss.getSheets();
+    if (todas.length === 1 && todas[0].getLastRow() === 0) { hoja = todas[0]; hoja.setName(PESTANA_RESUMEN); }
+    else { hoja = ss.insertSheet(PESTANA_RESUMEN); }
+    creada = true;
+  }
+
+  var conDatos = hoja.getLastRow() > 1;
+  var ancho = Math.max(1, hoja.getLastColumn());
+  var actuales = hoja.getLastRow() === 0 ? [] : hoja.getRange(1, 1, 1, ancho).getValues()[0].map(String);
+
+  var iguales = actuales.length === COLUMNAS_RESUMEN.length &&
+                COLUMNAS_RESUMEN.every(function (c, i) { return actuales[i] === c; });
+
+  if (iguales) {
+    Logger.log('Los encabezados ya son los correctos. No hay nada que cambiar.\n' + ss.getUrl());
+    return 'ya estaba bien';
+  }
+
+  if (conDatos) {
+    var aviso = 'ESA HOJA YA TIENE FILAS ESCRITAS, así que no se toca.\n\n' +
+                'Tiene:  ' + actuales.join(' | ') + '\n' +
+                'Debería: ' + COLUMNAS_RESUMEN.join(' | ') + '\n\n' +
+                'Corrige los encabezados a mano hasta que coincidan letra por letra, o\n' +
+                'usa una hoja vacía con crearHojaEnHolcim y trae las filas con\n' +
+                'copiarFilasDeHojaVieja.';
+    Logger.log(aviso);
+    return aviso;
+  }
+
+  hoja.getRange(1, 1, 1, Math.max(ancho, COLUMNAS_RESUMEN.length)).clearContent();
+  hoja.getRange(1, 1, 1, COLUMNAS_RESUMEN.length).setValues([COLUMNAS_RESUMEN]).setFontWeight('bold');
+  hoja.setFrozenRows(1);
+
+  var txt = (creada ? 'Pestaña "' + PESTANA_RESUMEN + '" creada.' : 'Encabezados corregidos.') +
+            '\nAntes:  ' + (actuales.join(' | ') || '(vacío)') +
+            '\nAhora:  ' + COLUMNAS_RESUMEN.join(' | ') +
+            '\n\nPega esto en ID_HOJA y ejecuta olvidarLoRecordado():\n  ' + ss.getUrl();
+  Logger.log(txt);
+  return txt;
+}
+
+/**
  * CREA LA HOJA EN HOLCIM, CON LOS ENCABEZADOS EXACTOS
  *
  * Le pasas la URL de la carpeta de Drive donde quieres que viva y la crea allí
