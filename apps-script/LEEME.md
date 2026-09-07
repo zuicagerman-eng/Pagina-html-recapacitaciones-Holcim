@@ -326,3 +326,32 @@ la columna del enlace queda donde tú pongas el rótulo `Vinculo` en la fila 1.
 
 Vale para todas: puedes ordenar los encabezados como quieras y el script los
 sigue encontrando.
+
+---
+
+## Encuesta de satisfacción
+
+Al terminar el examen, cuando la persona pulsa **Descargar certificado (PDF)**,
+antes de generar el archivo aparece una encuesta corta: cinco estrellas, un
+espacio para "¿qué cambiarías o mejorarías?" y el nombre, que es opcional.
+
+**No hay que tocar nada en Apps Script.** La encuesta viaja por el mismo camino
+que el botón ⚠️ **Reportar**, así que llega al correo de `CORREO_REPORTES` —hoy
+`german.zuica@holcim.com`— sin cambiar el script ni volver a publicar.
+
+Los correos llegan con el asunto **`Satisfacción HSE-001 · 4/5 estrellas`**, de
+modo que puedes filtrarlos en Gmail con `asunto: Satisfacción HSE-001` y llevar
+el seguimiento aparte de los reportes de fallos.
+
+Cosas que conviene saber:
+
+- **Nunca bloquea el certificado.** Si la persona pulsa *Omitir*, cierra con la
+  ✕ o con Escape, o si el envío falla porque no hay red, el PDF se genera igual.
+- **Sale una sola vez por persona.** Queda una marca en el navegador, así que
+  quien descargue el certificado dos veces no la vuelve a ver.
+- **Cuenta contra el límite de correos.** Una cuenta gratuita de Gmail permite
+  100 destinatarios al día, y ahora cada examen aprobado puede gastar uno. Con
+  el ritmo previsto (unas 100 personas al mes) sobra de largo; solo habría que
+  vigilarlo si algún día se citan más de 100 personas el mismo día.
+- Si prefieres apagarla, borra el bloque `ENCUESTA` de `index.html` o cambia
+  `ENCUESTA.pedir(function(){ … })` por el contenido de esa función.

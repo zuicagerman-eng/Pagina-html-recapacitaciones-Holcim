@@ -3391,6 +3391,24 @@
   .report-in{width:100%;border:2px solid #d9e2ee;border-radius:10px;padding:11px 13px;font-family:var(--font);
     font-size:14px;color:var(--ink);background:#fff;transition:border-color .2s;resize:vertical}
   .report-in:focus{outline:none;border-color:var(--cyan)}
+  /* ===== Encuesta de satisfaccion =====
+     Las estrellas son botones de verdad (no iconos sueltos) para que funcionen
+     con teclado y con lector de pantalla. El ambar es el mismo color de
+     atencion que usan el boton Reportar y el aviso del video. */
+  .encstars{display:flex;align-items:center;gap:4px;margin:2px 0 4px}
+  .encstar{background:none;border:0;padding:2px 3px;cursor:pointer;line-height:1;
+    font-size:34px;color:#cfd7e2;transition:transform .12s ease,color .12s ease}
+  .encstar:hover,.encstar:focus-visible{transform:scale(1.15);outline:none}
+  .encstar:focus-visible{color:#c58c00}
+  /* #f0a500 daba 2,08 sobre blanco, por debajo del minimo de 3 que piden los
+     graficos: al lado de una estrella apagada casi no se notaba cual estaba
+     marcada. Este ambar da 3,44 y el texto de al lado dice la nota en letras,
+     que es lo que de verdad la deja clara. */
+  .encstar.on{color:#c57900}
+  .encnota{margin-left:10px;font-size:13.5px;font-weight:700;color:#5b6b82}
+  .encnota.puesta{color:#8a4b00}
+  @media(prefers-reduced-motion:reduce){.encstar{transition:none}
+    .encstar:hover,.encstar:focus-visible{transform:none}}
   .report-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:16px}
   .report-cancel,.report-send{border:none;border-radius:10px;padding:11px 22px;font-family:var(--font);
     font-weight:700;font-size:14px;cursor:pointer;transition:.2s}
@@ -5905,6 +5923,34 @@
   </div>
 </div>
 
+<!-- Encuesta de satisfaccion. Sale una sola vez, al pedir el certificado, y
+     antes de generar el PDF. Se puede omitir: nunca bloquea el certificado. -->
+<div class="modal" id="encModal">
+  <div class="modal-box report-box">
+    <div class="modal-head"><span>¿Qué te pareció la reinducción?</span><button id="encClose" aria-label="Cerrar">✕</button></div>
+    <div class="report-body">
+      <div class="report-tip">Tu opinión nos ayuda a mejorar el curso para los próximos compañeros. Toma menos de un minuto.</div>
+      <label class="report-lbl" id="encLblEstrellas">Califica la experiencia</label>
+      <div class="encstars" id="encStars" role="radiogroup" aria-labelledby="encLblEstrellas">
+        <button type="button" class="encstar" data-v="1" role="radio" aria-checked="false" aria-label="1 estrella: muy mala">★</button>
+        <button type="button" class="encstar" data-v="2" role="radio" aria-checked="false" aria-label="2 estrellas: mala">★</button>
+        <button type="button" class="encstar" data-v="3" role="radio" aria-checked="false" aria-label="3 estrellas: aceptable">★</button>
+        <button type="button" class="encstar" data-v="4" role="radio" aria-checked="false" aria-label="4 estrellas: buena">★</button>
+        <button type="button" class="encstar" data-v="5" role="radio" aria-checked="false" aria-label="5 estrellas: excelente">★</button>
+        <span class="encnota" id="encNota">Sin calificar</span>
+      </div>
+      <label class="report-lbl" for="encMejora">¿Qué cambiarías o mejorarías?</label>
+      <textarea id="encMejora" class="report-in" rows="4" placeholder="Lo que quieras contarnos: temas que sobran o faltan, videos, duración, el examen…"></textarea>
+      <label class="report-lbl" for="encNombre">Tu nombre (opcional)</label>
+      <input id="encNombre" class="report-in" type="text" placeholder="Puedes dejarlo en blanco" autocomplete="name">
+      <div class="report-actions">
+        <button class="report-cancel" id="encOmitir">Omitir</button>
+        <button class="report-send" id="encEnviar">Enviar y descargar certificado</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div id="toast"></div>
 <script>
 /* ====== CONFIGURACIÓN ====== */
@@ -5915,7 +5961,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-07-z";
+var VERSION_CURSO = "2026-09-08-a";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 52 en cada intento.
@@ -6899,6 +6945,124 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&modal.clas
 /* ====== TOAST ====== */
 var toastEl = document.getElementById('toast'), toastT;
 function toast(msg){ toastEl.textContent = msg; toastEl.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(function(){ toastEl.classList.remove('show'); }, 2600); }
+
+/* ====== ENCUESTA DE SATISFACCIÓN ======
+   Sale al pedir el certificado, justo antes de generar el PDF, y una sola vez
+   por persona. Viaja por el mismo camino que el botón "Reportar" (tipo
+   'reporte'), así que llega al mismo correo sin tocar nada en Apps Script.
+   Nunca bloquea el certificado: si se omite, si falla el envío o si no hay red,
+   el PDF se genera igual. */
+var ENCUESTA = (function(){
+  var modal = document.getElementById('encModal');
+  if(!modal) return { pedir:function(seguir){ seguir(); } };
+  var cajaEstrellas = document.getElementById('encStars'),
+      estrellas = [].slice.call(modal.querySelectorAll('.encstar')),
+      nota      = document.getElementById('encNota'),
+      mejora    = document.getElementById('encMejora'),
+      nombre    = document.getElementById('encNombre'),
+      btnEnviar = document.getElementById('encEnviar'),
+      btnOmitir = document.getElementById('encOmitir'),
+      btnCerrar = document.getElementById('encClose');
+  var ETIQUETAS = ['', 'Muy mala', 'Mala', 'Aceptable', 'Buena', 'Excelente'];
+  var CLAVE = 'holcim_hse001_encuesta';
+  var valor = 0, seguir = null, cerrado = false;
+
+  function pintar(v){
+    estrellas.forEach(function(b, i){
+      var on = i < v;
+      b.classList.toggle('on', on);
+      b.setAttribute('aria-checked', (i + 1) === v ? 'true' : 'false');
+    });
+    nota.textContent = v ? (v + ' de 5 · ' + ETIQUETAS[v]) : 'Sin calificar';
+    nota.classList.toggle('puesta', !!v);
+  }
+  estrellas.forEach(function(b){
+    b.addEventListener('click', function(){ valor = Number(b.getAttribute('data-v')); pintar(valor); });
+    b.addEventListener('mouseenter', function(){ pintar(Number(b.getAttribute('data-v'))); });
+  });
+  cajaEstrellas.addEventListener('mouseleave', function(){ pintar(valor); });
+  /* Flechas para movernos entre estrellas, como en cualquier grupo de opciones. */
+  cajaEstrellas.addEventListener('keydown', function(e){
+    var paso = (e.key === 'ArrowRight' || e.key === 'ArrowUp') ? 1 :
+               (e.key === 'ArrowLeft'  || e.key === 'ArrowDown') ? -1 : 0;
+    if(!paso) return;
+    e.preventDefault();
+    valor = Math.min(5, Math.max(1, (valor || 0) + paso));
+    pintar(valor);
+    estrellas[valor - 1].focus();
+  });
+
+  function cerrar(){
+    if(cerrado) return;
+    cerrado = true;
+    modal.classList.remove('show');
+    var s = seguir; seguir = null;
+    if(s) s();
+  }
+  function yaRespondio(){
+    try{ return localStorage.getItem(CLAVE) === '1'; }catch(e){ return false; }
+  }
+  function marcar(){
+    try{ localStorage.setItem(CLAVE, '1'); }catch(e){}
+  }
+
+  function enviar(){
+    if(!valor && !(mejora.value || '').trim()){
+      toast('Marca al menos una estrella o escríbenos algo');
+      estrellas[4].focus();
+      return;
+    }
+    marcar();
+    var quien = (nombre.value || '').trim();
+    var datos = {
+      tipo: 'reporte',
+      asunto: 'Satisfacción HSE-001 · ' + (valor ? (valor + '/5 estrellas') : 'sin calificar'),
+      diapositiva: 'Encuesta final',
+      total: N,
+      modulo: 'Encuesta de satisfacción',
+      nombre: quien || '(anónimo)',
+      mensaje: 'Calificación: ' + (valor ? (valor + ' de 5 · ' + ETIQUETAS[valor]) : 'sin calificar') + '\n\n' +
+               'Qué cambiaría o mejoraría:\n' + ((mejora.value || '').trim() || '(no escribió nada)'),
+      url: location.href,
+      navegador: navigator.userAgent,
+      fecha: new Date().toLocaleString('es-CO')
+    };
+    btnEnviar.disabled = true;
+    btnEnviar.textContent = 'Enviando…';
+    /* El certificado no puede quedarse esperando al correo: se cierra a los
+       1,2 s pase lo que pase, igual que hace el botón Reportar. */
+    var salir = function(){ toast('✔ ¡Gracias por tu opinión!'); cerrar(); };
+    try{
+      if(typeof google !== 'undefined' && google.script && google.script.run){
+        google.script.run.withSuccessHandler(salir).withFailureHandler(salir).enviarReporte(datos);
+      }else if(REPORTE_URL && REPORTE_URL.indexOf('http') === 0){
+        fetch(REPORTE_URL, { method:'POST', mode:'no-cors',
+          headers:{'Content-Type':'text/plain;charset=utf-8'},
+          body: JSON.stringify(datos) }).then(salir).catch(salir);
+      }
+    }catch(e){}
+    setTimeout(salir, 1200);
+  }
+
+  btnEnviar.addEventListener('click', enviar);
+  btnOmitir.addEventListener('click', function(){ marcar(); cerrar(); });
+  btnCerrar.addEventListener('click', function(){ marcar(); cerrar(); });
+  modal.addEventListener('click', function(e){ if(e.target === modal){ marcar(); cerrar(); } });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && modal.classList.contains('show')){ marcar(); cerrar(); }
+  });
+
+  return {
+    pedir: function(despues){
+      if(yaRespondio()){ despues(); return; }
+      seguir = despues; cerrado = false;
+      btnEnviar.disabled = false;
+      btnEnviar.textContent = 'Enviar y descargar certificado';
+      modal.classList.add('show');
+      setTimeout(function(){ estrellas[4].focus(); }, 60);
+    }
+  };
+})();
 
 /* ====== REPORTAR UN PROBLEMA ====== */
 (function(){
@@ -8117,11 +8281,15 @@ document.addEventListener('DOMContentLoaded', function(){
       btnDip.textContent = 'Descargar certificado (PDF)';
       btnDip.disabled = false;
       btnDip.onclick = function(){
-        btnDip.disabled = true; btnDip.textContent = 'Preparando el certificado…';
-        descargarDiploma(datosDip, function(err){
-          toast('No se pudo generar el certificado: ' + (err && err.message ? err.message : err));
-        }).then(function(){
-          btnDip.disabled = false; btnDip.textContent = 'Descargar certificado (PDF)';
+        /* Primero la encuesta; el certificado se genera al cerrarla, se haya
+           respondido o no. */
+        ENCUESTA.pedir(function(){
+          btnDip.disabled = true; btnDip.textContent = 'Preparando el certificado…';
+          descargarDiploma(datosDip, function(err){
+            toast('No se pudo generar el certificado: ' + (err && err.message ? err.message : err));
+          }).then(function(){
+            btnDip.disabled = false; btnDip.textContent = 'Descargar certificado (PDF)';
+          });
         });
       };
     }
