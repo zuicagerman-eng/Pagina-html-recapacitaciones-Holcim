@@ -732,3 +732,74 @@ enlace viejo sigue por ahí, no seguirá guardando en la cuenta personal.
 - El límite de correos pasa de 100 a 1.500 al día, con lo que la copia del
   certificado y la encuesta dejan de ser una preocupación aunque se cite a
   mucha gente el mismo día.
+
+
+---
+
+## Guardar en la cuenta personal y trasladar a Holcim
+
+El obstáculo era este: para recibir del curso hace falta una implementación que
+acepte peticiones **sin iniciar sesión**, y en el dominio de Holcim eso está
+bloqueado. Pero para **escribir en una carpeta** solo hace falta tener permiso
+en ella, y eso sí se tiene.
+
+Así que se separan las dos cosas:
+
+1. El curso escribe al script de la cuenta personal, que es el único que puede
+   recibir sin sesión.
+2. El certificado se guarda en la carpeta de esa cuenta.
+3. **Acto seguido se traslada** a la carpeta de la unidad compartida de Holcim.
+
+El PDF pasa por la cuenta personal apenas un segundo. Donde queda —y donde se
+queda para siempre— es en Holcim.
+
+### Cómo se configura
+
+Rellena la cuarta dirección, que es opcional:
+
+```js
+var ID_CARPETA_CERTIFICADOS = "carpeta de paso, en el Drive personal";
+var ID_CARPETA_FINAL        = "carpeta de la unidad compartida de Holcim";
+```
+
+Déjala vacía y no se traslada nada: todo se queda como estaba.
+
+### Si el traslado falla, no se pierde nada
+
+Es lo primero que se pensó al escribirlo. Si el traslado no sale —permisos,
+red, lo que sea— el certificado **se queda en la carpeta de paso** y el examen
+queda registrado igual, con su enlace funcionando. Nada se pierde.
+
+Para recogerlos después está **`moverPendientes()`**: recorre la carpeta de
+paso y traslada todo lo que encuentre. Sirve también para llevarse de una vez
+los certificados que ya estaban guardados de antes.
+
+**Déjala programada y olvídate:** en el editor, ⏰ **Activadores → Añadir
+activador → `moverPendientes` → Según tiempo → Temporizador por horas → Cada
+hora**. Así, aunque algún traslado falle, a la hora siguiente se recupera solo.
+
+### Comprobarlo
+
+Ejecuta `probarTodo` y mira el paso nuevo:
+
+```
+3. Guardar el PDF .......... OK  ...
+3b. Traslado a Holcim ...... OK
+    quedó en: 3. SOPORTES CAPACITACION DEL PERSONAL
+```
+
+Si dice `NO se traslado`, la cuenta no tiene permiso de **escritura** en esa
+carpeta: con permiso de solo lectura no basta.
+
+### Lo que queda en la cuenta personal
+
+- El proyecto de Apps Script (no hay alternativa: es lo único que puede recibir
+  sin sesión).
+- La carpeta de paso, que queda vacía en cuanto el traslado funciona.
+- La hoja de resultados, salvo que crees una en Holcim y la compartas con la
+  cuenta personal como Editor; en ese caso basta con ponerla en `ID_HOJA`.
+
+### Y el día que TI habilite el acceso anónimo
+
+Nada de esto estorba: se mueve el script a Holcim, se deja `ID_CARPETA_FINAL`
+vacía y se apunta `ID_CARPETA_CERTIFICADOS` directamente a la carpeta buena.

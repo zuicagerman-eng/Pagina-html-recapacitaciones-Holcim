@@ -35,6 +35,17 @@ var ID_HOJA = "";
 // 3) Carpeta de certificados (drive.google.com/drive/folders/...)
 var ID_CARPETA_CERTIFICADOS = "";
 
+/* 4) OPCIONAL — Carpeta FINAL, normalmente la de la unidad compartida de Holcim.
+      Si la pones, cada certificado se guarda primero en la carpeta de arriba y
+      enseguida se traslada aquí. Sirve para que los datos personales acaben en
+      Holcim aunque el script tenga que seguir viviendo en una cuenta personal
+      (que es la única que puede recibir del curso sin iniciar sesión).
+
+      Si el traslado falla —permisos, red, lo que sea— el certificado NO se
+      pierde: se queda en la carpeta de arriba y lo recoge moverPendientes()
+      la próxima vez. Déjala vacía para no trasladar nada. */
+var ID_CARPETA_FINAL = "";
+
 /* ─── de aquí para abajo no hace falta tocar nada ─── */
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -236,6 +247,71 @@ function carpetaCertificados_() {
   return carpeta;
 }
 
+/** Devuelve la carpeta final, o null si no se configuró ninguna. */
+function carpetaFinal_() {
+  var id = soloId_(ID_CARPETA_FINAL);
+  if (!id) return null;
+  return DriveApp.getFolderById(id);   // si falla, que se vea el motivo
+}
+
+/**
+ * Traslada un archivo a la carpeta final. Devuelve un texto con lo que pasó.
+ *
+ * Nunca lanza error hacia fuera: el certificado ya está guardado y con enlace
+ * válido, así que un fallo aquí no puede tumbar el registro del examen. El
+ * archivo se queda donde está y moverPendientes() lo recoge después.
+ */
+function trasladar_(archivo) {
+  var destino;
+  try {
+    destino = carpetaFinal_();
+  } catch (e) {
+    console.error('No se pudo abrir la carpeta final: ' + e.message);
+    return 'carpeta final inaccesible';
+  }
+  if (!destino) return 'sin carpeta final';
+  try {
+    archivo.moveTo(destino);
+    console.log('Certificado trasladado a ' + destino.getName());
+    return 'trasladado';
+  } catch (e) {
+    /* Lo mas comun: la cuenta que ejecuta no tiene permiso de escritura en esa
+       carpeta, o la unidad compartida no admite mover archivos desde fuera. */
+    console.error('No se pudo trasladar el certificado: ' + e.message +
+                  ' — se queda en la carpeta de origen y lo recogera moverPendientes().');
+    return 'pendiente';
+  }
+}
+
+/**
+ * RECOGE LOS QUE SE QUEDARON ATRÁS
+ *
+ * Recorre la carpeta de origen y traslada a la carpeta final todo lo que
+ * encuentre. Sirve para dos cosas: recuperar los que fallaron en su momento, y
+ * llevarse de una vez los que ya estaban guardados antes de configurar esto.
+ *
+ * Se puede dejar programada: en el editor, ⏰ Activadores → Añadir activador →
+ * moverPendientes → Según tiempo → Cada hora. Así no hay que acordarse.
+ */
+function moverPendientes() {
+  var destino = carpetaFinal_();
+  if (!destino) { Logger.log('No hay carpeta final configurada (ID_CARPETA_FINAL).'); return 'sin carpeta final'; }
+  var origen = carpetaCertificados_();
+  if (origen.getId() === destino.getId()) { Logger.log('Origen y destino son la misma carpeta.'); return 'misma carpeta'; }
+
+  var archivos = origen.getFiles();
+  var movidos = 0, fallidos = 0, primerFallo = '';
+  while (archivos.hasNext()) {
+    var a = archivos.next();
+    try { a.moveTo(destino); movidos++; }
+    catch (e) { fallidos++; if (!primerFallo) primerFallo = e.message; }
+  }
+  var txt = 'Trasladados: ' + movidos + ' · No se pudo con: ' + fallidos +
+            (primerFallo ? ('\nPrimer fallo: ' + primerFallo) : '');
+  Logger.log(txt);
+  return txt;
+}
+
 /**
  * Guarda el PDF que mandó el curso y devuelve su enlace.
  * Nunca lanza error: si algo falla se devuelve cadena vacía, porque perder el
@@ -258,6 +334,10 @@ function guardarCertificado_(d) {
         archivo.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
       } catch (e) { /* la organización puede tener prohibido compartir hacia fuera */ }
     }
+    /* Se traslada a la carpeta de Holcim si esta configurada. El enlace se lee
+       DESPUES del traslado: el identificador no cambia al mover, pero asi se
+       devuelve lo que de verdad quedo. */
+    trasladar_(archivo);
     console.log('Certificado guardado: ' + archivo.getUrl());
     return archivo.getUrl();
   } catch (e) {
@@ -590,6 +670,20 @@ function probarTodo() {
         var id = (enlace.match(/[-\w]{25,}/) || [])[0];
         if (id) archivo = DriveApp.getFileById(id);
       } catch (e2) { lineas.push('   (el PDF de prueba habrá que borrarlo a mano)'); }
+
+      /* Donde acabo de verdad el PDF: es lo que dice si el traslado a la
+         carpeta de Holcim funciono o si se quedo en la de origen. */
+      if (soloId_(ID_CARPETA_FINAL)) {
+        try {
+          var padres = archivo.getParents();
+          var donde = padres.hasNext() ? padres.next() : null;
+          var fin = carpetaFinal_();
+          var ok = donde && fin && donde.getId() === fin.getId();
+          lineas.push('3b. Traslado a Holcim ...... ' + (ok ? 'OK' : 'NO se traslado'));
+          lineas.push('    quedo en: ' + (donde ? donde.getName() : '(no se pudo leer)'));
+          if (!ok) lineas.push('    revisa que la cuenta tenga permiso de ESCRITURA en esa carpeta');
+        } catch (e3) { lineas.push('3b. Traslado a Holcim ...... no se pudo comprobar: ' + e3.message); }
+      }
     } else {
       lineas.push('3. Guardar el PDF .......... FALLÓ (mira el registro de Ejecuciones)');
     }
