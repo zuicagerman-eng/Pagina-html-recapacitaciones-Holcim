@@ -803,3 +803,79 @@ carpeta: con permiso de solo lectura no basta.
 
 Nada de esto estorba: se mueve el script a Holcim, se deja `ID_CARPETA_FINAL`
 vacía y se apunta `ID_CARPETA_CERTIFICADOS` directamente a la carpeta buena.
+
+
+---
+
+## Cada centro de trabajo a su propia carpeta
+
+Los 15 centros tienen carpeta propia en Drive, y el certificado de cada
+persona debe caer en la de su centro.
+
+### Por qué NO se pegan 15 direcciones
+
+Se podría, pero saldría caro de mantener: quince direcciones que copiar sin
+equivocarse, y tocar el código cada vez que abra o cierre una planta.
+
+Hay un detalle que lo hace innecesario: **las carpetas se llaman igual que las
+opciones del desplegable** (BARRANCA GEO, NOBSA CEM, TELEPORT CORP...). Así que
+basta con decirle al script dónde están todas, y él busca la que toca.
+
+```js
+var CARPETA_RAIZ_CENTROS = "URL de la carpeta que CONTIENE las 15";
+```
+
+**Una sola dirección.** Y el día que abra una planta nueva, crea su carpeta con
+el mismo nombre que aparece en el desplegable y ya está: no hay que tocar el
+código.
+
+### Si los certificados van más adentro
+
+Si dentro de cada centro hay que bajar por una ruta —como
+`3. Procesos de Operación y Apoyo → 3.1 Capacitaciones → …`— se escribe una
+vez, con barras, y vale para los quince:
+
+```js
+var SUBRUTA_CENTRO = "3. Procesos de Operación y Apoyo/3.1 Capacitaciones/1. Capacitaciones H&S/3. SOPORTES CAPACITACION DEL PERSONAL";
+```
+
+Tiene que ser la misma en todos los centros. El script **no crea carpetas**: si
+en algún centro falta un tramo, avisa en el registro y deja el certificado en
+la carpeta de ese centro.
+
+### Nunca se pierde un certificado
+
+El orden es: carpeta del centro → si no la hay, `ID_CARPETA_FINAL` → si
+tampoco, se queda en la de paso y lo recoge `moverPendientes()`. Cada salto
+queda anotado en el registro de Ejecuciones, así que se sabe qué pasó.
+
+Por eso conviene dejar `ID_CARPETA_FINAL` puesta aunque uses el reparto por
+centro: es la red de seguridad para un centro sin carpeta, o para "Otra".
+
+### Compruébalo antes de confiar
+
+```
+verCarpetasDeCentros()
+```
+
+Dice, para los quince, a qué carpeta iría su certificado:
+
+```
+Centros con carpeta propia: 15 de 15
+
+OK      BARRANCA GEO  →  BARRANCA GEO
+OK      BELLO RMX  →  BELLO RMX
+...
+```
+
+Si alguno sale como `SIN CARPETA`, o la carpeta no existe o se llama distinto
+que la opción del desplegable. Es mucho más rápido verlo aquí que descubrir
+dentro de un mes que tres centros llevaban semanas cayendo en la carpeta de
+repuesto.
+
+### Sobre la velocidad
+
+Buscar una carpeta por nombre en Drive cuesta, así que el script **recuerda**
+la que encontró para cada centro: solo busca la primera vez de cada uno. Si
+algún día mueve o renombra las carpetas, ejecuta `olvidarLoRecordado()` y
+volverá a buscarlas.

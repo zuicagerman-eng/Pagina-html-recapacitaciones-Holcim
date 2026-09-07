@@ -46,6 +46,31 @@ var ID_CARPETA_CERTIFICADOS = "";
       la próxima vez. Déjala vacía para no trasladar nada. */
 var ID_CARPETA_FINAL = "";
 
+/* 5) OPCIONAL — Cada centro de trabajo a SU carpeta.
+      Pon aquí la carpeta que CONTIENE las carpetas de los centros (BARRANCA
+      GEO, BELLO RMX, NOBSA CEM...). El script busca dentro de ella la que se
+      llame igual que el centro que eligió la persona y deja ahí su
+      certificado.
+
+      Se configura UNA sola dirección, no quince. Y el día que abra una planta
+      nueva basta con crear su carpeta con el mismo nombre que aparece en el
+      desplegable del curso: no hay que tocar el código.
+
+      Si no encuentra la carpeta del centro, el certificado va a la de arriba
+      (ID_CARPETA_FINAL) y queda anotado en el registro. Nunca se pierde. */
+var CARPETA_RAIZ_CENTROS = "";
+
+/* 6) OPCIONAL — Ruta DENTRO de la carpeta de cada centro, si los certificados
+      no van en la raíz sino más adentro. Se escribe con barras, tal como se
+      lee en Drive, y tiene que ser la misma en todos los centros. Ejemplo:
+
+      var SUBRUTA_CENTRO = "3. Procesos de Operación y Apoyo/3.1 Capacitaciones/1. Capacitaciones H&S/3. SOPORTES CAPACITACION DEL PERSONAL";
+
+      Déjala vacía si el certificado va directo en la carpeta del centro.
+      El script NO crea carpetas: si algún tramo no existe, avisa y usa la
+      carpeta del centro que sí encontró. */
+var SUBRUTA_CENTRO = "";
+
 /* ─── de aquí para abajo no hace falta tocar nada ─── */
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -247,6 +272,111 @@ function carpetaCertificados_() {
   return carpeta;
 }
 
+/* Para comparar nombres de carpeta con lo que eligió la persona sin que un
+   acento, un espacio de más o unas mayúsculas lo estropeen. */
+function normaliza_(t) {
+  return String(t || '')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')   // quita acentos
+    .toUpperCase().replace(/\s+/g, ' ').trim();
+}
+
+/**
+ * Devuelve la carpeta que le toca a un centro de trabajo, o null.
+ *
+ * Busca dentro de CARPETA_RAIZ_CENTROS la subcarpeta que se llame igual que el
+ * centro, y luego baja por SUBRUTA_CENTRO si se configuró.
+ *
+ * El resultado se recuerda: buscar por nombre en Drive cuesta, y estos nombres
+ * no cambian. Así solo se busca la primera vez de cada centro. Si algún día se
+ * mueven las carpetas, ejecuta olvidarLoRecordado().
+ */
+function carpetaDelCentro_(centro) {
+  if (!soloId_(CARPETA_RAIZ_CENTROS)) return null;
+  var clave = normaliza_(centro);
+  if (!clave) return null;
+
+  var props = PropertiesService.getScriptProperties();
+  var guardada = props.getProperty('CENTRO_' + clave);
+  if (guardada) {
+    try { return DriveApp.getFolderById(guardada); }
+    catch (e) { props.deleteProperty('CENTRO_' + clave); }   // ya no existe: se vuelve a buscar
+  }
+
+  var raiz;
+  try { raiz = DriveApp.getFolderById(soloId_(CARPETA_RAIZ_CENTROS)); }
+  catch (e) { console.error('No se pudo abrir CARPETA_RAIZ_CENTROS: ' + e.message); return null; }
+
+  /* Se recorren las subcarpetas y se compara ya normalizado, porque
+     getFoldersByName exige el nombre exacto y aquí un acento no puede decidir
+     dónde acaba un certificado. */
+  var destino = null;
+  var it = raiz.getFolders();
+  while (it.hasNext()) {
+    var f = it.next();
+    if (normaliza_(f.getName()) === clave) { destino = f; break; }
+  }
+  if (!destino) {
+    console.warn('No hay carpeta para el centro "' + centro + '" dentro de la carpeta raiz.');
+    return null;
+  }
+
+  // y ahora hacia dentro, si se configuró una subruta
+  if (SUBRUTA_CENTRO) {
+    var tramos = String(SUBRUTA_CENTRO).split('/');
+    for (var i = 0; i < tramos.length; i++) {
+      var nombre = normaliza_(tramos[i]);
+      if (!nombre) continue;
+      var hijo = null, sub = destino.getFolders();
+      while (sub.hasNext()) {
+        var c = sub.next();
+        if (normaliza_(c.getName()) === nombre) { hijo = c; break; }
+      }
+      if (!hijo) {
+        console.warn('En "' + centro + '" no existe el tramo "' + tramos[i] +
+                     '" de SUBRUTA_CENTRO. Se usa la carpeta del centro.');
+        break;
+      }
+      destino = hijo;
+    }
+  }
+
+  props.setProperty('CENTRO_' + clave, destino.getId());
+  return destino;
+}
+
+/**
+ * COMPRUEBA LOS 15 DE UNA VEZ
+ *
+ * Dice, para cada centro que le pases, a qué carpeta iría a parar su
+ * certificado. Ejecútala antes de confiar en el reparto: es mucho más rápido
+ * que descubrir dentro de un mes que tres centros llevaban meses cayendo en la
+ * carpeta de repuesto.
+ *
+ * Pega entre los corchetes los mismos nombres del desplegable del curso.
+ */
+function verCarpetasDeCentros() {
+  var CENTROS = [
+    'BARRANCA GEO', 'BELLO RMX', 'CHIA RMX', 'FUNDACION', 'GEOCYCLE - AF NOBSA',
+    'MEDELLIN', 'MONDOÑEDO AGG', 'NOBSA - TUNJA RMX', 'NOBSA CEM',
+    'PUENTE ARANDA RMX', 'SIBATE RMX', 'TELEPORT CORP', 'TOCANCIPA TQC',
+    'TRANSCEM', 'VALLE'
+  ];
+  if (!soloId_(CARPETA_RAIZ_CENTROS)) {
+    Logger.log('CARPETA_RAIZ_CENTROS está vacía: todos los certificados irían a la carpeta general.');
+    return 'sin carpeta raiz';
+  }
+  var lineas = [], bien = 0;
+  CENTROS.forEach(function (c) {
+    var f = null;
+    try { f = carpetaDelCentro_(c); } catch (e) {}
+    if (f) { bien++; lineas.push('OK      ' + c + '  →  ' + f.getName()); }
+    else    { lineas.push('SIN CARPETA  ' + c + '  →  iría a la carpeta general'); }
+  });
+  var txt = 'Centros con carpeta propia: ' + bien + ' de ' + CENTROS.length + '\n\n' + lineas.join('\n');
+  Logger.log(txt);
+  return txt;
+}
+
 /** Devuelve la carpeta final, o null si no se configuró ninguna. */
 function carpetaFinal_() {
   var id = soloId_(ID_CARPETA_FINAL);
@@ -261,19 +391,28 @@ function carpetaFinal_() {
  * válido, así que un fallo aquí no puede tumbar el registro del examen. El
  * archivo se queda donde está y moverPendientes() lo recoge después.
  */
-function trasladar_(archivo) {
-  var destino;
-  try {
-    destino = carpetaFinal_();
-  } catch (e) {
-    console.error('No se pudo abrir la carpeta final: ' + e.message);
-    return 'carpeta final inaccesible';
+function trasladar_(archivo, centro) {
+  var destino = null;
+  /* Primero la carpeta del centro de trabajo; si no la hay, la general. Que
+     falle el reparto no puede costar el certificado. */
+  try { destino = carpetaDelCentro_(centro); } catch (e) {
+    console.error('No se pudo resolver la carpeta del centro: ' + e.message);
+  }
+  var porCentro = !!destino;
+  if (!destino) {
+    try {
+      destino = carpetaFinal_();
+    } catch (e) {
+      console.error('No se pudo abrir la carpeta final: ' + e.message);
+      return 'carpeta final inaccesible';
+    }
   }
   if (!destino) return 'sin carpeta final';
   try {
     archivo.moveTo(destino);
-    console.log('Certificado trasladado a ' + destino.getName());
-    return 'trasladado';
+    console.log('Certificado trasladado a ' + destino.getName() +
+                (porCentro ? ' (carpeta del centro)' : ' (carpeta general: el centro no tenia la suya)'));
+    return porCentro ? 'trasladado al centro' : 'trasladado a la general';
   } catch (e) {
     /* Lo mas comun: la cuenta que ejecuta no tiene permiso de escritura en esa
        carpeta, o la unidad compartida no admite mover archivos desde fuera. */
@@ -339,7 +478,7 @@ function guardarCertificado_(d) {
     /* Se traslada a la carpeta de Holcim si esta configurada. El enlace se lee
        DESPUES del traslado: el identificador no cambia al mover, pero asi se
        devuelve lo que de verdad quedo. */
-    trasladar_(archivo);
+    trasladar_(archivo, d.empresa);
     console.log('Certificado guardado: ' + archivo.getUrl());
     return archivo.getUrl();
   } catch (e) {
@@ -733,12 +872,12 @@ function probarTodo() {
 
       /* Donde acabo de verdad el PDF: es lo que dice si el traslado a la
          carpeta de Holcim funciono o si se quedo en la de origen. */
-      if (soloId_(ID_CARPETA_FINAL)) {
+      if (soloId_(ID_CARPETA_FINAL) || soloId_(CARPETA_RAIZ_CENTROS)) {
         try {
           var padres = archivo.getParents();
           var donde = padres.hasNext() ? padres.next() : null;
-          var fin = carpetaFinal_();
-          var ok = donde && fin && donde.getId() === fin.getId();
+          var esperada = carpetaDelCentro_(d.empresa) || carpetaFinal_();
+          var ok = donde && esperada && donde.getId() === esperada.getId();
           lineas.push('3b. Traslado a Holcim ...... ' + (ok ? 'OK' : 'NO se traslado'));
           lineas.push('    quedo en: ' + (donde ? donde.getName() : '(no se pudo leer)'));
           if (!ok) lineas.push('    revisa que la cuenta tenga permiso de ESCRITURA en esa carpeta');
@@ -863,6 +1002,12 @@ function olvidarLoRecordado() {
   var props = PropertiesService.getScriptProperties();
   props.deleteProperty('ID_HOJA');
   props.deleteProperty('ID_CARPETA');
+  /* Y las carpetas de cada centro, que tambien se recuerdan para no buscarlas
+     en Drive cada vez. */
+  var todas = props.getProperties();
+  Object.keys(todas).forEach(function (k) {
+    if (k.indexOf('CENTRO_') === 0) props.deleteProperty(k);
+  });
   Logger.log('Listo: el script ya no recuerda ninguna hoja ni carpeta.\n' +
              'Escribe las tuyas en ID_HOJA e ID_CARPETA_CERTIFICADOS antes de ' +
              'volver a ejecutar, o creará unas nuevas.');
