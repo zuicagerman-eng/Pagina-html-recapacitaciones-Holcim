@@ -593,8 +593,8 @@
   .mc-card{display:flex;flex-direction:column;align-items:center;text-align:center;
     background:var(--c);border-radius:12px;overflow:hidden;padding:12px 10px 0;
     box-shadow:0 6px 16px rgba(11,32,54,.16)}
-  .mc-card .mc-logo{width:100%;height:62px;display:flex;align-items:center;justify-content:center;margin-bottom:8px}
-  .mc-card .mc-nm{font-size:12.4px;font-weight:800;color:#fff;line-height:1.28;
+  .mc-card .mc-logo{width:100%;height:86px;display:flex;align-items:center;justify-content:center;margin-bottom:9px}
+  .mc-card .mc-nm{font-size:13.6px;font-weight:800;color:#fff;line-height:1.3;
     flex:1;display:flex;align-items:center;justify-content:center;padding-bottom:10px}
   /* franja inferior: es el remate de la tarjeta, igual que en el material impreso */
   .mc-card .mc-pie{width:100%;height:5px;background:linear-gradient(90deg,#8bbf3a,#1bb4e4);flex:none}
@@ -616,8 +616,8 @@
      al sello impreso. Desaparece sola en cuanto subas el logo de verdad. */
   .mc-sello{background:#fff;border-radius:9px;padding:6px 10px;display:flex;
     flex-direction:column;align-items:center;gap:3px;line-height:1}
-  .mc-logo .mc-sello svg{width:20px;height:20px;display:block}
-  .mc-sello b{font-size:11px;font-weight:800;letter-spacing:.02em;white-space:nowrap}
+  .mc-logo .mc-sello svg{width:26px;height:26px;display:block}
+  .mc-sello b{font-size:12px;font-weight:800;letter-spacing:.02em;white-space:nowrap}
   .slide.muy-apretado .mc-sello{padding:4px 8px}
   .slide.muy-apretado .mc-logo .mc-sello svg{width:16px;height:16px}
   .slide.muy-apretado .mc-sello b{font-size:10px}
@@ -626,10 +626,10 @@
 
   .mc-band{margin-top:11px;background:#fff;border-radius:12px;padding:9px 14px;
     display:flex;align-items:center;gap:16px;box-shadow:0 6px 16px rgba(11,32,54,.12)}
-  .mc-band .mc-band-t{font-size:13px;font-weight:800;color:#0b2036;flex:none;
+  .mc-band .mc-band-t{font-size:14px;font-weight:800;color:#0b2036;flex:none;
     border-right:2px solid #cdd8e4;padding-right:16px}
   .mc-band .mc-band-l{flex:1;display:flex;align-items:center;justify-content:space-around;gap:12px}
-  .mc-band .mc-mini{height:70px;flex:1;display:flex;align-items:center;justify-content:center}
+  .mc-band .mc-mini{height:92px;flex:1;display:flex;align-items:center;justify-content:center}
 
   .mc-logo svg,.mc-mini svg{width:100%;height:100%;display:block}
   .mc-logo.foto,.mc-mini.foto{background:none}
@@ -643,10 +643,10 @@
   @media(max-height:860px){
     .mc-iso,.mc-rec{gap:9px;margin-top:10px}
     .mc-card{padding:10px 8px 0}
-    .mc-card .mc-logo{height:52px;margin-bottom:6px}
-    .mc-card .mc-nm{font-size:11.8px}
+    .mc-card .mc-logo{height:74px;margin-bottom:8px}
+    .mc-card .mc-nm{font-size:13px}
     .mc-band{padding:7px 12px;margin-top:9px}
-    .mc-band .mc-mini{height:55px}}
+    .mc-band .mc-mini{height:78px}}
   .slide.apretado .mc-card .mc-logo{height:46px}
   .slide.apretado .mc-card .mc-nm{font-size:11.4px}
   .slide.apretado .mc-band .mc-mini{height:40px}
@@ -673,6 +673,18 @@
   .accgrid.parejo{align-items:stretch;grid-auto-rows:1fr}
   .accgrid.parejo .acc{display:flex;flex-direction:column}
   .accgrid.parejo .acc .acc-body{flex:1}
+  /* Estas cuatro llegan ya desplegadas (clase auto-si), asi que hay que
+     desactivarles dos cosas que 'acc-auto' trae pensadas para las rejillas de
+     ocho tarjetas:
+       · las tres columnas en pantalla ancha, aqui son dos;
+       · el reparto en dos columnas cuando la tarjeta tiene imagen, que coloca
+         un .tri.foto o un .ico.foto y aqui el icono es un .atico, asi que
+         dejaria el encabezado descuadrado. */
+  .accgrid.acc-auto.parejo{grid-template-columns:1fr 1fr;gap:12px}
+  .accgrid.parejo .acc.conFotos{display:flex;flex-direction:column;
+    grid-template-columns:none;padding:0}
+  .accgrid.parejo .acc.conFotos .acc-head{display:flex}
+  @media(max-width:720px){.accgrid.acc-auto.parejo{grid-template-columns:1fr}}
 
   /* ===== Icono de las responsabilidades en un A.T. (Modulo 6) =====
      Clase propia (atico) para no chocar con .tri ni .ico, que ya tienen
@@ -5765,9 +5777,9 @@
 <div class="wrap"><div class="eyebrow rv up">Responsabilidades en un accidente de trabajo</div>
 <h2 class="rv up" style="--d:1">Responsabilidades en un A.T.</h2>
 <p class="lead rv up" style="--d:2">Toca cada tipo de responsabilidad. 👆</p>
-<div class="accgrid parejo" style="margin-top:12px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#17868a"></span><span class="atico" data-foto="laboral(D103)"><svg viewBox="0 0 48 48" aria-hidden="true"><g fill="none" stroke="#17868a" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="21" cy="20" r="11"/><path d="M21 14v6l4 3"/><path d="M16 40c0-5 4-9 10-9s10 4 10 9"/><path d="M14 40h24"/></g></svg></span><h4>Laboral</h4><span class="chev">+</span></div><div class="acc-body"><div class="li"><span class="b"></span>Prestaciones de atención de la salud de los trabajadores.</div><div class="li"><span class="b"></span>Prestaciones económicas por incapacidad.</div><div class="li"><span class="b"></span>Pensión de invalidez.</div><div class="li"><span class="b"></span>Pensión de sobrevivencia.</div></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><span class="atico" data-foto="civil(D103)"><svg viewBox="0 0 48 48" aria-hidden="true"><g fill="none" stroke="#1877c4" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M24 9v30"/><path d="M14 39h20"/><path d="M10 16h28"/><path d="M10 16l-5 11h10z"/><path d="M38 16l-5 11h10z"/><circle cx="24" cy="12" r="2.4"/></g></svg></span><h4>Civil</h4><span class="chev">+</span></div><div class="acc-body"><div class="li"><span class="b"></span>Reparar daños, hasta 1000 SMMLV.</div><div class="li"><span class="b"></span><b>Daño moral</b> (dolor, angustia, sentimiento de pérdida).</div><div class="li"><span class="b"></span><b>Daño emergente</b> (gastos fúnebres, traslados y egresos que afectaron el patrimonio familiar).</div><div class="li"><span class="b"></span><b>Lucro cesante</b> (ganancia que deja de reportarse a consecuencia del accidente).</div></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#ef7d00"></span><span class="atico" data-foto="administrativa(D103)"><svg viewBox="0 0 48 48" aria-hidden="true"><g fill="none" stroke="#ef7d00" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="20" cy="16" r="7"/><path d="M7 39c0-7 6-12 13-12s13 5 13 12"/><path d="M33 12h9v9h-9z"/><path d="M35 16.5h5"/></g></svg></span><h4>Administrativa</h4><span class="chev">+</span></div><div class="acc-body"><div class="li"><span class="b"></span>Sanciones por autoridades: cierre temporal o permanente.</div><div class="li"><span class="b"></span>Sanción por autoridad: desde 400 hasta 1000 SMMLV.</div></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#e23b32"></span><span class="atico" data-foto="penal(D103)"><svg viewBox="0 0 48 48" aria-hidden="true"><g fill="none" stroke="#e23b32" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 10h28v28H10z"/><path d="M19 10v28M29 10v28"/><path d="M10 22h28"/><circle cx="34" cy="27" r="1.8"/></g></svg></span><h4>Penal</h4><span class="chev">+</span></div><div class="acc-body"><p><b>Culpa:</b> infracción al deber objetivo de cuidado; debió haberse previsto por ser previsible, o habiéndolo previsto confió en poder evitarlo.</p><p class="tdd"><b>Dolo:</b> cuando conoce los hechos constitutivos de la infracción penal y quiere su realización.</p><p class="tdd"><b>Preterintención:</b> a pesar de conocer que la conducta es ilegal o punible quiere cometer un acto que no sea de gravedad, pero que al final resulta mucho más grave de lo que pensó.</p><p class="tdd">El causante del accidente —gerente, jefe inmediato, compañero de trabajo o supervisor— <b>puede ser privado de su libertad</b>.</p></div></div></div>
+<div class="accgrid parejo auto-si" style="margin-top:12px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#17868a"></span><span class="atico" data-foto="laboral(D103)"><svg viewBox="0 0 48 48" aria-hidden="true"><g fill="none" stroke="#17868a" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="21" cy="20" r="11"/><path d="M21 14v6l4 3"/><path d="M16 40c0-5 4-9 10-9s10 4 10 9"/><path d="M14 40h24"/></g></svg></span><h4>Laboral</h4><span class="chev">+</span></div><div class="acc-body"><div class="li"><span class="b"></span>Prestaciones de atención de la salud de los trabajadores.</div><div class="li"><span class="b"></span>Prestaciones económicas por incapacidad.</div><div class="li"><span class="b"></span>Pensión de invalidez.</div><div class="li"><span class="b"></span>Pensión de sobrevivencia.</div></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><span class="atico" data-foto="civil(D103)"><svg viewBox="0 0 48 48" aria-hidden="true"><g fill="none" stroke="#1877c4" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M24 9v30"/><path d="M14 39h20"/><path d="M10 16h28"/><path d="M10 16l-5 11h10z"/><path d="M38 16l-5 11h10z"/><circle cx="24" cy="12" r="2.4"/></g></svg></span><h4>Civil</h4><span class="chev">+</span></div><div class="acc-body"><div class="li"><span class="b"></span>Reparar daños, hasta 1000 SMMLV.</div><div class="li"><span class="b"></span><b>Daño moral</b> (dolor, angustia, sentimiento de pérdida).</div><div class="li"><span class="b"></span><b>Daño emergente</b> (gastos fúnebres, traslados y egresos que afectaron el patrimonio familiar).</div><div class="li"><span class="b"></span><b>Lucro cesante</b> (ganancia que deja de reportarse a consecuencia del accidente).</div></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#ef7d00"></span><span class="atico" data-foto="administrativa(D103)"><svg viewBox="0 0 48 48" aria-hidden="true"><g fill="none" stroke="#ef7d00" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="20" cy="16" r="7"/><path d="M7 39c0-7 6-12 13-12s13 5 13 12"/><path d="M33 12h9v9h-9z"/><path d="M35 16.5h5"/></g></svg></span><h4>Administrativa</h4><span class="chev">+</span></div><div class="acc-body"><div class="li"><span class="b"></span>Sanciones por autoridades: cierre temporal o permanente.</div><div class="li"><span class="b"></span>Sanción por autoridad: desde 400 hasta 1000 SMMLV.</div></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#e23b32"></span><span class="atico" data-foto="penal(D103)"><svg viewBox="0 0 48 48" aria-hidden="true"><g fill="none" stroke="#e23b32" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 10h28v28H10z"/><path d="M19 10v28M29 10v28"/><path d="M10 22h28"/><circle cx="34" cy="27" r="1.8"/></g></svg></span><h4>Penal</h4><span class="chev">+</span></div><div class="acc-body"><p><b>Culpa:</b> infracción al deber objetivo de cuidado; debió haberse previsto por ser previsible, o habiéndolo previsto confió en poder evitarlo.</p><p class="tdd"><b>Dolo:</b> cuando conoce los hechos constitutivos de la infracción penal y quiere su realización.</p><p class="tdd"><b>Preterintención:</b> a pesar de conocer que la conducta es ilegal o punible quiere cometer un acto que no sea de gravedad, pero que al final resulta mucho más grave de lo que pensó.</p><p class="tdd">El causante del accidente —gerente, jefe inmediato, compañero de trabajo o supervisor— <b>puede ser privado de su libertad</b>.</p></div></div></div>
 </div></section>
-<section class="slide light" data-mod="6">
+<section class="slide light sinencoger" data-mod="6">
 <div class="wrap"><div class="eyebrow rv up">Mejora continua</div>
 <h2 class="rv up" style="--d:1">Mejora continua</h2>
 <div class="infobanner rv up" style="--d:2">El cumplimiento de los lineamientos internos y de la normativa nacional exigida para la industria en Colombia, así como la requerida a nivel mundial por organismos internacionales, nos ha permitido ser <b>certificados por ICONTEC</b>.</div>
@@ -5952,7 +5964,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-08-c";
+var VERSION_CURSO = "2026-09-08-d";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 52 en cada intento.
@@ -7415,6 +7427,10 @@ document.querySelectorAll('.pueBox').forEach(function(box){
      escalones antes de rendirse y dejar que se desplace. */
   function ajustar(s){
     if(!s || s.scrollTop > 0) return;   // ya la está leyendo: no le movemos el alto
+    /* Con 'sinencoger' la diapositiva renuncia al ajuste automatico: prefiere
+       verse grande y que haya que desplazarse antes que encogerlo todo. El
+       aviso de "Desliza para ver mas contenido" sigue saliendo igual. */
+    if(s.classList.contains('sinencoger')) return;
     /* La holgura es de un pixel, no de cuatro: con cuatro se daba por buena una
        diapositiva que igual sacaba barra de desplazamiento por dos o tres. */
     s.classList.remove('apretado','muy-apretado','ultra');
