@@ -2627,6 +2627,10 @@
     letter-spacing:.3px;padding:11px 40px 11px 16px;text-align:left;
     display:flex;align-items:center;min-height:58px;
     clip-path:polygon(0 0,calc(100% - 32px) 0,100% 50%,calc(100% - 32px) 100%,0 100%)}
+  /* Numero de orden delante del titulo. Va como elemento aparte para que el
+     titulo pueda seguir partiendose en dos renglones sin arrastrarlo. */
+  .rnum{flex:none;margin-right:9px;color:#97d13b;font-size:1.2em;line-height:1}
+  .apretado .rnum,.muy-apretado .rnum{margin-right:7px}
   /* El texto tambien arranca a la misma altura en las tres columnas. */
   .rpaso{justify-content:flex-start}
   .ruta3{align-items:stretch}
@@ -4155,9 +4159,9 @@
     <h2 class="rv up" style="--d:1">¡Así lo hacemos en Holcim!</h2>
     <div class="gline rv up" style="--d:2"></div>
     <div class="ruta3">
-      <div class="rpaso rv up" style="--d:0"><span class="rico"><svg viewBox="0 0 40 40"><rect x="6" y="8" width="28" height="19" rx="2.5"/><path d="M16 32h8M20 27v5"/><path d="M17 13l7 7-3 .6-.6 3z"/></svg></span><span class="rhilo"></span><span class="rflecha">Investigación<br>y análisis</span><p>Permanente consulta de fuentes productoras de normas jurídicas externas e internas, y estudio de aplicabilidad y acciones a ejecutar.</p></div>
-      <div class="rpaso rv up" style="--d:1"><span class="rico"><svg viewBox="0 0 40 40"><path d="M11 6h12l6 6v22H11z"/><path d="M23 6v6h6"/><circle cx="19" cy="22" r="5"/><path d="M23 26l4 4"/></svg></span><span class="rhilo"></span><span class="rflecha">Identificación</span><p>Alineación del requisito legal con los temas, peligros, aspectos o impactos según sus actividades y procesos.</p></div>
-      <div class="rpaso rv up" style="--d:2"><span class="rico"><svg viewBox="0 0 40 40"><rect x="9" y="8" width="19" height="25" rx="2.5"/><rect x="15" y="5" width="7" height="4.5" rx="1.2"/><path d="M13.5 15h3M13.5 21h3M13.5 27h3M19.5 15h6M19.5 21h4"/><path d="M29 17l4.5 4.5-7 7L23 30l1.5-3.5z"/></svg></span><span class="rhilo"></span><span class="rflecha">Revisión de<br>aplicación normativa</span><p>Acción de verificación por parte del responsable de la Compañía, para determinar la aplicación del requisito.</p></div>
+      <div class="rpaso rv up" style="--d:0"><span class="rico"><svg viewBox="0 0 40 40"><rect x="6" y="8" width="28" height="19" rx="2.5"/><path d="M16 32h8M20 27v5"/><path d="M17 13l7 7-3 .6-.6 3z"/></svg></span><span class="rhilo"></span><span class="rflecha"><b class="rnum">1.</b><span>Investigación<br>y análisis</span></span><p>Permanente consulta de fuentes productoras de normas jurídicas externas e internas, y estudio de aplicabilidad y acciones a ejecutar.</p></div>
+      <div class="rpaso rv up" style="--d:1"><span class="rico"><svg viewBox="0 0 40 40"><path d="M11 6h12l6 6v22H11z"/><path d="M23 6v6h6"/><circle cx="19" cy="22" r="5"/><path d="M23 26l4 4"/></svg></span><span class="rhilo"></span><span class="rflecha"><b class="rnum">2.</b><span>Identificación</span></span><p>Alineación del requisito legal con los temas, peligros, aspectos o impactos según sus actividades y procesos.</p></div>
+      <div class="rpaso rv up" style="--d:2"><span class="rico"><svg viewBox="0 0 40 40"><rect x="9" y="8" width="19" height="25" rx="2.5"/><rect x="15" y="5" width="7" height="4.5" rx="1.2"/><path d="M13.5 15h3M13.5 21h3M13.5 27h3M19.5 15h6M19.5 21h4"/><path d="M29 17l4.5 4.5-7 7L23 30l1.5-3.5z"/></svg></span><span class="rhilo"></span><span class="rflecha"><b class="rnum">3.</b><span>Revisión de<br>aplicación normativa</span></span><p>Acción de verificación por parte del responsable de la Compañía, para determinar la aplicación del requisito.</p></div>
     </div>
     <p class="avisogris rv up" style="--d:2">Ahora, tenemos la <b>Evaluación del Cumplimiento</b> y cómo calificar requisitos mediante acciones clave para garantizar su gestión adecuada.</p>
     <div class="normas dos" style="margin-top:16px">
@@ -4183,8 +4187,8 @@
     <div class="tabs3">
       <nav class="tabmenu3" aria-label="Familias de estándares">
         <button type="button" class="tabbtn on" data-vista="0">Gestión</button>
-        <button type="button" class="tabbtn" data-vista="1">Operativos (100)</button>
-        <button type="button" class="tabbtn" data-vista="2">Salud (200)</button>
+        <button type="button" class="tabbtn" data-vista="1">Críticos</button>
+        <button type="button" class="tabbtn" data-vista="2">Higiene</button>
       </nav>
       <div class="tabcont">
         <div class="vista on" data-vista="0"><div class="stdwrap" id="std0"></div></div>
@@ -5934,7 +5938,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-07-w";
+var VERSION_CURSO = "2026-09-07-x";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 56 en cada intento.
