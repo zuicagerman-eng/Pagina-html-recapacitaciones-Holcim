@@ -991,6 +991,20 @@ prueba con su enlace en *Vínculo* —bórrala a mano—.
 **Solo se ejecuta una vez.** Si se repite se planta sola, porque duplicaría las
 filas.
 
+### «You do not have permission to access the requested document»
+
+Es lo más probable la primera vez, y no significa que el enlace esté mal.
+
+El script corre con la **cuenta personal**, y la hoja de Holcim está en otra
+cuenta. Aunque tú veas las dos en tu navegador, el script solo es una de ellas.
+
+Se arregla en la hoja, no en el código: ábrela en Drive → **Compartir** → añade
+la cuenta personal (la del script) como **Editor**. Y vuelve a ejecutar
+`mudarLaHoja`.
+
+Para saber con qué cuenta corre exactamente, el propio aviso la nombra. Es la
+misma que ya usan los certificados.
+
 ### Lo que hace por dentro, por si algo sale raro
 
 `prepararHojaExistente(url)` — arregla los encabezados de una hoja que ya

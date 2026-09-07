@@ -223,6 +223,16 @@ function obtenerHoja_() {
          el propio script si se sigue de largo: ahi si significa que la hoja se
          borro. */
       if (soloId_(ID_HOJA)) {
+        /* Dos causas muy distintas dan aqui, y el mensaje de Google no las
+           separa: el enlace equivocado, o una hoja de otra cuenta que no esta
+           compartida con esta. Decir siempre "el enlace esta mal" manda a
+           revisar lo que ya estaba bien. */
+        if (esFaltaDePermiso_(e)) {
+          throw new Error(
+            'La hoja de ID_HOJA existe, pero ' + cuentaDelScript_() + ' no tiene ' +
+            'permiso para abrirla. Abrela en Drive, pulsa Compartir y da acceso de ' +
+            'EDITOR a esa cuenta. Detalle: ' + e.message);
+        }
         throw new Error(
           'ID_HOJA no corresponde a una hoja de calculo. Comprueba que sea el ' +
           'enlace de la HOJA (docs.google.com/spreadsheets/...) y no el de la ' +
@@ -1158,6 +1168,46 @@ function olvidarLoRecordado() {
   return 'olvidado';
 }
 
+/** ¿El error es "no tienes permiso" y no "no existe"? */
+function esFaltaDePermiso_(e) {
+  var m = String((e && e.message) || e).toLowerCase();
+  return m.indexOf('permission') >= 0 || m.indexOf('permiso') >= 0 ||
+         m.indexOf('access') >= 0 || m.indexOf('acceso') >= 0;
+}
+
+/** La cuenta con la que corre el script, para poder nombrarla en los avisos. */
+function cuentaDelScript_() {
+  try { return Session.getEffectiveUser().getEmail() || 'la cuenta del script'; }
+  catch (e) { return 'la cuenta del script'; }
+}
+
+/**
+ * Abre una hoja diciendo QUÉ pasa si no puede, en vez de soltar el mensaje
+ * de Google, que para el mismo texto tiene dos causas muy distintas.
+ * Devuelve la hoja, o null tras dejar el aviso en el registro.
+ */
+function abrirHoja_(url, comoSeLlama) {
+  var id = soloId_(url);
+  if (!id) { Logger.log('Falta la URL de ' + comoSeLlama + '.'); return null; }
+  try { return SpreadsheetApp.openById(id); }
+  catch (e) {
+    if (esFaltaDePermiso_(e)) {
+      Logger.log('NO SE PUDO ABRIR ' + comoSeLlama + '.\n\n' +
+                 'La hoja existe, pero este script corre con ' + cuentaDelScript_() +
+                 ' y esa cuenta no tiene acceso.\n\n' +
+                 'Abre la hoja en Drive → Compartir → añade ' + cuentaDelScript_() +
+                 ' como EDITOR, y vuelve a ejecutar.\n\n' +
+                 'Detalle de Google: ' + e.message);
+    } else {
+      Logger.log('NO SE PUDO ABRIR ' + comoSeLlama + '.\n' +
+                 'Comprueba que sea el enlace de la HOJA ' +
+                 '(docs.google.com/spreadsheets/...) y no el de una carpeta.\n' +
+                 'Detalle de Google: ' + e.message);
+    }
+    return null;
+  }
+}
+
 /**
  * MUDAR LA HOJA DE RESULTADOS — LA ÚNICA QUE HAY QUE EJECUTAR
  *
@@ -1184,9 +1234,22 @@ function mudarLaHoja() {
     return 'ya estaba hecha';
   }
 
+  /* Se comprueba el acceso a las DOS antes de tocar nada. Si la segunda no
+     abriera a mitad de camino, la primera se quedaria ya modificada. */
+  Logger.log('--- 0) comprobando que se pueden abrir las dos hojas ---');
+  var destino = abrirHoja_(ID_HOJA, 'la hoja de HOLCIM (ID_HOJA)');
+  if (!destino) return 'no se pudo abrir la hoja de Holcim';
+  var origen = abrirHoja_(HOJA_ANTERIOR, 'la hoja ANTERIOR (HOJA_ANTERIOR)');
+  if (!origen) return 'no se pudo abrir la hoja anterior';
+  Logger.log('Las dos abren bien.\n  Holcim:   ' + destino.getName() +
+             '\n  Anterior: ' + origen.getName());
+
   Logger.log('--- 1) preparando la hoja de Holcim ---');
   var r1 = prepararHojaExistente(ID_HOJA);
-  if (String(r1).indexOf('YA TIENE FILAS') >= 0) return r1;   // ya se explico solo, no se sigue
+  /* Cualquier tropiezo del paso 1 corta aqui: seguir al paso 2 con la hoja
+     de destino a medias es lo que convierte un aviso claro en un error feo. */
+  if (String(r1).indexOf('YA TIENE FILAS') >= 0) return r1;
+  if (r1 === 'inaccesible' || r1 === 'falta la hoja') return r1;
 
   Logger.log('--- 2) trayendo las filas de la hoja anterior ---');
   var r2 = copiarFilasDeHojaVieja(HOJA_ANTERIOR);
@@ -1215,12 +1278,8 @@ function mudarLaHoja() {
  *   prepararHojaExistente("https://docs.google.com/spreadsheets/d/1AbC.../edit")
  */
 function prepararHojaExistente(urlHoja) {
-  var id = soloId_(urlHoja);
-  if (!id) { Logger.log('Pásame la URL de la hoja de Holcim.'); return 'falta la hoja'; }
-
-  var ss;
-  try { ss = SpreadsheetApp.openById(id); }
-  catch (e) { Logger.log('No se pudo abrir esa hoja: ' + e.message); return 'inaccesible'; }
+  var ss = abrirHoja_(urlHoja, 'esa hoja');
+  if (!ss) return 'inaccesible';
 
   var hoja = ss.getSheetByName(PESTANA_RESUMEN);
   var creada = false;
@@ -1327,12 +1386,8 @@ function crearHojaEnHolcim(urlCarpeta) {
  * No borra nada de la hoja vieja. Si la ejecutas dos veces, duplicas filas.
  */
 function copiarFilasDeHojaVieja(urlHojaVieja) {
-  var id = soloId_(urlHojaVieja);
-  if (!id) { Logger.log('Pásame la URL de la hoja vieja.'); return 'falta la hoja'; }
-
-  var vieja;
-  try { vieja = SpreadsheetApp.openById(id); }
-  catch (e) { Logger.log('No se pudo abrir la hoja vieja: ' + e.message); return 'inaccesible'; }
+  var vieja = abrirHoja_(urlHojaVieja, 'la hoja vieja');
+  if (!vieja) return 'inaccesible';
   if (vieja.getId() === obtenerHoja_().getId()) { Logger.log('Esa es la hoja de ahora, no la vieja.'); return 'es la misma'; }
 
   var hv = vieja.getSheetByName(PESTANA_RESUMEN) || vieja.getSheets()[0];
