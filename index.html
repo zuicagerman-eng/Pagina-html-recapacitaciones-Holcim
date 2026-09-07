@@ -3557,10 +3557,10 @@
       <h2 class="rv up" style="--d:1">¿Cuál escenario tiene mayor riesgo?</h2>
       <p class="lead rv up" style="--d:2">Un colaborador debe pintar una pared. Elige y descubre por qué.</p>
       <div class="quiz rv up" style="--d:3;margin-top:22px" id="quiz">
-        <div class="opt" data-correct="1"><div class="optfoto" data-foto="escenarioA(D9)"></div><div class="tg">A</div><p>Sube y baja <b>10 veces al día</b> con una <b>escalera</b>.</p><div class="mark">✓</div></div>
-        <div class="opt" data-correct="0"><div class="optfoto" data-foto="escenarioB(D9)"></div><div class="tg">B</div><p>Sube y baja <b>2 veces al día</b> con un <b>andamio</b>.</p><div class="mark">✕</div></div>
+        <div class="opt" data-correct="0"><div class="optfoto" data-foto="escenarioA(D9)"></div><div class="tg">A</div><p>Sube y baja <b>2 veces al día</b> con un <b>andamio</b>.</p><div class="mark">✕</div></div>
+        <div class="opt" data-correct="1"><div class="optfoto" data-foto="escenarioB(D9)"></div><div class="tg">B</div><p>Sube y baja <b>10 veces al día</b> con una <b>escalera</b>.</p><div class="mark">✓</div></div>
       </div>
-      <div class="verdict" id="verdict">Hay <b>mayor riesgo en el escenario A</b>: subir con mayor frecuencia y mediante una escalera implica mayor exposición y mayor daño al caerse a distinto nivel.</div>
+      <div class="verdict" id="verdict">Hay <b>mayor riesgo en el escenario B</b>: subir con mayor frecuencia y mediante una escalera implica mayor exposición y mayor daño al caerse a distinto nivel.</div>
         </div>
         <div class="vista" data-vista="4">
 <div class="eyebrow rv up">Ejemplo</div>
@@ -5811,7 +5811,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-07-q";
+var VERSION_CURSO = "2026-09-07-r";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 56 en cada intento.
@@ -5957,8 +5957,11 @@ ponerLogo(document.getElementById('barLogo'),   LOGO_BARRA,   'imagenes/logo-bar
    Dos cuidados importantes:
     · Se lee ANTES de que el curso empiece a guardar, porque el arranque
       escribiría "paso 1" encima de lo que había.
-    · Se guarda el número de diapositivas: si el curso cambia de tamaño el
-      avance viejo se descarta, porque las posiciones ya no coincidirían.
+    · Se guarda la CLAVE de cada diapositiva (módulo + título), no su posición.
+      Así, cuando el curso se actualiza y se añaden o quitan diapositivas,
+      quien ya lo había empezado vuelve justo donde iba en vez de perder el
+      avance. Si una diapositiva ya no existe, solo se pierde esa; el resto
+      del avance se conserva.
    Si el navegador bloquea el almacenamiento (incógnito, políticas de la
    empresa), el curso funciona igual, solo que sin recordar. */
 var CLAVE_AVANCE = 'hse001_avance';
@@ -5976,10 +5979,12 @@ function guardarAvance(){
       var reqs = s.querySelectorAll('.req'); if(!reqs.length) return;
       var lista = [];
       Array.prototype.forEach.call(reqs, function(r, k){ if(r.classList.contains('done')) lista.push(k); });
-      if(lista.length) hechas[i] = lista;
+      if(lista.length) hechas[claveDe(i)] = lista;
     });
     localStorage.setItem(CLAVE_AVANCE, JSON.stringify({
+      v: 2,
       total: slides.length, idx: idx, maxUnlocked: maxUnlocked,
+      clave: claveDe(idx), claveMax: claveDe(maxUnlocked),
       hechas: hechas, aprobado: !!window.EXAMEN_APROBADO,
       fecha: new Date().toISOString()
     }));
@@ -5998,12 +6003,31 @@ document.addEventListener('DOMContentLoaded', function(){
   var nota       = document.getElementById('wnota');
   if(!caja || !btnIniciar) return;
 
-  // solo sirve si es de este mismo curso y no arranca en la primera diapositiva
-  var hay = AVANCE && AVANCE.total === slides.length && AVANCE.idx > 0;
+  /* Se traduce lo guardado a posiciones de HOY. La clave manda; la posicion
+     guardada solo se usa como respaldo, para los avances de la version vieja
+     que aun no llevaban clave. */
+  function posicion(clave, respaldo){
+    var i = clave ? indiceDe(clave) : -1;
+    if(i >= 0) return i;
+    return Math.max(0, Math.min(respaldo || 0, slides.length - 1));
+  }
+  var reIdx = 0, reMax = 0, reHechas = {};
+  if(AVANCE){
+    reIdx = posicion(AVANCE.clave, AVANCE.idx);
+    reMax = Math.max(posicion(AVANCE.claveMax, AVANCE.maxUnlocked), reIdx);
+    Object.keys(AVANCE.hechas || {}).forEach(function(k){
+      /* v2 guarda por clave; los avances viejos guardaban por posicion. */
+      var i = /^\d+$/.test(k) ? Number(k) : indiceDe(k);
+      if(i >= 0 && i < slides.length) reHechas[i] = AVANCE.hechas[k];
+    });
+  }
+
+  // solo sirve si no arranca en la primera diapositiva
+  var hay = AVANCE && reIdx > 0;
 
   if(hay){
     btnSeguir.style.display = '';
-    btnSeguir.textContent = 'Continuar en el paso ' + (AVANCE.idx + 1) + ' de ' + slides.length;
+    btnSeguir.textContent = 'Continuar en el paso ' + (reIdx + 1) + ' de ' + slides.length;
     btnIniciar.textContent = 'Empezar de nuevo';
     btnIniciar.classList.add('secundario');
     nota.style.display = '';
@@ -6025,14 +6049,14 @@ document.addEventListener('DOMContentLoaded', function(){
 
   btnSeguir.addEventListener('click', function(){
     caja.classList.add('hide');
-    maxUnlocked = Math.min(AVANCE.maxUnlocked || 0, slides.length - 1);
-    Object.keys(AVANCE.hechas || {}).forEach(function(i){
+    maxUnlocked = reMax;
+    Object.keys(reHechas).forEach(function(i){
       var reqs = slides[i] && slides[i].querySelectorAll('.req'); if(!reqs) return;
-      AVANCE.hechas[i].forEach(function(k){ if(reqs[k]) reqs[k].classList.add('done'); });
+      reHechas[i].forEach(function(k){ if(reqs[k]) reqs[k].classList.add('done'); });
     });
     if(AVANCE.aprobado) window.EXAMEN_APROBADO = true;
     avanceListo = true;
-    goTo(Math.min(AVANCE.idx || 0, maxUnlocked), 1);
+    goTo(Math.min(reIdx, maxUnlocked), 1);
     chrome();
   });
 
@@ -6157,6 +6181,23 @@ var MODULOS = {
  'EX':{c:'#e23b32', t:'Examen final'}
 };
 function modDe(i){ return slides[i].getAttribute('data-mod') || '1'; }
+/* ====== CLAVE DE CADA DIAPOSITIVA ======
+   Es el modulo mas el titulo. Sirve para reconocer una diapositiva aunque el
+   curso cambie de tamano: si se anaden o quitan diapositivas, la posicion se
+   corre pero la clave sigue siendo la misma, y con ella se puede devolver a la
+   persona justo donde iba. Si dos comparten titulo dentro del mismo modulo se
+   les anade un numero para distinguirlas. */
+var CLAVES = (function(){
+  var vistas = {}, lista = [];
+  for(var i = 0; i < slides.length; i++){
+    var base = modDe(i) + '|' + tituloDe(i);
+    vistas[base] = (vistas[base] || 0) + 1;
+    lista.push(vistas[base] > 1 ? base + '#' + vistas[base] : base);
+  }
+  return lista;
+})();
+function claveDe(i){ return CLAVES[i] || ''; }
+function indiceDe(clave){ var i = CLAVES.indexOf(clave); return i < 0 ? -1 : i; }
 function infoMod(m){ return MODULOS[m] || MODULOS['1']; }
 function tituloDe(i){
   var h = slides[i].querySelector('h2, .hero-title');
