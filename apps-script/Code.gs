@@ -57,21 +57,21 @@ var ID_CARPETA_FINAL = "";
       Cuando termines, ejecuta verCarpetasDeCentros() para ver los quince de
       una vez antes de confiar en el reparto. */
 var CARPETAS_POR_CENTRO = {
-  'BARRANCA GEO'        : "",
-  'BELLO RMX'           : "",
-  'CHIA RMX'            : "",
-  'FUNDACION'           : "",
-  'GEOCYCLE - AF NOBSA' : "",
-  'MEDELLIN'            : "",
-  'MONDOÑEDO AGG'       : "",
-  'NOBSA - TUNJA RMX'   : "",
-  'NOBSA CEM'           : "",
-  'PUENTE ARANDA RMX'   : "",
-  'SIBATE RMX'          : "",
-  'TELEPORT CORP'       : "",
-  'TOCANCIPA TQC'       : "",
-  'TRANSCEM'            : "",
-  'VALLE'               : ""
+  'BARRANCA GEO'        : "https://drive.google.com/drive/u/0/folders/1l-Z_FIYFWGGUDWkxwIjsvwzBgKShU3-r",
+  'BELLO RMX'           : "https://drive.google.com/drive/u/0/folders/16NoHm433BSUJxUGyV1Gf-7jEyN5mxFGO",
+  'CHIA RMX'            : "https://drive.google.com/drive/u/0/folders/1KUAEz4hVryZUpyhD5CvfGZHbUDpNtDzX",
+  'FUNDACION'           : "https://drive.google.com/drive/u/0/folders/15JmD_wRyfYkcKEhyoPqKNiRaU5irz6A0",
+  'GEOCYCLE - AF NOBSA' : "https://drive.google.com/drive/u/0/folders/1OOo6woFAin4LFgq_DCUfjfp2rgffxRoH",
+  'MEDELLIN'            : "",   // sin carpeta propia: va a CARPETA_OTROS
+  'MONDOÑEDO AGG'       : "https://drive.google.com/drive/u/0/folders/1PHWHu6-H7q6ufIXN5IEB_lu90i0ITmM8",
+  'NOBSA - TUNJA RMX'   : "https://drive.google.com/drive/u/0/folders/1NmVthMiObcRU3B4egnQ5H1jsIPYQlrFI",
+  'NOBSA CEM'           : "https://drive.google.com/drive/u/0/folders/1XVxdrRywd8IDVnEbLyT7TK9lXxWEejN2",
+  'PUENTE ARANDA RMX'   : "https://drive.google.com/drive/u/0/folders/1EO5EjpaKX3pzosKTyr7C8_APgmQJacuR",
+  'SIBATE RMX'          : "https://drive.google.com/drive/u/0/folders/1_Z9-GSENZyoHd4Jvs3xQ7YD1nUHzYsSY",
+  'TELEPORT CORP'       : "https://drive.google.com/drive/u/0/folders/1sHm47PoqY5OqdolLj8Dj0tfZXACEpe6F",
+  'TOCANCIPA TQC'       : "https://drive.google.com/drive/u/0/folders/1jJfv_s0nWXRGUCBuG-MnGiZiHYutb-db",
+  'TRANSCEM'            : "https://drive.google.com/drive/u/0/folders/1C_4kIHfPhFQK7qWM_jTGA6iYchvc7OlB",
+  'VALLE'               : "https://drive.google.com/drive/u/0/folders/1zMKQRGU3DoHxPYo4O-7Mqmd7eF1j_tXh"
 };
 
 /* 6) LOS QUE NO SON DE PLANTA
@@ -349,8 +349,19 @@ function destinoDelCertificado_(d) {
   }
 
   var f = carpetaDelCentro_(centro);
-  return f ? { carpeta: f, motivo: 'centro ' + centro }
-           : { carpeta: null, motivo: 'el centro "' + centro + '" no tiene carpeta' };
+  if (f) return { carpeta: f, motivo: 'centro ' + centro };
+
+  /* Un centro sin carpeta propia —hoy MEDELLIN, mañana una planta nueva— se
+     trata como los que no son de planta: a CARPETA_OTROS. Es preferible a la
+     carpeta general de repuesto, que es para fallos, no para casos previstos. */
+  var idOtros = soloId_(CARPETA_OTROS);
+  if (idOtros) {
+    try {
+      return { carpeta: DriveApp.getFolderById(idOtros),
+               motivo: 'el centro "' + centro + '" no tiene carpeta propia' };
+    } catch (e) { console.error('CARPETA_OTROS no se pudo abrir: ' + e.message); }
+  }
+  return { carpeta: null, motivo: 'el centro "' + centro + '" no tiene carpeta y CARPETA_OTROS esta vacia' };
 }
 
 /**
