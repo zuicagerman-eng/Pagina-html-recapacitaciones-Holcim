@@ -969,67 +969,45 @@ vez de `Centro_Trabajo`, el script no falla: añade una columna nueva al final y
 la tuya se queda vacía para siempre, sin avisar. Y a ojo no se ve: los
 nombres se parecen demasiado. Por eso hay una función que los revisa.
 
-### Si la hoja de Holcim ya está creada
+### Los dos pasos
 
-Es el caso normal: la hoja ya la hiciste tú. No hace falta crear otra. Solo hay
-que dejarle los encabezados exactos y decirle al script que use esa.
-
-En el editor, al final del archivo, escribe esta función auxiliar —es solo para
-poder pasarle la URL— y ejecútala:
+Arriba del `Code.gs`, rellena estas dos casillas:
 
 ```js
-function unaVez() {
-  prepararHojaExistente("https://docs.google.com/spreadsheets/d/LA_DE_HOLCIM/edit");
-}
+var ID_HOJA       = "URL de la hoja de HOLCIM";     // punto 2
+var HOJA_ANTERIOR = "URL de la hoja PERSONAL";      // punto 7
 ```
 
-Deja la pestaña `Resultados` con las 14 columnas, en negrita y con la primera
-fila congelada, y te dice qué había antes. Si la hoja **ya tiene filas
-escritas** no toca nada: te enseña los encabezados que no cuadran y lo decides
-tú, porque reescribirlos ahí movería los datos de sitio.
+Y ejecuta **`mudarLaHoja`** desde el desplegable de funciones. Ya está.
 
-Después pega esa URL en `ID_HOJA`, arriba del todo del `Code.gs`:
+Hace las dos cosas de una: deja la hoja de Holcim con la pestaña `Resultados`
+y los 14 encabezados exactos, y le trae las filas de la personal. Se hace en
+una sola función porque por separado es fácil hacerlo en el orden equivocado.
 
-```js
-var ID_HOJA = "https://docs.google.com/spreadsheets/d/....../edit";
-```
+Cuando termine, vuelve a dejar `HOJA_ANTERIOR = ""` y ejecuta `probarTodo`: el
+paso 1 tiene que mostrar la hoja **de Holcim**, y el paso 5 deja una fila de
+prueba con su enlace en *Vínculo* —bórrala a mano—.
 
-Y ejecuta **`olvidarLoRecordado()`** una vez. Si no, el script sigue usando la
-hoja vieja que tiene apuntada en sus propiedades y el cambio no se nota.
+**Solo se ejecuta una vez.** Si se repite se planta sola, porque duplicaría las
+filas.
 
-### Traer lo que ya hay en la hoja vieja
+### Lo que hace por dentro, por si algo sale raro
 
-Con la URL de la hoja **personal**, una sola vez:
+`prepararHojaExistente(url)` — arregla los encabezados de una hoja que ya
+existe. Si esa hoja **ya tiene filas escritas** no toca nada: te enseña cuáles
+no cuadran y lo decides tú, porque reescribirlos con datos debajo movería los
+valores de columna.
 
-```js
-function unaVez() {
-  copiarFilasDeHojaVieja("https://docs.google.com/spreadsheets/d/LA_VIEJA/edit");
-}
-```
+`copiarFilasDeHojaVieja(url)` — copia las filas emparejando por **nombre** de
+columna, así que no importa que estuvieran en otro orden. Traduce sola las que
+cambiaron —`Empresa` de antes era el centro de trabajo y hoy se llama
+`Centro_Trabajo`, porque `Empresa` pasó a ser la razón social del contratista—
+y vuelve a dejar los enlaces de *Vínculo* como enlaces, no como texto. No borra
+nada de la hoja vieja.
 
-Copia las filas emparejando por nombre de columna, así que no importa que en la
-hoja vieja estuvieran en otro orden. Traduce sola los nombres que cambiaron
-—`Empresa` de antes era el centro de trabajo y ahora se llama `Centro_Trabajo`,
-porque `Empresa` pasó a ser la razón social del contratista— y vuelve a dejar
-los enlaces de la columna *Vínculo* como enlaces, no como texto.
-
-No toca la hoja vieja. **Si la ejecutas dos veces, duplicas las filas**: si te
-pasa, deshaz con Ctrl+Z en la hoja nueva.
-
-### Comprobar y limpiar
-
-Ejecuta `probarTodo`. El paso 1 tiene que mostrar la URL de la hoja **de
-Holcim**, y el paso 5 tiene que dejar una fila de prueba con su enlace en
-*Vínculo*. Bórrala a mano después.
-
-Y borra la función `unaVez` que creaste, para no ejecutarla sin querer.
-
-### Si prefieres empezar de cero
-
-`crearHojaEnHolcim("URL de la carpeta")` crea una hoja nueva ya con las
-columnas correctas dentro de la carpeta que le digas. Sirve si la que tienes
-quedó con datos de prueba o con los encabezados revueltos y prefieres no
-arreglarla.
+`crearHojaEnHolcim(urlCarpeta)` — crea una hoja nueva, ya con las columnas
+correctas, dentro de la carpeta que le digas. Solo sirve si prefieres empezar
+de cero.
 
 ### Los enlaces de los PDF
 

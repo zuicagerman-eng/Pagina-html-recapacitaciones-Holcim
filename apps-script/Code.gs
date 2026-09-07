@@ -108,6 +108,11 @@ var CARPETA_RAIZ_CENTROS = "";
       carpeta del centro que sí encontró. */
 var SUBRUTA_CENTRO = "";
 
+/* 7) SOLO PARA LA MUDANZA DE LA HOJA — la hoja ANTERIOR, la personal.
+      Pégala aquí, ejecuta mudarLaHoja() UNA VEZ y vuelve a dejarla vacía.
+      Copia sus filas a la hoja del punto 2. No borra nada de la vieja. */
+var HOJA_ANTERIOR = "";
+
 /* ─── de aquí para abajo no hace falta tocar nada ─── */
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -1140,6 +1145,7 @@ function olvidarLoRecordado() {
   var props = PropertiesService.getScriptProperties();
   props.deleteProperty('ID_HOJA');
   props.deleteProperty('ID_CARPETA');
+  props.deleteProperty('MUDANZA_HECHA');   // el seguro contra repetir mudarLaHoja
   /* Y las carpetas de cada centro, que tambien se recuerdan para no buscarlas
      en Drive cada vez. */
   var todas = props.getProperties();
@@ -1150,6 +1156,44 @@ function olvidarLoRecordado() {
              'Escribe las tuyas en ID_HOJA e ID_CARPETA_CERTIFICADOS antes de ' +
              'volver a ejecutar, o creará unas nuevas.');
   return 'olvidado';
+}
+
+/**
+ * MUDAR LA HOJA DE RESULTADOS — LA ÚNICA QUE HAY QUE EJECUTAR
+ *
+ * Deja la hoja de ID_HOJA lista y le trae las filas de HOJA_ANTERIOR. Se hace
+ * en un solo paso a propósito: los dos trozos por separado son fáciles de
+ * hacer en el orden equivocado.
+ *
+ * Antes de ejecutarla, arriba:
+ *   ID_HOJA        = la hoja de Holcim, la nueva
+ *   HOJA_ANTERIOR  = la hoja personal, la de siempre
+ *
+ * Se ejecuta UNA VEZ. Si se intenta repetir, se planta: duplicaría las filas.
+ */
+function mudarLaHoja() {
+  var props = PropertiesService.getScriptProperties();
+  if (!soloId_(ID_HOJA))       { Logger.log('Falta ID_HOJA: pega arriba la URL de la hoja de Holcim.'); return 'falta ID_HOJA'; }
+  if (!soloId_(HOJA_ANTERIOR)) { Logger.log('Falta HOJA_ANTERIOR: pega arriba la URL de la hoja personal.'); return 'falta HOJA_ANTERIOR'; }
+  if (soloId_(ID_HOJA) === soloId_(HOJA_ANTERIOR)) { Logger.log('Las dos URL son la misma hoja. Revísalas.'); return 'son la misma'; }
+
+  var yaHecha = props.getProperty('MUDANZA_HECHA');
+  if (yaHecha === soloId_(HOJA_ANTERIOR)) {
+    Logger.log('Esta mudanza YA se hizo. No se repite porque duplicaría las filas.\n' +
+               'Si de verdad hace falta rehacerla, ejecuta olvidarLoRecordado() primero.');
+    return 'ya estaba hecha';
+  }
+
+  Logger.log('--- 1) preparando la hoja de Holcim ---');
+  var r1 = prepararHojaExistente(ID_HOJA);
+  if (String(r1).indexOf('YA TIENE FILAS') >= 0) return r1;   // ya se explico solo, no se sigue
+
+  Logger.log('--- 2) trayendo las filas de la hoja anterior ---');
+  var r2 = copiarFilasDeHojaVieja(HOJA_ANTERIOR);
+
+  props.setProperty('MUDANZA_HECHA', soloId_(HOJA_ANTERIOR));
+  Logger.log('--- listo ---\nAhora vuelve a dejar HOJA_ANTERIOR = "" y ejecuta probarTodo.');
+  return r2;
 }
 
 /**
