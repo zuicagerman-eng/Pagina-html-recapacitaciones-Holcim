@@ -43,7 +43,20 @@
   .slide.dark{background:radial-gradient(900px 520px at 80% 6%,rgba(27,180,228,.15),transparent 60%),radial-gradient(760px 520px at 4% 96%,rgba(151,209,59,.13),transparent 55%),var(--navy);color:#fff}
   .slide.light{background:var(--light);color:var(--ink)}
   .wrap{width:100%;max-width:1080px;margin:auto}
-  .eyebrow{display:inline-block;font-size:13.5px;font-weight:800;letter-spacing:2.2px;text-transform:uppercase;
+  /* Fila del rotulo. Cuando el .wrap es una columna flexible, el rotulo y la
+     insignia NUEVO eran dos hijos sueltos y la insignia se llevaba un renglon
+     entero. Metidos en esta fila se quedan siempre uno al lado del otro. */
+  /* En la portada el rotulo es el mas largo del curso y la columna es
+     estrecha: a tamano completo se parte en dos renglones y empuja la
+     insignia abajo. Alli se deja algo menor para que quepa de una linea. */
+  .heroTxt .eyebrow{font-size:15.5px;letter-spacing:1px}
+  @media(max-height:900px){.heroTxt .eyebrow{font-size:15px;letter-spacing:1px}}
+  .rotfila{display:flex;align-items:center;flex-wrap:wrap;flex:none}
+  .rotfila>.eyebrow{margin-bottom:0}
+  .rotfila{margin-bottom:12px}
+  @media(max-height:900px){.rotfila{margin-bottom:8px}}
+  .slide.ultra .rotfila{margin-bottom:6px}
+  .eyebrow{display:inline-block;font-size:16.5px;font-weight:800;letter-spacing:2.4px;text-transform:uppercase;
     background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:12px}
   h1{font-size:clamp(30px,5.2vw,58px);line-height:1.04;font-weight:800;letter-spacing:-.5px}
   h2{font-size:clamp(22px,3.5vw,38px);line-height:1.12;font-weight:800;letter-spacing:-.3px}
@@ -177,7 +190,7 @@
   .vista{display:none}
   .vista.on{display:block}
   /* Dentro de una vista el título ya no necesita tanto aire */
-  .vista>.eyebrow{margin-top:0}
+  .vista>.eyebrow,.vista>.rotfila>.eyebrow{margin-top:0}
   .vista h2{font-size:27px}
   @media(max-height:900px){.vista h2{font-size:24px}}
   /* El video se ajusta al alto disponible para que la vista quepa sin scroll */
@@ -726,7 +739,7 @@
      sistema) todavia quedaban cuatro diapositivas con recorrido oculto. Aqui se
      aprieta lo que faltaba: rotulo, avisos, tarjetas, fichas y la fila de PDF. */
   .slide.ultra{padding-top:12px;padding-bottom:10px}
-  .slide.ultra .eyebrow{font-size:11px;letter-spacing:1.6px;margin-bottom:6px}
+  .slide.ultra .eyebrow{font-size:13px;letter-spacing:1.8px;margin-bottom:6px}
   .slide.ultra h2{font-size:19.5px}
   .slide.ultra .lead{font-size:11.9px;margin-top:2px}
   .slide.ultra .lead[style*="margin-top"]{margin-top:9px!important}
@@ -749,6 +762,10 @@
   .slide.ultra .wbwrap{gap:18px;margin-top:10px}
   .slide.ultra .wbring{width:min(250px,70vw)}
   .slide.ultra .mediaBox img,.slide.ultra .mediaBox video{max-height:min(38vh,300px)}
+  /* En el escalon mas apretado la ilustracion suelta se limita ademas por alto:
+     iba mandada por el ancho y en pantallas de 720 px dejaba el aviso del pie
+     cortado. Solo aplica cuando la diapositiva ya no cabe de otra forma. */
+  .slide.ultra .mediaBox.plain img,.slide.ultra .mediaBox.plain video{max-height:158px}
   .slide.ultra .panel,.slide.ultra .card-center{padding:15px 16px}
   .slide.ultra .two{gap:14px}
   .slide.ultra .acc-body p,.slide.ultra .acc-body .li,
@@ -3132,7 +3149,7 @@
     :root{--gap:12px; --footer:66px; --bar2:52px}
     .slide{padding-top:20px;padding-bottom:20px}
     h2{font-size:clamp(20px,2.7vw,29px)}
-    .eyebrow{font-size:12.5px;letter-spacing:1.8px;margin-bottom:8px}
+    .eyebrow{font-size:15px;letter-spacing:2px;margin-bottom:8px}
     .lead{font-size:14px;margin-top:8px;line-height:1.5}
     .infobanner{padding:11px 16px;font-size:13px;margin-top:10px}
     .banner,.warn,.authbanner{padding:11px 16px;font-size:13px;margin-top:12px}
@@ -5917,7 +5934,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-07-v";
+var VERSION_CURSO = "2026-09-07-w";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 56 en cada intento.
@@ -6365,7 +6382,13 @@ var pipEls = [], pipFlags = [];
     tag.setAttribute('style', '--d:1');
     tag.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true">' +
       '<path d="M12 1.8l2.5 6 6 2.5-6 2.5-2.5 6-2.5-6-6-2.5 6-2.5z"/></svg>Nuevo';
-    rot.insertAdjacentElement('afterend', tag);
+    /* Van juntos dentro de una fila: si el .wrap es una columna flexible,
+       sueltos cada uno ocuparia su propio renglon. */
+    var fila = document.createElement('div');
+    fila.className = 'rotfila';
+    rot.parentNode.insertBefore(fila, rot);
+    fila.appendChild(rot);
+    fila.appendChild(tag);
   });
 })();
 
