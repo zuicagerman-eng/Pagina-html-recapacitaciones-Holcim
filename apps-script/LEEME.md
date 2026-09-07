@@ -355,3 +355,66 @@ Cosas que conviene saber:
   vigilarlo si algún día se citan más de 100 personas el mismo día.
 - Si prefieres apagarla, borra el bloque `ENCUESTA` de `index.html` o cambia
   `ENCUESTA.pedir(function(){ … })` por el contenido de esa función.
+
+---
+
+## Poner al día el script (y por qué hoy el enlace no es un PDF)
+
+En la hoja, la columna **Vínculo** trae la dirección del curso
+(`.../index.html`) en vez del enlace al PDF, y la carpeta de Drive está vacía.
+Las dos cosas son el mismo síntoma: **el despliegue publicado está corriendo
+una versión vieja del script**, anterior a que se le añadiera lo de Drive.
+
+Cuando el script no consigue guardar el PDF, deja en la columna la dirección
+desde donde se presentó el examen, que es el respaldo. Por eso el enlace lleva
+a la reinducción y no a un archivo.
+
+Editar el código en el editor **no cambia lo que está publicado**. Apps Script
+sirve la *versión* que elegiste al implementar, así que hay que publicar una
+versión nueva.
+
+### Paso a paso
+
+1. Abre el proyecto de Apps Script.
+2. Copia el contenido de `apps-script/Code.gs` de este repositorio y pégalo
+   encima de todo lo que haya en `Código.gs`. **Reemplaza todo, no lo pegues
+   al final.**
+3. Vuelve a poner tus dos valores, que el pegado se lleva por delante:
+   - `var CORREO_REPORTES = "german.zuica@holcim.com";`
+   - `var ID_CARPETA_CERTIFICADOS = "1LExNIvC0PP0CSRVn79bg1m4yPfdvXJ4l";`
+     (sirve igual el identificador suelto o la URL completa de la carpeta)
+4. Guarda (💾).
+5. Ejecuta la función **`probarTodo`** desde el editor y mira el registro.
+   Hace el recorrido completo con una persona inventada —fila en la hoja, PDF
+   en Drive y copia por correo— y después borra la fila y el PDF de prueba.
+   Si algo falla, el mensaje dice en qué paso.
+   La primera vez Google pedirá autorización: acéptala.
+6. **Implementar → Administrar implementaciones → ✏️ (editar) → Versión:
+   «Versión nueva» → Implementar.**
+   Este es el paso que faltaba. Si creas una implementación distinta en vez de
+   editar la que ya existe, cambia la URL `/exec` y habría que actualizar
+   `REPORTE_URL` en `index.html`; editando la que ya está, la URL no cambia.
+7. Comprueba que la línea final de `probarTodo` (la URL `/exec`) sea idéntica
+   a `REPORTE_URL` en `index.html`.
+
+### Qué cambia cuando quede publicado
+
+- El PDF del certificado se guarda en **Certificados Reinducciones** y la
+  columna **Vínculo** pasa a llevar el enlace a ese archivo, como hipervínculo.
+- Llega además **una copia del PDF por correo** a `CORREO_REPORTES` —el mismo
+  buzón de los reportes de problemas y de la encuesta—, con el asunto
+  `Certificado HSE-001 · Nombre · APROBADO`.
+
+### La copia por correo (segunda ruta)
+
+Es un respaldo por si Drive falla, se llena la cuota o alguien borra la carpeta
+sin querer. Si el PDF **no** se pudo guardar en Drive, el correo lo dice
+expresamente, para que sepas que esa copia es la única que queda.
+
+Si un día quieres apagarla, pon `COPIA_CERTIFICADO_CORREO = false`.
+
+**Cuota de correo:** una cuenta gratuita permite 100 destinatarios al día.
+Ahora cada examen aprobado gasta uno, más otro si la persona responde la
+encuesta de satisfacción: hasta 2 por persona. Con unas 100 personas al mes
+(≈3 al día) sobra de largo, pero si algún día citas a más de 50 el mismo día,
+conviene apagar la copia por correo ese día.

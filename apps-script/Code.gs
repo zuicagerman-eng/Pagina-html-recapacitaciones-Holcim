@@ -208,6 +208,67 @@ function guardarCertificado_(d) {
   }
 }
 
+/**
+ * SEGUNDA RUTA DE SEGURIDAD
+ *
+ * Manda una copia del certificado al mismo correo donde llegan los reportes de
+ * problemas y la encuesta de satisfacción (CORREO_REPORTES). Así, si un día
+ * Drive falla, se llena la cuota o alguien borra la carpeta por error, el PDF
+ * sigue existiendo en el buzón.
+ *
+ * Nunca interrumpe nada: si el correo falla, el resultado del examen ya quedó
+ * guardado en la hoja y el certificado ya se descargó en el equipo de la
+ * persona. El fallo queda anotado en el registro de Ejecuciones.
+ *
+ * OJO CON LA CUOTA: una cuenta gratuita permite 100 destinatarios al día, y
+ * ahora cada examen aprobado gasta uno (más otro si la persona responde la
+ * encuesta). Con el ritmo previsto —unas 100 personas al mes— sobra de largo.
+ * Si algún día se cita a mucha gente el mismo día, pon COPIA_CERTIFICADO_CORREO
+ * en false y quedará solo la copia de Drive.
+ */
+var COPIA_CERTIFICADO_CORREO = true;
+
+function enviarCopiaCertificado_(d, enlaceDrive) {
+  if (!COPIA_CERTIFICADO_CORREO) return 'apagada';
+  if (!d || !d.certificado) return 'sin PDF';
+  if (!CORREO_REPORTES) return 'sin correo configurado';
+  try {
+    var bytes  = Utilities.base64Decode(d.certificado);
+    var nombre = 'Certificado HSE-001 - ' + (d.nombre || 'Sin nombre') +
+                 ' - ' + (d.cedula || 's-c') + '.pdf';
+    var blob   = Utilities.newBlob(bytes, 'application/pdf', nombre);
+
+    var cuerpo =
+      'Copia de respaldo del certificado de la reinducción HSE-001.\n\n' +
+      '• Nombre: '    + (d.nombre || '-') + '\n' +
+      '• Documento: ' + (d.cedula || '-') + '\n' +
+      '• Tipo: '      + (d.tipoUsuario || '-') + '\n' +
+      '• Empresa: '   + (d.empresa || '-') + '\n' +
+      '• Puntaje: '   + (d.puntaje || '-') + '\n' +
+      '• Resultado: ' + (d.resultado || '-') + '\n' +
+      '• Fecha: '     + (d.fecha || new Date().toLocaleString()) + '\n\n' +
+      (enlaceDrive
+        ? 'También quedó guardado en Drive:\n' + enlaceDrive + '\n'
+        : 'AVISO: este certificado NO se pudo guardar en Drive. Esta copia por ' +
+          'correo es la única que queda; revisa el registro de Ejecuciones del ' +
+          'script para ver por qué falló.\n') +
+      '\n— Enviado automáticamente por el curso HSE-001.';
+
+    MailApp.sendEmail({
+      to: CORREO_REPORTES,
+      subject: 'Certificado HSE-001 · ' + (d.nombre || 'Sin nombre') +
+               ' · ' + (d.resultado || ''),
+      body: cuerpo,
+      attachments: [blob]
+    });
+    console.log('Copia del certificado enviada a ' + CORREO_REPORTES);
+    return 'enviada';
+  } catch (e) {
+    console.error('No se pudo enviar la copia del certificado: ' + e.message);
+    return 'falló';
+  }
+}
+
 /** Ejecútala UNA VEZ desde el editor para ver la URL de la carpeta. */
 function verCarpetaDeCertificados() {
   var url = carpetaCertificados_().getUrl();
@@ -306,7 +367,15 @@ function guardarExamen(d) {
      la celda sigue siendo la direccion, pero es clicable. */
   if (enlaceCert) enlazar_(hoja, fila, 'Vinculo', enlaceCert);
 
-  return { ok: true, certificado: enlaceCert ? 'guardado' : (d.certificado ? 'falló' : 'no llegó') };
+  /* Segunda ruta: la copia por correo va DESPUÉS de escribir la fila, para que
+     un fallo del correo no impida que el resultado quede registrado. */
+  var copia = enviarCopiaCertificado_(d, enlaceCert);
+
+  return {
+    ok: true,
+    certificado: enlaceCert ? 'guardado' : (d.certificado ? 'falló' : 'no llegó'),
+    copiaCorreo: copia
+  };
 }
 
 /**
@@ -381,6 +450,90 @@ function guardarFormulario(d) {
  * está hablando a una implementación vieja y por eso no ves los cambios.
  * ═══════════════════════════════════════════════════════════════════════════
  */
+/**
+ * PRUEBA COMPLETA — ejecútala UNA VEZ desde el editor antes de soltar el curso.
+ *
+ * Hace de verdad todo el recorrido con una persona inventada: escribe una fila
+ * en la hoja, guarda un PDF en la carpeta de Drive y te manda la copia por
+ * correo. Luego borra la fila y el PDF de prueba, así que no ensucia nada.
+ *
+ * Si algo falla, el mensaje dice exactamente qué paso fue.
+ */
+function probarTodo() {
+  var lineas = [];
+  var pdfPrueba = Utilities.base64Encode(Utilities.newBlob(
+    '%PDF-1.4\n1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj\n' +
+    '2 0 obj<</Type/Pages/Kids[3 0 R]/Count 1>>endobj\n' +
+    '3 0 obj<</Type/Page/Parent 2 0 R/MediaBox[0 0 200 200]>>endobj\n' +
+    'trailer<</Root 1 0 R>>', 'application/pdf').getBytes());
+
+  var d = {
+    nombre: 'PRUEBA - borrar', cedula: '000000000', tipoUsuario: 'Propio',
+    empresa: 'PRUEBA', capacitacion: 'HSE-001 · Reinducción H&S',
+    puntaje: '100%', resultado: 'APROBADO', aciertos: 20, total: 20,
+    segundos: 1, navegador: 'prueba', fecha: new Date().toLocaleString(),
+    certificado: pdfPrueba
+  };
+
+  var archivo = null, hoja = null, fila = 0;
+  try {
+    var ss = obtenerHoja_();
+    hoja = pestana_(ss, PESTANA_RESUMEN, COLUMNAS_RESUMEN);
+    lineas.push('1. Hoja de resultados ...... OK  ' + ss.getUrl());
+  } catch (e) { lineas.push('1. Hoja de resultados ...... FALLÓ: ' + e.message); }
+
+  var enlace = '';
+  try {
+    var carpeta = carpetaCertificados_();
+    lineas.push('2. Carpeta de Drive ........ OK  ' + carpeta.getUrl());
+    enlace = guardarCertificado_(d);
+    if (enlace) {
+      lineas.push('3. Guardar el PDF .......... OK  ' + enlace);
+      /* Se busca el archivo aparte: si el identificador no se pudiera sacar de
+         la URL, el paso 3 ya salió bien y no debe marcarse como fallo; solo se
+         queda el PDF de prueba sin borrar. */
+      try {
+        var id = (enlace.match(/[-\w]{25,}/) || [])[0];
+        if (id) archivo = DriveApp.getFileById(id);
+      } catch (e2) { lineas.push('   (el PDF de prueba habrá que borrarlo a mano)'); }
+    } else {
+      lineas.push('3. Guardar el PDF .......... FALLÓ (mira el registro de Ejecuciones)');
+    }
+  } catch (e) { lineas.push('2-3. Drive ................. FALLÓ: ' + e.message); }
+
+  try {
+    var r = enviarCopiaCertificado_(d, enlace);
+    lineas.push('4. Copia por correo ........ ' + (r === 'enviada' ? 'OK  → ' + CORREO_REPORTES : r));
+  } catch (e) { lineas.push('4. Copia por correo ........ FALLÓ: ' + e.message); }
+
+  try {
+    if (hoja) {
+      fila = escribirPorEncabezado_(hoja, COLUMNAS_RESUMEN, {
+        'Fecha': d.fecha, 'Nombre_Completo': d.nombre, 'Resultado': d.resultado,
+        'Vinculo': enlace || ''
+      });
+      lineas.push('5. Escribir la fila ........ OK  (fila ' + fila + ')');
+    }
+  } catch (e) { lineas.push('5. Escribir la fila ........ FALLÓ: ' + e.message); }
+
+  // limpieza: la prueba no debe dejar rastro
+  try { if (fila > 1) hoja.deleteRow(fila); } catch (e) {}
+  try { if (archivo) archivo.setTrashed(true); } catch (e) {}
+  lineas.push('6. Limpieza ................ hecha (fila y PDF de prueba borrados)');
+
+  try {
+    var url = ScriptApp.getService().getUrl();
+    lineas.push('');
+    lineas.push('URL /exec de ESTA implementación:');
+    lineas.push('  ' + (url || '(sin publicar)'));
+    lineas.push('Tiene que ser IDÉNTICA a REPORTE_URL en el index.html.');
+  } catch (e) {}
+
+  var txt = lineas.join('\n');
+  Logger.log(txt);
+  return txt;
+}
+
 function diagnostico() {
   var lineas = [];
   try {
