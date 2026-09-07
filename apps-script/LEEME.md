@@ -470,3 +470,56 @@ Ejecutando desde el editor, Google devuelve la dirección de **pruebas**, que
 termina en **`/dev`**. Esa lleva un código distinto al de la publicada y **no
 hay que compararla** con `REPORTE_URL`. La publicada termina en `/exec` y la
 ves en **Implementar → Administrar implementaciones**.
+
+
+---
+
+## Si al autorizar aparece una cuenta que no es la tuya
+
+Síntoma: cada vez que el script pide permisos, la pantalla sale con otra cuenta
+(por ejemplo una de Hotmail) en vez de la que tiene la carpeta.
+
+Pasa cuando el navegador tiene **varias cuentas de Google abiertas a la vez**.
+Google elige una y el permiso se concede a esa. Como esa cuenta no ve la
+carpeta *Certificados Reinducciones*, Drive sigue fallando por mucho que
+aceptes: no es un problema del identificador de la carpeta.
+
+**Regla:** el script tiene que ejecutarse y autorizarse con la **misma cuenta
+que es dueña de la carpeta y de la hoja**.
+
+### Cómo saber con qué cuenta está corriendo
+
+Ejecuta `probarTodo` y mira la primera línea del registro:
+
+```
+0. Cuenta que ejecuta ...... zuica.german@gmail.com
+   Tiene que ser la DUEÑA de la carpeta de Drive.
+```
+
+Si ahí sale otra cuenta, ese es el problema.
+
+### Cómo arreglarlo
+
+La forma más segura es trabajar con una sola cuenta abierta:
+
+1. Abre una **ventana de incógnito** (Ctrl+Shift+N).
+2. Entra a **script.google.com** e inicia sesión **solo** con la cuenta dueña
+   de la carpeta.
+3. Abre el proyecto, ejecuta `probarTodo` y acepta los permisos.
+4. Publica desde ahí la versión nueva de la implementación.
+
+En una ventana normal también sirve: pulsa tu foto arriba a la derecha en
+script.google.com y comprueba que la cuenta activa sea la correcta antes de
+ejecutar nada. Si no lo es, cierra las demás sesiones
+(**Cerrar sesión en todas las cuentas**) y vuelve a entrar solo con esa.
+
+**Importante:** revocar el permiso en `myaccount.google.com/permissions`
+también hay que hacerlo **dentro de la cuenta correcta**; esa página solo
+muestra los permisos de la cuenta en la que estás.
+
+### Y la implementación
+
+Quien publica la implementación debe ser esa misma cuenta: el script corre
+como `USER_DEPLOYING`, es decir, con los permisos de quien la publicó. Si la
+publica otra cuenta, los certificados intentarían guardarse en el Drive de esa
+otra cuenta.

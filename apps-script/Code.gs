@@ -492,6 +492,17 @@ function probarTodo() {
   };
 
   var archivo = null, hoja = null, fila = 0;
+
+  /* Con que cuenta esta corriendo el script. Si el navegador tiene varias
+     cuentas de Google abiertas, la pantalla de permisos puede salir con otra,
+     y esa no ve la carpeta de Drive: es la causa mas facil de confundir con un
+     identificador mal puesto. */
+  try {
+    var quien = Session.getEffectiveUser().getEmail();
+    lineas.push('0. Cuenta que ejecuta ...... ' + (quien || '(no se pudo leer)'));
+    lineas.push('   Tiene que ser la DUEÑA de la carpeta de Drive.');
+  } catch (e) { lineas.push('0. Cuenta que ejecuta ...... no se pudo leer: ' + e.message); }
+
   try {
     var ss = obtenerHoja_();
     hoja = pestana_(ss, PESTANA_RESUMEN, COLUMNAS_RESUMEN);
