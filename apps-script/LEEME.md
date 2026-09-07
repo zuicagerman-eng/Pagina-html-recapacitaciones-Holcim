@@ -1,5 +1,28 @@
 # Publicar el curso en el portal con Google Apps Script
 
+> ## ⚠️ PENDIENTE — sacar las direcciones de Drive de este repositorio
+>
+> El bloque `CARPETAS_POR_CENTRO` del `Code.gs` tiene las direcciones de las
+> carpetas internas de Holcim. Están aquí **a propósito y de forma temporal**,
+> mientras se hacen cambios: así no hay que volver a pegarlas cada vez que se
+> copia el archivo al editor de Apps Script.
+>
+> **Este repositorio es público.** Esas direcciones no son contraseñas —sin
+> permiso nadie abre esas carpetas, vería «solicita acceso»— pero revelan que
+> existen y cómo está organizado el Drive de H&S.
+>
+> **Cuando el curso deje de cambiar, hay que quitarlas.** Dos formas:
+>
+> 1. **Vaciarlas aquí** y dejarlas solo en el editor de Apps Script. Es lo más
+>    simple: el código del repositorio queda como plantilla.
+> 2. **Propiedades del script**: en el editor, ⚙️ Configuración del proyecto →
+>    Propiedades de la secuencia de comandos, una fila por centro. Quedan fuera
+>    del código y sobreviven a copiar y pegar.
+>
+> Lo mismo vale para `ID_HOJA`, `ID_CARPETA_CERTIFICADOS`, `ID_CARPETA_FINAL`
+> y `CARPETA_OTROS` si alguna vez se rellenan aquí.
+
+
 ## 1. Crear el proyecto
 1. Entra a https://script.google.com → **Nuevo proyecto**.
 2. Borra el contenido y pega el archivo **Code.gs** de esta carpeta.

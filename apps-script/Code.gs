@@ -56,6 +56,11 @@ var ID_CARPETA_FINAL = "";
 
       Cuando termines, ejecuta verCarpetasDeCentros() para ver los quince de
       una vez antes de confiar en el reparto. */
+/* ⚠️ PENDIENTE: estas direcciones estan aqui de forma TEMPORAL, para no tener
+   que pegarlas cada vez que se copia este archivo al editor mientras el curso
+   sigue cambiando. El repositorio es PUBLICO: cuando se deje de tocar, hay que
+   vaciarlas aqui y dejarlas solo en Apps Script, o pasarlas a Propiedades del
+   script. Ver el aviso del principio de LEEME.md. */
 var CARPETAS_POR_CENTRO = {
   'BARRANCA GEO'        : "https://drive.google.com/drive/u/0/folders/1l-Z_FIYFWGGUDWkxwIjsvwzBgKShU3-r",
   'BELLO RMX'           : "https://drive.google.com/drive/u/0/folders/16NoHm433BSUJxUGyV1Gf-7jEyN5mxFGO",
