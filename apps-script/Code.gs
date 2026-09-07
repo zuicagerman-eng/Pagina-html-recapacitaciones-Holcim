@@ -10,8 +10,32 @@
  *      enlace en la columna "Vinculo" de esa hoja.
  */
 
-// ►► CORREO donde quieres recibir los reportes ◄◄
+/* ═══════════════════════════════════════════════════════════════════════════
+   ►►►  LO ÚNICO QUE HAY QUE RELLENAR  ◄◄◄
+
+   Pega las URL completas, tal cual las copias de la barra del navegador. El
+   script se queda con lo que necesita, así que no hay que recortar nada.
+
+   Cuál va en cuál, que es donde es fácil equivocarse:
+     ID_HOJA                 → docs.google.com/spreadsheets/...
+     ID_CARPETA_CERTIFICADOS → drive.google.com/drive/folders/...
+
+   Si te equivocas, el script te lo dice y se detiene, en vez de crear una
+   hoja o una carpeta nueva por su cuenta.
+
+   Después de rellenarlas: ejecuta probarTodo y mira el registro.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+// 1) Correo donde llegan los reportes, la encuesta y la copia del certificado
 var CORREO_REPORTES = "german.zuica@holcim.com";
+
+// 2) Hoja de resultados (docs.google.com/spreadsheets/...)
+var ID_HOJA = "";
+
+// 3) Carpeta de certificados (drive.google.com/drive/folders/...)
+var ID_CARPETA_CERTIFICADOS = "";
+
+/* ─── de aquí para abajo no hace falta tocar nada ─── */
 
 /* ═══════════════════════════════════════════════════════════════════════════
    DÓNDE VIVE EL CURSO
@@ -44,9 +68,10 @@ function doGet() {
 /* ═══════════════════════════════════════════════════════════════════════════
    EXAMEN FINAL → HOJA DE CÁLCULO
 
-   NO tienes que crear la hoja a mano. La primera vez que alguien presente el
-   examen, el script crea en tu Drive una hoja llamada
-   "HSE-001 · Resultados examen" y recuerda su identificador.
+   La hoja se indica arriba, en ID_HOJA. Si se deja vacia, el script crea una
+   en el Drive de la cuenta que publico la implementacion y recuerda cual es;
+   sirve para empezar, pero para los datos de verdad conviene indicar la hoja
+   de Holcim.
 
    ¿Dónde queda? En "Mi unidad" de la cuenta con la que despliegas el script.
    Para ver el enlace directo, ejecuta una vez la función verHojaDeResultados().
@@ -58,7 +83,6 @@ function doGet() {
    (https://docs.google.com/spreadsheets/d/...), NO el de la carpeta de Drive.
    El de la carpeta va mas abajo, en ID_CARPETA_CERTIFICADOS. Confundirlos es
    el error mas facil de cometer y deja los resultados en una hoja distinta. */
-var ID_HOJA = "";   // opcional: déjalo vacío para que el script la cree solo
 
 /* ═══════════════════════════════════════════════════════════════════════════
    CARPETA DE CERTIFICADOS EN DRIVE
@@ -67,8 +91,10 @@ var ID_HOJA = "";   // opcional: déjalo vacío para que el script la cree solo
    script lo guarda en esta carpeta. El enlace al archivo queda en la columna
    "Vinculo" de la hoja de resultados.
 
-   No hay que crear la carpeta a mano: se crea sola la primera vez, en "Mi
-   unidad" de la cuenta que despliega el script.
+   La carpeta se indica arriba, en ID_CARPETA_CERTIFICADOS. Si se deja vacia,
+   el script crea una en "Mi unidad" de la cuenta que publico la implementacion,
+   que es lo que NO conviene: los certificados llevan datos personales y deben
+   quedar en la unidad compartida de Holcim.
 
    CERTIFICADOS_PUBLICOS controla quien puede abrir el enlace:
      false (recomendado) → solo quien tenga acceso a la carpeta, es decir tu y
@@ -76,10 +102,8 @@ var ID_HOJA = "";   // opcional: déjalo vacío para que el script la cree solo
             son datos personales: no conviene dejarlos abiertos a cualquiera.
      true  → cualquiera con el enlace puede verlo, sin iniciar sesion.
    ═══════════════════════════════════════════════════════════════════════════ */
-/* Pega aqui TU carpeta. Sirve igual el identificador suelto o la URL completa
-   copiada de la barra del navegador; el script se queda con lo que necesita.
-   Dejalo vacio solo si quieres que el script cree una carpeta el solo. */
-var ID_CARPETA_CERTIFICADOS = "";
+/* Solo se usa si ID_CARPETA_CERTIFICADOS quedo vacio: es el nombre con el que
+   el script crearia una carpeta el solo. */
 var NOMBRE_CARPETA_CERTIFICADOS = "HSE-001 · Certificados";
 var CERTIFICADOS_PUBLICOS = false;
 
