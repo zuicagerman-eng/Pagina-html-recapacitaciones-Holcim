@@ -54,6 +54,10 @@ function doGet() {
    Si prefieres usar una hoja que ya tengas, pega abajo su ID o directamente la
    URL completa que copiaste del navegador, y el script escribirá en esa.
    ═══════════════════════════════════════════════════════════════════════════ */
+/* OJO: aqui va el enlace de la HOJA DE CALCULO
+   (https://docs.google.com/spreadsheets/d/...), NO el de la carpeta de Drive.
+   El de la carpeta va mas abajo, en ID_CARPETA_CERTIFICADOS. Confundirlos es
+   el error mas facil de cometer y deja los resultados en una hoja distinta. */
 var ID_HOJA = "";   // opcional: déjalo vacío para que el script la cree solo
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -106,7 +110,24 @@ function obtenerHoja_() {
   var props = PropertiesService.getScriptProperties();
   var id = soloId_(ID_HOJA) || props.getProperty('ID_HOJA');
   if (id) {
-    try { return SpreadsheetApp.openById(id); } catch (e) { /* si ya no existe, se recrea */ }
+    try {
+      return SpreadsheetApp.openById(id);
+    } catch (e) {
+      /* Si el identificador viene de ID_HOJA (puesto a mano) y no abre, NO se
+         crea una hoja nueva: lo mas probable es que se haya pegado el enlace
+         equivocado —por ejemplo el de la carpeta de Drive en vez del de la
+         hoja— y crear otra en silencio dejaria los resultados repartidos entre
+         dos sitios sin que nadie se entere. Con el identificador recordado por
+         el propio script si se sigue de largo: ahi si significa que la hoja se
+         borro. */
+      if (soloId_(ID_HOJA)) {
+        throw new Error(
+          'ID_HOJA no corresponde a una hoja de calculo. Comprueba que sea el ' +
+          'enlace de la HOJA (docs.google.com/spreadsheets/...) y no el de la ' +
+          'carpeta de Drive (drive.google.com/drive/folders/...), que va en ' +
+          'ID_CARPETA_CERTIFICADOS. Detalle: ' + e.message);
+      }
+    }
   }
   var ss;
   try {
@@ -501,7 +522,13 @@ function probarTodo() {
     var quien = Session.getEffectiveUser().getEmail();
     lineas.push('0. Cuenta que ejecuta ...... ' + (quien || '(no se pudo leer)'));
     lineas.push('   Tiene que ser la DUEÑA de la carpeta de Drive.');
-  } catch (e) { lineas.push('0. Cuenta que ejecuta ...... no se pudo leer: ' + e.message); }
+  } catch (e) {
+    /* Leer el correo pide un permiso mas que no vale la pena aniadir solo para
+       esto. Si no se puede, la comprobacion util sigue siendo la del paso 2:
+       si la carpeta abre, la cuenta es la correcta. */
+    lineas.push('0. Cuenta que ejecuta ...... (Google no lo dice sin un permiso extra;');
+    lineas.push('   no hace falta: si el paso 2 abre TU carpeta, la cuenta es la buena)');
+  }
 
   try {
     var ss = obtenerHoja_();
