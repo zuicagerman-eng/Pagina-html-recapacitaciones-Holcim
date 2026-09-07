@@ -325,8 +325,10 @@ function guardarCertificado_(d) {
   try {
     console.log('Certificado recibido: ' + Math.round(d.certificado.length * 3 / 4 / 1024) + ' KB');
     var bytes = Utilities.base64Decode(d.certificado);
-    var nombre = (d.nombre || 'Sin nombre') + ' - ' + (d.cedula || 's-c') + ' - ' +
-                 Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd HHmm') + '.pdf';
+    /* AAAA.MM.DD APELLIDO1 APELLIDO2 NOMBRES — asi ordena solo por fecha en
+       Drive, y el nombre viene ya en mayusculas desde el formulario del curso. */
+    var nombre = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy.MM.dd') +
+                 ' ' + (d.nombre || 'SIN NOMBRE') + '.pdf';
     var blob = Utilities.newBlob(bytes, 'application/pdf', nombre);
     var archivo = carpetaCertificados_().createFile(blob);
     if (CERTIFICADOS_PUBLICOS) {
@@ -375,8 +377,8 @@ function enviarCopiaCertificado_(d, enlaceDrive) {
   if (!CORREO_REPORTES) return 'sin correo configurado';
   try {
     var bytes  = Utilities.base64Decode(d.certificado);
-    var nombre = 'Certificado HSE-001 - ' + (d.nombre || 'Sin nombre') +
-                 ' - ' + (d.cedula || 's-c') + '.pdf';
+    var nombre = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy.MM.dd') +
+                 ' ' + (d.nombre || 'SIN NOMBRE') + '.pdf';
     var blob   = Utilities.newBlob(bytes, 'application/pdf', nombre);
 
     var cuerpo =
