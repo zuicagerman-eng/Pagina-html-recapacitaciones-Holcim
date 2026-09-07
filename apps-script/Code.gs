@@ -46,18 +46,38 @@ var ID_CARPETA_CERTIFICADOS = "";
       la próxima vez. Déjala vacía para no trasladar nada. */
 var ID_CARPETA_FINAL = "";
 
-/* 5) OPCIONAL — Cada centro de trabajo a SU carpeta.
-      Pon aquí la carpeta que CONTIENE las carpetas de los centros (BARRANCA
-      GEO, BELLO RMX, NOBSA CEM...). El script busca dentro de ella la que se
-      llame igual que el centro que eligió la persona y deja ahí su
-      certificado.
+/* 5) CADA CENTRO DE TRABAJO A SU CARPETA
+      Pega al lado de cada centro la URL de SU carpeta, tal cual la copias de
+      la barra del navegador. Los nombres de la izquierda son los mismos del
+      desplegable del curso: no los cambies, son los que llegan del examen.
 
-      Se configura UNA sola dirección, no quince. Y el día que abra una planta
-      nueva basta con crear su carpeta con el mismo nombre que aparece en el
-      desplegable del curso: no hay que tocar el código.
+      El que dejes vacío no se rompe: su certificado va a ID_CARPETA_FINAL y
+      queda anotado en el registro. Puedes ir llenándolos poco a poco.
 
-      Si no encuentra la carpeta del centro, el certificado va a la de arriba
-      (ID_CARPETA_FINAL) y queda anotado en el registro. Nunca se pierde. */
+      Cuando termines, ejecuta verCarpetasDeCentros() para ver los quince de
+      una vez antes de confiar en el reparto. */
+var CARPETAS_POR_CENTRO = {
+  'BARRANCA GEO'        : "",
+  'BELLO RMX'           : "",
+  'CHIA RMX'            : "",
+  'FUNDACION'           : "",
+  'GEOCYCLE - AF NOBSA' : "",
+  'MEDELLIN'            : "",
+  'MONDOÑEDO AGG'       : "",
+  'NOBSA - TUNJA RMX'   : "",
+  'NOBSA CEM'           : "",
+  'PUENTE ARANDA RMX'   : "",
+  'SIBATE RMX'          : "",
+  'TELEPORT CORP'       : "",
+  'TOCANCIPA TQC'       : "",
+  'TRANSCEM'            : "",
+  'VALLE'               : ""
+};
+
+/* 5b) OPCIONAL — Alternativa a la tabla de arriba: la carpeta que CONTIENE las
+       de los centros, para que el script busque la que se llame igual que el
+       centro. Solo se usa para los centros que dejaste vacíos arriba. Sirve si
+       algún día todas cuelgan del mismo sitio. */
 var CARPETA_RAIZ_CENTROS = "";
 
 /* 6) OPCIONAL — Ruta DENTRO de la carpeta de cada centro, si los certificados
@@ -274,6 +294,12 @@ function carpetaCertificados_() {
 
 /* Para comparar nombres de carpeta con lo que eligió la persona sin que un
    acento, un espacio de más o unas mayúsculas lo estropeen. */
+function pad_(t, n) {
+  t = String(t);
+  while (t.length < n) t += ' ';
+  return t;
+}
+
 function normaliza_(t) {
   return String(t || '')
     .normalize('NFD').replace(/[\u0300-\u036f]/g, '')   // quita acentos
@@ -291,9 +317,30 @@ function normaliza_(t) {
  * mueven las carpetas, ejecuta olvidarLoRecordado().
  */
 function carpetaDelCentro_(centro) {
-  if (!soloId_(CARPETA_RAIZ_CENTROS)) return null;
   var clave = normaliza_(centro);
   if (!clave) return null;
+
+  /* Primero la tabla, que es lo explicito: si alguien la lleno, manda ella.
+     Se busca comparando normalizado para que un acento o un espacio de mas en
+     la tabla no deje a un centro sin carpeta. */
+  var enTabla = '';
+  for (var k in CARPETAS_POR_CENTRO) {
+    if (CARPETAS_POR_CENTRO.hasOwnProperty(k) && normaliza_(k) === clave) {
+      enTabla = soloId_(CARPETAS_POR_CENTRO[k]);
+      break;
+    }
+  }
+  if (enTabla) {
+    try { return DriveApp.getFolderById(enTabla); }
+    catch (e) {
+      console.error('La carpeta puesta para "' + centro + '" no se pudo abrir: ' + e.message +
+                    ' — revisa esa URL en CARPETAS_POR_CENTRO.');
+      return null;
+    }
+  }
+
+  // sin entrada en la tabla: se intenta buscarla por nombre, si hay carpeta raiz
+  if (!soloId_(CARPETA_RAIZ_CENTROS)) return null;
 
   var props = PropertiesService.getScriptProperties();
   var guardada = props.getProperty('CENTRO_' + clave);
@@ -361,18 +408,28 @@ function verCarpetasDeCentros() {
     'PUENTE ARANDA RMX', 'SIBATE RMX', 'TELEPORT CORP', 'TOCANCIPA TQC',
     'TRANSCEM', 'VALLE'
   ];
-  if (!soloId_(CARPETA_RAIZ_CENTROS)) {
-    Logger.log('CARPETA_RAIZ_CENTROS está vacía: todos los certificados irían a la carpeta general.');
-    return 'sin carpeta raiz';
-  }
   var lineas = [], bien = 0;
   CENTROS.forEach(function (c) {
     var f = null;
     try { f = carpetaDelCentro_(c); } catch (e) {}
-    if (f) { bien++; lineas.push('OK      ' + c + '  →  ' + f.getName()); }
-    else    { lineas.push('SIN CARPETA  ' + c + '  →  iría a la carpeta general'); }
+    if (f) {
+      bien++;
+      /* De donde salio: de la tabla o de la busqueda por nombre. Importa,
+         porque un centro que cae por la busqueda depende de que nadie renombre
+         la carpeta. */
+      var deTabla = false;
+      for (var k in CARPETAS_POR_CENTRO) {
+        if (CARPETAS_POR_CENTRO.hasOwnProperty(k) && normaliza_(k) === normaliza_(c) &&
+            soloId_(CARPETAS_POR_CENTRO[k])) { deTabla = true; break; }
+      }
+      lineas.push('OK  ' + pad_(c, 22) + ' → ' + f.getName() + (deTabla ? '' : '   (por nombre)'));
+    } else {
+      lineas.push('FALTA  ' + pad_(c, 20) + ' → iria a la carpeta general');
+    }
   });
-  var txt = 'Centros con carpeta propia: ' + bien + ' de ' + CENTROS.length + '\n\n' + lineas.join('\n');
+  var txt = 'Centros con carpeta propia: ' + bien + ' de ' + CENTROS.length +
+            (bien < CENTROS.length ? '\n(los que faltan van a ID_CARPETA_FINAL, no se pierden)' : '') +
+            '\n\n' + lineas.join('\n');
   Logger.log(txt);
   return txt;
 }

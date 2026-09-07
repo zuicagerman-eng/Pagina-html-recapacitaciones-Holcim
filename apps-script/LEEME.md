@@ -809,48 +809,36 @@ vacía y se apunta `ID_CARPETA_CERTIFICADOS` directamente a la carpeta buena.
 
 ## Cada centro de trabajo a su propia carpeta
 
-Los 15 centros tienen carpeta propia en Drive, y el certificado de cada
-persona debe caer en la de su centro.
+Cada uno de los 15 centros tiene su carpeta, y en Drive no cuelgan todas del
+mismo sitio ni a la misma profundidad. Por eso se indican una por una: es
+explícito y no depende de que ninguna carpeta conserve su nombre.
 
-### Por qué NO se pegan 15 direcciones
-
-Se podría, pero saldría caro de mantener: quince direcciones que copiar sin
-equivocarse, y tocar el código cada vez que abra o cierre una planta.
-
-Hay un detalle que lo hace innecesario: **las carpetas se llaman igual que las
-opciones del desplegable** (BARRANCA GEO, NOBSA CEM, TELEPORT CORP...). Así que
-basta con decirle al script dónde están todas, y él busca la que toca.
+En el bloque de configuración, arriba del archivo, están los quince nombres ya
+escritos. Solo hay que pegar la URL de cada carpeta:
 
 ```js
-var CARPETA_RAIZ_CENTROS = "URL de la carpeta que CONTIENE las 15";
+var CARPETAS_POR_CENTRO = {
+  'BARRANCA GEO'        : "https://drive.google.com/drive/folders/1AbC...",
+  'BELLO RMX'           : "https://drive.google.com/drive/folders/1DeF...",
+  ...
+};
 ```
 
-**Una sola dirección.** Y el día que abra una planta nueva, crea su carpeta con
-el mismo nombre que aparece en el desplegable y ya está: no hay que tocar el
-código.
+**No cambies los nombres de la izquierda:** son los que llegan del examen. Si
+no coinciden, ese centro se queda sin carpeta.
 
-### Si los certificados van más adentro
+Pega las URL completas, tal cual las copias de la barra del navegador; el
+script extrae lo que necesita.
 
-Si dentro de cada centro hay que bajar por una ruta —como
-`3. Procesos de Operación y Apoyo → 3.1 Capacitaciones → …`— se escribe una
-vez, con barras, y vale para los quince:
+### Se puede ir llenando poco a poco
 
-```js
-var SUBRUTA_CENTRO = "3. Procesos de Operación y Apoyo/3.1 Capacitaciones/1. Capacitaciones H&S/3. SOPORTES CAPACITACION DEL PERSONAL";
-```
+El centro que dejes vacío no rompe nada: su certificado va a
+`ID_CARPETA_FINAL` y queda anotado en el registro. Así puedes empezar por las
+plantas con más gente y completar el resto después.
 
-Tiene que ser la misma en todos los centros. El script **no crea carpetas**: si
-en algún centro falta un tramo, avisa en el registro y deja el certificado en
-la carpeta de ese centro.
-
-### Nunca se pierde un certificado
-
-El orden es: carpeta del centro → si no la hay, `ID_CARPETA_FINAL` → si
-tampoco, se queda en la de paso y lo recoge `moverPendientes()`. Cada salto
-queda anotado en el registro de Ejecuciones, así que se sabe qué pasó.
-
-Por eso conviene dejar `ID_CARPETA_FINAL` puesta aunque uses el reparto por
-centro: es la red de seguridad para un centro sin carpeta, o para "Otra".
+Por eso conviene dejar `ID_CARPETA_FINAL` puesta aunque llenes los quince: es
+la red para quien elija "Otra", y para el día que se abra una planta que
+todavía no esté en la tabla.
 
 ### Compruébalo antes de confiar
 
@@ -858,24 +846,39 @@ centro: es la red de seguridad para un centro sin carpeta, o para "Otra".
 verCarpetasDeCentros()
 ```
 
-Dice, para los quince, a qué carpeta iría su certificado:
-
 ```
-Centros con carpeta propia: 15 de 15
+Centros con carpeta propia: 13 de 15
+(los que faltan van a ID_CARPETA_FINAL, no se pierden)
 
-OK      BARRANCA GEO  →  BARRANCA GEO
-OK      BELLO RMX  →  BELLO RMX
+OK  BARRANCA GEO           → BARRANCA GEO
+OK  BELLO RMX              → SOPORTES CAPACITACION DEL PERSONAL
+FALTA  MEDELLIN            → iria a la carpeta general
 ...
 ```
 
-Si alguno sale como `SIN CARPETA`, o la carpeta no existe o se llama distinto
-que la opción del desplegable. Es mucho más rápido verlo aquí que descubrir
+Ejecútala cada vez que añadas direcciones. Es mucho más rápido que descubrir
 dentro de un mes que tres centros llevaban semanas cayendo en la carpeta de
 repuesto.
 
-### Sobre la velocidad
+Si una URL está mal, el registro lo dice con nombre y apellidos: *"La carpeta
+puesta para X no se pudo abrir — revisa esa URL en CARPETAS_POR_CENTRO"*.
 
-Buscar una carpeta por nombre en Drive cuesta, así que el script **recuerda**
-la que encontró para cada centro: solo busca la primera vez de cada uno. Si
-algún día mueve o renombra las carpetas, ejecuta `olvidarLoRecordado()` y
-volverá a buscarlas.
+### Añadir una planta nueva
+
+Dos pasos: añadirla a `SEDES` en el `index.html` (la lista del desplegable) y
+añadir su línea a `CARPETAS_POR_CENTRO`. Mientras no esté, sus certificados
+caen en la carpeta general.
+
+### La alternativa automática, por si algún día sirve
+
+Si alguna vez todas las carpetas acaban colgando del mismo sitio y con el
+mismo nombre que el desplegable, existe `CARPETA_RAIZ_CENTROS`: se pone esa
+carpeta madre y el script busca dentro la que se llame igual. Solo se usa para
+los centros que hayas dejado vacíos en la tabla, así que las dos formas pueden
+convivir.
+
+### Nunca se pierde un certificado
+
+El orden es: carpeta del centro → `ID_CARPETA_FINAL` → si tampoco, se queda en
+la carpeta de paso y lo recoge `moverPendientes()`. Cada salto queda anotado
+en el registro de Ejecuciones.
