@@ -3425,7 +3425,22 @@
      1280x720 y se comia el texto de las reglas. Las filas ya estaban al
      minimo (mas arriba, en el bloque .ultra), asi que lo que queda por
      recortar es el relleno de la tarjeta y el aire de alrededor. */
-  .ultra #exDatos .card{padding:12px 14px;margin-top:10px}
+  /* La ficha de identificacion a dos columnas en cuanto hay ancho. Con los
+     campos en una sola columna, un contratista —que suma el de empresa— y con
+     centro "Otra" uno mas, dejaba el boton "Comenzar examen" por debajo del
+     borde en 1280x720. En dos columnas cabe entero incluso en ese caso.
+     Los campos ocultos no ocupan celda, asi que la rejilla se reacomoda sola. */
+  @media(min-width:640px){
+    #exDatos .card{display:grid;grid-template-columns:1fr 1fr;
+      column-gap:18px;align-items:start}
+    #exDatos .card > .exerr,
+    #exDatos .card > .exbtn{grid-column:1 / -1}
+  }
+  .ultra #exDatos .card{padding:10px 14px;margin-top:8px}
+  /* Con contratista o visitante aparece ademas el campo de empresa, y con
+     centro "Otra" uno mas: en 1280x720 el boton quedaba fuera de pantalla. */
+  .ultra #exDatos .excampo{margin-top:4px}
+  .ultra #exDatos h2{font-size:22px;margin-bottom:0}
   .ultra #exDatos .lead{margin-top:5px;line-height:1.4}
   .ultra #exReglas{font-size:11.4px;line-height:1.38;margin-top:7px}
   .exmayus{text-transform:uppercase}
@@ -5820,6 +5835,10 @@
             <label for="exTipo">Tipo de usuario</label>
             <select id="exTipo"></select>
           </div>
+          <div class="excampo" id="exRazonCampo" hidden>
+            <label for="exRazon">Empresa</label>
+            <input id="exRazon" class="exmayus" type="text" autocomplete="organization" placeholder="Razón social" maxlength="70">
+          </div>
           <div class="excampo">
             <label for="exEmpresa">Centro de trabajo</label>
             <select id="exEmpresa"></select>
@@ -5984,7 +6003,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-08-j";
+var VERSION_CURSO = "2026-09-08-k";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 52 en cada intento.
@@ -5999,6 +6018,11 @@ var TIPOS_USUARIO = ['Propio', 'Contratista', 'Temporal', 'Visitante'];
    por linea y entre comillas, tal como quieres que queden escritas en la hoja.
    La ultima opcion, "Otra", abre una casilla para escribirla a mano: quitala de
    la lista cuando tengas todas las sedes cargadas. */
+/* Tipos de usuario que no son de Holcim y a los que si se les pregunta la
+   empresa (razon social). Si mañana cambia la lista de tipos, esto es lo
+   unico que hay que revisar. */
+var TIPOS_CON_EMPRESA = ['Contratista', 'Visitante'];
+
 var SEDES = [
   'BARRANCA GEO',
   'BELLO RMX',
@@ -7463,9 +7487,16 @@ document.querySelectorAll('.pueBox').forEach(function(box){
     var s=slides[idx];
     if(!s){ hint.classList.remove('show'); return; }
     ajustar(s);
-    // En el examen la barra fija de abajo ya avisa cuánto falta, y el aviso
-    // se le montaba encima al botón "Calificar".
-    if(s.getAttribute('data-mod') === 'EX'){ hint.classList.remove('show'); return; }
+    /* En el examen la barra fija de abajo ya avisa cuanto falta y el aviso se le
+       montaba encima al boton "Calificar". Pero eso vale mientras se responden
+       las preguntas: en la pantalla de identificacion no hay barra, y con un
+       contratista —que suma el campo de empresa— el boton "Comenzar examen"
+       puede quedar por debajo del borde. Ahi el aviso hace falta. */
+    if(s.getAttribute('data-mod') === 'EX'){
+      var datos = s.querySelector('#exDatos');
+      var enDatos = datos && !datos.hidden && datos.offsetParent !== null;
+      if(!enDatos){ hint.classList.remove('show'); return; }
+    }
     var oculto = s.scrollHeight - s.clientHeight - s.scrollTop;
     if(oculto > 40) hint.classList.add('show'); else hint.classList.remove('show');
   }
@@ -8125,6 +8156,7 @@ document.addEventListener('DOMContentLoaded', function(){
       inNombres=document.getElementById('exNombres'), inCedula=document.getElementById('exCedula'),
       inTipo=document.getElementById('exTipo'), inEmpresa=document.getElementById('exEmpresa'),
       inOtra=document.getElementById('exOtra'), campoOtra=document.getElementById('exOtraCampo'),
+      inRazon=document.getElementById('exRazon'), campoRazon=document.getElementById('exRazonCampo'),
       elErr=document.getElementById('exErr'), btnIni=document.getElementById('exIniciar'),
       btnCal=document.getElementById('exCalificar'), btnRep=document.getElementById('exRepetir'),
       elCont=document.getElementById('exCont');
@@ -8152,6 +8184,14 @@ document.addEventListener('DOMContentLoaded', function(){
     campoOtra.hidden = (inEmpresa.value !== 'Otra');
     if(campoOtra.hidden) inOtra.value = '';
   });
+  /* La empresa solo tiene sentido para quien no es de Holcim. A un propio o a
+     un temporal no se le pregunta, y si cambia de opcion el campo se limpia
+     para que no se cuele un dato de una eleccion anterior. */
+  function pideEmpresa(){ return TIPOS_CON_EMPRESA.indexOf(inTipo.value) >= 0; }
+  inTipo.addEventListener('change', function(){
+    campoRazon.hidden = !pideEmpresa();
+    if(campoRazon.hidden) inRazon.value = '';
+  });
 
   /* El tamaño del banco se cuenta, no se escribe: estaba puesto a mano y se
      quedó en 56 cuando el banco bajó a 52 al retirar unas preguntas. */
@@ -8175,11 +8215,13 @@ document.addEventListener('DOMContentLoaded', function(){
     var a1=limpiaNombre(inApe1.value), a2=limpiaNombre(inApe2.value), no=limpiaNombre(inNombres.value);
     var c=inCedula.value.replace(/\D/g,'');
     var t=inTipo.value, emp=inEmpresa.value, otra=inOtra.value.trim().replace(/\s+/g,' ');
+    var razon=inRazon.value.toUpperCase().replace(/\s+/g,' ').trim();
     /* Asi queda en el certificado, en la hoja y en el nombre del archivo:
        APELLIDO1 APELLIDO2 NOMBRES. El segundo apellido puede no existir. */
     var n=[a1, a2, no].filter(function(x){ return x; }).join(' ');
-    [inApe1,inApe2,inNombres,inCedula,inTipo,inEmpresa,inOtra].forEach(function(x){ x.classList.remove('mal'); });
+    [inApe1,inApe2,inNombres,inCedula,inTipo,inEmpresa,inOtra,inRazon].forEach(function(x){ x.classList.remove('mal'); });
     if(!t){ inTipo.classList.add('mal'); return 'Elige el tipo de usuario.'; }
+    if(pideEmpresa() && razon.length < 3){ inRazon.classList.add('mal'); return 'Escribe la empresa a la que perteneces.'; }
     if(!emp){ inEmpresa.classList.add('mal'); return 'Elige tu centro de trabajo.'; }
     if(emp === 'Otra'){
       if(otra.length < 3){ inOtra.classList.add('mal'); return 'Escribe el nombre del centro de trabajo.'; }
@@ -8188,7 +8230,8 @@ document.addEventListener('DOMContentLoaded', function(){
     if(a1.length<2){ inApe1.classList.add('mal'); return 'Escribe tu primer apellido.'; }
     if(no.length<2){ inNombres.classList.add('mal'); return 'Escribe tus nombres.'; }
     if(c.length<6 || c.length>12){ inCedula.classList.add('mal'); return 'La cédula debe tener entre 6 y 12 dígitos, sin puntos ni espacios.'; }
-    persona = { nombre:n, apellido1:a1, apellido2:a2, nombres:no, cedula:c, tipo:t, empresa:emp };
+    persona = { nombre:n, apellido1:a1, apellido2:a2, nombres:no, cedula:c, tipo:t,
+                empresa:emp, razonSocial: pideEmpresa() ? razon : '' };
     return '';
   }
 
@@ -8264,6 +8307,7 @@ document.addEventListener('DOMContentLoaded', function(){
     document.getElementById('exQuien').innerHTML =
       '<b>' + persona.nombre + '</b> · C.C. ' + persona.cedula +
       ' · ' + persona.tipo + ' · ' + persona.empresa +
+      (persona.razonSocial ? ' · ' + persona.razonSocial : '') +
       ' — se aprueba con ' + NOTA_MINIMA + '% o más.';
     pintar(); fase('preguntas');
     try{ elPreg.scrollIntoView({block:'start'}); }catch(err){}
@@ -8311,7 +8355,8 @@ document.addEventListener('DOMContentLoaded', function(){
     document.getElementById('exVeredicto').textContent = aprobo ? '¡Aprobado!' : 'No aprobado';
     document.getElementById('exDetalle').innerHTML =
       '<b>' + persona.nombre + '</b> · C.C. ' + persona.cedula + '<br>' +
-      persona.tipo + ' · ' + persona.empresa + '<br>' +
+      persona.tipo + ' · ' + persona.empresa +
+      (persona.razonSocial ? ' · ' + persona.razonSocial : '') + '<br>' +
       aciertos + ' de ' + sorteadas.length + ' respuestas correctas · nota mínima ' + NOTA_MINIMA + '%.' +
       (aprobo ? '<br>Tu resultado quedó registrado. Descarga tu <b>certificado</b> y ya puedes cerrar esta ventana.'
               : '<br>Revisa abajo las preguntas falladas y presenta el examen de nuevo.');
@@ -8355,6 +8400,7 @@ document.addEventListener('DOMContentLoaded', function(){
     var envio = {
       nombre: persona.nombre, cedula: persona.cedula,
       tipoUsuario: persona.tipo, empresa: persona.empresa,
+      razonSocial: persona.razonSocial || '',
       capacitacion: NOMBRE_CAPACITACION,
       puntaje: pct + '%', resultado: aprobo ? 'APROBADO' : 'NO APROBADO',
       /* "Vinculo": si el certificado llega a guardarse en Drive, Apps Script
