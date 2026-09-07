@@ -412,6 +412,62 @@ function enviarCopiaCertificado_(d, enlaceDrive) {
   }
 }
 
+/**
+ * RENOMBRA LOS CERTIFICADOS VIEJOS
+ *
+ * Los que se guardaron antes conservan el formato anterior:
+ *   NOMBRE - 1020827914 - 2026-09-07 1500.pdf
+ * y esta función los deja con el nuevo:
+ *   2026.09.07 NOMBRE.pdf
+ *
+ * Toma la fecha del propio nombre del archivo, no la de hoy, para no falsear
+ * cuándo se emitió cada certificado. Si no consigue leerla, usa la fecha de
+ * creación del archivo en Drive.
+ *
+ * Solo toca los que empiezan por letra —los ya renombrados empiezan por el
+ * año— así que se puede ejecutar dos veces sin estropear nada.
+ */
+function renombrarCertificados() {
+  var carpetas = [];
+  try { carpetas.push(carpetaCertificados_()); } catch (e) {}
+  try { var f = carpetaFinal_(); if (f) carpetas.push(f); } catch (e) {}
+  if (!carpetas.length) { Logger.log('No se pudo abrir ninguna carpeta.'); return 'sin carpetas'; }
+
+  var hechos = 0, saltados = 0, fallos = 0, ejemplos = [];
+  carpetas.forEach(function (carpeta) {
+    var it = carpeta.getFiles();
+    while (it.hasNext()) {
+      var a = it.next();
+      var viejo = a.getName();
+      if (!/\.pdf$/i.test(viejo)) { saltados++; continue; }
+      if (/^\d{4}\.\d{2}\.\d{2} /.test(viejo)) { saltados++; continue; }   // ya renombrado
+
+      /* Formato anterior: "NOMBRE - CEDULA - yyyy-MM-dd HHmm.pdf". Se parte por
+         " - " y se toma la primera parte como nombre y la fecha de la ultima. */
+      var cuerpo = viejo.replace(/\.pdf$/i, '');
+      var trozos = cuerpo.split(' - ');
+      var nombre = trozos[0].trim();
+      var fecha = '';
+      var m = cuerpo.match(/(\d{4})-(\d{2})-(\d{2})/);
+      if (m) fecha = m[1] + '.' + m[2] + '.' + m[3];
+      else fecha = Utilities.formatDate(a.getDateCreated(), Session.getScriptTimeZone(), 'yyyy.MM.dd');
+
+      if (!nombre) { saltados++; continue; }
+      try {
+        a.setName(fecha + ' ' + nombre.toUpperCase() + '.pdf');
+        hechos++;
+        if (ejemplos.length < 3) ejemplos.push(viejo + '  →  ' + a.getName());
+      } catch (e) { fallos++; }
+    }
+  });
+
+  var txt = 'Renombrados: ' + hechos + ' · Ya estaban bien o no aplican: ' + saltados +
+            ' · No se pudo con: ' + fallos +
+            (ejemplos.length ? ('\n\nEjemplos:\n  ' + ejemplos.join('\n  ')) : '');
+  Logger.log(txt);
+  return txt;
+}
+
 /** Ejecútala UNA VEZ desde el editor para ver la URL de la carpeta. */
 function verCarpetaDeCertificados() {
   var url = carpetaCertificados_().getUrl();
@@ -703,6 +759,7 @@ function probarTodo() {
         'Vinculo': enlace || ''
       });
       lineas.push('5. Escribir la fila ........ OK  (fila ' + fila + ')');
+      lineas.push('   enlace que quedo en Vinculo: ' + (enlace || '(VACIO — el PDF no se guardo)'));
     }
   } catch (e) { lineas.push('5. Escribir la fila ........ FALLÓ: ' + e.message); }
 
