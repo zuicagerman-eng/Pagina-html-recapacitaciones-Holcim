@@ -631,6 +631,49 @@ function diagnostico() {
   return txt;
 }
 
+/**
+ * QUÉ TIENE RECORDADO EL SCRIPT
+ *
+ * Cuando ID_HOJA e ID_CARPETA_CERTIFICADOS están vacíos, el script usa lo que
+ * recordó la primera vez. Eso es cómodo, pero cuesta de ver: si alguna vez creó
+ * una hoja o una carpeta por error, se queda apuntando ahí y no hay forma de
+ * saberlo mirando el código.
+ *
+ * Ejecuta esta función para ver a dónde está apuntando de verdad.
+ */
+function verLoRecordado() {
+  var props = PropertiesService.getScriptProperties();
+  var lineas = [
+    'Hoja recordada:    ' + (props.getProperty('ID_HOJA') || '(ninguna)'),
+    'Carpeta recordada: ' + (props.getProperty('ID_CARPETA') || '(ninguna)'),
+    '',
+    'Lo que manda es lo que esté escrito en ID_HOJA e ID_CARPETA_CERTIFICADOS;',
+    'esto de arriba solo se usa cuando esas dos variables están vacías.'
+  ];
+  var txt = lineas.join('\n');
+  Logger.log(txt);
+  return txt;
+}
+
+/**
+ * BORRA lo recordado, para que el script vuelva a empezar de cero.
+ *
+ * Úsala si alguna vez se quedó apuntando a una hoja o una carpeta equivocadas.
+ * No borra ningún archivo: solo olvida las direcciones. En la siguiente
+ * ejecución, si ID_HOJA e ID_CARPETA_CERTIFICADOS siguen vacías, creará una
+ * hoja y una carpeta NUEVAS. Por eso lo recomendable es escribir en esas dos
+ * variables las tuyas de verdad, y así no depender de lo recordado.
+ */
+function olvidarLoRecordado() {
+  var props = PropertiesService.getScriptProperties();
+  props.deleteProperty('ID_HOJA');
+  props.deleteProperty('ID_CARPETA');
+  Logger.log('Listo: el script ya no recuerda ninguna hoja ni carpeta.\n' +
+             'Escribe las tuyas en ID_HOJA e ID_CARPETA_CERTIFICADOS antes de ' +
+             'volver a ejecutar, o creará unas nuevas.');
+  return 'olvidado';
+}
+
 /** Ejecútala UNA VEZ desde el editor para ver la URL de la hoja de resultados. */
 function verHojaDeResultados() {
   var url = obtenerHoja_().getUrl();

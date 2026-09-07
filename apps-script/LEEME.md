@@ -523,3 +523,40 @@ Quien publica la implementación debe ser esa misma cuenta: el script corre
 como `USER_DEPLOYING`, es decir, con los permisos de quien la publicó. Si la
 publica otra cuenta, los certificados intentarían guardarse en el Drive de esa
 otra cuenta.
+
+
+---
+
+## Dejar `ID_HOJA` en blanco: cuidado con lo que el script recuerda
+
+Dejar las variables vacías **no significa «empezar limpio»**. Significa «usa lo
+que recordaste». El script guarda la hoja y la carpeta que usó la primera vez,
+y sigue apuntando ahí aunque el código quede vacío.
+
+Eso muerde cuando alguna vez se creó una hoja o una carpeta por error: quedan
+recordadas y los resultados nuevos se van ahí, lejos de los de siempre, sin
+ningún aviso.
+
+**Para ver a dónde apunta de verdad**, ejecuta `verLoRecordado()`:
+
+```
+Hoja recordada:    1HTWzcTXPudUu0vfNjxA8nfYIgMA_7yJp1WjctbtwiOo
+Carpeta recordada: 1LExNIvC0PP0CSRVn79bg1m4yPfdvXJ4l
+```
+
+**Para que olvide todo**, ejecuta `olvidarLoRecordado()`. No borra archivos:
+solo olvida las direcciones.
+
+### Lo recomendable
+
+Escribir las tuyas de verdad en las dos variables, y no depender de lo
+recordado. Así, lo que apunta el script se ve leyendo el código:
+
+```js
+var ID_HOJA = "https://docs.google.com/spreadsheets/d/TU_HOJA/edit";
+var ID_CARPETA_CERTIFICADOS = "https://drive.google.com/drive/folders/TU_CARPETA";
+```
+
+Y recuerda cuál va en cuál: `ID_HOJA` lleva el enlace de
+**docs.google.com/spreadsheets/**, y `ID_CARPETA_CERTIFICADOS` el de
+**drive.google.com/drive/folders/**.
