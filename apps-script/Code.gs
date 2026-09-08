@@ -110,8 +110,13 @@ var CARPETA_RAIZ_CENTROS = "";
 
       Déjala vacía si el certificado va directo en la carpeta del centro.
       El script NO crea carpetas: si algún tramo no existe, avisa y usa la
-      carpeta del centro que sí encontró. */
-var SUBRUTA_CENTRO = "";
+      carpeta del centro que sí encontró. Eso hace que dé igual si la URL de un
+      centro apunta a la raíz de la planta o ya a la subcarpeta: las dos formas
+      acaban en el mismo sitio.
+
+      Si la cambias, ejecuta olvidarLoRecordado(): el script recuerda la
+      subcarpeta de cada centro para no buscarla en cada examen. */
+var SUBRUTA_CENTRO = "001 (Re) Inducción General H&S";
 
 /* 7) LA URL PUBLICADA (la que está en REPORTE_URL del index.html).
       Solo sirve para comprobarPublicacion(), que pregunta a la implementación
@@ -147,7 +152,7 @@ var URL_CURSO = "https://zuicagerman-eng.github.io/Pagina-html-recapacitaciones-
    siguen atendidos por el codigo viejo. Este sello es lo que permite verlo:
    comprobarPublicacion() se lo pregunta a la implementacion y compara.
    Subelo cada vez que cambie algo de fondo. */
-var VERSION_GS = "2026-09-08-c";
+var VERSION_GS = "2026-09-08-d";
 
 function doGet(e) {
   /* ?ping=1 devuelve la version que esta atendiendo. No toca nada: es la unica
@@ -451,7 +456,13 @@ function carpetaDelCentro_(centro) {
     }
   }
   if (enTabla) {
-    try { return DriveApp.getFolderById(enTabla); }
+    try {
+      /* Tambien a las de la tabla se les aplica la subruta. Antes solo se
+         aplicaba a las que se buscaban por nombre, asi que con los 15 puestos
+         a mano la opcion no hacia nada y los certificados quedaban en la raiz
+         de la planta, al lado de la subcarpeta a la que tenian que ir. */
+      return bajarPorSubruta_(DriveApp.getFolderById(enTabla), centro);
+    }
     catch (e) {
       console.error('La carpeta puesta para "' + centro + '" no se pudo abrir: ' + e.message +
                     ' — revisa esa URL en CARPETAS_POR_CENTRO.');
@@ -487,27 +498,52 @@ function carpetaDelCentro_(centro) {
     return null;
   }
 
-  // y ahora hacia dentro, si se configuró una subruta
-  if (SUBRUTA_CENTRO) {
-    var tramos = String(SUBRUTA_CENTRO).split('/');
-    for (var i = 0; i < tramos.length; i++) {
-      var nombre = normaliza_(tramos[i]);
-      if (!nombre) continue;
-      var hijo = null, sub = destino.getFolders();
-      while (sub.hasNext()) {
-        var c = sub.next();
-        if (normaliza_(c.getName()) === nombre) { hijo = c; break; }
-      }
-      if (!hijo) {
-        console.warn('En "' + centro + '" no existe el tramo "' + tramos[i] +
-                     '" de SUBRUTA_CENTRO. Se usa la carpeta del centro.');
-        break;
-      }
-      destino = hijo;
-    }
+  props.setProperty('CENTRO_' + clave, destino.getId());
+  return bajarPorSubruta_(destino, centro);
+}
+
+/**
+ * Baja desde la carpeta de un centro por los tramos de SUBRUTA_CENTRO.
+ *
+ * Si un tramo no existe, se queda en lo que haya encontrado y lo avisa. Eso no
+ * es un apaño: las URL de la tabla no son homogeneas —unas apuntan a la raiz de
+ * la planta y otras ya a la subcarpeta— y asi las dos formas acaban en el mismo
+ * sitio sin tener que uniformarlas a mano.
+ *
+ * El resultado se recuerda por carpeta de origen, no por centro: si algun dia
+ * se cambia la URL de un centro en la tabla, cambia la clave y se vuelve a
+ * buscar sola. Si cambias SUBRUTA_CENTRO, ejecuta olvidarLoRecordado().
+ */
+function bajarPorSubruta_(carpeta, centro) {
+  if (!carpeta || !SUBRUTA_CENTRO) return carpeta;
+
+  var props = PropertiesService.getScriptProperties();
+  var clave = 'SUB_' + carpeta.getId();
+  var guardada = props.getProperty(clave);
+  if (guardada) {
+    try { return DriveApp.getFolderById(guardada); }
+    catch (e) { props.deleteProperty(clave); }   // ya no existe: se vuelve a buscar
   }
 
-  props.setProperty('CENTRO_' + clave, destino.getId());
+  var destino = carpeta;
+  var tramos = String(SUBRUTA_CENTRO).split('/');
+  for (var i = 0; i < tramos.length; i++) {
+    var nombre = normaliza_(tramos[i]);
+    if (!nombre) continue;
+    var hijo = null, sub = destino.getFolders();
+    while (sub.hasNext()) {
+      var c = sub.next();
+      if (normaliza_(c.getName()) === nombre) { hijo = c; break; }
+    }
+    if (!hijo) {
+      console.warn('En "' + (centro || carpeta.getName()) + '" no hay ninguna subcarpeta "' +
+                   tramos[i] + '". Se usa "' + destino.getName() + '" tal cual.');
+      break;
+    }
+    destino = hijo;
+  }
+
+  props.setProperty(clave, destino.getId());
   return destino;
 }
 
@@ -542,7 +578,14 @@ function verCarpetasDeCentros() {
         if (CARPETAS_POR_CENTRO.hasOwnProperty(k) && normaliza_(k) === normaliza_(c) &&
             soloId_(CARPETAS_POR_CENTRO[k])) { deTabla = true; break; }
       }
-      lineas.push('OK  ' + pad_(c, 22) + ' → ' + f.getName() + (deTabla ? '' : '   (por nombre)'));
+      /* Se enseña tambien la carpeta madre: con la subruta puesta, el ultimo
+         nombre es igual en los 15 y no dejaria ver a que planta pertenece. */
+      var ruta = f.getName();
+      try {
+        var pd = f.getParents();
+        if (pd.hasNext()) ruta = pd.next().getName() + ' / ' + ruta;
+      } catch (e2) {}
+      lineas.push('OK  ' + pad_(c, 22) + ' → ' + ruta + (deTabla ? '' : '   (por nombre)'));
     } else {
       lineas.push('FALTA  ' + pad_(c, 20) + ' → iria a la carpeta general');
     }
@@ -1059,6 +1102,10 @@ function revisarConfiguracion() {
   if (sinCarpeta.length) {
     avisos.push('Centros sin carpeta propia (van a CARPETA_OTROS): ' + sinCarpeta.join(', '));
   }
+  avisos.push(SUBRUTA_CENTRO
+    ? 'Los certificados van DENTRO de "' + SUBRUTA_CENTRO + '" en cada centro. ' +
+      'El centro que no tenga esa subcarpeta los recibe en su raiz, y queda avisado.'
+    : 'SUBRUTA_CENTRO vacia: el certificado va directo a la carpeta del centro.');
   if (soloId_(HOJA_ANTERIOR)) {
     avisos.push('HOJA_ANTERIOR sigue rellena. Si la mudanza ya se hizo, dejala vacia.');
   }
@@ -1388,7 +1435,7 @@ function olvidarLoRecordado() {
      en Drive cada vez. */
   var todas = props.getProperties();
   Object.keys(todas).forEach(function (k) {
-    if (k.indexOf('CENTRO_') === 0) props.deleteProperty(k);
+    if (k.indexOf('CENTRO_') === 0 || k.indexOf('SUB_') === 0) props.deleteProperty(k);
   });
   Logger.log('Listo: el script ya no recuerda ninguna hoja ni carpeta.\n' +
              'Escribe las tuyas en ID_HOJA e ID_CARPETA_CERTIFICADOS antes de ' +

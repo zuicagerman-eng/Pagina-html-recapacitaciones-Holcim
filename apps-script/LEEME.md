@@ -1203,3 +1203,51 @@ function unaVez() {
 Desde la versión `2026-09-08-c`, el PDF se guarda **antes** de resolver la
 hoja. Una hoja mal configurada ya no puede costar el certificado, que es lo
 único irrepetible: la persona acaba de hacer el examen y no lo va a repetir.
+
+
+---
+
+## El certificado cae en la raíz de la planta, no en su subcarpeta
+
+Las carpetas de las plantas no guardan los certificados en su raíz: dentro hay
+una subcarpeta, `001 (Re) Inducción General H&S`, que es donde van. Para eso
+está `SUBRUTA_CENTRO`:
+
+```js
+var SUBRUTA_CENTRO = "001 (Re) Inducción General H&S";
+```
+
+Se escribe **una vez** y vale para los quince. Si algún día los certificados
+pasan a colgar más adentro, se encadenan los tramos con barras, tal como se leen
+en Drive.
+
+### Da igual a dónde apunte la URL de cada centro
+
+Las URL de `CARPETAS_POR_CENTRO` no son homogéneas: unas apuntan a la raíz de la
+planta y otras ya a la subcarpeta. No hay que uniformarlas.
+
+- Si la URL apunta a **la raíz**, el script baja a la subcarpeta.
+- Si la URL **ya es** la subcarpeta, dentro no encuentra otra igual, avisa en el
+  registro y la usa tal cual.
+
+Las dos formas acaban en el mismo sitio.
+
+### Compruébalo
+
+`verCarpetasDeCentros()` ahora enseña la carpeta **madre** además del nombre
+final, porque con la subruta puesta las quince terminan igual y sin eso no se
+vería de qué planta es cada una:
+
+```
+OK  SIBATE RMX             → SIBATE RMX / 001 (Re) Inducción General H&S
+OK  TELEPORT CORP          → TELEPORT CORP / 001 (Re) Inducción General H&S
+```
+
+Si en alguna aparece solo el nombre de la planta, es que ahí la subcarpeta se
+llama distinto. El registro dice cuál.
+
+### Si cambias `SUBRUTA_CENTRO`
+
+Ejecuta `olvidarLoRecordado()`. El script recuerda la subcarpeta resuelta de
+cada centro para no buscarla en cada examen, y si no lo haces seguiría usando la
+anterior.
