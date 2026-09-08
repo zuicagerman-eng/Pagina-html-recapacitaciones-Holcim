@@ -166,7 +166,7 @@ Opciones en ese caso:
 1. Pedirle a TI que habilite la publicación externa de Apps Script para tu
    cuenta o para el proyecto.
 2. Dejarlo en *"Cualquier usuario de Holcim"*, si todos los que van a
-   presentar la reinducción tienen correo corporativo.
+   presentar la (Re) Inducción tienen correo corporativo.
 3. Desplegar el curso desde una cuenta de Google personal, que sí permite
    "Cualquier usuario, incluso los anónimos". La hoja de resultados quedaría
    en el Drive de esa cuenta.
@@ -390,7 +390,7 @@ una versión vieja del script**, anterior a que se le añadiera lo de Drive.
 
 Cuando el script no consigue guardar el PDF, deja en la columna la dirección
 desde donde se presentó el examen, que es el respaldo. Por eso el enlace lleva
-a la reinducción y no a un archivo.
+a la (Re) Inducción y no a un archivo.
 
 Editar el código en el editor **no cambia lo que está publicado**. Apps Script
 sirve la *versión* que elegiste al implementar, así que hay que publicar una

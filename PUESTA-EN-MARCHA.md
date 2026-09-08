@@ -1,4 +1,4 @@
-# Puesta en marcha · HSE-001 Reinducción H&S
+# Puesta en marcha · HSE-001 (Re) Inducción H&S
 
 Guía para dejar el curso funcionando de punta a punta.
 Tiempo estimado: **20 minutos**.

@@ -1,5 +1,5 @@
 /**
- * Proyecto Apps Script "Reinducción HS Web".
+ * Proyecto Apps Script "(Re) Inducción HS Web".
  *
  * El curso NO vive aquí: se reparte desde GitHub Pages. Este proyecto es un
  * solo archivo (este) y hace tres cosas, todas por doPost:
@@ -152,7 +152,7 @@ var URL_CURSO = "https://zuicagerman-eng.github.io/Pagina-html-recapacitaciones-
    siguen atendidos por el codigo viejo. Este sello es lo que permite verlo:
    comprobarPublicacion() se lo pregunta a la implementacion y compara.
    Subelo cada vez que cambie algo de fondo. */
-var VERSION_GS = "2026-09-08-d";
+var VERSION_GS = "2026-09-08-e";
 
 function doGet(e) {
   /* ?ping=1 devuelve la version que esta atendiendo. No toca nada: es la unica
@@ -166,11 +166,11 @@ function doGet(e) {
   var destino = URL_CURSO.replace(/"/g, '');
   return HtmlService.createHtmlOutput(
       '<!DOCTYPE html><meta charset="utf-8">' +
-      '<title>HSE-001 Reinducción H&amp;S 2026</title>' +
-      '<p style="font:15px/1.5 system-ui;padding:24px">Abriendo la reinducción… ' +
+      '<title>HSE-001 (Re) Inducción H&amp;S 2026</title>' +
+      '<p style="font:15px/1.5 system-ui;padding:24px">Abriendo la (Re) Inducción… ' +
       'Si no avanza sola, <a id="ir" href="' + destino + '">entra aquí</a>.</p>' +
       '<script>var u="' + destino + '";try{top.location.replace(u)}catch(e){location.replace(u)}<\/script>')
-    .setTitle('HSE-001 Reinducción H&S 2026')
+    .setTitle('HSE-001 (Re) Inducción H&S 2026')
     .addMetaTag('viewport', 'width=device-width, initial-scale=1')
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 }
@@ -759,7 +759,7 @@ function enviarCopiaCertificado_(d, enlaceDrive) {
     var blob   = Utilities.newBlob(bytes, 'application/pdf', nombre);
 
     var cuerpo =
-      'Copia de respaldo del certificado de la reinducción HSE-001.\n\n' +
+      'Copia de respaldo del certificado de la (Re) Inducción HSE-001.\n\n' +
       '• Nombre: '    + (d.nombre || '-') + '\n' +
       '• Documento: ' + (d.cedula || '-') + '\n' +
       '• Tipo: '      + (d.tipoUsuario || '-') + '\n' +
@@ -1229,7 +1229,7 @@ function probarTodo() {
 
   var d = {
     nombre: 'PRUEBA - borrar', cedula: '000000000', tipoUsuario: 'Propio',
-    empresa: 'PRUEBA', capacitacion: 'HSE-001 · Reinducción H&S',
+    empresa: 'PRUEBA', capacitacion: 'HSE-001 · (Re) Inducción H&S',
     puntaje: '100%', resultado: 'APROBADO', aciertos: 20, total: 20,
     segundos: 1, navegador: 'prueba', fecha: new Date().toLocaleString(),
     certificado: pdfPrueba
