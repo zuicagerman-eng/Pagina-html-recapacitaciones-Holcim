@@ -232,6 +232,10 @@
   /* Pista del modo administrador: la respuesta correcta se señala, no se
      marca. Fuera del modo administrador no existe visualmente. */
   body.admin .exopt[data-ok]{border-color:var(--ok);background:rgba(46,178,94,.13)}
+  /* En un bloque no cabe la palabra "correcta" dentro de la casilla: se marca
+     con un anillo verde, que es lo unico que entra en 52 px. */
+  body.admin .mzop[data-ok]{background:rgba(46,178,94,.16);border-radius:8px;
+    box-shadow:inset 0 0 0 2px var(--ok)}
   body.admin .exopt[data-ok] span:after{content:"correcta";display:inline-block;
     margin-left:8px;font-size:10.5px;font-weight:800;letter-spacing:.6px;
     text-transform:uppercase;color:#04121f;background:var(--ok);
@@ -287,24 +291,42 @@
   /* Bloque Verdadero/Falso: varias afirmaciones dentro de UNA sola pregunta.
      Se acierta solo si estan todas bien, asi que se presenta como un bloque y
      no como preguntas sueltas: verlo como una unidad es parte del enunciado. */
-  .exvf{margin-top:10px;display:grid;gap:6px}
-  .exvf .vfcab{display:grid;grid-template-columns:1fr 78px 88px;gap:8px;
+  .exmz{margin-top:10px;display:grid;gap:6px;--cols:2;--anchoc:86px}
+  .exmz .mzcab{display:grid;grid-template-columns:1fr repeat(var(--cols),var(--anchoc));gap:8px;
     font-size:11px;font-weight:800;letter-spacing:.5px;color:#9fb6cd;
     padding:0 11px;text-transform:uppercase}
-  .exvf .vfcab span:not(:first-child){text-align:center}
-  .exvf .vffila{display:grid;grid-template-columns:1fr 78px 88px;gap:8px;align-items:center;
+  .exmz .mzcab span:not(:first-child){text-align:center;line-height:1.25}
+  .exmz .mzfila{display:grid;grid-template-columns:1fr repeat(var(--cols),var(--anchoc));gap:8px;align-items:center;
     background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);
     border-radius:9px;padding:9px 11px;font-size:13.5px;color:#dce8f5;line-height:1.4}
-  .exvf .vffila.bien{border-color:var(--ok);background:rgba(63,181,89,.18)}
-  .exvf .vffila.mal{border-color:var(--danger);background:rgba(226,59,50,.18)}
-  .exvf .vfop{display:grid;place-items:center;cursor:pointer;min-height:34px}
-  .exvf .vfop input{accent-color:#1bb4e4;width:18px;height:18px;cursor:pointer}
+  .exmz .mzfila.bien{border-color:var(--ok);background:rgba(63,181,89,.18)}
+  .exmz .mzfila.mal{border-color:var(--danger);background:rgba(226,59,50,.18)}
+  .exmz .mzop{display:grid;place-items:center;cursor:pointer;min-height:34px}
+  .exmz .mzop input{accent-color:#1bb4e4;width:18px;height:18px;cursor:pointer}
   /* En el telefono la afirmacion se lleva todo el ancho que se pueda: con las
      columnas anchas el texto salia a cuatro y cinco lineas. Las casillas bajan
      a 52 px, que sigue por encima de los 32 que necesita un dedo. */
   @media(max-width:560px){
-    .exvf .vfcab{grid-template-columns:1fr 52px 58px;font-size:9.5px;padding:0 8px;gap:4px}
-    .exvf .vffila{grid-template-columns:1fr 52px 58px;font-size:13px;padding:9px 8px;gap:4px}
+    .exmz{--anchoc:52px}
+    .exmz .mzcab{font-size:9px;padding:0 8px;gap:4px}
+    .exmz .mzfila{font-size:13px;padding:9px 8px;gap:4px}
+  }
+  /* El rotulo de cada casilla solo se ve cuando el bloque se apila: en la
+     tabla lo dice la cabecera de la columna. */
+  .exmz .mzet{display:none}
+  /* Con cuatro columnas la tabla no cabe en un telefono: la definicion se
+     quedaba en una tira de 86 px y salia a diez lineas. Ahi se apila —la
+     definicion entera y debajo sus opciones, cada una con su nombre—, que es
+     como se lee de verdad en una pantalla estrecha. */
+  @media(max-width:560px){
+    .exmz.muchas .mzcab{display:none}
+    .exmz.muchas .mzfila{display:block;padding:11px 12px}
+    .exmz.muchas .mzfila > span:first-child{display:block;margin-bottom:9px;font-weight:600}
+    .exmz.muchas .mzop{display:flex;gap:10px;align-items:center;justify-content:flex-start;
+      background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);
+      border-radius:8px;padding:9px 11px;margin-top:5px;min-height:38px}
+    .exmz.muchas .mzet{display:inline;font-size:13.5px;color:#dce8f5}
+    body.admin .exmz.muchas .mzop[data-ok]{box-shadow:none;border-color:var(--ok)}
   }
   .exopts{margin-top:9px;display:grid;gap:6px}
   .exopt{display:flex;gap:10px;align-items:flex-start;background:rgba(255,255,255,.05);
@@ -6079,7 +6101,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-08-q";
+var VERSION_CURSO = "2026-09-08-r";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 52 en cada intento.
@@ -7783,6 +7805,13 @@ cargarMediosCercanos();
    Para añadir o cambiar preguntas basta con editar esta lista. */
 var BANCO = [
 /* ---------- Módulo 1 · Generalidades ---------- */
+{m:'1',ob:1,rotulo:'Definición',cols:['Peligro','P.U.E','Riesgo','Acto inseguro'],
+ p:'Relaciona cada definición con el concepto que le corresponde.',matriz:[
+  ['Fuente, situación o acto con potencial de causar daño',0],
+  ['Acción que realiza un trabajador de manera insegura o inapropiada',3],
+  ['Evento prioritario NO deseado',1],
+  ['Probabilidad de exposición a eventos peligrosos y la gravedad del daño que este me puede causar',2]
+]},
 {m:'1',p:'Ante una emergencia, ¿cuál es la primera acción que se debe tomar?',o:['Mantener la calma','Correr hacia la salida más cercana','Buscar sus pertenencias personales','Llamar a su familia'],r:0},
 {m:'1',p:'Al informar una emergencia, ¿cuál de los siguientes datos NO forma parte de lo que se debe reportar?',o:['El nombre del jefe inmediato de cada afectado','Qué ocurrió','Número de personas afectadas','Qué tipo de ayuda se requiere'],r:0},
 {m:'1',p:'Según la clasificación de condiciones de seguridad, se considera trabajo en alturas a partir de:',o:['1,8 metros o más desde un plano horizontal','1,2 metros o más','2,5 metros o más','30 centímetros o más'],r:0},
@@ -7795,7 +7824,7 @@ var BANCO = [
 /* ---------- Módulo 2 · Planeación estratégica ---------- */
 /* --- Reglas HSE · completar la frase. Reutilizan los iconos de la lamina
        "Reglas HSE": el dibujo es parte del enunciado, no un adorno. --- */
-{m:'2',ob:1,p:'Según la Política HSE y la Declaración Local H&S, indica si cada afirmación es verdadera o falsa.',vf:[
+{m:'2',ob:1,p:'Según la Política HSE y la Declaración Local H&S, indica si cada afirmación es verdadera o falsa.',matriz:[
   ['La Política H&S de Holcim Colombia refleja el compromiso de la empresa y los trabajadores, en todos los niveles, para la gestión de los riesgos laborales.',1],
   ['El principal objetivo H&S de Holcim es desarrollar los negocios con cero daños.',1],
   ['Nada de lo que hacemos es tan importante como para ponernos en riesgo o dañar el medio ambiente.',1],
@@ -7844,6 +7873,11 @@ var BANCO = [
 {m:'4',p:'Está permitido operar un equipo al que se le retiraron las guardas de seguridad si la tarea es corta.',o:['Falso','Verdadero'],r:0},
 {m:'4',p:'En elevación y soporte de cargas, ¿cuál es una conducta prohibida?',o:['Colocarse debajo de cargas suspendidas','Verificar el peso exacto de la carga','Inspeccionar el equipo antes de usarlo','Usar terreno firme y nivelado'],r:0},
 /* ---------- Módulo 5 · Controles críticos ---------- */
+{m:'5',ob:1,p:'El cumplimiento de los controles críticos sirve para:',o:[
+  'Controlar los riesgos críticos y prevenir lesiones graves y fatales',
+  'Cumplir con el papeleo de Holcim',
+  'Reducir la necesidad de supervisión y depender de la experiencia del trabajador',
+  'Firmar el permiso de trabajo desde el escritorio'],r:0},
 {m:'5',p:'PUE significa:',o:['Evento Prioritario no Deseado','Plan Único de Emergencias','Procedimiento Unificado de Ejecución','Permiso Único de Entrada'],r:0},
 {m:'5',p:'A nivel mundial en Holcim, aproximadamente ¿qué porcentaje de los incidentes críticos y fatalidades está relacionado con los controles críticos?',o:['85%','50%','25%','100%'],r:0},
 {m:'5',p:'En el PUE de fallo en respuesta a emergencias, la respuesta de los brigadistas debe tardar menos de:',o:['5 minutos','15 minutos','30 minutos','1 hora'],r:0},
@@ -8333,6 +8367,11 @@ document.addEventListener('DOMContentLoaded', function(){
      se marcan mas con ob:1, los textos de la pantalla se ponen al dia solos. */
   function nObligatorias(){ return BANCO.filter(function(q){ return q.ob; }).length; }
 
+  /* Las columnas de un bloque. Por defecto Falso/Verdadero, que es el caso mas
+     comun; con 'cols' se le ponen las que sean —PELIGRO, P.U.E, RIESGO...— y
+     entonces el bloque es de relacionar en vez de verdadero o falso. */
+  function columnasDe(q){ return q.cols || ['Falso', 'Verdadero']; }
+
   function mezclar(a){ for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
 
   /* Mayusculas de verdad, no solo como se ve. Se quitan los espacios de sobra
@@ -8395,8 +8434,8 @@ document.addEventListener('DOMContentLoaded', function(){
     return tomadas.map(function(q){
       /* Un bloque V/F no tiene opciones que barajar; lo que se baraja son las
          afirmaciones, para que no se aprendan por su posicion en la lista. */
-      if(q.vf){
-        var filas = q.vf.map(function(_,k){ return k; });
+      if(q.matriz){
+        var filas = q.matriz.map(function(_,k){ return k; });
         mezclar(filas);
         return { q:q, filas:filas };
       }
@@ -8426,14 +8465,22 @@ document.addEventListener('DOMContentLoaded', function(){
               '<div class="qh"><span class="qn">'+(i+1)+'.</span><span>'+it.q.p+marca+'</span><span class="qm">'+etq+'</span></div>' +
               '<div class="qcuerpo">' + foto + '<div class="qtexto">';
 
-      if(it.q.vf){
-        html += '<div class="exvf"><div class="vfcab"><span>Afirmación</span>' +
-                '<span>Falso</span><span>Verdadero</span></div>';
+      if(it.q.matriz){
+        var cols = columnasDe(it.q), rotulo = it.q.rotulo || 'Afirmación';
+        html += '<div class="exmz' + (cols.length > 2 ? ' muchas' : '') + '" style="--cols:' + cols.length + '">' +
+                '<div class="mzcab"><span>' + rotulo + '</span>' +
+                cols.map(function(c){ return '<span>' + c + '</span>'; }).join('') + '</div>';
         it.filas.forEach(function(fi,k){
-          html += '<div class="vffila" data-fila="'+k+'"><span>'+it.q.vf[fi][0]+'</span>' +
-                  '<label class="vfop"><input type="radio" name="exq'+i+'f'+k+'" data-fila="'+k+'" value="0" aria-label="Falso"></label>' +
-                  '<label class="vfop"><input type="radio" name="exq'+i+'f'+k+'" data-fila="'+k+'" value="1" aria-label="Verdadero"></label>' +
-                  '</div>';
+          html += '<div class="mzfila" data-fila="'+k+'"><span>'+it.q.matriz[fi][0]+'</span>' +
+                  cols.map(function(c,ci){
+                    /* Misma pista que en las opciones sueltas: marcada en el
+                       HTML y visible solo con el modo administrador. Sin esto
+                       no habia forma de revisar un bloque sin responderlo. */
+                    var pista = (ci === +it.q.matriz[fi][1]) ? ' data-ok="1"' : '';
+                    return '<label class="mzop"'+pista+'><input type="radio" name="exq'+i+'f'+k+'" ' +
+                           'data-fila="'+k+'" value="'+ci+'" aria-label="'+c+'">' +
+                           '<span class="mzet">'+c+'</span></label>';
+                  }).join('') + '</div>';
         });
         html += '</div></div></div></div>';
         return;
@@ -8457,7 +8504,7 @@ document.addEventListener('DOMContentLoaded', function(){
       if(!e.target || e.target.type!=='radio') return;
       var caja = e.target.closest('.exq'); if(!caja) return;
       var i = +caja.getAttribute('data-q');
-      if(sorteadas[i].q.vf){
+      if(sorteadas[i].q.matriz){
         /* Un bloque V/F guarda una respuesta por afirmacion, no una sola. */
         if(!Array.isArray(respuestas[i])) respuestas[i] = [];
         respuestas[i][ +e.target.getAttribute('data-fila') ] = +e.target.value;
@@ -8475,10 +8522,11 @@ document.addEventListener('DOMContentLoaded', function(){
      dejarse una es lo mismo que dejarse una pregunta entera. */
   function respondida(i){
     var r = respuestas[i];
-    if(sorteadas[i] && sorteadas[i].q.vf){
+    if(sorteadas[i] && sorteadas[i].q.matriz){
       if(!Array.isArray(r)) return false;
-      for(var k = 0; k < sorteadas[i].q.vf.length; k++){
-        if(r[k] !== 0 && r[k] !== 1) return false;
+      var nCols = columnasDe(sorteadas[i].q).length;
+      for(var k = 0; k < sorteadas[i].q.matriz.length; k++){
+        if(!(r[k] >= 0 && r[k] < nCols)) return false;
       }
       return true;
     }
@@ -8530,25 +8578,22 @@ document.addEventListener('DOMContentLoaded', function(){
     var aciertos=0, detalle=[], obFalladas=0;
     sorteadas.forEach(function(it,i){
       var bien, resp, corr;
-      if(it.q.vf){
+      if(it.q.matriz){
         /* El bloque entero acierta solo si acierta cada afirmacion: por eso
            cuenta como UNA pregunta y no como cinco. En el repaso y en el PDF se
            nombran las que fallaron, que es lo unico que sirve para estudiar. */
-        var falladas = [];
+        var cols = columnasDe(it.q), falladas = [];
         it.filas.forEach(function(fi,k){
-          var esperada = it.q.vf[fi][1] ? 1 : 0;
-          if(respuestas[i][k] !== esperada) falladas.push(it.q.vf[fi][0]);
+          if(respuestas[i][k] !== +it.q.matriz[fi][1]) falladas.push(it.q.matriz[fi][0]);
         });
         bien = falladas.length === 0;
-        resp = bien ? 'Las ' + it.q.vf.length + ' correctas'
-                    : 'Fallaste ' + falladas.length + ' de ' + it.q.vf.length + ': ' + falladas.join(' · ');
-        corr = 'Todas las afirmaciones son VERDADERAS excepto las marcadas como falsas en el curso.';
-        /* Si algun dia hay afirmaciones falsas, el texto de arriba se queda
-           corto: se compone con las de verdad. */
-        var verdaderas = it.q.vf.filter(function(f){ return f[1]; }).length;
-        corr = (verdaderas === it.q.vf.length)
-          ? 'Las ' + it.q.vf.length + ' afirmaciones son VERDADERAS.'
-          : it.q.vf.map(function(f){ return (f[1] ? 'V' : 'F') + ' · ' + f[0]; }).join('  |  ');
+        resp = bien ? 'Las ' + it.q.matriz.length + ' correctas'
+                    : 'Fallaste ' + falladas.length + ' de ' + it.q.matriz.length + ': ' + falladas.join(' · ');
+        /* La correccion se escribe entera —cada fila con su columna— porque es
+           lo que se lee en el repaso y en el PDF, donde ya no esta la tabla. */
+        corr = it.q.matriz.map(function(f){
+          return cols[ +f[1] ].toUpperCase() + ' · ' + f[0];
+        }).join('  |  ');
       } else {
         bien = (respuestas[i] === it.correcta);
         resp = it.q.o[ it.orden[ respuestas[i] ] ];
@@ -8562,9 +8607,9 @@ document.addEventListener('DOMContentLoaded', function(){
       });
       // se pinta la corrección sobre las mismas tarjetas
       var caja = elLista.querySelector('.exq[data-q="'+i+'"]');
-      if(it.q.vf){
-        caja.querySelectorAll('.vffila').forEach(function(fila,k){
-          var esperada = it.q.vf[ it.filas[k] ][1] ? 1 : 0;
+      if(it.q.matriz){
+        caja.querySelectorAll('.mzfila').forEach(function(fila,k){
+          var esperada = +it.q.matriz[ it.filas[k] ][1];
           fila.classList.add(respuestas[i][k] === esperada ? 'bien' : 'mal');
           fila.querySelectorAll('input').forEach(function(inp){ inp.disabled = true; });
         });
