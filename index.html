@@ -284,6 +284,28 @@
     .exq .qcuerpo{flex-direction:column;gap:10px}
     .exq .qfoto{width:96px;height:96px;align-self:center}
   }
+  /* Bloque Verdadero/Falso: varias afirmaciones dentro de UNA sola pregunta.
+     Se acierta solo si estan todas bien, asi que se presenta como un bloque y
+     no como preguntas sueltas: verlo como una unidad es parte del enunciado. */
+  .exvf{margin-top:10px;display:grid;gap:6px}
+  .exvf .vfcab{display:grid;grid-template-columns:1fr 78px 88px;gap:8px;
+    font-size:11px;font-weight:800;letter-spacing:.5px;color:#9fb6cd;
+    padding:0 11px;text-transform:uppercase}
+  .exvf .vfcab span:not(:first-child){text-align:center}
+  .exvf .vffila{display:grid;grid-template-columns:1fr 78px 88px;gap:8px;align-items:center;
+    background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);
+    border-radius:9px;padding:9px 11px;font-size:13.5px;color:#dce8f5;line-height:1.4}
+  .exvf .vffila.bien{border-color:var(--ok);background:rgba(63,181,89,.18)}
+  .exvf .vffila.mal{border-color:var(--danger);background:rgba(226,59,50,.18)}
+  .exvf .vfop{display:grid;place-items:center;cursor:pointer;min-height:34px}
+  .exvf .vfop input{accent-color:#1bb4e4;width:18px;height:18px;cursor:pointer}
+  /* En el telefono la afirmacion se lleva todo el ancho que se pueda: con las
+     columnas anchas el texto salia a cuatro y cinco lineas. Las casillas bajan
+     a 52 px, que sigue por encima de los 32 que necesita un dedo. */
+  @media(max-width:560px){
+    .exvf .vfcab{grid-template-columns:1fr 52px 58px;font-size:9.5px;padding:0 8px;gap:4px}
+    .exvf .vffila{grid-template-columns:1fr 52px 58px;font-size:13px;padding:9px 8px;gap:4px}
+  }
   .exopts{margin-top:9px;display:grid;gap:6px}
   .exopt{display:flex;gap:10px;align-items:flex-start;background:rgba(255,255,255,.05);
     border:1px solid rgba(255,255,255,.09);border-radius:9px;padding:9px 11px;cursor:pointer;
@@ -6057,7 +6079,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-08-p";
+var VERSION_CURSO = "2026-09-08-q";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 52 en cada intento.
@@ -7773,6 +7795,13 @@ var BANCO = [
 /* ---------- Módulo 2 · Planeación estratégica ---------- */
 /* --- Reglas HSE · completar la frase. Reutilizan los iconos de la lamina
        "Reglas HSE": el dibujo es parte del enunciado, no un adorno. --- */
+{m:'2',ob:1,p:'Según la Política HSE y la Declaración Local H&S, indica si cada afirmación es verdadera o falsa.',vf:[
+  ['La Política H&S de Holcim Colombia refleja el compromiso de la empresa y los trabajadores, en todos los niveles, para la gestión de los riesgos laborales.',1],
+  ['El principal objetivo H&S de Holcim es desarrollar los negocios con cero daños.',1],
+  ['Nada de lo que hacemos es tan importante como para ponernos en riesgo o dañar el medio ambiente.',1],
+  ['Usted cuenta con la autoridad de detener un trabajo inseguro.',1],
+  ['Cumplir las Reglas HSE es condición de trabajo y empleo.',1]
+]},
 {m:'2',ob:1,f:'reportar(D14)',p:'Completa la regla HSE: «Yo ______ todos los incidentes.»',o:['Reporto','Utilizo siempre','Obtengo y hago seguimiento','Cumplo'],r:0},
 {m:'2',ob:1,f:'epp(D14)',p:'Completa la regla HSE: «Yo ______ el Equipo de Protección Personal (EPP) básico y específico para cada tarea.»',o:['Utilizo siempre','Reporto','Obtengo y hago seguimiento','Cumplo'],r:0},
 {m:'2',ob:1,f:'permisos(D14)',p:'Completa la regla HSE: «Yo ______ de los permisos de trabajo en alturas, en caliente, en espacios confinados, de aislamiento y bloqueo, y de elevación y soporte de cargas. Aíslo, bloqueo, etiqueto y pruebo siempre.»',o:['Obtengo y hago seguimiento','Reporto','Utilizo siempre','Cumplo'],r:0},
@@ -8296,7 +8325,7 @@ document.addEventListener('DOMContentLoaded', function(){
     'El examen tiene ' + (PREGUNTAS_EXAMEN + nOb) + ' preguntas y se aprueba con ' + NOTA_MINIMA +
     '% o más. Puedes repetirlo las veces que necesites; cada intento queda registrado.' +
     (nOb && EXIGIR_OBLIGATORIAS
-      ? '<br><b>Las ' + nOb + ' primeras son obligatorias</b> (Reglas HSE): hay que acertarlas ' +
+      ? '<br><b>Las ' + nOb + ' primeras son obligatorias</b>: hay que acertarlas ' +
         'todas, aparte del porcentaje.'
       : '');
 
@@ -8364,6 +8393,13 @@ document.addEventListener('DOMContentLoaded', function(){
 
     // se baraja también el orden de las opciones, salvo en las de Verdadero/Falso
     return tomadas.map(function(q){
+      /* Un bloque V/F no tiene opciones que barajar; lo que se baraja son las
+         afirmaciones, para que no se aprendan por su posicion en la lista. */
+      if(q.vf){
+        var filas = q.vf.map(function(_,k){ return k; });
+        mezclar(filas);
+        return { q:q, filas:filas };
+      }
       var idx = q.o.map(function(_,k){ return k; });
       if(q.o.length > 2) mezclar(idx);
       return { q:q, orden:idx, correcta:idx.indexOf(q.r) };
@@ -8388,8 +8424,22 @@ document.addEventListener('DOMContentLoaded', function(){
         ? '<span class="qob" title="Hay que acertarla para aprobar">★ Obligatoria</span>' : '';
       html += '<div class="exq'+(it.q.ob && EXIGIR_OBLIGATORIAS ? ' esob' : '')+'" data-q="'+i+'" style="--cm:'+infoMod(it.q.m).c+'">' +
               '<div class="qh"><span class="qn">'+(i+1)+'.</span><span>'+it.q.p+marca+'</span><span class="qm">'+etq+'</span></div>' +
-              '<div class="qcuerpo">' + foto + '<div class="qtexto">' +
-              '<div class="exopts">';
+              '<div class="qcuerpo">' + foto + '<div class="qtexto">';
+
+      if(it.q.vf){
+        html += '<div class="exvf"><div class="vfcab"><span>Afirmación</span>' +
+                '<span>Falso</span><span>Verdadero</span></div>';
+        it.filas.forEach(function(fi,k){
+          html += '<div class="vffila" data-fila="'+k+'"><span>'+it.q.vf[fi][0]+'</span>' +
+                  '<label class="vfop"><input type="radio" name="exq'+i+'f'+k+'" data-fila="'+k+'" value="0" aria-label="Falso"></label>' +
+                  '<label class="vfop"><input type="radio" name="exq'+i+'f'+k+'" data-fila="'+k+'" value="1" aria-label="Verdadero"></label>' +
+                  '</div>';
+        });
+        html += '</div></div></div></div>';
+        return;
+      }
+
+      html += '<div class="exopts">';
       it.orden.forEach(function(oi,k){
         /* La opcion correcta se marca en el HTML, pero SOLO se ve si el modo
            administrador esta activo (lo decide el CSS con body.admin). No se
@@ -8407,16 +8457,37 @@ document.addEventListener('DOMContentLoaded', function(){
       if(!e.target || e.target.type!=='radio') return;
       var caja = e.target.closest('.exq'); if(!caja) return;
       var i = +caja.getAttribute('data-q');
-      respuestas[i] = +e.target.value;
+      if(sorteadas[i].q.vf){
+        /* Un bloque V/F guarda una respuesta por afirmacion, no una sola. */
+        if(!Array.isArray(respuestas[i])) respuestas[i] = [];
+        respuestas[i][ +e.target.getAttribute('data-fila') ] = +e.target.value;
+      } else {
+        respuestas[i] = +e.target.value;
+        caja.querySelectorAll('.exopt').forEach(function(l){ l.classList.toggle('sel', l.querySelector('input').checked); });
+      }
       caja.classList.remove('sinresp');
-      caja.querySelectorAll('.exopt').forEach(function(l){ l.classList.toggle('sel', l.querySelector('input').checked); });
       contar();
     });
     contar();
   }
 
+  /* Un bloque V/F no esta respondido hasta que lo estan todas sus afirmaciones:
+     dejarse una es lo mismo que dejarse una pregunta entera. */
+  function respondida(i){
+    var r = respuestas[i];
+    if(sorteadas[i] && sorteadas[i].q.vf){
+      if(!Array.isArray(r)) return false;
+      for(var k = 0; k < sorteadas[i].q.vf.length; k++){
+        if(r[k] !== 0 && r[k] !== 1) return false;
+      }
+      return true;
+    }
+    return r !== undefined && r !== null;
+  }
+
   function contar(){
-    var hechas = respuestas.filter(function(r){ return r !== undefined && r !== null; }).length;
+    var hechas = 0;
+    for(var i = 0; i < sorteadas.length; i++){ if(respondida(i)) hechas++; }
     elCont.textContent = 'Respondidas ' + hechas + ' de ' + sorteadas.length;
     btnCal.disabled = hechas < sorteadas.length;
   }
@@ -8447,10 +8518,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
   btnCal.addEventListener('click', function(){
     var faltan = [];
-    respuestas.forEach(function(r,i){ if(r===undefined||r===null) faltan.push(i); });
-    for(var i=0;i<sorteadas.length;i++){
-      if(respuestas[i]===undefined||respuestas[i]===null) faltan.push(i);
-    }
+    for(var i=0;i<sorteadas.length;i++){ if(!respondida(i)) faltan.push(i); }
     if(faltan.length){
       elLista.querySelector('.exq[data-q="'+faltan[0]+'"]').classList.add('sinresp');
       return;
@@ -8461,23 +8529,53 @@ document.addEventListener('DOMContentLoaded', function(){
   function calificar(){
     var aciertos=0, detalle=[], obFalladas=0;
     sorteadas.forEach(function(it,i){
-      var bien = (respuestas[i] === it.correcta);
+      var bien, resp, corr;
+      if(it.q.vf){
+        /* El bloque entero acierta solo si acierta cada afirmacion: por eso
+           cuenta como UNA pregunta y no como cinco. En el repaso y en el PDF se
+           nombran las que fallaron, que es lo unico que sirve para estudiar. */
+        var falladas = [];
+        it.filas.forEach(function(fi,k){
+          var esperada = it.q.vf[fi][1] ? 1 : 0;
+          if(respuestas[i][k] !== esperada) falladas.push(it.q.vf[fi][0]);
+        });
+        bien = falladas.length === 0;
+        resp = bien ? 'Las ' + it.q.vf.length + ' correctas'
+                    : 'Fallaste ' + falladas.length + ' de ' + it.q.vf.length + ': ' + falladas.join(' · ');
+        corr = 'Todas las afirmaciones son VERDADERAS excepto las marcadas como falsas en el curso.';
+        /* Si algun dia hay afirmaciones falsas, el texto de arriba se queda
+           corto: se compone con las de verdad. */
+        var verdaderas = it.q.vf.filter(function(f){ return f[1]; }).length;
+        corr = (verdaderas === it.q.vf.length)
+          ? 'Las ' + it.q.vf.length + ' afirmaciones son VERDADERAS.'
+          : it.q.vf.map(function(f){ return (f[1] ? 'V' : 'F') + ' · ' + f[0]; }).join('  |  ');
+      } else {
+        bien = (respuestas[i] === it.correcta);
+        resp = it.q.o[ it.orden[ respuestas[i] ] ];
+        corr = it.q.o[ it.q.r ];
+      }
       if(bien) aciertos++;
       if(it.q.ob && !bien) obFalladas++;
       detalle.push({
         n: i+1, modulo: it.q.m, pregunta: it.q.p,
-        respondio: it.q.o[ it.orden[ respuestas[i] ] ],
-        correcta:  it.q.o[ it.q.r ],
-        acierto: bien
+        respondio: resp, correcta: corr, acierto: bien
       });
       // se pinta la corrección sobre las mismas tarjetas
       var caja = elLista.querySelector('.exq[data-q="'+i+'"]');
-      caja.querySelectorAll('.exopt').forEach(function(l,k){
-        l.classList.remove('sel');
-        if(k === it.correcta) l.classList.add('bien');
-        else if(k === respuestas[i]) l.classList.add('mal');
-        l.querySelector('input').disabled = true;
-      });
+      if(it.q.vf){
+        caja.querySelectorAll('.vffila').forEach(function(fila,k){
+          var esperada = it.q.vf[ it.filas[k] ][1] ? 1 : 0;
+          fila.classList.add(respuestas[i][k] === esperada ? 'bien' : 'mal');
+          fila.querySelectorAll('input').forEach(function(inp){ inp.disabled = true; });
+        });
+      } else {
+        caja.querySelectorAll('.exopt').forEach(function(l,k){
+          l.classList.remove('sel');
+          if(k === it.correcta) l.classList.add('bien');
+          else if(k === respuestas[i]) l.classList.add('mal');
+          l.querySelector('input').disabled = true;
+        });
+      }
     });
     var pct = Math.round(aciertos * 100 / sorteadas.length);
     /* Las obligatorias no se compensan con el resto: fallar una reprueba
@@ -8498,7 +8596,7 @@ document.addEventListener('DOMContentLoaded', function(){
       /* Sin esta linea, sacar 90% y no aprobar es incomprensible. */
       (porObligatorias
         ? '<br><b>Fallaste ' + obFalladas + ' de las ' + nObligatorias() + ' preguntas obligatorias</b> ' +
-          '(las de las Reglas HSE, marcadas con ★). Esas hay que acertarlas todas, ' +
+          '(las marcadas con ★). Esas hay que acertarlas todas, ' +
           'sin importar el porcentaje.'
         : '') +
       (aprobo ? '<br>Tu resultado quedó registrado. Descarga tu <b>certificado</b> y ya puedes cerrar esta ventana.'
