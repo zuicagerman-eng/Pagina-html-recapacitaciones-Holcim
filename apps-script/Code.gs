@@ -141,7 +141,7 @@ var URL_CURSO = "https://zuicagerman-eng.github.io/Pagina-html-recapacitaciones-
    siguen atendidos por el codigo viejo. Este sello es lo que permite verlo:
    comprobarPublicacion() se lo pregunta a la implementacion y compara.
    Subelo cada vez que cambie algo de fondo. */
-var VERSION_GS = "2026-09-08-a";
+var VERSION_GS = "2026-09-08-b";
 
 function doGet(e) {
   /* ?ping=1 devuelve la version que esta atendiendo. No toca nada: es la unica
@@ -875,12 +875,34 @@ function guardarExamen(d) {
     'Duración (s)': d.segundos,
     'Navegador': d.navegador || ''
   };
-  var hoja = pestana_(ss, PESTANA_RESUMEN, COLUMNAS_RESUMEN);
-  var fila = escribirPorEncabezado_(hoja, COLUMNAS_RESUMEN, valores);
+  /* Se deja escrito DONDE se guardo, no solo que se guardo. Cuando una fila no
+     aparece, la duda siempre es la misma —¿en que hoja y en que pestaña acabo?—
+     y sin esto hay que deducirlo. Ademas, si la escritura falla, el certificado
+     ya esta guardado: el fallo tiene que verse, no perderse. */
+  var hoja, fila = 0, dondeEscribio = '';
+  try {
+    var pestanasAntes = ss.getSheets().map(function (h) { return h.getName(); });
+    hoja = pestana_(ss, PESTANA_RESUMEN, COLUMNAS_RESUMEN);
+    if (pestanasAntes.indexOf(PESTANA_RESUMEN) < 0) {
+      console.warn('No existia la pestaña "' + PESTANA_RESUMEN + '" en esa hoja, ' +
+                   'asi que se acaba de crear. Las que ya habia: ' + pestanasAntes.join(', ') +
+                   '. Si esperabas ver la fila en otra pestaña, ese es el motivo.');
+    }
+    fila = escribirPorEncabezado_(hoja, COLUMNAS_RESUMEN, valores);
+    dondeEscribio = ss.getUrl() + '  ·  pestaña "' + hoja.getName() + '"  ·  fila ' + fila;
+    console.log('Fila escrita en: ' + dondeEscribio);
 
-  /* El enlace del certificado se deja como hipervinculo de verdad: el texto de
-     la celda sigue siendo la direccion, pero es clicable. */
-  if (enlaceCert) enlazar_(hoja, fila, 'Vinculo', enlaceCert);
+    /* El enlace del certificado se deja como hipervinculo de verdad: el texto de
+       la celda sigue siendo la direccion, pero es clicable. */
+    if (enlaceCert) enlazar_(hoja, fila, 'Vinculo', enlaceCert);
+  } catch (e) {
+    console.error('NO SE PUDO ESCRIBIR LA FILA: ' + e.message +
+                  '\nHoja: ' + (function () { try { return ss.getUrl(); } catch (x) { return '(no se pudo leer)'; } })() +
+                  '\nEl certificado SI se guardo: ' + (enlaceCert || '(tampoco)'));
+    var copiaF = enviarCopiaCertificado_(d, enlaceCert);
+    return { ok: false, error: 'no se pudo escribir la fila: ' + e.message,
+             certificado: enlaceCert ? 'guardado' : 'falló', copiaCorreo: copiaF };
+  }
 
   /* Segunda ruta: la copia por correo va DESPUÉS de escribir la fila, para que
      un fallo del correo no impida que el resultado quede registrado. */
@@ -889,7 +911,8 @@ function guardarExamen(d) {
   return {
     ok: true,
     certificado: enlaceCert ? 'guardado' : (d.certificado ? 'falló' : 'no llegó'),
-    copiaCorreo: copia
+    copiaCorreo: copia,
+    fila: dondeEscribio
   };
 }
 
@@ -1543,6 +1566,54 @@ function copiarFilasDeHojaVieja(urlHojaVieja) {
             '\nA:  ' + obtenerHoja_().getUrl() +
             '\n\nLa hoja vieja no se toco. Revisala y bórrala tú cuando estés conforme.' +
             '\nOJO: si ejecutas esto dos veces, duplicas las filas.';
+  Logger.log(txt);
+  return txt;
+}
+
+/**
+ * ¿EN QUÉ HOJA Y EN QUÉ PESTAÑA ESCRIBE?
+ *
+ * Cuando una fila "no aparece", casi siempre está escrita — en otro sitio. Las
+ * dos formas de que pase son mirar la hoja equivocada, o mirar la pestaña
+ * equivocada dentro de la buena: el script escribe en "Resultados", y si esa
+ * pestaña no existía la crea, quedando al lado de la que se está mirando.
+ *
+ * Esta función dice exactamente dónde va a caer la próxima fila.
+ */
+function verDondeEscribe() {
+  var lineas = [];
+  var ss;
+  try { ss = obtenerHoja_(); }
+  catch (e) { Logger.log('No se pudo abrir la hoja: ' + e.message); return 'sin hoja'; }
+
+  lineas.push('Hoja: "' + ss.getName() + '"');
+  lineas.push('  ' + ss.getUrl());
+  lineas.push('  de donde sale: ' + (soloId_(ID_HOJA) ? 'ID_HOJA' : 'lo que el script recuerda'));
+  lineas.push('');
+  lineas.push('Pestaña donde escribe: "' + PESTANA_RESUMEN + '"');
+
+  var hoja = ss.getSheetByName(PESTANA_RESUMEN);
+  if (!hoja) {
+    lineas.push('  NO EXISTE todavia: se creara sola en el proximo examen.');
+    lineas.push('  Las que hay ahora: ' + ss.getSheets().map(function (h) { return '"' + h.getName() + '"'; }).join(', '));
+    lineas.push('  Si tus datos estan en una de esas, renombrala a "' + PESTANA_RESUMEN + '".');
+  } else {
+    var ancho = Math.max(1, hoja.getLastColumn());
+    var enc = hoja.getRange(1, 1, 1, ancho).getValues()[0].map(String);
+    lineas.push('  filas escritas: ' + Math.max(0, hoja.getLastRow() - 1));
+    lineas.push('  encabezados:    ' + enc.join(' | '));
+    var faltan = COLUMNAS_RESUMEN.filter(function (c) { return enc.indexOf(c) < 0; });
+    lineas.push(faltan.length
+      ? '  OJO: le faltan estas, se agregaran al final: ' + faltan.join(', ')
+      : '  Todas las columnas que hacen falta estan.');
+  }
+
+  lineas.push('');
+  lineas.push('Todas las pestañas: ' + ss.getSheets().map(function (h) {
+    return '"' + h.getName() + '" (' + Math.max(0, h.getLastRow() - 1) + ' filas)';
+  }).join(', '));
+
+  var txt = lineas.join('\n');
   Logger.log(txt);
   return txt;
 }

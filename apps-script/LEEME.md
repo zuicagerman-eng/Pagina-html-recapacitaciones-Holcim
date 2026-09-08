@@ -1125,3 +1125,38 @@ Se arregla poniendo una carpeta propia, solo de paso, en
 `ID_CARPETA_CERTIFICADOS`. `verLoRecordado()` ahora enseña el **nombre** de lo
 que hay recordado, no solo su identificador, que es lo que hacía invisible el
 problema.
+
+
+---
+
+## «El certificado sí, pero la fila no aparece»
+
+El caso raro: el PDF se guarda y va a la carpeta que le toca, pero la fila no
+sale en la hoja. Como el certificado se guarda **antes** que la fila, que
+aparezca el PDF prueba que el examen llegó y que la hoja se abrió bien: el
+problema está en los últimos centímetros.
+
+Casi siempre la fila **sí está escrita**, en otro sitio. Hay dos:
+
+1. **Otra pestaña.** El script escribe en la pestaña `Resultados`. Si esa
+   pestaña no existe, la **crea** —y queda al lado de aquella en la que estás
+   mirando, con el mismo aspecto—. Es lo más frecuente cuando la hoja se hizo a
+   mano.
+2. **Otra hoja.** Si `ID_HOJA` está vacía, el script usa la que recordó, que
+   puede ser otra.
+
+### Cómo se ve sin adivinar
+
+Ejecuta **`verDondeEscribe()`**. Dice la hoja, de dónde salió esa hoja, la
+pestaña donde va a caer la próxima fila, sus encabezados, y **todas las
+pestañas con cuántas filas tiene cada una**. Ahí se ve de un vistazo si los
+datos están en una pestaña que no estabas mirando.
+
+Si resulta que tus datos están en una pestaña con otro nombre, renómbrala a
+`Resultados` y ya.
+
+### Y si de verdad falló
+
+El registro lo dice ahora con todas las letras: `NO SE PUDO ESCRIBIR LA FILA`,
+con el motivo y la hoja. Míralo en **Ejecuciones** (el icono del reloj, a la
+izquierda del editor), en la ejecución de `doPost` correspondiente a esa hora.
