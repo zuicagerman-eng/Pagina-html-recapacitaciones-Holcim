@@ -1050,3 +1050,59 @@ Transferir propiedad*.
 Déjala unos días, comprueba que la nueva se está llenando y bórrala tú cuando
 estés conforme. El script no la vuelve a tocar en cuanto `ID_HOJA` apunta a la
 nueva.
+
+
+---
+
+## «Pegué el código y sigue haciendo lo de antes»
+
+Es el fallo más caro de todos porque **no da ningún error**. Lo que atiende al
+curso no es el código del editor: es el de la **implementación publicada**. Si
+pegas el archivo y no publicas versión nueva, las dos cosas quedan distintas y
+nada avisa.
+
+Y `probarTodo` no lo detecta: ejecuta el código del editor, así que pasa entero
+mientras los exámenes de verdad los sigue atendiendo el código viejo.
+
+### Cómo se reconoce
+
+Mira **el nombre de un PDF recién guardado**. Es la prueba más rápida:
+
+| El nombre es… | Entonces |
+|---|---|
+| `2026.09.08 APELLIDO APELLIDO NOMBRES.pdf` | está publicado el código de ahora |
+| `NOMBRE - 1020304050 - 2026-09-08 0703.pdf` | **está publicado el código viejo** |
+
+Con el código viejo también verás las otras dos señales, que son la misma causa:
+todos los certificados caen en una sola carpeta —da igual el centro que
+elijan— y las filas siguen yendo a la hoja anterior.
+
+### Cómo se comprueba sin adivinar
+
+Ejecuta **`comprobarPublicacion()`**. Le pregunta a la implementación qué
+versión está atendiendo y la compara con la de este archivo. Una implementación
+vieja ni siquiera reconoce la pregunta, y eso ya es la respuesta.
+
+### Cómo se arregla
+
+**Implementar → Administrar implementaciones → el lápiz ✏️ → Versión: «Nueva
+versión» → Implementar.**
+
+Que sea *versión nueva*, no una de la lista. Y sin cambiar la URL: editando la
+implementación que ya existe, el enlace del curso sigue igual.
+
+## Todos los certificados caen en la misma carpeta
+
+Si ya publicaste y aun así todos acaban en el mismo sitio, ejecuta
+**`verLoRecordado()`**.
+
+Cuando `ID_CARPETA_CERTIFICADOS` está vacía, el script usa la carpeta que
+recordó la primera vez, y ahí es donde **nace** cada certificado antes de
+trasladarse a la de su centro. Si esa carpeta recordada resulta ser la de un
+centro concreto —de una prueba de hace semanas—, todos nacen allí; y cualquiera
+que no se pueda trasladar se queda allí.
+
+Se arregla poniendo una carpeta propia, solo de paso, en
+`ID_CARPETA_CERTIFICADOS`. `verLoRecordado()` ahora enseña el **nombre** de lo
+que hay recordado, no solo su identificador, que es lo que hacía invisible el
+problema.

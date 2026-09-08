@@ -108,6 +108,11 @@ var CARPETA_RAIZ_CENTROS = "";
       carpeta del centro que sí encontró. */
 var SUBRUTA_CENTRO = "";
 
+/* 8) LA URL PUBLICADA (la que está en REPORTE_URL del index.html).
+      Solo sirve para comprobarPublicacion(), que pregunta a la implementación
+      qué versión del código está atendiendo de verdad. */
+var URL_EXEC_PUBLICADA = "https://script.google.com/macros/s/AKfycbzkHY0ugVub450O7yNT08YagD1YMgSsdFGRIKUz9fnuxvABvzHQaFysxpmVCT15HqDs/exec";
+
 /* 7) SOLO PARA LA MUDANZA DE LA HOJA — la hoja ANTERIOR, la personal.
       Pégala aquí, ejecuta mudarLaHoja() UNA VEZ y vuelve a dejarla vacía.
       Copia sus filas a la hoja del punto 2. No borra nada de la vieja. */
@@ -129,7 +134,24 @@ var HOJA_ANTERIOR = "";
    ═══════════════════════════════════════════════════════════════════════════ */
 var URL_CURSO = "https://zuicagerman-eng.github.io/Pagina-html-recapacitaciones-Holcim/index.html";
 
-function doGet() {
+/* SELLO DE VERSION DE ESTE ARCHIVO
+   El curso no habla con el codigo del editor, sino con el de la implementacion
+   PUBLICADA. Pegar el archivo y no publicar version nueva deja las dos cosas
+   distintas sin que nada avise: probarTodo pasa —usa el editor— y los examenes
+   siguen atendidos por el codigo viejo. Este sello es lo que permite verlo:
+   comprobarPublicacion() se lo pregunta a la implementacion y compara.
+   Subelo cada vez que cambie algo de fondo. */
+var VERSION_GS = "2026-09-08-a";
+
+function doGet(e) {
+  /* ?ping=1 devuelve la version que esta atendiendo. No toca nada: es la unica
+     forma de saber, desde fuera, si lo publicado es lo que hay en el editor.
+     Una implementacion vieja no conoce el parametro y contesta con la pagina de
+     siempre, que ya es la respuesta: esta desactualizada. */
+  if (e && e.parameter && e.parameter.ping) {
+    return ContentService.createTextOutput(JSON.stringify({ ok: true, version: VERSION_GS }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
   var destino = URL_CURSO.replace(/"/g, '');
   return HtmlService.createHtmlOutput(
       '<!DOCTYPE html><meta charset="utf-8">' +
@@ -958,6 +980,59 @@ function duenio_(archivoOCarpeta) {
 }
 
 /**
+ * ¿LO PUBLICADO ES LO QUE HAY EN EL EDITOR?
+ *
+ * Es la pregunta que probarTodo NO responde. probarTodo ejecuta el codigo del
+ * editor; el curso habla con la implementacion PUBLICADA. Si se pega el archivo
+ * y no se publica version nueva, probarTodo pasa entero y los examenes los
+ * sigue atendiendo el codigo viejo: los certificados salen con el nombre de
+ * antes, van a la carpeta de antes y las filas caen en la hoja de antes.
+ *
+ * Esta funcion le pregunta a la implementacion publicada que version esta
+ * atendiendo y la compara con la de este archivo.
+ */
+function comprobarPublicacion() {
+  var url = String(URL_EXEC_PUBLICADA || '').trim();
+  if (!url) { Logger.log('Pega en URL_EXEC_PUBLICADA la direccion /exec, la misma que hay en REPORTE_URL del index.html.'); return 'falta la url'; }
+  if (/\/dev$/.test(url)) { Logger.log('Esa es la direccion de PRUEBAS (/dev). Hace falta la publicada, que termina en /exec.'); return 'es la de pruebas'; }
+
+  var sep = url.indexOf('?') >= 0 ? '&' : '?';
+  var resp;
+  try {
+    resp = UrlFetchApp.fetch(url + sep + 'ping=1', { muteHttpExceptions: true, followRedirects: true });
+  } catch (e) {
+    Logger.log('No se pudo consultar la implementacion: ' + e.message);
+    return 'no se pudo consultar';
+  }
+
+  var cuerpo = String(resp.getContentText() || '');
+  var publicada = '';
+  try { publicada = (JSON.parse(cuerpo) || {}).version || ''; } catch (e) { /* no contesto JSON */ }
+
+  if (!publicada) {
+    var txt = 'LA IMPLEMENTACION PUBLICADA ESTA DESACTUALIZADA.\n\n' +
+      'No reconoce la pregunta, asi que es codigo anterior al de este archivo.\n' +
+      'Mientras siga asi, el curso guarda con las reglas viejas: el nombre del\n' +
+      'PDF, la carpeta y la hoja son las de antes, aunque aqui pongan otra cosa.\n\n' +
+      'Arreglo: Implementar → Administrar implementaciones → el lapiz ✏️ →\n' +
+      'Version: "Nueva version" → Implementar. Sin cambiar la URL.\n\n' +
+      'Version de este archivo: ' + VERSION_GS;
+    Logger.log(txt);
+    return txt;
+  }
+
+  var igual = publicada === VERSION_GS;
+  var txt2 = (igual ? 'AL DIA.' : 'NO COINCIDEN.') +
+    '\n  publicada: ' + publicada +
+    '\n  editor:    ' + VERSION_GS +
+    (igual ? '\n\nLo que atiende al curso es este mismo codigo.'
+           : '\n\nPublica una version NUEVA de la implementacion: Implementar →\n' +
+             'Administrar implementaciones → el lapiz ✏️ → Version: "Nueva version".');
+  Logger.log(txt2);
+  return txt2;
+}
+
+/**
  * PRUEBA COMPLETA — ejecútala UNA VEZ desde el editor antes de soltar el curso.
  *
  * Hace de verdad todo el recorrido con una persona inventada: escribe una fila
@@ -968,6 +1043,11 @@ function duenio_(archivoOCarpeta) {
  */
 function probarTodo() {
   var lineas = [];
+  /* Lo primero, porque es lo que mas confunde: esto prueba el codigo DEL
+     EDITOR. Que pase entero no dice nada sobre lo que atiende al curso. */
+  lineas.push('OJO: esto prueba el codigo del EDITOR, no el publicado.');
+  lineas.push('     Para saber si lo publicado esta al dia: comprobarPublicacion()');
+  lineas.push('');
   var pdfPrueba = Utilities.base64Encode(Utilities.newBlob(
     '%PDF-1.4\n1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj\n' +
     '2 0 obj<</Type/Pages/Kids[3 0 R]/Count 1>>endobj\n' +
@@ -1010,7 +1090,8 @@ function probarTodo() {
   var enlace = '';
   try {
     var carpeta = carpetaCertificados_();
-    lineas.push('2. Carpeta de Drive ........ OK  ' + carpeta.getUrl());
+    lineas.push('2. Carpeta de Drive ........ OK  "' + carpeta.getName() + '"  ' + carpeta.getUrl());
+    lineas.push('   (aqui NACE el certificado; luego se traslada a la de su centro)');
     lineas.push('   dueño: ' + duenio_(carpeta));
     enlace = guardarCertificado_(d);
     if (enlace) {
@@ -1130,13 +1211,34 @@ function diagnostico() {
  */
 function verLoRecordado() {
   var props = PropertiesService.getScriptProperties();
+
+  /* Se enseña el NOMBRE, no solo el identificador. Un identificador no dice
+     nada al leerlo, y aqui es justo donde aparece la sorpresa: la carpeta
+     recordada puede ser la de un centro concreto, de una prueba de hace
+     semanas, y entonces TODOS los certificados nacen ahi. */
+  function comoSeLlama(id, tipo) {
+    if (!id) return '(ninguna)';
+    try {
+      var x = (tipo === 'hoja') ? SpreadsheetApp.openById(id) : DriveApp.getFolderById(id);
+      return '"' + x.getName() + '"   ' + x.getUrl();
+    } catch (e) { return id + '   (no se pudo abrir: ' + e.message + ')'; }
+  }
+
+  var idHoja = props.getProperty('ID_HOJA'), idCarp = props.getProperty('ID_CARPETA');
   var lineas = [
-    'Hoja recordada:    ' + (props.getProperty('ID_HOJA') || '(ninguna)'),
-    'Carpeta recordada: ' + (props.getProperty('ID_CARPETA') || '(ninguna)'),
+    'Hoja recordada:    ' + comoSeLlama(idHoja, 'hoja'),
+    'Carpeta recordada: ' + comoSeLlama(idCarp, 'carpeta'),
     '',
     'Lo que manda es lo que esté escrito en ID_HOJA e ID_CARPETA_CERTIFICADOS;',
     'esto de arriba solo se usa cuando esas dos variables están vacías.'
   ];
+  if (!soloId_(ID_CARPETA_CERTIFICADOS) && idCarp) {
+    lineas.push('');
+    lineas.push('ID_CARPETA_CERTIFICADOS está vacía, así que la carpeta de arriba es');
+    lineas.push('donde NACE cada certificado antes de trasladarse a la de su centro.');
+    lineas.push('Si ahí sale la carpeta de un centro concreto, eso es lo que hay que');
+    lineas.push('cambiar: pon una carpeta propia en ID_CARPETA_CERTIFICADOS.');
+  }
   var txt = lineas.join('\n');
   Logger.log(txt);
   return txt;
@@ -1454,7 +1556,9 @@ function doPost(e) {
     if (d.tipo === 'examen')                      r = guardarExamen(d);
     else if (!d.tipo || d.tipo === 'reporte')     r = enviarCorreoReporte(d);
     else                                          r = guardarFormulario(d);
-    return ContentService.createTextOutput(JSON.stringify(r || { ok: true }))
+    r = r || { ok: true };
+    r.version = VERSION_GS;   // para saber que codigo atendio, si algo no cuadra
+    return ContentService.createTextOutput(JSON.stringify(r))
       .setMimeType(ContentService.MimeType.JSON);
   } catch (err) {
     return ContentService.createTextOutput(JSON.stringify({ ok: false, error: String(err) }))
