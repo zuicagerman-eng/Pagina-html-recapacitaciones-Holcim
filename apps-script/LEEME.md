@@ -1088,8 +1088,27 @@ vieja ni siquiera reconoce la pregunta, y eso ya es la respuesta.
 **Implementar → Administrar implementaciones → el lápiz ✏️ → Versión: «Nueva
 versión» → Implementar.**
 
-Que sea *versión nueva*, no una de la lista. Y sin cambiar la URL: editando la
-implementación que ya existe, el enlace del curso sigue igual.
+Que sea *versión nueva*, no una de la lista.
+
+### El error que parece el arreglo
+
+**Crear una implementación nueva no sirve.** Nace con **otra URL**, y la de
+siempre —la que tiene el curso en `REPORTE_URL`— se queda intacta, con el
+código viejo. Todo sigue igual, y encima uno se queda con la sensación de haber
+publicado.
+
+Hay que **editar la que ya existe**, con el lápiz ✏️, y darle versión nueva. Así
+la URL no cambia y no hay que tocar el `index.html`.
+
+Si ya creaste otra y prefieres quedarte con ella, compruébala pasándole su URL:
+
+```js
+comprobarPublicacion("https://script.google.com/macros/s/LA_NUEVA/exec")
+```
+
+Si esa sí está al día, entonces hay que cambiar `REPORTE_URL` en el
+`index.html` por esa. Es más trabajo: hay que tocar el HTML y esperar a que
+GitHub Pages lo sirva.
 
 ## Todos los certificados caen en la misma carpeta
 

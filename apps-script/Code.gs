@@ -991,8 +991,14 @@ function duenio_(archivoOCarpeta) {
  * Esta funcion le pregunta a la implementacion publicada que version esta
  * atendiendo y la compara con la de este archivo.
  */
-function comprobarPublicacion() {
-  var url = String(URL_EXEC_PUBLICADA || '').trim();
+function comprobarPublicacion(otraUrl) {
+  /* Se admite una URL suelta para poder comprobar OTRA implementacion sin tocar
+     la configuracion. Hace falta justo cuando alguien, en vez de publicar una
+     version nueva de la de siempre, crea una implementacion nueva: esa nace con
+     OTRA URL, la de siempre se queda intacta con el codigo viejo, y el curso
+     —que apunta a la de siempre— no cambia en nada. */
+  var url = String(otraUrl || URL_EXEC_PUBLICADA || '').trim();
+  var esLaDelCurso = !otraUrl || soloId_(url) === soloId_(URL_EXEC_PUBLICADA);
   if (!url) { Logger.log('Pega en URL_EXEC_PUBLICADA la direccion /exec, la misma que hay en REPORTE_URL del index.html.'); return 'falta la url'; }
   if (/\/dev$/.test(url)) { Logger.log('Esa es la direccion de PRUEBAS (/dev). Hace falta la publicada, que termina en /exec.'); return 'es la de pruebas'; }
 
@@ -1010,24 +1016,38 @@ function comprobarPublicacion() {
   try { publicada = (JSON.parse(cuerpo) || {}).version || ''; } catch (e) { /* no contesto JSON */ }
 
   if (!publicada) {
-    var txt = 'LA IMPLEMENTACION PUBLICADA ESTA DESACTUALIZADA.\n\n' +
-      'No reconoce la pregunta, asi que es codigo anterior al de este archivo.\n' +
+    var txt = 'ESTA URL SIRVE CODIGO VIEJO.\n  ' + url + '\n' +
+      (esLaDelCurso ? '  (es la que usa el curso: REPORTE_URL)\n' : '  (no es la del curso)\n') +
+      '\nNo reconoce la pregunta, asi que es anterior al codigo de este archivo.\n' +
       'Mientras siga asi, el curso guarda con las reglas viejas: el nombre del\n' +
-      'PDF, la carpeta y la hoja son las de antes, aunque aqui pongan otra cosa.\n\n' +
-      'Arreglo: Implementar → Administrar implementaciones → el lapiz ✏️ →\n' +
-      'Version: "Nueva version" → Implementar. Sin cambiar la URL.\n\n' +
-      'Version de este archivo: ' + VERSION_GS;
+      'PDF, la carpeta y la hoja son las de antes, aunque aqui pongan otra cosa.\n' +
+      '\nCUIDADO CON EL ARREGLO: crear una implementacion NUEVA no sirve, porque\n' +
+      'nace con otra URL y esta se queda igual. Hay que publicar una version\n' +
+      'nueva DE ESTA:\n' +
+      '  Implementar → Administrar implementaciones → busca la que termina en\n' +
+      '  ...' + url.slice(-12) + ' → el lapiz ✏️ → Version: "Nueva version" → Implementar\n' +
+      '\nSi ya creaste otra y prefieres quedarte con ella, comprueba su URL con\n' +
+      '  comprobarPublicacion("https://script.google.com/macros/s/.../exec")\n' +
+      'y, si esa si esta al dia, hay que cambiar REPORTE_URL en el index.html.\n' +
+      '\nVersion de este archivo: ' + VERSION_GS;
     Logger.log(txt);
     return txt;
   }
 
   var igual = publicada === VERSION_GS;
   var txt2 = (igual ? 'AL DIA.' : 'NO COINCIDEN.') +
+    '\n  url:       ' + url +
     '\n  publicada: ' + publicada +
     '\n  editor:    ' + VERSION_GS +
-    (igual ? '\n\nLo que atiende al curso es este mismo codigo.'
-           : '\n\nPublica una version NUEVA de la implementacion: Implementar →\n' +
-             'Administrar implementaciones → el lapiz ✏️ → Version: "Nueva version".');
+    (igual
+      ? (esLaDelCurso
+          ? '\n\nLo que atiende al curso es este mismo codigo.'
+          : '\n\nEsta URL esta al dia, pero NO es la que usa el curso.\n' +
+            'O publicas version nueva en la del curso, o cambias REPORTE_URL\n' +
+            'en el index.html por esta.')
+      : '\n\nPublica una version NUEVA de ESTA implementacion: Implementar →\n' +
+        'Administrar implementaciones → el lapiz ✏️ → Version: "Nueva version".\n' +
+        'Crear otra implementacion no sirve: naceria con otra URL.');
   Logger.log(txt2);
   return txt2;
 }
