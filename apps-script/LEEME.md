@@ -1160,3 +1160,46 @@ Si resulta que tus datos están en una pestaña con otro nombre, renómbrala a
 El registro lo dice ahora con todas las letras: `NO SE PUDO ESCRIBIR LA FILA`,
 con el motivo y la hoja. Míralo en **Ejecuciones** (el icono del reloj, a la
 izquierda del editor), en la ejecución de `doPost` correspondiente a esa hora.
+
+
+---
+
+## ⚠️ Después de pegar este archivo, rellena dos casillas
+
+Pegar el `Code.gs` encima **borra lo que hubiera escrito arriba**. Y aquí está
+la trampa: las 15 carpetas de los centros sí vienen puestas en el repositorio,
+así que sobreviven al pegado y todo *parece* configurado. Estas dos no:
+
+```js
+var ID_HOJA       = "";   // ← la hoja de Holcim
+var CARPETA_OTROS = "";   // ← contratistas, visitantes y "Otra"
+```
+
+Con `ID_HOJA` vacía **no sale ningún error**. El script usa la hoja que recordó
+—o se crea una él solo, llamada `HSE-001 · Resultados examen`— y los exámenes
+se van ahí. El certificado se guarda bien, el reparto por centro funciona, y
+solo se nota al abrir la hoja de Holcim y ver que no llega nada.
+
+Ejecuta **`revisarConfiguracion()`** después de cada pegado. Dice qué quedó
+vacío y qué consecuencia tiene. `probarTodo` ya la llama sola, de primeras.
+
+### Si ya pasó: recuperar las filas
+
+1. Ejecuta `verDondeEscribe()`. Si dice **«de dónde sale: lo que el script
+   recuerda»**, es esto. Apunta la URL que muestra.
+2. Pon la URL de la hoja de Holcim en `ID_HOJA`.
+3. Trae las filas de la hoja fantasma:
+
+```js
+function unaVez() {
+  copiarFilasDeHojaVieja("https://docs.google.com/spreadsheets/d/LA_FANTASMA/edit");
+}
+```
+
+4. Revisa que no queden repetidas y borra la hoja fantasma.
+
+### Por qué el certificado sí se salva
+
+Desde la versión `2026-09-08-c`, el PDF se guarda **antes** de resolver la
+hoja. Una hoja mal configurada ya no puede costar el certificado, que es lo
+único irrepetible: la persona acaba de hacer el examen y no lo va a repetir.

@@ -141,7 +141,7 @@ var URL_CURSO = "https://zuicagerman-eng.github.io/Pagina-html-recapacitaciones-
    siguen atendidos por el codigo viejo. Este sello es lo que permite verlo:
    comprobarPublicacion() se lo pregunta a la implementacion y compara.
    Subelo cada vez que cambie algo de fondo. */
-var VERSION_GS = "2026-09-08-b";
+var VERSION_GS = "2026-09-08-c";
 
 function doGet(e) {
   /* ?ping=1 devuelve la version que esta atendiendo. No toca nada: es la unica
@@ -232,10 +232,21 @@ var COLUMNAS_RESUMEN = [
 /** Devuelve la hoja de cálculo, creándola la primera vez si hace falta. */
 function obtenerHoja_() {
   var props = PropertiesService.getScriptProperties();
-  var id = soloId_(ID_HOJA) || props.getProperty('ID_HOJA');
+  var puesta = soloId_(ID_HOJA);
+  var id = puesta || props.getProperty('ID_HOJA');
   if (id) {
     try {
-      return SpreadsheetApp.openById(id);
+      var abierta = SpreadsheetApp.openById(id);
+      /* Que ID_HOJA este vacia no es un detalle: significa que se esta
+         escribiendo en la hoja que el script recordo, que puede ser una que
+         creo el solo hace semanas. Pegar este archivo encima borra ID_HOJA, y
+         entonces los examenes se van a esa hoja fantasma sin que nada avise. */
+      if (!puesta) {
+        console.warn('ID_HOJA esta VACIA. Se escribe en la hoja recordada: "' +
+                     abierta.getName() + '"  ' + abierta.getUrl() +
+                     '\nSi no es la que quieres, rellena ID_HOJA. Ejecuta verDondeEscribe().');
+      }
+      return abierta;
     } catch (e) {
       /* Si el identificador viene de ID_HOJA (puesto a mano) y no abre, NO se
          crea una hoja nueva: lo mas probable es que se haya pegado el enlace
@@ -281,6 +292,9 @@ function obtenerHoja_() {
       'hoja a mano y pega su ID en la variable ID_HOJA. Detalle: ' + e.message);
   }
   props.setProperty('ID_HOJA', ss.getId());
+  console.warn('SE ACABA DE CREAR UNA HOJA NUEVA porque ID_HOJA estaba vacia:\n  ' +
+               ss.getUrl() + '\nLos resultados van a caer AHI, no en la hoja de Holcim. ' +
+               'Rellena ID_HOJA y ejecuta verDondeEscribe() para comprobarlo.');
 
   var r = ss.getActiveSheet();
   r.setName(PESTANA_RESUMEN);
@@ -850,10 +864,12 @@ function borrarPestanaRespuestas() {
  */
 function guardarExamen(d) {
   d = d || {};
-  var ss = obtenerHoja_();
   var fecha = d.fecha || new Date().toLocaleString();
 
-  // primero se archiva el PDF: su enlace es uno de los datos de la fila
+  /* El PDF primero, y la hoja despues, dentro del try. Al reves, una hoja mal
+     configurada cortaba antes de llegar al certificado y se perdian las dos
+     cosas; asi, lo unico irrepetible —el PDF que la persona acaba de sacar— ya
+     esta a salvo pase lo que pase con la hoja. */
   var enlaceCert = guardarCertificado_(d);
 
   /* Un dato por cada nombre de columna posible. Se incluyen también los nombres
@@ -879,8 +895,9 @@ function guardarExamen(d) {
      aparece, la duda siempre es la misma —¿en que hoja y en que pestaña acabo?—
      y sin esto hay que deducirlo. Ademas, si la escritura falla, el certificado
      ya esta guardado: el fallo tiene que verse, no perderse. */
-  var hoja, fila = 0, dondeEscribio = '';
+  var ss, hoja, fila = 0, dondeEscribio = '';
   try {
+    ss = obtenerHoja_();
     var pestanasAntes = ss.getSheets().map(function (h) { return h.getName(); });
     hoja = pestana_(ss, PESTANA_RESUMEN, COLUMNAS_RESUMEN);
     if (pestanasAntes.indexOf(PESTANA_RESUMEN) < 0) {
@@ -1003,6 +1020,61 @@ function duenio_(archivoOCarpeta) {
 }
 
 /**
+ * ¿QUÉ CASILLAS QUEDARON VACÍAS?
+ *
+ * Pegar este archivo encima BORRA lo que estuviera escrito arriba. Las carpetas
+ * de los centros vienen puestas en el repositorio, así que sobreviven al pegado
+ * y dan la impresión de que todo sigue configurado; ID_HOJA y CARPETA_OTROS no,
+ * y esas se pierden en silencio. Entonces los resultados se van a una hoja que
+ * el script se crea solo, y no hay ningún error: simplemente no aparecen.
+ *
+ * Ejecútala después de cada pegado. probarTodo ya la llama sola.
+ */
+function revisarConfiguracion() {
+  var faltan = [], avisos = [];
+
+  if (!soloId_(ID_HOJA)) {
+    faltan.push('ID_HOJA — sin ella los resultados van a una hoja que el script se crea solo.');
+  }
+  if (!soloId_(ID_CARPETA_CERTIFICADOS)) {
+    avisos.push('ID_CARPETA_CERTIFICADOS vacia: los certificados NACEN en la carpeta ' +
+                'que el script recuerde. Ejecuta verLoRecordado() para ver cual es.');
+  }
+  if (!soloId_(CARPETA_OTROS)) {
+    faltan.push('CARPETA_OTROS — contratistas, visitantes y "Otra" se quedarian sin carpeta propia.');
+  }
+  if (!CORREO_REPORTES) faltan.push('CORREO_REPORTES — no llegarian ni reportes ni copias.');
+
+  var conCarpeta = 0, sinCarpeta = [];
+  for (var k in CARPETAS_POR_CENTRO) {
+    if (!CARPETAS_POR_CENTRO.hasOwnProperty(k)) continue;
+    if (soloId_(CARPETAS_POR_CENTRO[k])) conCarpeta++; else sinCarpeta.push(k);
+  }
+  if (sinCarpeta.length) {
+    avisos.push('Centros sin carpeta propia (van a CARPETA_OTROS): ' + sinCarpeta.join(', '));
+  }
+  if (soloId_(HOJA_ANTERIOR)) {
+    avisos.push('HOJA_ANTERIOR sigue rellena. Si la mudanza ya se hizo, dejala vacia.');
+  }
+
+  var lineas = [];
+  lineas.push(faltan.length ? 'FALTA POR RELLENAR:' : 'Todo lo imprescindible esta puesto.');
+  faltan.forEach(function (f) { lineas.push('  ✗ ' + f); });
+  if (avisos.length) {
+    lineas.push('');
+    lineas.push('Para tener en cuenta:');
+    avisos.forEach(function (a) { lineas.push('  · ' + a); });
+  }
+  lineas.push('');
+  lineas.push('Carpetas de centro puestas: ' + conCarpeta + ' de ' +
+              Object.keys(CARPETAS_POR_CENTRO).length);
+
+  var txt = lineas.join('\n');
+  Logger.log(txt);
+  return txt;
+}
+
+/**
  * ¿LO PUBLICADO ES LO QUE HAY EN EL EDITOR?
  *
  * Es la pregunta que probarTodo NO responde. probarTodo ejecuta el codigo del
@@ -1090,6 +1162,11 @@ function probarTodo() {
      EDITOR. Que pase entero no dice nada sobre lo que atiende al curso. */
   lineas.push('OJO: esto prueba el codigo del EDITOR, no el publicado.');
   lineas.push('     Para saber si lo publicado esta al dia: comprobarPublicacion()');
+  lineas.push('');
+  /* Lo segundo: si al pegar el archivo se borro alguna casilla, todo lo demas
+     "funciona" pero apuntando a otro sitio. Mejor verlo aqui que dentro de una
+     semana con los datos repartidos entre dos hojas. */
+  lineas.push(revisarConfiguracion());
   lineas.push('');
   var pdfPrueba = Utilities.base64Encode(Utilities.newBlob(
     '%PDF-1.4\n1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj\n' +
