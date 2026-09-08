@@ -263,6 +263,19 @@
   .exq .qn{flex:none;color:var(--cyan);font-weight:800}
   .exq .qm{font-size:10.5px;font-weight:800;letter-spacing:.6px;color:#04121f;background:var(--cm,#97d13b);
     border-radius:4px;padding:1px 6px;align-self:flex-start;margin-top:2px}
+  /* Imagen de una pregunta. El icono de las Reglas HSE ya dice la mitad del
+     enunciado, asi que va junto a el, no encima de las opciones: leer y mirar
+     tienen que caber de una sola vez. En el telefono baja a su propia linea. */
+  .exq .qfoto{flex:none;width:86px;height:86px;border-radius:10px;overflow:hidden;
+    background:rgba(255,255,255,.06);display:grid;place-items:center;margin-top:2px}
+  .exq .qfoto img{width:100%;height:100%;object-fit:contain}
+  .exq .qfoto svg{width:44px;height:44px;stroke:#8fd6f2;fill:none;stroke-width:1.6}
+  .exq .qcuerpo{display:flex;gap:14px;align-items:flex-start}
+  .exq .qcuerpo > .qtexto{flex:1;min-width:0}
+  @media(max-width:560px){
+    .exq .qcuerpo{flex-direction:column;gap:10px}
+    .exq .qfoto{width:96px;height:96px;align-self:center}
+  }
   .exopts{margin-top:9px;display:grid;gap:6px}
   .exopt{display:flex;gap:10px;align-items:flex-start;background:rgba(255,255,255,.05);
     border:1px solid rgba(255,255,255,.09);border-radius:9px;padding:9px 11px;cursor:pointer;
@@ -6036,7 +6049,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-08-m";
+var VERSION_CURSO = "2026-09-08-n";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 52 en cada intento.
@@ -7742,6 +7755,16 @@ var BANCO = [
 {m:'1',p:'Los peligros por iluminación (exceso o defecto), confort térmico y ruido se clasifican como:',o:['Físicos','Químicos','Biológicos','Biomecánicos'],r:0},
 {m:'1',p:'Los peligros por posturas prolongadas y movimientos repetitivos se clasifican como:',o:['Biomecánicos','Psicosociales','Físicos','Fenómenos naturales'],r:0},
 /* ---------- Módulo 2 · Planeación estratégica ---------- */
+/* --- Reglas HSE · completar la frase. Reutilizan los iconos de la lamina
+       "Reglas HSE": el dibujo es parte del enunciado, no un adorno. --- */
+{m:'2',f:'reportar(D14)',p:'Completa la regla HSE: «Yo ______ todos los incidentes.»',o:['Reporto','Utilizo siempre','Obtengo y hago seguimiento','Cumplo'],r:0},
+{m:'2',f:'epp(D14)',p:'Completa la regla HSE: «Yo ______ el Equipo de Protección Personal (EPP) básico y específico para cada tarea.»',o:['Utilizo siempre','Reporto','Obtengo y hago seguimiento','Cumplo'],r:0},
+{m:'2',f:'permisos(D14)',p:'Completa la regla HSE: «Yo ______ de los permisos de trabajo en alturas, en caliente, en espacios confinados, de aislamiento y bloqueo, y de elevación y soporte de cargas. Aíslo, bloqueo, etiqueto y pruebo siempre.»',o:['Obtengo y hago seguimiento','Reporto','Utilizo siempre','Cumplo'],r:0},
+{m:'2',f:'cumplimiento(D14)',p:'Completa la regla HSE: «Yo ______ con todos los permisos ambientales y operacionales.»',o:['Cumplo','Reporto','Utilizo siempre','Obtengo y hago seguimiento'],r:0},
+{m:'2',f:'controles(D14)',p:'Completa la regla HSE: «Yo ______ ningún dispositivo de seguridad ni control crítico.»',o:['No me salto ni deshabilito','No trabajo sin las protecciones de la maquinaria, ni me sitúo o camino','No conduzco sin','No trabajo ni conduzco'],r:0},
+{m:'2',f:'lineafuego(D14)',p:'Completa la regla HSE: «Yo ______ bajo una carga suspendida, en zonas de exclusión o en línea de fuego.»',o:['No trabajo sin las protecciones de la maquinaria, ni me sitúo o camino','No me salto ni deshabilito','No conduzco sin','No trabajo ni conduzco'],r:0},
+{m:'2',f:'conduccion(D14)',p:'Completa la regla HSE: «Yo ______ el cinturón o mientras utilizo el teléfono celular, ni supero los límites de velocidad o las horas de servicio.»',o:['No conduzco sin','No me salto ni deshabilito','No trabajo sin las protecciones de la maquinaria, ni me sitúo o camino','No trabajo ni conduzco'],r:0},
+{m:'2',f:'alcohol(D14)',p:'Completa la regla HSE: «Yo ______ bajo la influencia del alcohol o las drogas.»',o:['No trabajo ni conduzco','No me salto ni deshabilito','No trabajo sin las protecciones de la maquinaria, ni me sitúo o camino','No conduzco sin'],r:0},
 {m:'2',p:'Según las Reglas HSE, ¿en qué plazo máximo se deben reportar los incidentes?',o:['No mayor a 24 horas','No mayor a 72 horas','Antes de terminar la semana','Antes del cierre del mes'],r:0},
 {m:'2',p:'El objetivo principal de la Política HSE de Holcim es:',o:['Desarrollar nuestros negocios con cero daños','Reducir los costos de operación','Aumentar la productividad de las plantas','Cumplir únicamente la norma legal mínima'],r:0},
 {m:'2',p:'Las políticas y declaraciones de Holcim otorgan autoridad para detener trabajos inseguros.',o:['Verdadero','Falso'],r:0},
@@ -8314,8 +8337,16 @@ document.addEventListener('DOMContentLoaded', function(){
     var html='';
     sorteadas.forEach(function(it,i){
       var etq = it.q.m==='EX' ? 'EX' : 'M'+it.q.m;
+      /* Una pregunta puede traer imagen en 'f'. Se reutilizan los mismos
+         archivos de las laminas: si el archivo no esta, data-foto deja el
+         dibujo de repuesto y la pregunta se responde igual. */
+      var foto = it.q.f
+        ? '<span class="ph qfoto" data-foto="'+it.q.f+'"><svg viewBox="0 0 24 24" aria-hidden="true">' +
+          '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 16l5-4 4 3 3-2 6 5"/></svg></span>'
+        : '';
       html += '<div class="exq" data-q="'+i+'" style="--cm:'+infoMod(it.q.m).c+'">' +
               '<div class="qh"><span class="qn">'+(i+1)+'.</span><span>'+it.q.p+'</span><span class="qm">'+etq+'</span></div>' +
+              '<div class="qcuerpo">' + foto + '<div class="qtexto">' +
               '<div class="exopts">';
       it.orden.forEach(function(oi,k){
         /* La opcion correcta se marca en el HTML, pero SOLO se ve si el modo
@@ -8324,9 +8355,12 @@ document.addEventListener('DOMContentLoaded', function(){
         var pista = (k === it.correcta) ? ' data-ok="1"' : '';
         html += '<label class="exopt"'+pista+'><input type="radio" name="exq'+i+'" value="'+k+'"><span>'+it.q.o[oi]+'</span></label>';
       });
-      html += '</div></div>';
+      html += '</div></div></div></div>';
     });
     elLista.innerHTML = html;
+    /* Las imagenes se enganchan despues de pintar: los huecos acaban de nacer. */
+    if(window.activarFotos) activarFotos();
+    if(window.cargarMediosCercanos) cargarMediosCercanos();
     elLista.addEventListener('change', function(e){
       if(!e.target || e.target.type!=='radio') return;
       var caja = e.target.closest('.exq'); if(!caja) return;
