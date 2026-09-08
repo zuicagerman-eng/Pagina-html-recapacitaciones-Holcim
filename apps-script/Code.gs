@@ -24,13 +24,23 @@
    hoja o una carpeta nueva por su cuenta.
 
    Después de rellenarlas: ejecuta probarTodo y mira el registro.
+
+   ⚠️ PENDIENTE — LEER ANTES DE DEJAR ESTO QUIETO
+   Las direcciones de abajo (la hoja, las 15 carpetas de centro y la de otros)
+   estan escritas aqui de forma TEMPORAL, para que copiar este archivo al editor
+   no borre la configuracion: eso ya paso una vez y los examenes acabaron en una
+   hoja que el script se creo solo.
+   El repositorio es PUBLICO. Un enlace no da acceso por si solo —eso lo deciden
+   los permisos de Drive— pero apunta a datos personales, asi que cuando el curso
+   deje de cambiar hay que vaciarlas de aqui y dejarlas solo en Apps Script, o
+   pasarlas a Propiedades del script. Ver el aviso de LEEME.md.
    ═══════════════════════════════════════════════════════════════════════════ */
 
 // 1) Correo donde llegan los reportes, la encuesta y la copia del certificado
 var CORREO_REPORTES = "german.zuica@holcim.com";
 
 // 2) Hoja de resultados (docs.google.com/spreadsheets/...)
-var ID_HOJA = "";
+var ID_HOJA = "https://docs.google.com/spreadsheets/d/1xD-o9cXWLWf78x-58dUhow2-zhZ9utVjrjh6cv3RPls/edit?gid=0#gid=0";
 
 // 3) Carpeta de certificados (drive.google.com/drive/folders/...)
 var ID_CARPETA_CERTIFICADOS = "";
@@ -56,11 +66,6 @@ var ID_CARPETA_FINAL = "";
 
       Cuando termines, ejecuta verCarpetasDeCentros() para ver los quince de
       una vez antes de confiar en el reparto. */
-/* ⚠️ PENDIENTE: estas direcciones estan aqui de forma TEMPORAL, para no tener
-   que pegarlas cada vez que se copia este archivo al editor mientras el curso
-   sigue cambiando. El repositorio es PUBLICO: cuando se deje de tocar, hay que
-   vaciarlas aqui y dejarlas solo en Apps Script, o pasarlas a Propiedades del
-   script. Ver el aviso del principio de LEEME.md. */
 var CARPETAS_POR_CENTRO = {
   'BARRANCA GEO'        : "https://drive.google.com/drive/u/0/folders/1l-Z_FIYFWGGUDWkxwIjsvwzBgKShU3-r",
   'BELLO RMX'           : "https://drive.google.com/drive/u/0/folders/16NoHm433BSUJxUGyV1Gf-7jEyN5mxFGO",
@@ -85,7 +90,7 @@ var CARPETAS_POR_CENTRO = {
 
       Se decide ANTES que la carpeta del centro. Es decir, un contratista de
       NOBSA CEM acaba aquí, no en NOBSA CEM. */
-var CARPETA_OTROS = "";
+var CARPETA_OTROS = "https://drive.google.com/drive/u/0/folders/1aC6LgMbE9yR9vObLAgcgufgtp8lqpNuX";
 
 /* Tipos de usuario que van a CARPETA_OTROS, sean del centro que sean. Tiene
    que coincidir con los tipos del desplegable del curso. */
@@ -108,14 +113,15 @@ var CARPETA_RAIZ_CENTROS = "";
       carpeta del centro que sí encontró. */
 var SUBRUTA_CENTRO = "";
 
-/* 8) LA URL PUBLICADA (la que está en REPORTE_URL del index.html).
+/* 7) LA URL PUBLICADA (la que está en REPORTE_URL del index.html).
       Solo sirve para comprobarPublicacion(), que pregunta a la implementación
       qué versión del código está atendiendo de verdad. */
 var URL_EXEC_PUBLICADA = "https://script.google.com/macros/s/AKfycbzkHY0ugVub450O7yNT08YagD1YMgSsdFGRIKUz9fnuxvABvzHQaFysxpmVCT15HqDs/exec";
 
-/* 7) SOLO PARA LA MUDANZA DE LA HOJA — la hoja ANTERIOR, la personal.
-      Pégala aquí, ejecuta mudarLaHoja() UNA VEZ y vuelve a dejarla vacía.
-      Copia sus filas a la hoja del punto 2. No borra nada de la vieja. */
+/* 8) SOLO PARA TRAER FILAS DE OTRA HOJA — se deja vacía el resto del tiempo.
+      Pega aquí la hoja de la que quieras traer las filas, ejecuta mudarLaHoja()
+      UNA VEZ y vuelve a vaciarla. Copia a la hoja del punto 2, sin borrar nada
+      de la de origen. */
 var HOJA_ANTERIOR = "";
 
 /* ─── de aquí para abajo no hace falta tocar nada ─── */

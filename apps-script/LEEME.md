@@ -1166,14 +1166,14 @@ izquierda del editor), en la ejecución de `doPost` correspondiente a esa hora.
 
 ## ⚠️ Después de pegar este archivo, rellena dos casillas
 
-Pegar el `Code.gs` encima **borra lo que hubiera escrito arriba**. Y aquí está
-la trampa: las 15 carpetas de los centros sí vienen puestas en el repositorio,
-así que sobreviven al pegado y todo *parece* configurado. Estas dos no:
+Pegar el `Code.gs` encima **borra lo que hubiera escrito arriba**. Pasó una vez:
+las 15 carpetas de los centros venían puestas en el repositorio y sobrevivían al
+pegado, así que todo *parecía* configurado, pero `ID_HOJA` y `CARPETA_OTROS`
+estaban vacías y los exámenes se fueron a una hoja que el script creó solo.
 
-```js
-var ID_HOJA       = "";   // ← la hoja de Holcim
-var CARPETA_OTROS = "";   // ← contratistas, visitantes y "Otra"
-```
+**Ya no**: el archivo del repositorio lleva puestos también esos dos, así que
+pegar no borra nada. La única que sigue vacía a propósito es
+`ID_CARPETA_CERTIFICADOS`.
 
 Con `ID_HOJA` vacía **no sale ningún error**. El script usa la hoja que recordó
 —o se crea una él solo, llamada `HSE-001 · Resultados examen`— y los exámenes
