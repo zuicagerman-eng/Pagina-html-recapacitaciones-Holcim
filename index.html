@@ -247,6 +247,14 @@
   .ultra .excampo{margin-top:5px}
   .ultra .excampo label{font-size:11px;margin-bottom:2px}
   .ultra .excampo input,.ultra .excampo select{padding:6px 11px;font-size:13px}
+  /* El examen es la unica lamina que sigue encogiendose en el movil, para que
+     el boton de enviar quede a la vista. Pero un campo de 31 px es incomodo de
+     tocar y de escribir, y sitio hay de sobra: se le pone un minimo de 36 px,
+     que caben sin sacar el boton de la pantalla. */
+  @media(pointer:coarse){
+    .excampo input,.excampo select,
+    .ultra .excampo input,.ultra .excampo select{min-height:36px}
+  }
   .ultra .exerr{min-height:0}
   .exq{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:13px;
     padding:14px 16px;margin-top:12px}
@@ -1215,7 +1223,15 @@
   .muy-apretado .carrtxt li{font-size:11.7px;line-height:1.34}
   .ultra .carrfoto{width:88px;height:88px} .ultra .carrfoto svg{width:56px;height:56px}
   .ultra .carrtxt li{font-size:11.1px}
-  @media(pointer:coarse){ .carrflecha{width:44px;height:44px} .carrpunto{width:14px;height:14px} }
+  /* Con el dedo el punto media 14 px y fallar el toque era lo normal. El
+     relleno agranda el boton hasta 32 px sin agrandar el circulo: el color se
+     recorta a la caja de contenido, asi que se ve igual y se toca mucho mejor.
+     El hueco entre puntos baja porque el propio relleno ya los separa. */
+  @media(pointer:coarse){
+    .carrflecha{width:44px;height:44px}
+    .carrpunto{width:14px;height:14px;padding:9px;box-sizing:content-box;background-clip:content-box}
+    .carrpuntos{gap:2px}
+  }
   @media(max-width:700px){
     /* En el telefono las flechas van bajo el panel, junto a los puntos. */
     .carru{padding:0 0 46px}
@@ -1652,6 +1668,12 @@
   .apretado .tbl td{padding:8px 14px;font-size:12.6px}
   .muy-apretado .tbl th,.muy-apretado .tbl td{padding:6px 12px;font-size:12px}
   .slide.ultra .tbl th,.slide.ultra .tbl td{padding:5px 11px;font-size:11.4px}
+  /* En el telefono la tabla de tres columnas se pasaba de ancho por unos 38 px
+     y habia que arrastrarla de lado para leer la ultima. Con menos margen
+     interior cabe entera; el .tblwrap sigue ahi por si alguna se pasa igual. */
+  @media(max-width:520px){
+    .tbl th,.tbl td{padding-left:7px;padding-right:7px}
+  }
 
   /* ===== Columnas de responsabilidades (Modulo 6) ===== */
   .rescol{display:flex;flex-direction:column;height:100%}
@@ -1793,6 +1815,11 @@
   .qcarr-punto.vis{background:var(--cyan)}
   .qcarr-punto.on.vis{background:var(--green)}
   .qcarr-punto:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
+  /* Lo mismo que en el otro carrusel: 12 px es muy poco para el dedo. */
+  @media(pointer:coarse){
+    .qcarr-punto{padding:10px;box-sizing:content-box;background-clip:content-box}
+    .qcarr-puntos{gap:2px}
+  }
   .qcarr-pie{grid-column:1 / -1;text-align:center;font-size:12.5px;font-weight:600;
     opacity:.8;margin-top:8px}
   .apretado .qcarr-caja{padding:15px 18px 14px} .apretado .qcarr-tit{font-size:15.5px;padding:9px 16px;margin-bottom:11px}
@@ -3238,6 +3265,12 @@
   .wbslider{width:min(340px,86%);margin:18px auto 0;display:block;-webkit-appearance:none;appearance:none;
     height:8px;border-radius:99px;background:linear-gradient(90deg,var(--cyan),var(--blue));outline:none;cursor:grab}
   .wbslider:active{cursor:grabbing}
+  /* La barra mide 8 px de alto, asi que con el dedo habia que acertarle justo.
+     El relleno le da 32 px de zona sensible sin engordar la barra: el degradado
+     se recorta a la caja de contenido y se ve igual que antes. */
+  @media(pointer:coarse){
+    .wbslider{padding:12px 0;box-sizing:content-box;background-clip:content-box;margin-top:6px}
+  }
   .wbslider::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;border-radius:50%;
     background:var(--cyan);border:3px solid #fff;box-shadow:0 4px 12px -3px rgba(0,0,0,.5);cursor:grab;transition:transform .2s}
   .wbslider::-webkit-slider-thumb:hover{transform:scale(1.15)}
@@ -5824,7 +5857,7 @@
     <div class="recap rv up" style="--d:4"><span class="chip">Módulo 1</span><span class="chip">Módulo 2</span><span class="chip">Módulo 3</span><span class="chip">Módulo 4</span><span class="chip">Módulo 5</span><span class="chip">Módulo 6</span><span class="chip">¡Cero daños!</span></div>
   </div>
 </section>
-  <section class="slide dark nogate" data-mod="EX">
+  <section class="slide dark nogate encogesiempre" data-mod="EX">
     <div class="wrap exwrap">
       <div id="exDatos">
         <div class="eyebrow rv up">Evaluación final</div>
@@ -6003,7 +6036,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-08-l";
+var VERSION_CURSO = "2026-09-08-m";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 52 en cada intento.
@@ -7467,12 +7500,30 @@ document.querySelectorAll('.pueBox').forEach(function(box){
   var hint=document.getElementById('scrollhint'); if(!hint) return;
   /* Si el contenido no cabe, se aprieta esa diapositiva (y solo esa) en dos
      escalones antes de rendirse y dejar que se desplace. */
+  /* El mismo ancho con el que el resto del curso decide que es un movil. */
+  function esPantallaChica(){
+    try { return window.matchMedia('(max-width:760px)').matches; }
+    catch(e){ return (window.innerWidth || 0) <= 760; }
+  }
   function ajustar(s){
     if(!s || s.scrollTop > 0) return;   // ya la está leyendo: no le movemos el alto
     /* Con 'sinencoger' la diapositiva renuncia al ajuste automatico: prefiere
        verse grande y que haya que desplazarse antes que encogerlo todo. El
        aviso de "Desliza para ver mas contenido" sigue saliendo igual. */
     if(s.classList.contains('sinencoger')) return;
+    /* En una pantalla de movil el encogido no compensa. Medido en 390x844:
+       casi todas las laminas acababan en 'ultra' —el escalon mas fuerte— con el
+       texto a 10-11 px, y aun asi mas de la mitad seguia sin caber. Se pagaba
+       la letra pequena sin ahorrarse el desplazamiento. Ahi es mejor leerlo a
+       tamano normal y deslizar, que es el gesto natural del telefono; del aviso
+       de "hay mas contenido abajo" ya se encarga revisar(). */
+    /* Salvo donde el encogido si sirve —'encogesiempre'—: en el examen no se
+       lee, se rellena, y lo que importa es ver el boton de enviar sin tener que
+       deslizar. Ahi cabe entero apretandolo, y la letra de las etiquetas
+       aguanta bien. */
+    if(esPantallaChica() && !s.classList.contains('encogesiempre')){
+      s.classList.remove('apretado','muy-apretado','ultra'); return;
+    }
     /* La holgura es de un pixel, no de cuatro: con cuatro se daba por buena una
        diapositiva que igual sacaba barra de desplazamiento por dos o tres. */
     s.classList.remove('apretado','muy-apretado','ultra');
