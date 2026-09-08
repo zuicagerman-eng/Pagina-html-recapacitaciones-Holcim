@@ -43,7 +43,7 @@ var CORREO_REPORTES = "german.zuica@holcim.com";
 var ID_HOJA = "https://docs.google.com/spreadsheets/d/1xD-o9cXWLWf78x-58dUhow2-zhZ9utVjrjh6cv3RPls/edit?gid=0#gid=0";
 
 // 3) Carpeta de certificados (drive.google.com/drive/folders/...)
-var ID_CARPETA_CERTIFICADOS = "";
+var ID_CARPETA_CERTIFICADOS = "https://drive.google.com/drive/folders/1LExNIvC0PP0CSRVn79bg1m4yPfdvXJ4l";
 
 /* 4) OPCIONAL — Carpeta FINAL, normalmente la de la unidad compartida de Holcim.
       Si la pones, cada certificado se guarda primero en la carpeta de arriba y
