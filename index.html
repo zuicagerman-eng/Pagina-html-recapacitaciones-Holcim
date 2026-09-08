@@ -259,6 +259,14 @@
   .exq{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:13px;
     padding:14px 16px;margin-top:12px}
   .exq.sinresp{border-color:rgba(226,59,50,.65)}
+  /* Obligatoria: un borde ambar y una etiqueta. Es aviso, no alarma —el rojo
+     esta reservado a lo que ya salio mal—, pero tiene que verse antes de
+     responder, no despues. */
+  .exq.esob{border-color:rgba(239,125,0,.7);background:rgba(239,125,0,.14)}
+  .exq .qob{display:inline-block;margin-left:8px;font-size:10.5px;font-weight:800;
+    letter-spacing:.5px;color:#ffce8a;background:rgba(239,125,0,.22);
+    border:1px solid rgba(239,125,0,.45);border-radius:999px;padding:1px 8px;
+    vertical-align:middle;white-space:nowrap}
   .exq .qh{display:flex;gap:10px;font-size:14.5px;font-weight:700;color:#eaf1fb;line-height:1.4}
   .exq .qn{flex:none;color:var(--cyan);font-weight:800}
   .exq .qm{font-size:10.5px;font-weight:800;letter-spacing:.6px;color:#04121f;background:var(--cm,#97d13b);
@@ -6049,7 +6057,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-08-n";
+var VERSION_CURSO = "2026-09-08-o";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 52 en cada intento.
@@ -6089,6 +6097,14 @@ var SEDES = [
 ];
 var PREGUNTAS_EXAMEN = 20;
 var NOTA_MINIMA      = 80;
+/* PREGUNTAS OBLIGATORIAS (las marcadas con ob:1 en el banco)
+   Salen SIEMPRE, todas, agrupadas al principio del examen, y ademas del
+   sorteo normal. Fallar una sola reprueba, aunque el porcentaje llegue al
+   minimo: son las reglas que no se negocian, y aprobar sabiendo siete de
+   ocho no significa nada.
+   Para quitar la regla, deja EXIGIR_OBLIGATORIAS en false: entonces solo
+   cuentan como preguntas fijas mas. */
+var EXIGIR_OBLIGATORIAS = true;
 var EXIGIR_EXAMEN    = true;
 var EXIGIR_VIDEO_COMPLETO = true;   // pon false para no obligar a ver el video completo
 /* Segundo en el que arranca el video de bienvenida: se saltan los primeros 9 s.
@@ -7757,14 +7773,14 @@ var BANCO = [
 /* ---------- Módulo 2 · Planeación estratégica ---------- */
 /* --- Reglas HSE · completar la frase. Reutilizan los iconos de la lamina
        "Reglas HSE": el dibujo es parte del enunciado, no un adorno. --- */
-{m:'2',f:'reportar(D14)',p:'Completa la regla HSE: «Yo ______ todos los incidentes.»',o:['Reporto','Utilizo siempre','Obtengo y hago seguimiento','Cumplo'],r:0},
-{m:'2',f:'epp(D14)',p:'Completa la regla HSE: «Yo ______ el Equipo de Protección Personal (EPP) básico y específico para cada tarea.»',o:['Utilizo siempre','Reporto','Obtengo y hago seguimiento','Cumplo'],r:0},
-{m:'2',f:'permisos(D14)',p:'Completa la regla HSE: «Yo ______ de los permisos de trabajo en alturas, en caliente, en espacios confinados, de aislamiento y bloqueo, y de elevación y soporte de cargas. Aíslo, bloqueo, etiqueto y pruebo siempre.»',o:['Obtengo y hago seguimiento','Reporto','Utilizo siempre','Cumplo'],r:0},
-{m:'2',f:'cumplimiento(D14)',p:'Completa la regla HSE: «Yo ______ con todos los permisos ambientales y operacionales.»',o:['Cumplo','Reporto','Utilizo siempre','Obtengo y hago seguimiento'],r:0},
-{m:'2',f:'controles(D14)',p:'Completa la regla HSE: «Yo ______ ningún dispositivo de seguridad ni control crítico.»',o:['No me salto ni deshabilito','No trabajo sin las protecciones de la maquinaria, ni me sitúo o camino','No conduzco sin','No trabajo ni conduzco'],r:0},
-{m:'2',f:'lineafuego(D14)',p:'Completa la regla HSE: «Yo ______ bajo una carga suspendida, en zonas de exclusión o en línea de fuego.»',o:['No trabajo sin las protecciones de la maquinaria, ni me sitúo o camino','No me salto ni deshabilito','No conduzco sin','No trabajo ni conduzco'],r:0},
-{m:'2',f:'conduccion(D14)',p:'Completa la regla HSE: «Yo ______ el cinturón o mientras utilizo el teléfono celular, ni supero los límites de velocidad o las horas de servicio.»',o:['No conduzco sin','No me salto ni deshabilito','No trabajo sin las protecciones de la maquinaria, ni me sitúo o camino','No trabajo ni conduzco'],r:0},
-{m:'2',f:'alcohol(D14)',p:'Completa la regla HSE: «Yo ______ bajo la influencia del alcohol o las drogas.»',o:['No trabajo ni conduzco','No me salto ni deshabilito','No trabajo sin las protecciones de la maquinaria, ni me sitúo o camino','No conduzco sin'],r:0},
+{m:'2',ob:1,f:'reportar(D14)',p:'Completa la regla HSE: «Yo ______ todos los incidentes.»',o:['Reporto','Utilizo siempre','Obtengo y hago seguimiento','Cumplo'],r:0},
+{m:'2',ob:1,f:'epp(D14)',p:'Completa la regla HSE: «Yo ______ el Equipo de Protección Personal (EPP) básico y específico para cada tarea.»',o:['Utilizo siempre','Reporto','Obtengo y hago seguimiento','Cumplo'],r:0},
+{m:'2',ob:1,f:'permisos(D14)',p:'Completa la regla HSE: «Yo ______ de los permisos de trabajo en alturas, en caliente, en espacios confinados, de aislamiento y bloqueo, y de elevación y soporte de cargas. Aíslo, bloqueo, etiqueto y pruebo siempre.»',o:['Obtengo y hago seguimiento','Reporto','Utilizo siempre','Cumplo'],r:0},
+{m:'2',ob:1,f:'cumplimiento(D14)',p:'Completa la regla HSE: «Yo ______ con todos los permisos ambientales y operacionales.»',o:['Cumplo','Reporto','Utilizo siempre','Obtengo y hago seguimiento'],r:0},
+{m:'2',ob:1,f:'controles(D14)',p:'Completa la regla HSE: «Yo ______ ningún dispositivo de seguridad ni control crítico.»',o:['No me salto ni deshabilito','No trabajo sin las protecciones de la maquinaria, ni me sitúo o camino','No conduzco sin','No trabajo ni conduzco'],r:0},
+{m:'2',ob:1,f:'lineafuego(D14)',p:'Completa la regla HSE: «Yo ______ bajo una carga suspendida, en zonas de exclusión o en línea de fuego.»',o:['No trabajo sin las protecciones de la maquinaria, ni me sitúo o camino','No me salto ni deshabilito','No conduzco sin','No trabajo ni conduzco'],r:0},
+{m:'2',ob:1,f:'conduccion(D14)',p:'Completa la regla HSE: «Yo ______ el cinturón o mientras utilizo el teléfono celular, ni supero los límites de velocidad o las horas de servicio.»',o:['No conduzco sin','No me salto ni deshabilito','No trabajo sin las protecciones de la maquinaria, ni me sitúo o camino','No trabajo ni conduzco'],r:0},
+{m:'2',ob:1,f:'alcohol(D14)',p:'Completa la regla HSE: «Yo ______ bajo la influencia del alcohol o las drogas.»',o:['No trabajo ni conduzco','No me salto ni deshabilito','No trabajo sin las protecciones de la maquinaria, ni me sitúo o camino','No conduzco sin'],r:0},
 {m:'2',p:'Según las Reglas HSE, ¿en qué plazo máximo se deben reportar los incidentes?',o:['No mayor a 24 horas','No mayor a 72 horas','Antes de terminar la semana','Antes del cierre del mes'],r:0},
 {m:'2',p:'El objetivo principal de la Política HSE de Holcim es:',o:['Desarrollar nuestros negocios con cero daños','Reducir los costos de operación','Aumentar la productividad de las plantas','Cumplir únicamente la norma legal mínima'],r:0},
 {m:'2',p:'Las políticas y declaraciones de Holcim otorgan autoridad para detener trabajos inseguros.',o:['Verdadero','Falso'],r:0},
@@ -8270,12 +8286,23 @@ document.addEventListener('DOMContentLoaded', function(){
   /* El tamaño del banco se cuenta, no se escribe: estaba puesto a mano y se
      quedó en 56 cuando el banco bajó a 52 al retirar unas preguntas. */
   var elIntro = document.getElementById('exIntro');
+  /* Se descuentan las obligatorias: esas no se sortean, salen siempre, y
+     contarlas aqui prometeria mas variedad de la que hay. */
   if(elIntro) elIntro.textContent = 'Antes de comenzar, identifícate. Las preguntas se toman al azar ' +
-    'de un banco de ' + BANCO.length + ' y cambian en cada intento.';
+    'de un banco de ' + (BANCO.length - nObligatorias()) + ' y cambian en cada intento.';
 
-  document.getElementById('exReglas').textContent =
-    'El examen tiene ' + PREGUNTAS_EXAMEN + ' preguntas y se aprueba con ' + NOTA_MINIMA +
-    '% o más. Puedes repetirlo las veces que necesites; cada intento queda registrado.';
+  var nOb = nObligatorias();
+  document.getElementById('exReglas').innerHTML =
+    'El examen tiene ' + (PREGUNTAS_EXAMEN + nOb) + ' preguntas y se aprueba con ' + NOTA_MINIMA +
+    '% o más. Puedes repetirlo las veces que necesites; cada intento queda registrado.' +
+    (nOb && EXIGIR_OBLIGATORIAS
+      ? '<br><b>Las ' + nOb + ' primeras son obligatorias</b> (Reglas HSE): hay que acertarlas ' +
+        'todas, aparte del porcentaje.'
+      : '');
+
+  /* Cuantas preguntas obligatorias hay. Se cuenta, no se escribe: si maniana
+     se marcan mas con ob:1, los textos de la pantalla se ponen al dia solos. */
+  function nObligatorias(){ return BANCO.filter(function(q){ return q.ob; }).length; }
 
   function mezclar(a){ for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
 
@@ -8310,21 +8337,31 @@ document.addEventListener('DOMContentLoaded', function(){
   }
 
   function sortear(){
-    // se reparten proporcionalmente por módulo para que el examen cubra todo el curso
-    var porMod={}; BANCO.forEach(function(q){ (porMod[q.m]=porMod[q.m]||[]).push(q); });
+    /* Las obligatorias no entran en el sorteo: van todas, siempre. Se apartan
+       antes de repartir por modulo para que no ocupen plazas del sorteo ni
+       descuadren el reparto —si no, el modulo 2 se comeria media prueba—. */
+    var obligatorias = BANCO.filter(function(q){ return q.ob; });
+    var resto        = BANCO.filter(function(q){ return !q.ob; });
+
+    var porMod={}; resto.forEach(function(q){ (porMod[q.m]=porMod[q.m]||[]).push(q); });
     var mods=Object.keys(porMod).sort(), tomadas=[];
     mods.forEach(function(m){
-      var cuantas=Math.max(1, Math.round(PREGUNTAS_EXAMEN * porMod[m].length / BANCO.length));
+      var cuantas=Math.max(1, Math.round(PREGUNTAS_EXAMEN * porMod[m].length / resto.length));
       tomadas = tomadas.concat(mezclar(porMod[m].slice()).slice(0, cuantas));
     });
     tomadas = mezclar(tomadas);
     if(tomadas.length > PREGUNTAS_EXAMEN) tomadas = tomadas.slice(0, PREGUNTAS_EXAMEN);
     // si faltan, se completan con cualquiera que no esté ya
     if(tomadas.length < PREGUNTAS_EXAMEN){
-      mezclar(BANCO.slice()).forEach(function(q){
+      mezclar(resto.slice()).forEach(function(q){
         if(tomadas.length < PREGUNTAS_EXAMEN && tomadas.indexOf(q) < 0) tomadas.push(q);
       });
     }
+    /* Delante y seguidas: si se repartieran entre las demas, nadie notaria que
+       son de otra clase, y de eso depende aprobar. El orden entre ellas si se
+       baraja, para que no se aprendan de memoria por su posicion. */
+    tomadas = mezclar(obligatorias.slice()).concat(tomadas);
+
     // se baraja también el orden de las opciones, salvo en las de Verdadero/Falso
     return tomadas.map(function(q){
       var idx = q.o.map(function(_,k){ return k; });
@@ -8344,8 +8381,13 @@ document.addEventListener('DOMContentLoaded', function(){
         ? '<span class="ph qfoto" data-foto="'+it.q.f+'"><svg viewBox="0 0 24 24" aria-hidden="true">' +
           '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 16l5-4 4 3 3-2 6 5"/></svg></span>'
         : '';
-      html += '<div class="exq" data-q="'+i+'" style="--cm:'+infoMod(it.q.m).c+'">' +
-              '<div class="qh"><span class="qn">'+(i+1)+'.</span><span>'+it.q.p+'</span><span class="qm">'+etq+'</span></div>' +
+      /* La obligatoria se marca en la propia pregunta: enterarse de que habia
+         unas que no se podian fallar DESPUES de fallarlas es lo peor que puede
+         pasar aqui. */
+      var marca = (it.q.ob && EXIGIR_OBLIGATORIAS)
+        ? '<span class="qob" title="Hay que acertarla para aprobar">★ Obligatoria</span>' : '';
+      html += '<div class="exq'+(it.q.ob && EXIGIR_OBLIGATORIAS ? ' esob' : '')+'" data-q="'+i+'" style="--cm:'+infoMod(it.q.m).c+'">' +
+              '<div class="qh"><span class="qn">'+(i+1)+'.</span><span>'+it.q.p+marca+'</span><span class="qm">'+etq+'</span></div>' +
               '<div class="qcuerpo">' + foto + '<div class="qtexto">' +
               '<div class="exopts">';
       it.orden.forEach(function(oi,k){
@@ -8393,7 +8435,12 @@ document.addEventListener('DOMContentLoaded', function(){
       '<b>' + persona.nombre + '</b> · C.C. ' + persona.cedula +
       ' · ' + persona.tipo + ' · ' + persona.empresa +
       (persona.razonSocial ? ' · ' + persona.razonSocial : '') +
-      ' — se aprueba con ' + NOTA_MINIMA + '% o más.';
+      ' — se aprueba con ' + NOTA_MINIMA + '% o más' +
+      /* El aviso se repite aqui a proposito: la pantalla de datos ya lo dijo,
+         pero entre rellenar el formulario y responder se olvida, y esto decide
+         si aprueba. */
+      (EXIGIR_OBLIGATORIAS && nObligatorias()
+        ? ', y hay que acertar TODAS las marcadas con ★.' : '.');
     pintar(); fase('preguntas');
     try{ elPreg.scrollIntoView({block:'start'}); }catch(err){}
   });
@@ -8412,10 +8459,11 @@ document.addEventListener('DOMContentLoaded', function(){
   });
 
   function calificar(){
-    var aciertos=0, detalle=[];
+    var aciertos=0, detalle=[], obFalladas=0;
     sorteadas.forEach(function(it,i){
       var bien = (respuestas[i] === it.correcta);
       if(bien) aciertos++;
+      if(it.q.ob && !bien) obFalladas++;
       detalle.push({
         n: i+1, modulo: it.q.m, pregunta: it.q.p,
         respondio: it.q.o[ it.orden[ respuestas[i] ] ],
@@ -8432,7 +8480,11 @@ document.addEventListener('DOMContentLoaded', function(){
       });
     });
     var pct = Math.round(aciertos * 100 / sorteadas.length);
-    var aprobo = pct >= NOTA_MINIMA;
+    /* Las obligatorias no se compensan con el resto: fallar una reprueba
+       aunque el porcentaje llegue. Aprobar sabiendo siete de las ocho reglas
+       que no se negocian no significa nada. */
+    var porObligatorias = EXIGIR_OBLIGATORIAS && obFalladas > 0;
+    var aprobo = pct >= NOTA_MINIMA && !porObligatorias;
     var seg = Math.round((Date.now() - inicio) / 1000);
 
     document.getElementById('exMarca').className = 'exmarca ' + (aprobo ? 'ok' : 'no');
@@ -8443,6 +8495,12 @@ document.addEventListener('DOMContentLoaded', function(){
       persona.tipo + ' · ' + persona.empresa +
       (persona.razonSocial ? ' · ' + persona.razonSocial : '') + '<br>' +
       aciertos + ' de ' + sorteadas.length + ' respuestas correctas · nota mínima ' + NOTA_MINIMA + '%.' +
+      /* Sin esta linea, sacar 90% y no aprobar es incomprensible. */
+      (porObligatorias
+        ? '<br><b>Fallaste ' + obFalladas + ' de las ' + nObligatorias() + ' preguntas obligatorias</b> ' +
+          '(las de las Reglas HSE, marcadas con ★). Esas hay que acertarlas todas, ' +
+          'sin importar el porcentaje.'
+        : '') +
       (aprobo ? '<br>Tu resultado quedó registrado. Descarga tu <b>certificado</b> y ya puedes cerrar esta ventana.'
               : '<br>Revisa abajo las preguntas falladas y presenta el examen de nuevo.');
 
