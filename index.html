@@ -266,11 +266,15 @@
   /* Obligatoria: un borde ambar y una etiqueta. Es aviso, no alarma —el rojo
      esta reservado a lo que ya salio mal—, pero tiene que verse antes de
      responder, no despues. */
-  .exq.esob{border-color:rgba(239,125,0,.7);background:rgba(239,125,0,.14)}
+  .exq.esob{border-color:rgba(226,59,50,.8);background:rgba(226,59,50,.12)}
   .exq .qob{display:inline-block;margin-left:8px;font-size:10.5px;font-weight:800;
-    letter-spacing:.5px;color:#ffce8a;background:rgba(239,125,0,.22);
-    border:1px solid rgba(239,125,0,.45);border-radius:999px;padding:1px 8px;
+    letter-spacing:.5px;color:#ffb3ae;background:rgba(226,59,50,.24);
+    border:1px solid rgba(226,59,50,.55);border-radius:999px;padding:1px 8px;
     vertical-align:middle;white-space:nowrap}
+  /* Cuantas hay que marcar. Va dentro de la pregunta y no solo en el
+     enunciado: es la diferencia entre poder enviar el examen y no poder. */
+  .exnota{margin:0 0 4px;font-size:11.5px;font-weight:700;letter-spacing:.3px;
+    color:#8fd6f2;text-transform:uppercase}
   .exq .qh{display:flex;gap:10px;font-size:14.5px;font-weight:700;color:#eaf1fb;line-height:1.4}
   .exq .qn{flex:none;color:var(--cyan);font-weight:800}
   .exq .qm{font-size:10.5px;font-weight:800;letter-spacing:.6px;color:#04121f;background:var(--cm,#97d13b);
@@ -6101,7 +6105,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-08-r";
+var VERSION_CURSO = "2026-09-09-a";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 52 en cada intento.
@@ -7805,6 +7809,11 @@ cargarMediosCercanos();
    Para añadir o cambiar preguntas basta con editar esta lista. */
 var BANCO = [
 /* ---------- Módulo 1 · Generalidades ---------- */
+{m:'1',ob:1,p:'¿Qué simboliza la línea roja demarcada en la operación?',o:[
+  'Inicia el área industrial y es obligatorio usar el Elemento de Protección Personal (EPP) establecido en la señalética del área',
+  'Debo pasar saltando la línea para evitar tocarla',
+  'En la operación no tenemos demarcadas líneas rojas',
+  'El uso de Elementos de Protección Personal (EPP) no es importante'],r:0},
 {m:'1',ob:1,rotulo:'Definición',cols:['Peligro','P.U.E','Riesgo','Acto inseguro'],
  p:'Relaciona cada definición con el concepto que le corresponde.',matriz:[
   ['Fuente, situación o acto con potencial de causar daño',0],
@@ -7844,6 +7853,28 @@ var BANCO = [
 {m:'2',p:'Las políticas y declaraciones de Holcim otorgan autoridad para detener trabajos inseguros.',o:['Verdadero','Falso'],r:0},
 {m:'2',p:'El indicador C-VPC corresponde al abordaje a trabajadores en labores relacionadas con:',o:['Los Controles Críticos','La dotación de EPP','El pago de la nómina','Las auditorías financieras'],r:0},
 /* ---------- Módulo 3 · Control operacional ---------- */
+{m:'3',ob:1,rotulo:'Definición',cols:['Trabajo en alturas','Izaje de cargas','Trabajo en caliente','Aislamiento de energías'],
+ p:'Asocia cada definición con el permiso de trabajo que le corresponde.',matriz:[
+  ['Actividad que implica la suspensión y/o desplazamiento, en el que se expone a un trabajador a riesgo de caída mayor a 1,8 metros',0],
+  ['Actividad que involucra fuentes de ignición o uso de llama abierta',2],
+  ['Actividad que implica levantar, bajar o suspender cargas usando una diversa gama de máquinas y equipos de levantamiento mecánico',1],
+  ['Acción de identificar, liberar, incomunicar, clausurar, desconectar y/o eliminar las fuentes de energía de peligro presentes dentro de maquinaria y/o equipo, previo a la intervención del mismo',3]
+]},
+{m:'3',ob:1,p:'Selecciona los 3 criterios mínimos que debes tener en cuenta antes de iniciar cualquier tarea.',o:[
+  'Identificar los peligros y valorar los riesgos',
+  'Definir e implementar controles',
+  'Estar capacitado para la tarea a ejecutar',
+  'Iniciar rápido y corregir cuando haya tiempo'],r:[0,1,2]},
+{m:'3',ob:1,p:'El Análisis de Riesgo Personal (ARP) es un mecanismo de control del riesgo laboral que permite:',o:[
+  'Identificar y controlar peligros no previstos en la planificación de las tareas, justo antes de ejecutar la tarea',
+  'Confiar únicamente en los controles definidos durante la planificación inicial',
+  'Basar la ejecución de la tarea sin considerar posibles cambios en el área o en las condiciones operativas',
+  'Asumir que las condiciones de trabajo se mantendrán iguales durante toda la ejecución de la tarea'],r:0},
+{m:'3',ob:1,p:'Trabajar sin cumplir las normas y controles H&S está:',o:[
+  'Prohibido. Bajo ninguna circunstancia se deben incumplir las normas y controles H&S',
+  'Permitido si utilizo EPP',
+  'Permitido si el supervisor lo autoriza',
+  'Aceptable si la tarea es rápida'],r:0},
 {m:'3',p:'El ATS (Análisis de Trabajo Seguro) se utiliza para tareas:',o:['No estándar: no planificadas, impredecibles o por primera vez','Rutinarias que se repiten todos los días','Exclusivamente administrativas','Solo de mantenimiento eléctrico'],r:0},
 {m:'3',p:'¿Cuál es la vigencia de un ATS?',o:['Un turno de trabajo','Una semana','Un mes','Un año'],r:0},
 {m:'3',p:'El ITS (Instructivo de Trabajo Seguro) define la forma estandarizada y segura de ejecutar una tarea estándar.',o:['Verdadero','Falso'],r:0},
@@ -7873,6 +7904,12 @@ var BANCO = [
 {m:'4',p:'Está permitido operar un equipo al que se le retiraron las guardas de seguridad si la tarea es corta.',o:['Falso','Verdadero'],r:0},
 {m:'4',p:'En elevación y soporte de cargas, ¿cuál es una conducta prohibida?',o:['Colocarse debajo de cargas suspendidas','Verificar el peso exacto de la carga','Inspeccionar el equipo antes de usarlo','Usar terreno firme y nivelado'],r:0},
 /* ---------- Módulo 5 · Controles críticos ---------- */
+{m:'5',ob:1,rotulo:'Definición',cols:['Equipo móvil','Espacio confinado','Energía peligrosa'],
+ p:'Asocia cada definición con el concepto que le corresponde.',matriz:[
+  ['Cualquier tipo de energía que puede liberarse sin control, pudiendo generar un accidente',2],
+  ['Espacio suficientemente grande y configurado para permitir el ingreso del cuerpo de un trabajador, sin estar diseñado para su ocupación continua, con medios de entrada y salida restringidos en dimensión y forma o limitados en cantidad',1],
+  ['Equipo que se puede mover propulsado de forma autónoma dentro de un lugar de trabajo, desde equipos pesados —camiones volquete de minería, obra civil o pavimentación vial— hasta pequeñas carretillas elevadoras de almacén',0]
+]},
 {m:'5',ob:1,p:'El cumplimiento de los controles críticos sirve para:',o:[
   'Controlar los riesgos críticos y prevenir lesiones graves y fatales',
   'Cumplir con el papeleo de Holcim',
@@ -8441,6 +8478,12 @@ document.addEventListener('DOMContentLoaded', function(){
       }
       var idx = q.o.map(function(_,k){ return k; });
       if(q.o.length > 2) mezclar(idx);
+      /* Con 'r' como lista la pregunta tiene varias respuestas: se marcan con
+         casillas y hay que acertarlas todas, ni una de mas ni una de menos. */
+      if(Array.isArray(q.r)){
+        return { q:q, orden:idx, varias:true,
+                 correcta:q.r.map(function(x){ return idx.indexOf(x); }).sort(function(a,b){ return a-b; }) };
+      }
       return { q:q, orden:idx, correcta:idx.indexOf(q.r) };
     });
   }
@@ -8486,13 +8529,18 @@ document.addEventListener('DOMContentLoaded', function(){
         return;
       }
 
-      html += '<div class="exopts">';
+      var tipo = it.varias ? 'checkbox' : 'radio';
+      html += '<div class="exopts' + (it.varias ? ' varias' : '') + '">';
+      if(it.varias){
+        html += '<p class="exnota">Marca ' + it.correcta.length + ' opciones.</p>';
+      }
       it.orden.forEach(function(oi,k){
         /* La opcion correcta se marca en el HTML, pero SOLO se ve si el modo
            administrador esta activo (lo decide el CSS con body.admin). No se
            selecciona: se señala, para poder revisar el banco sin responder. */
-        var pista = (k === it.correcta) ? ' data-ok="1"' : '';
-        html += '<label class="exopt"'+pista+'><input type="radio" name="exq'+i+'" value="'+k+'"><span>'+it.q.o[oi]+'</span></label>';
+        var esOk = it.varias ? it.correcta.indexOf(k) >= 0 : k === it.correcta;
+        var pista = esOk ? ' data-ok="1"' : '';
+        html += '<label class="exopt"'+pista+'><input type="'+tipo+'" name="exq'+i+'" value="'+k+'"><span>'+it.q.o[oi]+'</span></label>';
       });
       html += '</div></div></div></div>';
     });
@@ -8501,13 +8549,19 @@ document.addEventListener('DOMContentLoaded', function(){
     if(window.activarFotos) activarFotos();
     if(window.cargarMediosCercanos) cargarMediosCercanos();
     elLista.addEventListener('change', function(e){
-      if(!e.target || e.target.type!=='radio') return;
+      if(!e.target || (e.target.type!=='radio' && e.target.type!=='checkbox')) return;
       var caja = e.target.closest('.exq'); if(!caja) return;
       var i = +caja.getAttribute('data-q');
       if(sorteadas[i].q.matriz){
-        /* Un bloque V/F guarda una respuesta por afirmacion, no una sola. */
+        /* Un bloque de matriz guarda una respuesta por fila, no una sola. */
         if(!Array.isArray(respuestas[i])) respuestas[i] = [];
         respuestas[i][ +e.target.getAttribute('data-fila') ] = +e.target.value;
+      } else if(sorteadas[i].varias){
+        /* Aqui se guarda la lista de lo marcado, en orden, para poder
+           compararla tal cual con la de las correctas. */
+        respuestas[i] = Array.prototype.slice.call(caja.querySelectorAll('.exopt input:checked'))
+          .map(function(x){ return +x.value; }).sort(function(a,b){ return a-b; });
+        caja.querySelectorAll('.exopt').forEach(function(l){ l.classList.toggle('sel', l.querySelector('input').checked); });
       } else {
         respuestas[i] = +e.target.value;
         caja.querySelectorAll('.exopt').forEach(function(l){ l.classList.toggle('sel', l.querySelector('input').checked); });
@@ -8529,6 +8583,11 @@ document.addEventListener('DOMContentLoaded', function(){
         if(!(r[k] >= 0 && r[k] < nCols)) return false;
       }
       return true;
+    }
+    if(sorteadas[i] && sorteadas[i].varias){
+      /* Se pide el numero exacto que dice el enunciado: con "marca 3", dejarlo
+         en 2 es no haber contestado, no haber contestado a medias. */
+      return Array.isArray(r) && r.length === sorteadas[i].correcta.length;
     }
     return r !== undefined && r !== null;
   }
@@ -8594,6 +8653,12 @@ document.addEventListener('DOMContentLoaded', function(){
         corr = it.q.matriz.map(function(f){
           return cols[ +f[1] ].toUpperCase() + ' · ' + f[0];
         }).join('  |  ');
+      } else if(it.varias){
+        var marcadas = respuestas[i] || [];
+        bien = marcadas.length === it.correcta.length &&
+               marcadas.every(function(k,j){ return k === it.correcta[j]; });
+        resp = marcadas.map(function(k){ return it.q.o[ it.orden[k] ]; }).join(' · ') || '(nada)';
+        corr = it.q.r.map(function(x){ return it.q.o[x]; }).join(' · ');
       } else {
         bien = (respuestas[i] === it.correcta);
         resp = it.q.o[ it.orden[ respuestas[i] ] ];
@@ -8614,10 +8679,12 @@ document.addEventListener('DOMContentLoaded', function(){
           fila.querySelectorAll('input').forEach(function(inp){ inp.disabled = true; });
         });
       } else {
+        var elegidas = it.varias ? (respuestas[i] || []) : [respuestas[i]];
+        var buenas   = it.varias ? it.correcta : [it.correcta];
         caja.querySelectorAll('.exopt').forEach(function(l,k){
           l.classList.remove('sel');
-          if(k === it.correcta) l.classList.add('bien');
-          else if(k === respuestas[i]) l.classList.add('mal');
+          if(buenas.indexOf(k) >= 0) l.classList.add('bien');
+          else if(elegidas.indexOf(k) >= 0) l.classList.add('mal');
           l.querySelector('input').disabled = true;
         });
       }
