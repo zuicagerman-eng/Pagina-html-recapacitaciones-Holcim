@@ -6105,7 +6105,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-09-a";
+var VERSION_CURSO = "2026-09-09-b";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 52 en cada intento.
@@ -7809,6 +7809,11 @@ cargarMediosCercanos();
    Para añadir o cambiar preguntas basta con editar esta lista. */
 var BANCO = [
 /* ---------- Módulo 1 · Generalidades ---------- */
+{m:'1',ob:1,p:'Ante una emergencia, lo primero que debes hacer es:',o:[
+  'Mantener la calma y seguir las instrucciones de brigadistas y evacuadores',
+  'Gritar y correr',
+  'Ignorar a los brigadistas',
+  'Seguir trabajando'],r:0},
 {m:'1',ob:1,p:'¿Qué simboliza la línea roja demarcada en la operación?',o:[
   'Inicia el área industrial y es obligatorio usar el Elemento de Protección Personal (EPP) establecido en la señalética del área',
   'Debo pasar saltando la línea para evitar tocarla',
@@ -7821,7 +7826,6 @@ var BANCO = [
   ['Evento prioritario NO deseado',1],
   ['Probabilidad de exposición a eventos peligrosos y la gravedad del daño que este me puede causar',2]
 ]},
-{m:'1',p:'Ante una emergencia, ¿cuál es la primera acción que se debe tomar?',o:['Mantener la calma','Correr hacia la salida más cercana','Buscar sus pertenencias personales','Llamar a su familia'],r:0},
 {m:'1',p:'Al informar una emergencia, ¿cuál de los siguientes datos NO forma parte de lo que se debe reportar?',o:['El nombre del jefe inmediato de cada afectado','Qué ocurrió','Número de personas afectadas','Qué tipo de ayuda se requiere'],r:0},
 {m:'1',p:'Según la clasificación de condiciones de seguridad, se considera trabajo en alturas a partir de:',o:['1,8 metros o más desde un plano horizontal','1,2 metros o más','2,5 metros o más','30 centímetros o más'],r:0},
 {m:'1',p:'Se recomienda NO usar vello facial (barba o bigote) porque impide el sello correcto de la protección respiratoria.',o:['Verdadero','Falso'],r:0},
@@ -7853,6 +7857,19 @@ var BANCO = [
 {m:'2',p:'Las políticas y declaraciones de Holcim otorgan autoridad para detener trabajos inseguros.',o:['Verdadero','Falso'],r:0},
 {m:'2',p:'El indicador C-VPC corresponde al abordaje a trabajadores en labores relacionadas con:',o:['Los Controles Críticos','La dotación de EPP','El pago de la nómina','Las auditorías financieras'],r:0},
 /* ---------- Módulo 3 · Control operacional ---------- */
+{m:'3',ob:1,p:'Marca las 5 actividades que requieren permiso de trabajo.',o:[
+  'Trabajos en altura',
+  'Trabajos en espacios confinados',
+  'Trabajos en caliente',
+  'Trabajo con aislamiento de energía',
+  'Izaje y elevación de cargas',
+  'Trabajo en solitario',
+  'Conducción de equipo móvil'],r:[0,1,2,3,4]},
+{m:'3',ob:1,p:'En todo trabajo en el que se requiera identificar, aislar, bloquear y etiquetar ______, se debe cumplir el procedimiento de aislamiento de energía.',o:[
+  'Energías peligrosas',
+  'Atmósferas riesgosas',
+  'Potencias bajas',
+  'Corrientes alternas'],r:0},
 {m:'3',ob:1,rotulo:'Definición',cols:['Trabajo en alturas','Izaje de cargas','Trabajo en caliente','Aislamiento de energías'],
  p:'Asocia cada definición con el permiso de trabajo que le corresponde.',matriz:[
   ['Actividad que implica la suspensión y/o desplazamiento, en el que se expone a un trabajador a riesgo de caída mayor a 1,8 metros',0],
@@ -7922,6 +7939,11 @@ var BANCO = [
 {m:'5',p:'¿Cuántos Eventos Prioritarios no Deseados (PUE) tiene definidos Holcim?',o:['12','5','8','20'],r:0},
 {m:'5',p:'El «Contacto con Harina Caliente» es uno de los PUE definidos por Holcim.',o:['Verdadero','Falso'],r:0},
 /* ---------- Módulo 6 · Comunicación y consulta ---------- */
+{m:'6',ob:1,p:'Marca las 3 responsabilidades legales del trabajador.',o:[
+  'Procurar el cuidado integral de su salud',
+  'Conocer, entender y cumplir las normas, políticas, reglas, procedimientos, reglamentos y objetivos SST',
+  'Informar oportunamente los peligros y riesgos latentes del sitio de trabajo',
+  'Crear las leyes de Salud y Seguridad del país'],r:[0,1,2]},
 {m:'6',p:'El COPASST está compuesto por:',o:['Igual número de representantes del empleador y de los trabajadores','Solo representantes de los trabajadores','Solo representantes del empleador','Únicamente personal del área de HSE'],r:0},
 {m:'6',p:'El Comité de Convivencia Laboral determina si existe o no acoso laboral.',o:['Falso','Verdadero'],r:0},
 {m:'6',p:'La brigada especializada o clase III está formada para la prevención y atención de emergencias en sectores de:',o:['Alto riesgo (petrolero, minero, químico, eléctrico, entre otros)','Riesgo administrativo únicamente','Comercio y oficinas','Transporte urbano de pasajeros'],r:0},
