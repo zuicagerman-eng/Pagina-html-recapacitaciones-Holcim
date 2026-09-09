@@ -6105,7 +6105,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-09-b";
+var VERSION_CURSO = "2026-09-09-c";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 52 en cada intento.
@@ -6144,7 +6144,7 @@ var SEDES = [
   'Otra'
 ];
 var PREGUNTAS_EXAMEN = 20;
-var NOTA_MINIMA      = 80;
+var NOTA_MINIMA      = 90;
 /* PREGUNTAS OBLIGATORIAS (las marcadas con ob:1 en el banco)
    Salen SIEMPRE, todas, agrupadas al principio del examen, y ademas del
    sorteo normal. Fallar una sola reprueba, aunque el porcentaje llegue al
@@ -7826,14 +7826,7 @@ var BANCO = [
   ['Evento prioritario NO deseado',1],
   ['Probabilidad de exposición a eventos peligrosos y la gravedad del daño que este me puede causar',2]
 ]},
-{m:'1',p:'Al informar una emergencia, ¿cuál de los siguientes datos NO forma parte de lo que se debe reportar?',o:['El nombre del jefe inmediato de cada afectado','Qué ocurrió','Número de personas afectadas','Qué tipo de ayuda se requiere'],r:0},
-{m:'1',p:'Según la clasificación de condiciones de seguridad, se considera trabajo en alturas a partir de:',o:['1,8 metros o más desde un plano horizontal','1,2 metros o más','2,5 metros o más','30 centímetros o más'],r:0},
-{m:'1',p:'Se recomienda NO usar vello facial (barba o bigote) porque impide el sello correcto de la protección respiratoria.',o:['Verdadero','Falso'],r:0},
-{m:'1',p:'“Barreras físicas inapropiadas en el lugar de trabajo” es un ejemplo de:',o:['Condición insegura','Acto inseguro','Accidente de trabajo','Enfermedad laboral'],r:0},
-{m:'1',p:'Un incidente de trabajo es un suceso con potencial de ser accidente, en el que hubo personas involucradas sin lesiones ni daños.',o:['Verdadero','Falso'],r:0},
-{m:'1',p:'“Piso resbaloso” corresponde a:',o:['Un peligro','Un riesgo','Un accidente','Una enfermedad laboral'],r:0},
-{m:'1',p:'Los peligros por iluminación (exceso o defecto), confort térmico y ruido se clasifican como:',o:['Físicos','Químicos','Biológicos','Biomecánicos'],r:0},
-{m:'1',p:'Los peligros por posturas prolongadas y movimientos repetitivos se clasifican como:',o:['Biomecánicos','Psicosociales','Físicos','Fenómenos naturales'],r:0},
+
 /* ---------- Módulo 2 · Planeación estratégica ---------- */
 /* --- Reglas HSE · completar la frase. Reutilizan los iconos de la lamina
        "Reglas HSE": el dibujo es parte del enunciado, no un adorno. --- */
@@ -7852,10 +7845,7 @@ var BANCO = [
 {m:'2',ob:1,f:'lineafuego(D14)',p:'Completa la regla HSE: «Yo ______ bajo una carga suspendida, en zonas de exclusión o en línea de fuego.»',o:['No trabajo sin las protecciones de la maquinaria, ni me sitúo o camino','No me salto ni deshabilito','No conduzco sin','No trabajo ni conduzco'],r:0},
 {m:'2',ob:1,f:'conduccion(D14)',p:'Completa la regla HSE: «Yo ______ el cinturón o mientras utilizo el teléfono celular, ni supero los límites de velocidad o las horas de servicio.»',o:['No conduzco sin','No me salto ni deshabilito','No trabajo sin las protecciones de la maquinaria, ni me sitúo o camino','No trabajo ni conduzco'],r:0},
 {m:'2',ob:1,f:'alcohol(D14)',p:'Completa la regla HSE: «Yo ______ bajo la influencia del alcohol o las drogas.»',o:['No trabajo ni conduzco','No me salto ni deshabilito','No trabajo sin las protecciones de la maquinaria, ni me sitúo o camino','No conduzco sin'],r:0},
-{m:'2',p:'Según las Reglas HSE, ¿en qué plazo máximo se deben reportar los incidentes?',o:['No mayor a 24 horas','No mayor a 72 horas','Antes de terminar la semana','Antes del cierre del mes'],r:0},
-{m:'2',p:'El objetivo principal de la Política HSE de Holcim es:',o:['Desarrollar nuestros negocios con cero daños','Reducir los costos de operación','Aumentar la productividad de las plantas','Cumplir únicamente la norma legal mínima'],r:0},
-{m:'2',p:'Las políticas y declaraciones de Holcim otorgan autoridad para detener trabajos inseguros.',o:['Verdadero','Falso'],r:0},
-{m:'2',p:'El indicador C-VPC corresponde al abordaje a trabajadores en labores relacionadas con:',o:['Los Controles Críticos','La dotación de EPP','El pago de la nómina','Las auditorías financieras'],r:0},
+
 /* ---------- Módulo 3 · Control operacional ---------- */
 {m:'3',ob:1,p:'Marca las 5 actividades que requieren permiso de trabajo.',o:[
   'Trabajos en altura',
@@ -7892,34 +7882,9 @@ var BANCO = [
   'Permitido si utilizo EPP',
   'Permitido si el supervisor lo autoriza',
   'Aceptable si la tarea es rápida'],r:0},
-{m:'3',p:'El ATS (Análisis de Trabajo Seguro) se utiliza para tareas:',o:['No estándar: no planificadas, impredecibles o por primera vez','Rutinarias que se repiten todos los días','Exclusivamente administrativas','Solo de mantenimiento eléctrico'],r:0},
-{m:'3',p:'¿Cuál es la vigencia de un ATS?',o:['Un turno de trabajo','Una semana','Un mes','Un año'],r:0},
-{m:'3',p:'El ITS (Instructivo de Trabajo Seguro) define la forma estandarizada y segura de ejecutar una tarea estándar.',o:['Verdadero','Falso'],r:0},
-{m:'3',p:'La matriz IPVR se actualiza:',o:['Cada año, o ante accidente mortal, evento catastrófico o cambios en procesos','Solo cuando lo pida la ARL','Cada cinco años','Únicamente al cambiar de contratista'],r:0},
-{m:'3',p:'¿Cuál de las siguientes actividades NO requiere permiso de trabajo?',o:['Labores administrativas de oficina','Trabajo en alturas','Trabajo en caliente','Aislamiento de energías (LOTOTO)'],r:0},
-{m:'3',p:'La Resolución 0312 de 2019, que aplica en Holcim, corresponde a:',o:['Los estándares mínimos del SG-SST','La norma de seguridad vial','La guía de organización saludable','El reglamento de higiene industrial'],r:0},
-{m:'3',p:'La NTC ISO 39001, dentro de las normas que aplican en Holcim, corresponde a la seguridad vial.',o:['Verdadero','Falso'],r:0},
-{m:'3',p:'El Decreto 1072 de 2015 corresponde a:',o:['El SG-SST (Sistema de Gestión de Seguridad y Salud en el Trabajo)','Los estándares mínimos del SG-SST','La guía de organización saludable','La norma de seguridad vial'],r:0},
-{m:'3',p:'El estándar HSE-103 corresponde a:',o:['Aislamiento de energías (LOTOTO)','Trabajo en alturas','Espacios confinados','Trabajo en caliente'],r:0},
-{m:'3',p:'Las tres técnicas del ATS son definir el paso de la tarea, identificar peligros, riesgos y consecuencias, y formular y cumplir controles.',o:['Verdadero','Falso'],r:0},
-{m:'3',p:'Dentro del ITS, el Análisis de Riesgo Personal sirve para:',o:['Identificar peligros y controles que no se contemplaron ni documentaron en el ITS','Reemplazar el permiso de trabajo','Calificar el desempeño del trabajador','Programar el mantenimiento de los equipos'],r:0},
+
 /* ---------- Módulo 4 · Controles complementarios ---------- */
-{m:'4',p:'La “autoridad para detener trabajos” (Stop Work Authority) significa que:',o:['Todo trabajador está facultado y obligado a detener una tarea que considere insegura','Solo el gerente de planta puede detener una tarea','Solo el personal de HSE puede detener una tarea','Solo se puede detener si ya ocurrió un accidente'],r:0},
-{m:'4',p:'Ante un accidente de trabajo, el primer paso es:',o:['Que el trabajador accidentado reporte inmediatamente lo ocurrido a su jefe directo','Diligenciar el informe de investigación','Esperar el resultado de la incapacidad','Notificar primero al cliente'],r:0},
-{m:'4',p:'Los elementos de protección personal (EPP) deben ser suministrados de forma gratuita al trabajador.',o:['Verdadero','Falso'],r:0},
-{m:'4',p:'Está permitido compartir elementos de protección personal como la protección auditiva.',o:['Falso','Verdadero'],r:0},
-{m:'4',p:'¿Cuál es la vigencia de la tarjeta de inspección de un andamio?',o:['7 días','24 horas','30 días','Un turno'],r:0},
-{m:'4',p:'En el sistema de tarjetas de andamios, la tarjeta roja indica:',o:['NO USAR: el andamio está en montaje o desmontaje','El andamio es seguro y puede usarse','El andamio requiere solo revisión visual','El andamio está autorizado para alturas'],r:0},
-{m:'4',p:'En LOTOTO, el candado rojo corresponde a:',o:['El ejecutor de la actividad','El punto de bloqueo del equipo','La estación o caja de bloqueo','El supervisor del área'],r:0},
-{m:'4',p:'La primera de las 5 Reglas de Oro de seguridad eléctrica es:',o:['Efectuar el corte visible de todas las fuentes de tensión','Instalar la puesta a tierra','Verificar la ausencia de tensión','Señalizar la zona de trabajo'],r:0},
-{m:'4',p:'Únicamente un eléctrico autorizado puede hacer instalación, inspección, prueba y mantenimiento de instalaciones y equipos eléctricos.',o:['Verdadero','Falso'],r:0},
-{m:'4',p:'En trabajo en caliente, el centinela debe permanecer durante toda la actividad y al terminarla, como mínimo:',o:['30 minutos','5 minutos','1 hora','El resto del turno'],r:0},
-{m:'4',p:'En trabajo en caliente debe permanecer en el sitio un extintor de:',o:['20 libras','5 libras','10 libras','50 libras'],r:0},
-{m:'4',p:'Se considera excavación un corte, cavidad, zanja o depresión con una profundidad mayor a:',o:['30 centímetros','1,2 metros','1,8 metros','1 metro'],r:0},
-{m:'4',p:'¿Cuál de las siguientes actividades está prohibida en trabajo en solitario?',o:['Trabajo en espacios confinados','Labores de oficina','Recorridos peatonales por zonas administrativas','Reuniones de equipo'],r:0},
-{m:'4',p:'Los daños producidos en el oído por exposición a ruido son irreversibles: nunca se recuperan.',o:['Verdadero','Falso'],r:0},
-{m:'4',p:'Está permitido operar un equipo al que se le retiraron las guardas de seguridad si la tarea es corta.',o:['Falso','Verdadero'],r:0},
-{m:'4',p:'En elevación y soporte de cargas, ¿cuál es una conducta prohibida?',o:['Colocarse debajo de cargas suspendidas','Verificar el peso exacto de la carga','Inspeccionar el equipo antes de usarlo','Usar terreno firme y nivelado'],r:0},
+
 /* ---------- Módulo 5 · Controles críticos ---------- */
 {m:'5',ob:1,rotulo:'Definición',cols:['Equipo móvil','Espacio confinado','Energía peligrosa'],
  p:'Asocia cada definición con el concepto que le corresponde.',matriz:[
@@ -7932,24 +7897,84 @@ var BANCO = [
   'Cumplir con el papeleo de Holcim',
   'Reducir la necesidad de supervisión y depender de la experiencia del trabajador',
   'Firmar el permiso de trabajo desde el escritorio'],r:0},
-{m:'5',p:'PUE significa:',o:['Evento Prioritario no Deseado','Plan Único de Emergencias','Procedimiento Unificado de Ejecución','Permiso Único de Entrada'],r:0},
-{m:'5',p:'A nivel mundial en Holcim, aproximadamente ¿qué porcentaje de los incidentes críticos y fatalidades está relacionado con los controles críticos?',o:['85%','50%','25%','100%'],r:0},
-{m:'5',p:'En el PUE de fallo en respuesta a emergencias, la respuesta de los brigadistas debe tardar menos de:',o:['5 minutos','15 minutos','30 minutos','1 hora'],r:0},
-{m:'5',p:'El control crítico “barreras, barandas y cubiertas en aperturas y bordes de caída” pertenece al PUE:',o:['Caída de Alturas','Contacto con Energías Peligrosas','Sepultamiento por Material','Contaminación'],r:0},
-{m:'5',p:'¿Cuántos Eventos Prioritarios no Deseados (PUE) tiene definidos Holcim?',o:['12','5','8','20'],r:0},
-{m:'5',p:'El «Contacto con Harina Caliente» es uno de los PUE definidos por Holcim.',o:['Verdadero','Falso'],r:0},
+
 /* ---------- Módulo 6 · Comunicación y consulta ---------- */
 {m:'6',ob:1,p:'Marca las 3 responsabilidades legales del trabajador.',o:[
   'Procurar el cuidado integral de su salud',
   'Conocer, entender y cumplir las normas, políticas, reglas, procedimientos, reglamentos y objetivos SST',
   'Informar oportunamente los peligros y riesgos latentes del sitio de trabajo',
   'Crear las leyes de Salud y Seguridad del país'],r:[0,1,2]},
-{m:'6',p:'El COPASST está compuesto por:',o:['Igual número de representantes del empleador y de los trabajadores','Solo representantes de los trabajadores','Solo representantes del empleador','Únicamente personal del área de HSE'],r:0},
-{m:'6',p:'El Comité de Convivencia Laboral determina si existe o no acoso laboral.',o:['Falso','Verdadero'],r:0},
-{m:'6',p:'La brigada especializada o clase III está formada para la prevención y atención de emergencias en sectores de:',o:['Alto riesgo (petrolero, minero, químico, eléctrico, entre otros)','Riesgo administrativo únicamente','Comercio y oficinas','Transporte urbano de pasajeros'],r:0},
-{m:'6',p:'En la responsabilidad civil derivada de un accidente de trabajo, la reparación de daños puede llegar hasta:',o:['1000 SMMLV','100 SMMLV','10 SMMLV','No tiene límite definido'],r:0},
-{m:'6',p:'La norma ISO 45001 corresponde al sistema de gestión de:',o:['Seguridad y Salud en el Trabajo','Calidad','Ambiental','Seguridad Vial'],r:0},
-{m:'6',p:'Es responsabilidad del trabajador procurar el cuidado integral de su salud e informar oportunamente los peligros del sitio de trabajo.',o:['Verdadero','Falso'],r:0}
+
+/* ═══════════ ROTABLES ═══════════
+   Van en parejas: dos maneras de preguntar lo mismo. En cada intento sale UNA
+   de cada pareja, la que decida el azar. No son obligatorias —aqui si cabe
+   fallar— y son las que hacen que el examen no sea igual dos veces. */
+{m:'3',g:'reporte',p:'Marca las 3 ventajas de reportar oportunamente los incidentes, comportamientos y condiciones inseguras.',o:[
+  'Evita la repetición de eventos similares',
+  'Fortalece la cultura de Seguridad y Salud',
+  'Protege a las personas',
+  'No es necesario'],r:[0,1,2]},
+{m:'3',g:'reporte',p:'No reportar oportunamente los incidentes, comportamientos y condiciones inseguras está mal porque facilita:',o:[
+  'La repetición de eventos similares',
+  'La cultura de Seguridad y Salud',
+  'La protección de las personas',
+  'El control efectivo de los riesgos'],r:0},
+
+{m:'1',g:'orden',p:'Mantener el área de trabajo ordenada y limpia:',o:[
+  'Reduce riesgos y minimiza condiciones inseguras',
+  'No afecta la seguridad',
+  'Es solo un tema visual',
+  'Solo importa durante visitas gerenciales y auditorías'],r:0},
+{m:'1',g:'orden',p:'El desorden en el área de trabajo:',o:[
+  'Genera condiciones inseguras y aumenta el riesgo de accidente',
+  'Es normal en cualquier operación',
+  'No tiene relación con accidentes de trabajo',
+  'No importa si yo entiendo mi desorden'],r:0},
+
+{m:'4',g:'induccion',p:'Trabajar sin inducción o sin capacitación:',o:[
+  'Está prohibido, porque aumenta el riesgo de accidentarme',
+  'Es normal si hay urgencia',
+  'Es aceptable si tengo mucha experiencia',
+  'Se tolera porque está primero la producción'],r:0},
+{m:'4',g:'induccion',p:'La inducción y la capacitación permiten:',o:[
+  'Que los trabajos se realicen de manera más segura',
+  'Saltarse los permisos de trabajo',
+  'Que haya más accidentes de trabajo',
+  'Omitir los demás controles H&S'],r:0},
+
+{m:'2',g:'presion',p:'Trabajar más rápido para terminar antes:',o:[
+  'No justifica omitir los controles de Salud y Seguridad en el Trabajo',
+  'Es válido cuando no hay un supervisor que me regañe',
+  'Es válido siempre y cuando ahorre dinero a la empresa',
+  'Es válido si mi jefe está al tanto'],r:0},
+{m:'2',g:'presion',p:'La presión por mayor producción:',o:[
+  'No justifica omitir los controles de Salud y Seguridad en el Trabajo',
+  'Justifica incumplir los controles de Salud y Seguridad en el Trabajo',
+  'Es más importante que la salud y la seguridad de los trabajadores',
+  'Permite violar las Reglas HSE'],r:0},
+
+{m:'3',g:'condiciones',p:'Si ves condiciones inseguras en el trabajo, debes:',o:[
+  'Detener la tarea y reportar para corregir las condiciones inseguras',
+  'Continuar la tarea',
+  'Ignorar la condición',
+  'Esperar a que otro lo haga'],r:0},
+{m:'3',g:'condiciones',p:'Si las condiciones de la tarea cambian y aumenta el riesgo durante su ejecución, debes:',o:[
+  'Detener y reevaluar la tarea con base en las nuevas condiciones y el nivel de riesgo',
+  'Continuar si falta poco',
+  'Mirar a otro lado',
+  'Terminar rápido para que nadie se dé cuenta'],r:0},
+
+{m:'3',g:'antes-tarea',p:'Antes de iniciar una tarea, debes:',o:[
+  'Identificar peligros, evaluar los riesgos y cumplir los controles que cuidan de tu salud y seguridad',
+  'Empezar muy rápido para ganar tiempo',
+  'Esperar a que otro la haga por ti',
+  'Confiar únicamente en tu instinto'],r:0},
+{m:'3',g:'antes-tarea',p:'Iniciar una tarea sin antes identificar peligros, evaluar los riesgos e implementar los controles que cuidan de tu salud y seguridad:',o:[
+  'Aumenta la probabilidad de que te accidentes y sufras lesiones graves',
+  'Es normal si tengo mucho afán',
+  'Lo puedo hacer porque nunca me ha pasado nada',
+  'Es aceptable si tengo mis EPP'],r:0},
+
 ];
 
 /* ====== ENVIAR CUALQUIER FORMULARIO A LA HOJA DE CÁLCULO ======
@@ -8411,11 +8436,15 @@ document.addEventListener('DOMContentLoaded', function(){
   /* Se descuentan las obligatorias: esas no se sortean, salen siempre, y
      contarlas aqui prometeria mas variedad de la que hay. */
   if(elIntro) elIntro.textContent = 'Antes de comenzar, identifícate. Las preguntas se toman al azar ' +
-    'de un banco de ' + (BANCO.length - nObligatorias()) + ' y cambian en cada intento.';
+    'de un banco de ' + sorteables() + ' y cambian en cada intento.';
 
   var nOb = nObligatorias();
+  /* El total se cuenta, no se escribe: del sorteo salen como mucho las que
+     haya disponibles, y anunciar PREGUNTAS_EXAMEN cuando el banco es mas
+     pequeño prometia un examen de 41 que en realidad tenia 27. */
+  var nTotal = nOb + Math.min(PREGUNTAS_EXAMEN, sorteables());
   document.getElementById('exReglas').innerHTML =
-    'El examen tiene ' + (PREGUNTAS_EXAMEN + nOb) + ' preguntas y se aprueba con ' + NOTA_MINIMA +
+    'El examen tiene ' + nTotal + ' preguntas y se aprueba con ' + NOTA_MINIMA +
     '% o más. Puedes repetirlo las veces que necesites; cada intento queda registrado.' +
     (nOb && EXIGIR_OBLIGATORIAS
       ? '<br><b>Las ' + nOb + ' primeras son obligatorias</b>: hay que acertarlas ' +
@@ -8430,6 +8459,19 @@ document.addEventListener('DOMContentLoaded', function(){
      comun; con 'cols' se le ponen las que sean —PELIGRO, P.U.E, RIESGO...— y
      entonces el bloque es de relacionar en vez de verdadero o falso. */
   function columnasDe(q){ return q.cols || ['Falso', 'Verdadero']; }
+
+  /* Cuantas preguntas distintas puede sacar el sorteo: las que no son
+     obligatorias, contando cada grupo de rotables como UNA, porque de cada
+     grupo solo sale una. Contarlas todas prometeria mas variedad de la que hay. */
+  function sorteables(){
+    var vistos = {}, n = 0;
+    BANCO.forEach(function(q){
+      if(q.ob) return;
+      if(q.g){ if(!vistos[q.g]){ vistos[q.g] = 1; n++; } }
+      else n++;
+    });
+    return n;
+  }
 
   function mezclar(a){ for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
 
@@ -8467,8 +8509,25 @@ document.addEventListener('DOMContentLoaded', function(){
     /* Las obligatorias no entran en el sorteo: van todas, siempre. Se apartan
        antes de repartir por modulo para que no ocupen plazas del sorteo ni
        descuadren el reparto —si no, el modulo 2 se comeria media prueba—. */
-    var obligatorias = BANCO.filter(function(q){ return q.ob; });
-    var resto        = BANCO.filter(function(q){ return !q.ob; });
+    /* Las rotables van en parejas —o en grupos— que preguntan lo mismo de dos
+       maneras: sale UNA de cada grupo, elegida al azar. Asi el examen cambia
+       entre intentos sin repetir el mismo enunciado dos veces en la misma
+       hoja, que es lo que pasaria si entraran las dos por separado. */
+    var usable = (function(){
+      var grupos = {}, sueltas = [];
+      BANCO.forEach(function(q){
+        if(q.g) (grupos[q.g] = grupos[q.g] || []).push(q);
+        else sueltas.push(q);
+      });
+      Object.keys(grupos).forEach(function(g){
+        var v = grupos[g];
+        sueltas.push(v[Math.floor(Math.random() * v.length)]);
+      });
+      return sueltas;
+    })();
+
+    var obligatorias = usable.filter(function(q){ return q.ob; });
+    var resto        = usable.filter(function(q){ return !q.ob; });
 
     var porMod={}; resto.forEach(function(q){ (porMod[q.m]=porMod[q.m]||[]).push(q); });
     var mods=Object.keys(porMod).sort(), tomadas=[];
