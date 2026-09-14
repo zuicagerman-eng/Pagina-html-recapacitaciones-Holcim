@@ -301,6 +301,18 @@
   /* Datos traidos de la lista: se ven confirmados, no editables por descuido,
      pero con la puerta abierta a corregirlos —una lista siempre tiene erratas
      y nadie deberia quedarse sin certificado por una tilde ajena—. */
+  /* Adjuntar imagen en el reporte: una captura explica en un vistazo lo que
+     una descripcion escrita a las apuradas deja a medias. */
+  .report-foto{margin-top:4px}
+  /* El modal de reporte es claro, no oscuro como el resto del curso: los
+     colores van con el, no con la lamina. */
+  .report-previa{display:flex;gap:11px;align-items:center;margin-top:10px;
+    background:#eef3f9;border:1px solid #d9e2ee;border-radius:10px;padding:9px 11px}
+  .report-previa img{width:56px;height:56px;object-fit:cover;border-radius:7px;flex:none;
+    background:#fff;border:1px solid #d9e2ee}
+  .report-previa span{display:block;font-size:12.5px;color:var(--ink);font-weight:600;line-height:1.35}
+  .report-previa button{margin-top:5px;background:none;border:0;padding:0;font:inherit;
+    font-size:12.5px;font-weight:700;color:#c02a21;cursor:pointer;text-decoration:underline}
   .exverif{background:rgba(63,181,89,.12);border:1px solid rgba(63,181,89,.42);
     border-radius:11px;padding:11px 14px;margin-bottom:16px;display:flex;
     align-items:center;gap:10px;flex-wrap:wrap}
@@ -6207,6 +6219,16 @@
       <input id="reportName" class="report-in" type="text" placeholder="Ej: David Restrepo" autocomplete="name">
       <label class="report-lbl" for="reportMsg">¿Qué problema encontraste?</label>
       <textarea id="reportMsg" class="report-in" rows="4" placeholder="Describe brevemente el error…"></textarea>
+      <label class="report-lbl">Captura o foto <span style="text-transform:none;letter-spacing:0;font-weight:600">(opcional)</span></label>
+      <input id="reportFoto" type="file" accept="image/*" hidden>
+      <div class="report-foto">
+        <button type="button" id="reportFotoBtn" class="report-cancel">📷 Adjuntar imagen</button>
+        <div class="report-previa" id="reportPrevia" hidden>
+          <img id="reportPreviaImg" alt="Vista previa de la imagen adjunta">
+          <div><span id="reportPreviaTxt"></span>
+            <button type="button" id="reportFotoQuitar">Quitar</button></div>
+        </div>
+      </div>
       <div class="report-actions">
         <button class="report-cancel" id="reportCancel">Cancelar</button>
         <button class="report-send" id="reportSend">Enviar</button>
@@ -6253,7 +6275,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-14-m";
+var VERSION_CURSO = "2026-09-14-n";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas preguntas tiene el examen EN TOTAL. Las
@@ -6869,9 +6891,83 @@ function goTo(i, dir){
   reveal(slides[idx]);
   chrome();
 }
+/* ====== AVANZAR POR DENTRO DE LA LAMINA ======
+   Antes, la flecha con tarjetas sin explorar solo regañaba: "explora todas las
+   tarjetas". Proyectando con un mando a distancia eso obliga a bajar del
+   estrado a tocar cada tarjeta. Ahora la flecha HACE la siguiente interaccion:
+   gira la tarjeta, mueve el cursor, abre la pestaña. Sigue haciendo falta una
+   pulsacion por interaccion —nadie se salta contenido— pero ya no hay que
+   buscar con el dedo cual falta. */
+
+/* Un mismo gesto sirve para todo si se mira en este orden: primero los mandos
+   que el propio componente ya tiene, y solo al final el clic a pelo. */
+function pasoInteractivo(dir){
+  var s = slides[idx];
+  if(!s || s.classList.contains('nogate')) return false;
+
+  /* Hacia atras se retrocede dentro del componente mientras quede sitio; una
+     vez en su primer paso, la flecha vuelve a ser "lamina anterior". */
+  if(dir < 0){
+    var rangoA = s.querySelector('input[type=range]');
+    if(rangoA && +rangoA.value > +(rangoA.min || 0)){
+      rangoA.value = +rangoA.value - 1;
+      rangoA.dispatchEvent(new Event('input', { bubbles:true }));
+      return true;
+    }
+    var flAnt = s.querySelector('.qcarr-flecha.ant');
+    var puntos = s.querySelectorAll('.qcarr-punto');
+    if(flAnt && puntos.length){
+      for(var k = 0; k < puntos.length; k++)
+        if(puntos[k].classList.contains('on')) return k > 0 ? (flAnt.click(), true) : false;
+    }
+    return false;
+  }
+
+  /* Hacia delante solo actua si de verdad falta algo: si ya esta todo
+     explorado, la flecha tiene que pasar de lamina como siempre. */
+  var r = reqStats(s);
+  if(!(r.total > 0 && r.done < r.total)) return false;
+
+  var pend = s.querySelector('.req:not(.done)');
+  if(!pend) return false;
+
+  /* El deslizador suele ser hermano del elemento marcado, no hijo: se busca en
+     la lamina, que en la practica no lleva dos. */
+  var rango = (pend.matches && pend.matches('input[type=range]')) ? pend
+            : (pend.querySelector('input[type=range]') || s.querySelector('input[type=range]'));
+  if(rango && +rango.value < +rango.max){
+    rango.value = +rango.value + 1;
+    rango.dispatchEvent(new Event('input', { bubbles:true }));
+    return true;
+  }
+
+  /* Carrusel: su propia flecha ya sabe dar la vuelta y marcar lo visto. */
+  var sig = pend.querySelector('.qcarr-flecha.sig') || s.querySelector('.qcarr-flecha.sig');
+  if(sig && s.querySelector('.qcarr-punto')){ sig.click(); return true; }
+
+  /* Pregunta de opciones: se marca la correcta. Proyectando, lo util es
+     enseñar la respuesta buena a la sala; y es un quiz de repaso, no el
+     examen, asi que revelarla no regala nada que cuente. */
+  var buena = pend.querySelector('.opt[data-correct="1"]');
+  if(buena){ buena.click(); return true; }
+
+  /* Pasos numerados: el primero que nadie haya abierto. */
+  var nums = pend.querySelectorAll('.puenum');
+  if(!nums.length) nums = s.querySelectorAll('.puenum');
+  for(var i = 0; i < nums.length; i++){
+    if(!nums[i].classList.contains('vis')){ nums[i].click(); return true; }
+  }
+
+  /* Y si no, el elemento pendiente sin mas: tarjetas que giran, pestañas,
+     puntos de la rueda... todos responden al clic. */
+  pend.click();
+  return true;
+}
+
 function next(){
   var gate = slides[idx].getAttribute('data-gate');
   if(gate==='video' && EXIGIR_VIDEO_COMPLETO && !videoEnded){ toast('Observa el video completo para continuar'); return; }
+  if(pasoInteractivo(1)) return;
   var r=reqStats(slides[idx]);
   if(r.total>0 && r.done<r.total){ toast('Explora todas las tarjetas para continuar ('+r.done+'/'+r.total+')'); return; }
   if(idx>=N-1) return;
@@ -6880,10 +6976,12 @@ function next(){
   if(iEx >= 0 && idx+1 >= iEx) vioPresentacion = true;
   goTo(idx+1, 1);
 }
-function prev(){ if(idx>0) goTo(idx-1, -1); }
+function prev(){ if(pasoInteractivo(-1)) return; if(idx>0) goTo(idx-1, -1); }
 nextBtn.addEventListener('click', next);
 prevBtn.addEventListener('click', prev);
-document.addEventListener('keydown', function(e){ var ap=document.getElementById('admpanel'); if(ap&&ap.classList.contains('show'))return; var md=document.getElementById('pdfmodal'); if(md&&md.classList.contains('show'))return; var wc=document.getElementById('welcome'); if(wc&&!wc.classList.contains('hide'))return; if(e.key==='ArrowRight') next(); if(e.key==='ArrowLeft') prev(); });
+document.addEventListener('keydown', function(e){ var ap=document.getElementById('admpanel'); if(ap&&ap.classList.contains('show'))return; var md=document.getElementById('pdfmodal'); if(md&&md.classList.contains('show'))return; var wc=document.getElementById('welcome'); if(wc&&!wc.classList.contains('hide'))return; /* Los mandos de presentacion mandan casi siempre AvPag/RePag, no flechas. */
+  if(e.key==='ArrowRight' || e.key==='PageDown') next();
+  if(e.key==='ArrowLeft'  || e.key==='PageUp')   prev(); });
 /* reveal de la primera slide */
 reveal(slides[0]); chrome();
 /* ====== VIDEO VIMEO ====== */
@@ -7490,6 +7588,63 @@ var ENCUESTA = (function(){
 
   function moduloActual(){ var el=document.getElementById('modlabel'); return el?el.textContent:''; }
 
+  /* ---- Imagen adjunta ----
+     Una foto de un celular pesa entre 3 y 8 MB, y en base64 crece un tercio
+     mas. Mandarla tal cual seria un correo de 10 MB por cada reporte, asi que
+     se reencoge a 1600 px de lado y se guarda en JPEG: basta de sobra para ver
+     una pantalla y deja el envio en un par de cientos de KB. */
+  var LADO_MAX = 1600, CALIDAD = 0.75;
+  var fotoB64 = '', fotoNombre = '';
+  var fBtn = document.getElementById('reportFotoBtn'),
+      fInp = document.getElementById('reportFoto'),
+      fPrev = document.getElementById('reportPrevia'),
+      fImg = document.getElementById('reportPreviaImg'),
+      fTxt = document.getElementById('reportPreviaTxt'),
+      fQuit = document.getElementById('reportFotoQuitar');
+
+  function kb(n){ return n < 1024 ? n + ' B' : Math.round(n / 1024) + ' KB'; }
+
+  function quitarFoto(){
+    fotoB64 = ''; fotoNombre = '';
+    fInp.value = ''; fPrev.hidden = true; fImg.removeAttribute('src');
+    fBtn.textContent = '📷 Adjuntar imagen';
+  }
+  if(fBtn) fBtn.addEventListener('click', function(){ fInp.click(); });
+  if(fQuit) fQuit.addEventListener('click', quitarFoto);
+
+  if(fInp) fInp.addEventListener('change', function(){
+    var f = fInp.files && fInp.files[0];
+    if(!f) return;
+    if(!/^image\//.test(f.type)){ toast('Ese archivo no es una imagen'); quitarFoto(); return; }
+    fBtn.textContent = 'Preparando la imagen…';
+    var lector = new FileReader();
+    lector.onerror = function(){ toast('No se pudo leer la imagen'); quitarFoto(); };
+    lector.onload = function(){
+      var im = new Image();
+      im.onerror = function(){ toast('No se pudo abrir la imagen'); quitarFoto(); };
+      im.onload = function(){
+        var esc = Math.min(1, LADO_MAX / Math.max(im.width, im.height));
+        var w = Math.max(1, Math.round(im.width * esc)), h = Math.max(1, Math.round(im.height * esc));
+        var c = document.createElement('canvas'); c.width = w; c.height = h;
+        /* Fondo blanco: un PNG con transparencia acabaria en JPEG con los
+           huecos en negro, que es justo donde suele estar el texto. */
+        var cx = c.getContext('2d');
+        cx.fillStyle = '#fff'; cx.fillRect(0, 0, w, h);
+        cx.drawImage(im, 0, 0, w, h);
+        var url;
+        try { url = c.toDataURL('image/jpeg', CALIDAD); }
+        catch(e){ toast('No se pudo procesar la imagen'); quitarFoto(); return; }
+        fotoB64 = url.split(',')[1] || '';
+        fotoNombre = (f.name || 'captura').replace(/\.[^.]+$/, '') + '.jpg';
+        fImg.src = url; fPrev.hidden = false;
+        fTxt.textContent = fotoNombre + ' · ' + w + '×' + h + ' · ' + kb(Math.round(fotoB64.length * 3 / 4));
+        fBtn.textContent = '📷 Cambiar imagen';
+      };
+      im.src = lector.result;
+    };
+    lector.readAsDataURL(f);
+  });
+
   function abrir(){
     rSlide.textContent = (idx+1) + ' / ' + N;
     rMod.textContent = moduloActual();
@@ -7513,7 +7668,9 @@ var ENCUESTA = (function(){
       mensaje: mensaje,
       url: location.href,
       navegador: navigator.userAgent,
-      fecha: new Date().toLocaleString()
+      fecha: new Date().toLocaleString(),
+      imagen: fotoB64,            // JPEG en base64, sin la cabecera "data:"
+      imagenNombre: fotoNombre
     };
 
     // Opción A: servido POR Apps Script → llamada nativa (sin URLs ni CORS)
@@ -7547,6 +7704,7 @@ var ENCUESTA = (function(){
                  'Módulo: '+datos.modulo+'\n'+
                  (datos.nombre?('Reporta: '+datos.nombre+'\n'):'')+
                  '\nProblema:\n'+mensaje+'\n\n'+
+                 (fotoB64 ? '(Adjunta la captura a mano: por correo no viaja sola.)\n\n' : '')+
                  '— Enviado desde: '+datos.url;
     window.location.href = 'mailto:'+encodeURIComponent(REPORTE_EMAIL)+
       '?subject='+encodeURIComponent(asunto)+'&body='+encodeURIComponent(cuerpo);
@@ -7556,6 +7714,7 @@ var ENCUESTA = (function(){
   function hecho(){
     if(hechoYa) return; hechoYa=true;
     rSend.disabled=false; cerrar(); rMsg.value='';
+    quitarFoto();          // si no, la captura se colaria en el siguiente reporte
     toast('✔ Reporte enviado. ¡Gracias!');
   }
 

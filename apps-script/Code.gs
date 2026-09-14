@@ -165,7 +165,7 @@ var URL_CURSO = "https://zuicagerman-eng.github.io/Pagina-html-recapacitaciones-
    siguen atendidos por el codigo viejo. Este sello es lo que permite verlo:
    comprobarPublicacion() se lo pregunta a la implementacion y compara.
    Subelo cada vez que cambie algo de fondo. */
-var VERSION_GS = "2026-09-14-c";
+var VERSION_GS = "2026-09-14-d";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    LISTA DE PERSONAL  ·  la cédula como llave del examen
@@ -2165,6 +2165,24 @@ function enviarCorreoReporte(d) {
     "• Fecha: " + (d.fecha || "-") + "\n\n" +
     "Descripción:\n" + (d.mensaje || "(sin descripción)") + "\n\n" +
     "-----\nURL: " + (d.url || "-") + "\nNavegador: " + (d.navegador || "-");
-  MailApp.sendEmail(CORREO_REPORTES, asunto, cuerpo);
+
+  /* La captura, si la mandaron. Va adjunta al mismo correo: es donde se va a
+     mirar, junto al texto que la explica, sin tener que abrir otra cosa. */
+  var opciones = {};
+  if (d.imagen) {
+    try {
+      var bytes = Utilities.base64Decode(d.imagen);
+      var nombre = String(d.imagenNombre || 'captura.jpg').replace(/[\\\/:*?"<>|]/g, '_');
+      opciones.attachments = [Utilities.newBlob(bytes, 'image/jpeg', nombre)];
+      cuerpo += "\n\n(Se adjunta la captura enviada: " + nombre + ")";
+    } catch (err) {
+      /* Que la imagen falle no puede tumbar el reporte: el texto es lo que
+         importa y sin el no queda constancia de nada. */
+      cuerpo += "\n\n(Mandaron una captura pero no se pudo adjuntar: " + err.message + ")";
+      console.error('Adjunto del reporte: ' + err.message);
+    }
+  }
+
+  MailApp.sendEmail(CORREO_REPORTES, asunto, cuerpo, opciones);
   return { ok: true };
 }
