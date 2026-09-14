@@ -6253,7 +6253,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-14-j";
+var VERSION_CURSO = "2026-09-14-k";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas preguntas tiene el examen EN TOTAL. Las
@@ -6322,6 +6322,11 @@ var NOTA_MINIMA      = 90;
    que el problema que esto resuelve. */
 var USAR_LISTA_PERSONAL = false;   // ponlo en true cuando la lista este cargada
 var EXIGIR_LISTA        = true;
+/* El Maestro People no tiene columna de tipo de usuario: todo el que esta ahi
+   es personal propio de Holcim. Con esto, a quien sale de la lista no se le
+   pregunta nada mas. Si algun dia la lista incluye contratistas, aniade una
+   columna "Tipo" y esto deja de aplicarse solo. */
+var TIPO_POR_DEFECTO_LISTA = 'Propio';
 
 var EXIGIR_OBLIGATORIAS = true;
 var EXIGIR_EXAMEN    = true;
@@ -9520,6 +9525,9 @@ document.addEventListener('DOMContentLoaded', function(){
      saber, viendo un resultado, si el nombre esta verificado o es lo que
      alguien tecleo. */
   var verificado = 'SIN LISTA';
+  /* La posicion que trae el maestro. Solo informativa, pero en la hoja permite
+     ver de un vistazo que perfiles han pasado por la (Re) Induccion. */
+  var cargo = '';
 
   function montarLlave(){
     var caja = document.getElementById('exLlave'), campos = document.getElementById('exCampos'),
@@ -9538,6 +9546,8 @@ document.addEventListener('DOMContentLoaded', function(){
       /* Corregir no cambia el "verificado": los datos ya no son los de la
          lista, y la hoja tiene que poder decirlo. */
       bloquear(false); verificado = 'NO'; verif.hidden = true;
+      escondidos.forEach(function(c){ c.hidden = false; });
+      escondidos = [];
       inApe1.focus();
     });
 
@@ -9585,24 +9595,44 @@ document.addEventListener('DOMContentLoaded', function(){
         if(p.apellido1) inApe1.value = p.apellido1;
         if(p.apellido2) inApe2.value = p.apellido2;
         if(p.nombres)   inNombres.value = p.nombres;
-        if(p.tipo)      ponerSiExiste(inTipo, p.tipo);
+        /* Sin columna de tipo, quien esta en el maestro de Holcim es propio. */
+        ponerSiExiste(inTipo, p.tipo || TIPO_POR_DEFECTO_LISTA);
         if(p.centro)    ponerSiExiste(inEmpresa, p.centro);
         try{ inTipo.dispatchEvent(new Event('change')); }catch(e){}
         try{ inEmpresa.dispatchEvent(new Event('change')); }catch(e){}
         if(p.empresa && pideEmpresa()) inRazon.value = p.empresa;
+        cargo = p.cargo || '';
 
         verificado = 'SI';
         verif.hidden = false;
-        verifTxt.textContent = [p.apellido1, p.apellido2, p.nombres].filter(Boolean).join(' ') +
-                               ' · C.C. ' + ced;
-        /* Se bloquea solo lo que de verdad trajo la lista: si un campo vino
-           vacio hay que poder escribirlo. */
+        verifTxt.innerHTML = '<b style="display:block;font-size:14.5px;letter-spacing:0;text-transform:none">' +
+          [p.apellido1, p.apellido2, p.nombres].filter(Boolean).join(' ') + '</b>' +
+          'C.C. ' + ced +
+          (inEmpresa.value ? ' · ' + inEmpresa.value : '') +
+          (p.cargo ? ' · ' + p.cargo : '');
+
+        /* Lo que trajo la lista ya no se pregunta: el campo desaparece en vez
+           de quedarse gris. Lo que vino vacio si se queda, para escribirlo. */
         inApe1.readOnly = !!p.apellido1; inApe2.readOnly = !!p.apellido1;
         inNombres.readOnly = !!p.nombres; inCedula.readOnly = true;
-        inTipo.disabled = !!p.tipo && !!inTipo.value;
-        inEmpresa.disabled = !!p.centro && !!inEmpresa.value;
+        ocultarCampo(inTipo,    !!inTipo.value);
+        ocultarCampo(inEmpresa, !!inEmpresa.value);
+        ocultarCampo(inApe1,    !!p.apellido1);
+        ocultarCampo(inApe2,    !!p.apellido1);
+        ocultarCampo(inNombres, !!p.nombres);
+        ocultarCampo(inCedula,  true);
         abrirCampos();
       });
+    }
+
+    /* Oculta la casilla entera —etiqueta incluida— cuando su dato ya lo trajo
+       la lista. Se guarda cual se escondio para poder devolverla en "Corregir". */
+    var escondidos = [];
+    function ocultarCampo(el, si){
+      var caja2 = el.closest ? el.closest('.excampo') : null;
+      if(!caja2) return;
+      caja2.hidden = !!si;
+      if(si && escondidos.indexOf(caja2) < 0) escondidos.push(caja2);
     }
 
     function ponerSiExiste(sel, valor){
@@ -9618,6 +9648,8 @@ document.addEventListener('DOMContentLoaded', function(){
 
     window.reiniciarLlave = function(){
       inp.value = ''; err.textContent = ''; inp.classList.remove('mal');
+      escondidos.forEach(function(c){ c.hidden = false; }); escondidos = [];
+      cargo = '';
       [inApe1, inApe2, inNombres, inCedula].forEach(function(x){ x.value = ''; });
       bloquear(false);
       verif.hidden = true; verificado = 'SIN LISTA';
@@ -10006,6 +10038,7 @@ document.addEventListener('DOMContentLoaded', function(){
       /* Si el nombre lo trajo la lista de Holcim o lo tecleo la persona. Sin
          esta columna, viendo un resultado no hay forma de saberlo. */
       verificado:   verificado,
+      cargo:        cargo,
       modalidad:    SESION ? 'Grupal' : 'Individual',
       sesion:       SESION ? SESION.id : '',
       sesionPlanta: SESION ? SESION.planta : '',

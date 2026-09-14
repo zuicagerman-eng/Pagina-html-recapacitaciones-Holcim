@@ -173,7 +173,7 @@ var VERSION_GS = "2026-09-14-a";
    dejes vacias las escribe la persona. "Activo" con NO deja a alguien fuera sin
    borrarlo de la lista. Crea la pestaña con prepararListaPersonal().
    ═══════════════════════════════════════════════════════════════════════════ */
-var PESTANA_PERSONAL = "Personal";
+var PESTANA_PERSONAL = "Maestro People";
 
 /* ¿En qué archivo está esa pestaña? Vacío = en la misma hoja de resultados.
    Si tu base de personal ya vive en OTRO archivo de Holcim, pega aquí su
@@ -184,6 +184,82 @@ var PESTANA_PERSONAL = "Personal";
    lo marca como "sin verificar", que es mejor que dejar a media planta fuera
    por un permiso. */
 var ID_HOJA_PERSONAL = "";
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   EQUIVALENCIAS DE CENTRO  ·  del Maestro People al curso
+   ───────────────────────────────────────────────────────────────────────────
+   El Maestro People llama a las plantas "HC-NOBSA CEMENTO", "HC-TELEPORT"...
+   y el curso las llama "NOBSA CEM", "TELEPORT CORP". Hay que traducirlas o el
+   certificado no encuentra su carpeta y acaba en CARPETA_OTROS.
+
+   A la izquierda va tal cual aparece en la columna "División de personal"; a
+   la derecha, EXACTAMENTE uno de los nombres de CARPETAS_POR_CENTRO.
+
+   Lo que no esté aquí pasa tal cual y caerá en "otros". Ejecuta
+   verCentrosDeLaLista() para que te diga qué divisiones hay de verdad en tu
+   hoja y cuáles todavía no tienen equivalencia: es la unica forma de
+   completar esta tabla sin adivinar.
+   ═══════════════════════════════════════════════════════════════════════════ */
+var EQUIVALENCIAS_CENTRO = {
+  'HC-TELEPORT'      : 'TELEPORT CORP',
+  'HC-NOBSA CEMENTO' : 'NOBSA CEM',
+  'HC-BELLO'         : 'BELLO RMX',
+  'HC-CHIA'          : 'CHIA RMX',
+  'HC-PUENTE ARANDA' : 'PUENTE ARANDA RMX'
+  // 'HC-PALMIRA'    : '',     ← no hay equivalente en la lista del curso: complétalo
+};
+
+/* La comparación ignora mayúsculas, tildes y espacios de sobra, para que
+   "HC-NOBSA CEMENTO" y "HC-Nobsa  Cemento" sean lo mismo. */
+function traducirCentro_(valor) {
+  var v = String(valor || '').trim();
+  if (!v) return '';
+  var k = normalizarTitulo_(v);
+  for (var orig in EQUIVALENCIAS_CENTRO) {
+    if (EQUIVALENCIAS_CENTRO.hasOwnProperty(orig) && normalizarTitulo_(orig) === k) {
+      return EQUIVALENCIAS_CENTRO[orig] || v;
+    }
+  }
+  return v;   // sin equivalencia: pasa tal cual y el certificado irá a "otros"
+}
+
+/**
+ * Qué divisiones hay REALMENTE en tu lista y cuáles no tienen equivalencia.
+ * Ejecútala después de cargar la base: es lo que te dice qué falta por mapear.
+ */
+function verCentrosDeLaLista() {
+  var h = libroDePersonal_().getSheetByName(PESTANA_PERSONAL);
+  if (!h) { SpreadsheetApp.getUi().alert('No existe la pestaña "' + PESTANA_PERSONAL + '".'); return; }
+  var datos = h.getDataRange().getValues();
+  if (datos.length < 2) { SpreadsheetApp.getUi().alert('La lista está vacía.'); return; }
+
+  var titulos = datos[0].map(normalizarTitulo_);
+  var c = -1;
+  ['Centro', 'DivisionDePersonal', 'Division', 'CentroDeTrabajo', 'Sede', 'Planta']
+    .forEach(function (n) { if (c < 0) c = titulos.indexOf(normalizarTitulo_(n)); });
+  if (c < 0) { SpreadsheetApp.getUi().alert('No encontré una columna de centro/división.'); return; }
+
+  var cuenta = {};
+  for (var f = 1; f < datos.length; f++) {
+    var v = String(datos[f][c] || '').trim();
+    if (v) cuenta[v] = (cuenta[v] || 0) + 1;
+  }
+  var carpetas = Object.keys(CARPETAS_POR_CENTRO);
+  var bien = [], faltan = [];
+  Object.keys(cuenta).sort().forEach(function (v) {
+    var t = traducirCentro_(v);
+    var linea = '  ' + v + '  (' + cuenta[v] + ')  →  ' + t;
+    if (carpetas.indexOf(t) >= 0) bien.push(linea);
+    else faltan.push(linea + '   ⚠ SIN CARPETA');
+  });
+  SpreadsheetApp.getUi().alert(
+    'DIVISIONES EN "' + PESTANA_PERSONAL + '"\n\n' +
+    (bien.length ? 'Con carpeta:\n' + bien.join('\n') + '\n\n' : '') +
+    (faltan.length
+      ? 'SIN EQUIVALENCIA (sus certificados irían a la carpeta "otros"):\n' +
+        faltan.join('\n') + '\n\nAñádelas a EQUIVALENCIAS_CENTRO, arriba en este archivo.'
+      : 'Todas las divisiones tienen carpeta. No falta nada.'));
+}
 
 /* Cada consulta queda anotada aqui: cedula preguntada, si aparecio y cuando.
    Con 870 personas y un centenar de examenes al mes esto es un puñado de filas
@@ -281,17 +357,26 @@ function buscarPersona_(cedulaPedida) {
     }
     return -1;
   }
-  var cCed = col('Cedula', 'Documento', 'Identificacion', 'CC');
+  var cCed = col('Cedula', 'NumeroID', 'Numero ID', 'Documento', 'Identificacion', 'CC', 'ID');
   if (cCed < 0) return { ok: false, motivo: 'sin-columna-cedula' };
 
   var cAp1 = col('Apellido1', 'PrimerApellido', 'Apellido'),
       cAp2 = col('Apellido2', 'SegundoApellido'),
       cNom = col('Nombres', 'Nombre'),
       cTip = col('Tipo', 'TipoUsuario', 'Vinculacion'),
-      cCen = col('Centro', 'CentroDeTrabajo', 'CentroTrabajo', 'Sede', 'Planta'),
+      /* "Division de personal" es la columna B del Maestro People: HC-NOBSA
+         CEMENTO, HC-TELEPORT... No son los nombres de los centros que usa el
+         curso, por eso existe EQUIVALENCIAS_CENTRO mas abajo. */
+      cCen = col('Centro', 'DivisionDePersonal', 'Division', 'CentroDeTrabajo',
+                 'CentroTrabajo', 'Sede', 'Planta'),
       cEmp = col('Empresa', 'RazonSocial'),
-      cAct = col('Activo', 'Estado'),
-      cComp= col('NombreCompleto', 'Completo');
+      /* "Grupo de personal" dice Activos / Retirados. */
+      cAct = col('Activo', 'GrupoDePersonal', 'Estado', 'Grupo'),
+      cCar = col('Posicion', 'Cargo', 'Puesto'),
+      /* OJO: en el Maestro People la columna D se titula "Numero de personal"
+         pero lo que trae es el NOMBRE COMPLETO ("CORTES GONZALEZ RICARDO").
+         El numero de verdad esta en "N pers.", que no se usa aqui. */
+      cComp= col('NombreCompleto', 'Completo', 'NumeroDePersonal', 'NombreDelPersonal');
 
   for (var f = 1; f < datos.length; f++) {
     if (soloDigitos_(datos[f][cCed]) !== ced) continue;
@@ -300,7 +385,9 @@ function buscarPersona_(cedulaPedida) {
       var act = String(datos[f][cAct] || '').trim().toLowerCase();
       /* Vacio cuenta como activo: obligar a escribir "SI" en 870 filas para
          que la lista funcione seria un campo minado. */
-      if (act && /^(no|inactivo|retirado|0|false)$/.test(act)) {
+      /* Por prefijo: la hoja dice "Activos", "Retirados", "Inactivos"... en
+         plural, y un igual exacto los dejaria a todos como activos. */
+      if (act && /^(no|inactiv|retirad|baja|desvincul|0|false)/.test(act)) {
         anotarConsulta_(ced, 'INACTIVO');
         return { ok: true, encontrado: false, motivo: 'inactivo' };
       }
@@ -320,6 +407,7 @@ function buscarPersona_(cedulaPedida) {
       else if (t.length === 1) { nom = t[0]; }
     }
 
+    var centroCrudo = cCen >= 0 ? String(datos[f][cCen] || '').trim() : '';
     anotarConsulta_(ced, 'ENCONTRADA');
     return {
       ok: true, encontrado: true,
@@ -327,7 +415,9 @@ function buscarPersona_(cedulaPedida) {
         cedula: ced,
         apellido1: ap1, apellido2: ap2, nombres: nom,
         tipo:    cTip >= 0 ? String(datos[f][cTip] || '').trim() : '',
-        centro:  cCen >= 0 ? String(datos[f][cCen] || '').trim() : '',
+        centro:  traducirCentro_(centroCrudo),
+        centroOriginal: centroCrudo,
+        cargo:   cCar >= 0 ? String(datos[f][cCar] || '').trim() : '',
         empresa: cEmp >= 0 ? String(datos[f][cEmp] || '').trim() : ''
       }
     };
