@@ -152,7 +152,44 @@ var URL_CURSO = "https://zuicagerman-eng.github.io/Pagina-html-recapacitaciones-
    siguen atendidos por el codigo viejo. Este sello es lo que permite verlo:
    comprobarPublicacion() se lo pregunta a la implementacion y compara.
    Subelo cada vez que cambie algo de fondo. */
-var VERSION_GS = "2026-09-08-e";
+var VERSION_GS = "2026-09-14-a";
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   LISTA DE PERSONAL  ·  la cédula como llave del examen
+   ───────────────────────────────────────────────────────────────────────────
+   Pestaña de ESTA MISMA hoja con la gente autorizada. El curso le pregunta por
+   UNA cédula y recibe SOLO esa persona: la lista nunca sale de Drive.
+
+   Esto es a proposito y es lo importante. El curso vive en un repositorio
+   publico: meter ahi las 870 cedulas seria dejarlas descargables para
+   cualquiera que abra la pagina. Aqui, en cambio, quien pregunta tiene que
+   saber de antemano una cedula valida para obtener un nombre.
+
+   Columnas (la primera fila son los titulos, el orden da igual, se buscan por
+   nombre y se aceptan con o sin tildes):
+     Cedula · Apellido1 · Apellido2 · Nombres · Tipo · Centro · Empresa · Activo
+
+   Cedula es obligatoria. Las demas se usan para rellenar el formulario; las que
+   dejes vacias las escribe la persona. "Activo" con NO deja a alguien fuera sin
+   borrarlo de la lista. Crea la pestaña con prepararListaPersonal().
+   ═══════════════════════════════════════════════════════════════════════════ */
+var PESTANA_PERSONAL = "Personal";
+
+/* ¿En qué archivo está esa pestaña? Vacío = en la misma hoja de resultados.
+   Si tu base de personal ya vive en OTRO archivo de Holcim, pega aquí su
+   enlace o su ID y se lee de ahí, sin copiar ni mover nada.
+
+   La cuenta que publica la implementación tiene que poder abrir ese archivo.
+   Si no puede, el curso no bloquea a nadie: deja escribir los datos a mano y
+   lo marca como "sin verificar", que es mejor que dejar a media planta fuera
+   por un permiso. */
+var ID_HOJA_PERSONAL = "";
+
+/* Cada consulta queda anotada aqui: cedula preguntada, si aparecio y cuando.
+   Con 870 personas y un centenar de examenes al mes esto es un puñado de filas
+   al mes, y es lo unico que permite notar si alguien se pone a probar cedulas
+   en serie. Deja la pestaña vacia ("") para no registrar nada. */
+var PESTANA_CONSULTAS = "Consultas";
 
 function doGet(e) {
   /* ?ping=1 devuelve la version que esta atendiendo. No toca nada: es la unica
@@ -162,6 +199,15 @@ function doGet(e) {
   if (e && e.parameter && e.parameter.ping) {
     return ContentService.createTextOutput(JSON.stringify({ ok: true, version: VERSION_GS }))
       .setMimeType(ContentService.MimeType.JSON);
+  }
+
+  /* ?cedula=1020304050&callback=fn  →  fn({...})
+     Va por JSONP y no por fetch normal a proposito: el curso se sirve desde
+     github.io y Apps Script no manda cabeceras CORS de forma fiable, asi que
+     un fetch se queda sin poder leer la respuesta. Con JSONP siempre llega.
+     Se responde SOLO la persona preguntada, nunca la lista. */
+  if (e && e.parameter && e.parameter.cedula) {
+    return responderJSONP_(e.parameter.callback, buscarPersona_(e.parameter.cedula));
   }
   var destino = URL_CURSO.replace(/"/g, '');
   return HtmlService.createHtmlOutput(
@@ -175,6 +221,199 @@ function doGet(e) {
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 }
 
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BUSCAR UNA PERSONA EN LA LISTA
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* JSONP: la respuesta se envuelve en la funcion que pidio el navegador. Si no
+   viene callback se devuelve JSON pelado, que es lo comodo para probar el
+   enlace a mano desde el navegador. */
+function responderJSONP_(callback, obj) {
+  var json = JSON.stringify(obj);
+  var cb = String(callback || '').replace(/[^A-Za-z0-9_$.]/g, '');   // solo un nombre de funcion
+  if (!cb) {
+    return ContentService.createTextOutput(json).setMimeType(ContentService.MimeType.JSON);
+  }
+  return ContentService.createTextOutput(cb + '(' + json + ');')
+    .setMimeType(ContentService.MimeType.JAVASCRIPT);
+}
+
+/* Solo digitos: la gente escribe la cedula con puntos, espacios o guiones, y
+   en la hoja puede estar de cualquiera de esas formas. Comparando solo los
+   digitos, "1.020.304.050" y "1020304050" son la misma persona. */
+function soloDigitos_(v) { return String(v == null ? '' : v).replace(/\D/g, ''); }
+
+/* Los titulos se comparan sin tildes, sin espacios y en minusculas, para que
+   "Cédula", "CEDULA" y "cedula" sean la misma columna. */
+function normalizarTitulo_(v) {
+  return String(v == null ? '' : v)
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .toLowerCase().replace(/[^a-z0-9]/g, '');
+}
+
+function buscarPersona_(cedulaPedida) {
+  var ced = soloDigitos_(cedulaPedida);
+  if (ced.length < 4) return { ok: false, motivo: 'cedula-invalida' };
+
+  var hoja;
+  try {
+    var libro = ID_HOJA_PERSONAL
+      ? SpreadsheetApp.openById(soloId_(ID_HOJA_PERSONAL))
+      : obtenerHoja_();
+    hoja = libro.getSheetByName(PESTANA_PERSONAL);
+  } catch (err) {
+    /* La hoja no se pudo abrir: es un fallo tecnico, no "esta persona no
+       existe". El curso tiene que poder distinguirlo para no dejar a nadie
+       fuera por una caida de Google. */
+    return { ok: false, motivo: 'sin-acceso', detalle: String(err && err.message || err) };
+  }
+  if (!hoja) return { ok: false, motivo: 'sin-lista' };
+
+  var datos = hoja.getDataRange().getValues();
+  if (datos.length < 2) return { ok: false, motivo: 'sin-lista' };
+
+  var titulos = datos[0].map(normalizarTitulo_);
+  function col(/* alternativas */) {
+    for (var i = 0; i < arguments.length; i++) {
+      var k = titulos.indexOf(normalizarTitulo_(arguments[i]));
+      if (k >= 0) return k;
+    }
+    return -1;
+  }
+  var cCed = col('Cedula', 'Documento', 'Identificacion', 'CC');
+  if (cCed < 0) return { ok: false, motivo: 'sin-columna-cedula' };
+
+  var cAp1 = col('Apellido1', 'PrimerApellido', 'Apellido'),
+      cAp2 = col('Apellido2', 'SegundoApellido'),
+      cNom = col('Nombres', 'Nombre'),
+      cTip = col('Tipo', 'TipoUsuario', 'Vinculacion'),
+      cCen = col('Centro', 'CentroDeTrabajo', 'CentroTrabajo', 'Sede', 'Planta'),
+      cEmp = col('Empresa', 'RazonSocial'),
+      cAct = col('Activo', 'Estado'),
+      cComp= col('NombreCompleto', 'Completo');
+
+  for (var f = 1; f < datos.length; f++) {
+    if (soloDigitos_(datos[f][cCed]) !== ced) continue;
+
+    if (cAct >= 0) {
+      var act = String(datos[f][cAct] || '').trim().toLowerCase();
+      /* Vacio cuenta como activo: obligar a escribir "SI" en 870 filas para
+         que la lista funcione seria un campo minado. */
+      if (act && /^(no|inactivo|retirado|0|false)$/.test(act)) {
+        anotarConsulta_(ced, 'INACTIVO');
+        return { ok: true, encontrado: false, motivo: 'inactivo' };
+      }
+    }
+
+    var ap1 = String(datos[f][cAp1] || '').trim(),
+        ap2 = String(datos[f][cAp2] || '').trim(),
+        nom = String(datos[f][cNom] || '').trim();
+
+    /* Si la lista solo trae el nombre completo en una columna, se parte: los
+       dos primeros pedazos son los apellidos y el resto los nombres, que es
+       como se escribe en Colombia. Mejor eso que dejar el formulario vacio. */
+    if (!ap1 && !nom && cComp >= 0) {
+      var t = String(datos[f][cComp] || '').trim().split(/\s+/);
+      if (t.length >= 3) { ap1 = t[0]; ap2 = t[1]; nom = t.slice(2).join(' '); }
+      else if (t.length === 2) { ap1 = t[0]; nom = t[1]; }
+      else if (t.length === 1) { nom = t[0]; }
+    }
+
+    anotarConsulta_(ced, 'ENCONTRADA');
+    return {
+      ok: true, encontrado: true,
+      p: {
+        cedula: ced,
+        apellido1: ap1, apellido2: ap2, nombres: nom,
+        tipo:    cTip >= 0 ? String(datos[f][cTip] || '').trim() : '',
+        centro:  cCen >= 0 ? String(datos[f][cCen] || '').trim() : '',
+        empresa: cEmp >= 0 ? String(datos[f][cEmp] || '').trim() : ''
+      }
+    };
+  }
+
+  anotarConsulta_(ced, 'NO ESTA');
+  return { ok: true, encontrado: false, motivo: 'no-esta' };
+}
+
+/* Deja rastro de quien se consulta. No guarda nombres: con la cedula y el
+   resultado basta para ver un patron raro, y no duplica datos personales. */
+function anotarConsulta_(cedula, resultado) {
+  if (!PESTANA_CONSULTAS) return;
+  try {
+    var ss = obtenerHoja_();
+    var h = ss.getSheetByName(PESTANA_CONSULTAS);
+    if (!h) {
+      h = ss.insertSheet(PESTANA_CONSULTAS);
+      h.appendRow(['Fecha', 'Cedula consultada', 'Resultado']);
+      h.setFrozenRows(1);
+    }
+    h.appendRow([new Date(), "'" + cedula, resultado]);
+  } catch (err) { /* que no se pueda anotar no puede impedir el examen */ }
+}
+
+/**
+ * Crea la pestaña de personal con sus títulos. Ejecútala una vez y luego pega
+ * ahí tu base: una fila por persona.
+ */
+function libroDePersonal_() {
+  return ID_HOJA_PERSONAL ? SpreadsheetApp.openById(soloId_(ID_HOJA_PERSONAL)) : obtenerHoja_();
+}
+
+function prepararListaPersonal() {
+  var ss = libroDePersonal_();
+  var h = ss.getSheetByName(PESTANA_PERSONAL);
+  if (h) {
+    SpreadsheetApp.getUi().alert(
+      'La pestaña "' + PESTANA_PERSONAL + '" ya existe, con ' +
+      Math.max(0, h.getLastRow() - 1) + ' personas.\n\n' +
+      'No se toca nada. Si quieres empezar de cero, bórrala a mano y vuelve a ejecutar.');
+    return;
+  }
+  h = ss.insertSheet(PESTANA_PERSONAL);
+  h.appendRow(['Cedula', 'Apellido1', 'Apellido2', 'Nombres', 'Tipo', 'Centro', 'Empresa', 'Activo']);
+  h.setFrozenRows(1);
+  h.getRange('A:A').setNumberFormat('@');      // texto: la cedula no es un numero, no debe perder ceros
+  h.setColumnWidths(1, 8, 140);
+  SpreadsheetApp.getUi().alert(
+    'Lista creada: pestaña "' + PESTANA_PERSONAL + '".\n\n' +
+    'Pega ahí tu base, una fila por persona. Solo "Cedula" es obligatoria.\n' +
+    'La columna A ya está en formato texto para que no se pierdan los ceros.\n\n' +
+    'Después publica una NUEVA VERSIÓN de la implementación y enciende\n' +
+    'USAR_LISTA_PERSONAL en el index.html.');
+}
+
+/**
+ * Comprueba la lista sin salir del editor: dice cuánta gente hay, qué columnas
+ * reconoció y prueba una cédula concreta.
+ */
+function revisarListaPersonal() {
+  var ss = libroDePersonal_();
+  var h = ss.getSheetByName(PESTANA_PERSONAL);
+  if (!h) {
+    SpreadsheetApp.getUi().alert('No existe la pestaña "' + PESTANA_PERSONAL +
+      '".\nEjecuta prepararListaPersonal() para crearla.');
+    return;
+  }
+  var datos = h.getDataRange().getValues();
+  var titulos = datos[0].map(String).join(' · ');
+  var n = Math.max(0, datos.length - 1);
+  var ejemplo = n ? soloDigitos_(datos[1][0]) : '';
+  var prueba = ejemplo ? buscarPersona_(ejemplo) : null;
+  SpreadsheetApp.getUi().alert(
+    'LISTA DE PERSONAL\n\n' +
+    'Personas: ' + n + '\n' +
+    'Columnas: ' + titulos + '\n\n' +
+    (prueba
+      ? 'Prueba con la primera cédula (' + ejemplo + '):\n' +
+        (prueba.encontrado
+          ? '  ENCONTRADA → ' + [prueba.p.apellido1, prueba.p.apellido2, prueba.p.nombres].join(' ').trim() +
+            '\n  Tipo: ' + (prueba.p.tipo || '(vacío)') + '  ·  Centro: ' + (prueba.p.centro || '(vacío)')
+          : '  NO la encontró (motivo: ' + prueba.motivo + ')')
+      : 'La lista está vacía: pega tu base debajo de los títulos.') +
+    '\n\nVersión de este archivo: ' + VERSION_GS);
+}
 
 /* ═══════════════════════════════════════════════════════════════════════════
    EXAMEN FINAL → HOJA DE CÁLCULO

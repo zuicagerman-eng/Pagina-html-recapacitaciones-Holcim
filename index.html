@@ -298,6 +298,19 @@
   .sesbanner b{display:block;color:#bfe87a;font-size:12px;font-weight:800;
     letter-spacing:1.2px;text-transform:uppercase;margin-bottom:3px}
   .sesbanner span{color:#e7f3d6;font-size:13.5px;font-weight:700}
+  /* Datos traidos de la lista: se ven confirmados, no editables por descuido,
+     pero con la puerta abierta a corregirlos —una lista siempre tiene erratas
+     y nadie deberia quedarse sin certificado por una tilde ajena—. */
+  .exverif{background:rgba(63,181,89,.12);border:1px solid rgba(63,181,89,.42);
+    border-radius:11px;padding:11px 14px;margin-bottom:16px;display:flex;
+    align-items:center;gap:10px;flex-wrap:wrap}
+  .exverif b{color:#8fe0a4;font-size:12px;font-weight:800;letter-spacing:1.1px;
+    text-transform:uppercase}
+  .exverif span{flex:1;min-width:140px;color:#e4f5e8;font-size:13.5px;font-weight:700}
+  .exverif button{background:rgba(255,255,255,.12);color:#dce8f5;border:1px solid rgba(255,255,255,.22);
+    border-radius:8px;padding:6px 12px;font:inherit;font-size:12.5px;font-weight:700;cursor:pointer}
+  .exverif button:hover{background:rgba(255,255,255,.2)}
+  .excampo input[readonly],.excampo select[disabled]{opacity:.72;cursor:default}
   /* En sesion grupal el QR no se mira de cerca: se proyecta para una sala que
      lo escanea desde su sitio. A 220 px la ultima fila no lo alcanza, asi que
      la ventana se ensancha y el codigo ocupa lo que la pantalla permita. */
@@ -6053,6 +6066,20 @@
           <b>Sesión grupal</b><span id="exSesionTxt"></span>
         </div>
         <div class="card rv up" style="--d:3;margin-top:18px">
+          <div id="exLlave" hidden>
+            <div class="excampo">
+              <label for="exLlaveCed">Número de cédula</label>
+              <input id="exLlaveCed" type="text" inputmode="numeric" autocomplete="off"
+                     placeholder="1020304050" maxlength="15">
+            </div>
+            <p class="exerr" id="exLlaveErr"></p>
+            <button class="exbtn" id="exLlaveBtn" type="button">Continuar</button>
+            <p class="exerr" id="exLlaveNota" style="color:#9fb6cd;min-height:0;margin-top:14px">
+              Escribe tu cédula: con ella traemos tus datos y no tienes que escribirlos.</p>
+          </div>
+          <div id="exCampos">
+          <div class="exverif" id="exVerif" hidden><b>Datos confirmados</b><span id="exVerifTxt"></span>
+            <button type="button" id="exCorregir">Corregir</button></div>
           <div class="excampo">
             <label for="exTipo">Tipo de usuario</label>
             <select id="exTipo"></select>
@@ -6088,6 +6115,7 @@
           <p class="exerr" id="exErr"></p>
           <button class="exbtn" id="exIniciar" type="button">Comenzar examen</button>
           <p class="exerr" id="exReglas" style="color:#9fb6cd;min-height:0;margin-top:14px"></p>
+          </div>
         </div>
       </div>
 
@@ -6225,7 +6253,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-14-h";
+var VERSION_CURSO = "2026-09-14-i";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas preguntas tiene el examen EN TOTAL. Las
@@ -6274,6 +6302,27 @@ var NOTA_MINIMA      = 90;
    ocho no significa nada.
    Para quitar la regla, deja EXIGIR_OBLIGATORIAS en false: entonces solo
    cuentan como preguntas fijas mas. */
+/* ====== LISTA DE PERSONAL: la cedula como llave ======
+   Con esto encendido, el examen empieza pidiendo SOLO la cedula. El curso se
+   la pregunta al Apps Script, que la busca en la lista de Holcim y devuelve
+   los datos de ESA persona: nombre, tipo y centro salen puestos y no hay que
+   escribirlos. La lista se queda en Drive; aqui nunca hay mas de una persona.
+
+   Eso es lo que lo hace viable: este archivo vive en un repositorio publico,
+   asi que meter la base de personal dentro seria repartirla.
+
+   EXIGIR_LISTA decide que pasa con quien no aparece:
+     true  → no puede presentar (la cedula es de verdad una llave)
+     false → puede seguir escribiendo sus datos a mano, y queda marcado
+             "NO" en la columna "verificado" de la hoja.
+
+   Si la consulta falla por un problema tecnico —Google caido, permiso que
+   falta, sin internet— NUNCA se bloquea: se deja el formulario de siempre y se
+   anota como "SIN LISTA". Dejar a media planta fuera por una caida seria peor
+   que el problema que esto resuelve. */
+var USAR_LISTA_PERSONAL = false;   // ponlo en true cuando la lista este cargada
+var EXIGIR_LISTA        = true;
+
 var EXIGIR_OBLIGATORIAS = true;
 var EXIGIR_EXAMEN    = true;
 var EXIGIR_VIDEO_COMPLETO = true;   // pon false para no obligar a ver el video completo
@@ -9423,6 +9472,140 @@ document.addEventListener('DOMContentLoaded', function(){
     return String(v || '').toUpperCase().replace(/[^A-ZÁÉÍÓÚÜÑ' -]/g, '').replace(/\s+/g, ' ').trim();
   }
 
+  /* ====== LA CEDULA COMO LLAVE ======
+     Se pregunta por JSONP y no con fetch a proposito: el curso se sirve desde
+     github.io y el Apps Script desde script.google.com, y de ahi no vuelven
+     cabeceras CORS de forma fiable —el POST de los resultados va con no-cors
+     justo por eso, pero ahi da igual porque no hace falta leer la respuesta;
+     aqui si hace falta—. Una etiqueta <script> no tiene esa limitacion. */
+  var consultaN = 0;
+  function consultarCedula(ced, listo){
+    var url = (typeof REPORTE_URL !== 'undefined') ? REPORTE_URL : '';
+    if(!url || url.indexOf('http') !== 0){ listo({ ok:false, motivo:'sin-url' }); return; }
+    var fn = '__hse_lista_' + (++consultaN);
+    var et = document.createElement('script');
+    var acabado = false;
+    /* Un solo camino de salida, se conteste, falle o tarde: si no, un timeout
+       tardio llamaria a "listo" por segunda vez y el formulario se volveria a
+       rellenar encima de lo que la persona ya estuviera escribiendo. */
+    function terminar(r){
+      if(acabado) return; acabado = true;
+      clearTimeout(reloj);
+      try{ delete window[fn]; }catch(e){ window[fn] = undefined; }
+      if(et.parentNode) et.parentNode.removeChild(et);
+      listo(r);
+    }
+    var reloj = setTimeout(function(){ terminar({ ok:false, motivo:'tardo' }); }, 12000);
+    window[fn] = function(r){ terminar(r || { ok:false, motivo:'vacio' }); };
+    et.onerror = function(){ terminar({ ok:false, motivo:'sin-red' }); };
+    et.src = url + (url.indexOf('?') >= 0 ? '&' : '?') +
+             'cedula=' + encodeURIComponent(ced) + '&callback=' + fn;
+    document.head.appendChild(et);
+  }
+
+  /* 'SI' la trajo la lista · 'NO' la escribio la persona · 'SIN LISTA' no se
+     pudo consultar. Va a la hoja con cada examen: sin esto no hay forma de
+     saber, viendo un resultado, si el nombre esta verificado o es lo que
+     alguien tecleo. */
+  var verificado = 'SIN LISTA';
+
+  function montarLlave(){
+    var caja = document.getElementById('exLlave'), campos = document.getElementById('exCampos'),
+        inp = document.getElementById('exLlaveCed'), btn = document.getElementById('exLlaveBtn'),
+        err = document.getElementById('exLlaveErr'), verif = document.getElementById('exVerif'),
+        verifTxt = document.getElementById('exVerifTxt'), bCorregir = document.getElementById('exCorregir');
+    if(!caja || !USAR_LISTA_PERSONAL) return;      // apagada: el formulario de siempre
+
+    caja.hidden = false; campos.hidden = true;
+
+    function bloquear(si){
+      [inApe1, inApe2, inNombres, inCedula].forEach(function(x){ x.readOnly = si; });
+      [inTipo, inEmpresa].forEach(function(x){ x.disabled = si; });
+    }
+    bCorregir.addEventListener('click', function(){
+      /* Corregir no cambia el "verificado": los datos ya no son los de la
+         lista, y la hoja tiene que poder decirlo. */
+      bloquear(false); verificado = 'NO'; verif.hidden = true;
+      inApe1.focus();
+    });
+
+    function abrirCampos(){ caja.hidden = true; campos.hidden = false; }
+
+    function pedir(){
+      var ced = inp.value.replace(/\D/g, '');
+      if(ced.length < 6 || ced.length > 12){
+        inp.classList.add('mal'); err.textContent = 'La cédula debe tener entre 6 y 12 dígitos, sin puntos ni espacios.';
+        return;
+      }
+      inp.classList.remove('mal'); err.textContent = '';
+      btn.disabled = true; btn.textContent = 'Buscando…';
+      consultarCedula(ced, function(r){
+        btn.disabled = false; btn.textContent = 'Continuar';
+        inCedula.value = ced;
+
+        /* Fallo tecnico: no se sabe si esta o no, asi que no se le cierra la
+           puerta a nadie. Se anota "SIN LISTA" y sigue el formulario normal. */
+        if(!r || !r.ok){
+          verificado = 'SIN LISTA';
+          bloquear(false);
+          abrirCampos();
+          elErr.textContent = 'No se pudo consultar la lista de personal. Escribe tus datos y continúa.';
+          return;
+        }
+
+        if(!r.encontrado){
+          if(EXIGIR_LISTA){
+            err.textContent = r.motivo === 'inactivo'
+              ? 'Esta cédula figura como inactiva. Escribe a Salud y Seguridad para que la habiliten.'
+              : 'Esta cédula no está en la lista de la (Re) Inducción. Escribe a Salud y Seguridad para que te incluyan.';
+            inp.classList.add('mal');
+            return;                      // aqui si se bloquea: la lista contesto
+          }
+          verificado = 'NO';
+          bloquear(false);
+          abrirCampos();
+          elErr.textContent = 'No apareces en la lista. Escribe tus datos para continuar.';
+          return;
+        }
+
+        // encontrada: se rellena lo que venga y se deja lo demas a la persona
+        var p = r.p || {};
+        if(p.apellido1) inApe1.value = p.apellido1;
+        if(p.apellido2) inApe2.value = p.apellido2;
+        if(p.nombres)   inNombres.value = p.nombres;
+        if(p.tipo)      ponerSiExiste(inTipo, p.tipo);
+        if(p.centro)    ponerSiExiste(inEmpresa, p.centro);
+        try{ inTipo.dispatchEvent(new Event('change')); }catch(e){}
+        try{ inEmpresa.dispatchEvent(new Event('change')); }catch(e){}
+        if(p.empresa && pideEmpresa()) inRazon.value = p.empresa;
+
+        verificado = 'SI';
+        verif.hidden = false;
+        verifTxt.textContent = [p.apellido1, p.apellido2, p.nombres].filter(Boolean).join(' ') +
+                               ' · C.C. ' + ced;
+        /* Se bloquea solo lo que de verdad trajo la lista: si un campo vino
+           vacio hay que poder escribirlo. */
+        inApe1.readOnly = !!p.apellido1; inApe2.readOnly = !!p.apellido1;
+        inNombres.readOnly = !!p.nombres; inCedula.readOnly = true;
+        inTipo.disabled = !!p.tipo && !!inTipo.value;
+        inEmpresa.disabled = !!p.centro && !!inEmpresa.value;
+        abrirCampos();
+      });
+    }
+
+    function ponerSiExiste(sel, valor){
+      var v = String(valor || '').trim();
+      for(var i = 0; i < sel.options.length; i++){
+        if(sel.options[i].value.toUpperCase() === v.toUpperCase()){ sel.value = sel.options[i].value; return true; }
+      }
+      return false;
+    }
+
+    btn.addEventListener('click', pedir);
+    inp.addEventListener('keydown', function(e){ if(e.key === 'Enter'){ e.preventDefault(); pedir(); } });
+  }
+  montarLlave();
+
   function validar(){
     var a1=limpiaNombre(inApe1.value), a2=limpiaNombre(inApe2.value), no=limpiaNombre(inNombres.value);
     var c=inCedula.value.replace(/\D/g,'');
@@ -9799,6 +9982,9 @@ document.addEventListener('DOMContentLoaded', function(){
          la modalidad y los demas campos vacios: asi TODAS las filas dicen que
          fueron, y no hay que adivinarlo por el hueco. Apps Script anade estas
          columnas al final la primera vez, sin tocar lo ya guardado. */
+      /* Si el nombre lo trajo la lista de Holcim o lo tecleo la persona. Sin
+         esta columna, viendo un resultado no hay forma de saberlo. */
+      verificado:   verificado,
       modalidad:    SESION ? 'Grupal' : 'Individual',
       sesion:       SESION ? SESION.id : '',
       sesionPlanta: SESION ? SESION.planta : '',
