@@ -6154,7 +6154,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-14-c";
+var VERSION_CURSO = "2026-09-14-d";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 52 en cada intento.
@@ -8392,6 +8392,66 @@ var BANCO = [
   'Es normal si tengo mucho afán',
   'Lo puedo hacer porque nunca me ha pasado nada',
   'Es aceptable si tengo mis EPP'],r:0},
+
+/* --- Controles criticos por PUE. Cada pareja es el mismo tema preguntado de
+       dos maneras: primero cuales son los controles, despues que hacer cuando
+       faltan. --- */
+{m:'5',g:'cc-alturas',p:'Marca los 4 controles críticos para prevenir caídas de altura.',o:[
+  'Barreras, barandales y cubiertas en aperturas y bordes de caída',
+  'Plan previo al trabajo',
+  'Equipos certificados para realizar el trabajo',
+  'Sistema de protección personal contra caídas',
+  'Sistemas libres de fuga'],r:[0,1,2,3]},
+{m:'5',g:'cc-alturas',p:'Si vas a trabajar en alturas y no cuentas con plan previo al trabajo, debes:',o:[
+  'No asumir el riesgo: detener la tarea y reportar al supervisor el incumplimiento de los controles críticos, para asegurar la implementación de las medidas que previenen caídas de altura',
+  'Trabajar más rápido',
+  'Hacer la tarea sin que se den cuenta',
+  'Echarle la culpa al supervisor'],r:0},
+
+{m:'5',g:'cc-movil',p:'Marca los 5 controles críticos para prevenir incidentes con equipo móvil.',o:[
+  'Segregación y barreras',
+  'Sistemas de advertencia',
+  'Sistema de inspección y mantenimiento',
+  'Protección de los ocupantes',
+  'Control de acceso a zonas'],r:[0,1,2,3,4]},
+{m:'5',g:'cc-movil',p:'Si durante una tarea con equipo móvil no se garantiza la segregación entre peatones y equipos, debes:',o:[
+  'No asumir el riesgo: evitar ingresar al área del equipo móvil y reportar al supervisor el incumplimiento de los controles críticos, indicando la actividad y el área sin segregación ni barreras físicas',
+  'Continuar la tarea si el operador tiene buena visibilidad',
+  'Ingresar al área solo si la actividad dura poco',
+  'Ingresar al área si el operador del equipo está pendiente de ti'],r:0},
+
+{m:'5',g:'cc-energias',p:'Marca los 3 controles críticos para prevenir el contacto con energías peligrosas.',o:[
+  'Barreras físicas',
+  'Aislamiento de energías',
+  'Paradas de emergencia',
+  'Accionadores de potencia asistida',
+  'Protección estructural'],r:[0,1,2]},
+{m:'5',g:'cc-energias',p:'Si en una tarea con exposición a energías peligrosas no hay barreras físicas, no se ha hecho el aislamiento de energías ni se han verificado las paradas de emergencia, debes:',o:[
+  'No asumir el riesgo: evitar intervenir el área o el equipo y reportar al supervisor el incumplimiento de los controles críticos, para asegurar la implementación de las medidas que previenen el contacto con energías peligrosas',
+  'Continuar la tarea si el equipo no está en operación',
+  'Ingresar al área evitando el contacto directo con las fuentes de energía',
+  'Ingresar al área evitando el contacto indirecto con las fuentes de energía'],r:0},
+
+{m:'5',g:'cc-sepultamiento',p:'Marca los 4 controles críticos para prevenir el sepultamiento por material.',o:[
+  'Sistemas de detección temprana, prevención y mantenimiento',
+  'Control y aislamiento de las fuentes de energía',
+  'Trabajar por encima del nivel del material',
+  'Estar siempre anclado a una línea de vida',
+  'Proyectos de mejora y contención de polvo'],r:[0,1,2,3]},
+{m:'5',g:'cc-sepultamiento',p:'Si en una tarea con riesgo de sepultamiento por material no hay control y aislamiento de energías, no se han implementado sistemas de detección temprana y no se garantiza la línea de vida ni el trabajo por encima del nivel del material, debes:',o:[
+  'No asumir el riesgo: evitar realizar la tarea y reportar al supervisor el incumplimiento de los controles críticos, para asegurar la implementación de las medidas que previenen el sepultamiento por material',
+  'Continuar la tarea si el material parece estable',
+  'Ingresar al área evitando movimientos bruscos',
+  'Realizar la actividad si se mantiene comunicación por radio'],r:0},
+
+{m:'5',g:'cc-respiratoria',p:'Marca los 2 controles críticos para prevenir la enfermedad respiratoria.',o:[
+  'Programa de protección respiratoria',
+  'Proyectos de mejora y contención de polvo',
+  'Procedimiento de reporte, clasificación e investigación de accidentes de trabajo',
+  'Control y aislamiento de las fuentes de energía',
+  'Ecocardiograma'],r:[0,1]},
+{m:'5',g:'cc-respiratoria',p:'Para prevenir enfermedades respiratorias hay que garantizar dos controles críticos: programa de protección respiratoria y proyectos de mejora y contención de polvo.',o:[
+  'Verdadero','Falso'],r:0},
 
 ];
 
