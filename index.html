@@ -6253,7 +6253,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-14-l";
+var VERSION_CURSO = "2026-09-14-m";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas preguntas tiene el examen EN TOTAL. Las
@@ -6321,8 +6321,18 @@ var NOTA_MINIMA      = 90;
    falta, sin internet— NUNCA se bloquea: se deja el formulario de siempre y se
    anota como "SIN LISTA". Dejar a media planta fuera por una caida seria peor
    que el problema que esto resuelve. */
-var USAR_LISTA_PERSONAL = false;   // ponlo en true cuando la lista este cargada
-var EXIGIR_LISTA        = true;
+var USAR_LISTA_PERSONAL = true;
+/* ARRANCA EN false A PROPOSITO, no es un olvido.
+   Con 870 personas, encender la llave de golpe significa que cualquiera que
+   falte en el maestro —un ingreso reciente, un contratista, una cedula escrita
+   con un digito de mas— se queda sin poder presentar y sin a quien recurrir en
+   ese momento.
+
+   Asi, quien no aparece PUEDE presentar escribiendo sus datos, y su fila queda
+   marcada "verificado: NO". Deja pasar unas jornadas, filtra esa columna en la
+   hoja y tendras exactamente quien falta en el maestro. Cuando la lista este
+   cuadrada, pon esto en true y la cedula pasa a ser una llave de verdad. */
+var EXIGIR_LISTA        = false;
 /* El Maestro People no tiene columna de tipo de usuario: todo el que esta ahi
    es personal propio de Holcim. Con esto, a quien sale de la lista no se le
    pregunta nada mas. Si algun dia la lista incluye contratistas, aniade una
@@ -9541,6 +9551,13 @@ document.addEventListener('DOMContentLoaded', function(){
     var reloj = setTimeout(function(){ terminar({ ok:false, motivo:'tardo' }); }, 12000);
     window[fn] = function(r){ terminar(r || { ok:false, motivo:'vacio' }); };
     et.onerror = function(){ terminar({ ok:false, motivo:'sin-red' }); };
+    /* Si la implementacion publicada es vieja y no conoce ?cedula, contesta la
+       pagina HTML de siempre. Como <script> eso revienta al interpretarse, y un
+       error de sintaxis NO dispara 'error': dispara 'load'. Sin esto habria
+       doce segundos de "Buscando..." antes de rendirse. */
+    et.onload = function(){
+      setTimeout(function(){ terminar({ ok:false, motivo:'respuesta-no-valida' }); }, 60);
+    };
     et.src = url + (url.indexOf('?') >= 0 ? '&' : '?') +
              'cedula=' + encodeURIComponent(ced) + '&callback=' + fn;
     document.head.appendChild(et);
@@ -9566,6 +9583,9 @@ document.addEventListener('DOMContentLoaded', function(){
     var reloj = setTimeout(function(){ terminar(null); }, 10000);
     window[fn] = function(r){ terminar(r); };
     et.onerror = function(){ terminar(null); };
+    /* Igual que en la consulta de cedula: una implementacion vieja contesta
+       HTML, y eso como script dispara 'load', no 'error'. */
+    et.onload = function(){ setTimeout(function(){ terminar(null); }, 60); };
     et.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'divisiones=1&callback=' + fn;
     document.head.appendChild(et);
   }
