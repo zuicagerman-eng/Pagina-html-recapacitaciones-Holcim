@@ -248,9 +248,11 @@
   .fab.fab-qr svg{stroke:#04121f}
   .fab.fab-qr:hover{background:#a8e04a;border-color:#a8e04a}
   /* ===== Compartir / QR ===== */
-  #qrpanel{position:fixed;inset:0;z-index:120;background:rgba(3,12,22,.72);
+  #qrpanel,#sespanel{position:fixed;inset:0;z-index:120;background:rgba(3,12,22,.72);
     display:none;place-items:center;padding:20px;backdrop-filter:blur(3px)}
-  #qrpanel.show{display:grid}
+  #qrpanel.show,#sespanel.show{display:grid}
+  /* La de sesion va por encima: se contesta antes de repartir el QR. */
+  #sespanel{z-index:130}
   .qrbox{background:#0d2036;border:1px solid rgba(255,255,255,.14);border-radius:16px;
     width:min(680px,100%);max-height:92vh;overflow:auto;box-shadow:0 24px 60px -20px rgba(0,0,0,.8)}
   .qrhead{display:flex;align-items:center;gap:12px;padding:16px 20px;
@@ -275,6 +277,36 @@
     text-transform:uppercase;color:#9fb6cd;margin-bottom:5px}
   #qrenlace{width:100%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);
     border-radius:9px;padding:10px 12px;color:#eaf1fb;font:inherit;font-size:13px}
+  /* La modalidad se elige con el curso proyectado y el publico mirando: dos
+     botones grandes, no un desplegable que nadie ve desde la tercera fila. */
+  .sesopts{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:8px 20px 18px}
+  @media(max-width:560px){.sesopts{grid-template-columns:1fr}}
+  .sesopt{text-align:left;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);
+    border-radius:13px;padding:15px 16px;cursor:pointer;font:inherit;color:#eaf1fb;
+    transition:background .18s,border-color .18s,transform .18s}
+  .sesopt:hover{background:rgba(255,255,255,.13);border-color:var(--cyan);transform:translateY(-2px)}
+  .sesopt b{display:block;font-size:15.5px;margin-bottom:4px}
+  .sesopt small{display:block;color:#a9c0d6;font-size:12.5px;line-height:1.4}
+  .sescampos{padding:4px 20px 18px}
+  .sesfila{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media(max-width:560px){.sesfila{grid-template-columns:1fr}}
+  .sesaviso{margin:0 20px 16px;background:rgba(27,180,228,.12);border:1px solid rgba(27,180,228,.35);
+    border-radius:10px;padding:11px 13px;font-size:13px;line-height:1.45;color:#cfe6f5}
+  /* Cartel de la sesion en la pantalla de datos de quien escanea el QR. */
+  .sesbanner{background:rgba(151,209,59,.13);border:1px solid rgba(151,209,59,.4);
+    border-radius:11px;padding:11px 14px;margin-bottom:16px}
+  .sesbanner b{display:block;color:#bfe87a;font-size:12px;font-weight:800;
+    letter-spacing:1.2px;text-transform:uppercase;margin-bottom:3px}
+  .sesbanner span{color:#e7f3d6;font-size:13.5px;font-weight:700}
+  /* En sesion grupal el QR no se mira de cerca: se proyecta para una sala que
+     lo escanea desde su sitio. A 220 px la ultima fila no lo alcanza, asi que
+     la ventana se ensancha y el codigo ocupa lo que la pantalla permita. */
+  #qrpanel.sesion .qrbox{width:min(860px,100%)}
+  #qrpanel.sesion #qrlienzo{width:min(380px,52vh);height:min(380px,52vh)}
+  @media(max-width:620px){
+    .qrsalida{flex-direction:column;align-items:stretch}
+    #qrpanel.sesion #qrlienzo,#qrlienzo{width:min(300px,78vw);height:min(300px,78vw);align-self:center}
+  }
   .qrbtns{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
   .qrbtns button{background:var(--cyan);color:#04121f;border:none;border-radius:9px;
     padding:10px 16px;font:inherit;font-weight:800;cursor:pointer}
@@ -6017,6 +6049,9 @@
         <div class="eyebrow rv up">Evaluación final</div>
         <h2 class="rv up" style="--d:1">Examen final &middot; HSE-001</h2>
         <p class="lead rv up" style="--d:2" id="exIntro">Antes de comenzar, identifícate. Las preguntas se toman al azar y cambian en cada intento.</p>
+        <div class="sesbanner rv up" id="exSesion" style="--d:2" hidden>
+          <b>Sesión grupal</b><span id="exSesionTxt"></span>
+        </div>
         <div class="card rv up" style="--d:3;margin-top:18px">
           <div class="excampo">
             <label for="exTipo">Tipo de usuario</label>
@@ -6190,7 +6225,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-14-g";
+var VERSION_CURSO = "2026-09-14-h";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas preguntas tiene el examen EN TOTAL. Las
@@ -6728,7 +6763,15 @@ function chrome(){
   pipFlags.forEach(function(f){ f.classList.toggle('lock', (+f.getAttribute('data-i')) > maxUnlocked); });
   /* Fuera de la lamina del examen el boton estorba: el QR es para el final. */
   var bQR = document.getElementById('shareBtn');
-  if(bQR) bQR.hidden = !(vioPresentacion && idx === iExamen());
+  var enExamen = vioPresentacion && idx === iExamen();
+  if(bQR) bQR.hidden = !enExamen;
+  /* Y al pisar el examen por primera vez, la pregunta: individual o grupal.
+     Se espera un instante a que la lamina termine de entrar, para que el popup
+     no aparezca encima de una transicion a medias. */
+  if(enExamen && !yaPreguntoModalidad && !window.ADMIN && window.__abrirModalidad){
+    yaPreguntoModalidad = true;
+    setTimeout(function(){ window.__abrirModalidad(); }, 420);
+  }
   if(idx===N-1) marcarCompletado();
   if(window.revisarScroll){ setTimeout(window.revisarScroll, 60); setTimeout(window.revisarScroll, 1500); }
   if(window.actualizarAtajos) window.actualizarAtajos();
@@ -7943,6 +7986,55 @@ function qrDibujar(canvas, texto, lado){
    La direccion se toma de la barra del navegador, no de una constante: asi el
    enlace que sale es SIEMPRE el del sitio desde donde se esta abriendo, y el
    dia que el curso cambie de dominio no hay que acordarse de tocar nada. */
+/* ====== SESION: INDIVIDUAL O GRUPAL ======
+   Antes del examen se pregunta como se esta dando la (Re) Induccion.
+
+   Individual es lo de siempre: una persona, este equipo, su examen.
+
+   Grupal es para la jornada con publico: se crea UNA sesion —planta, fecha y
+   hora— con un codigo irrepetible, y su QR. Cada asistente lo escanea, pone
+   SUS datos en su propio telefono y presenta el examen; el codigo viaja en el
+   enlace y termina guardado junto a su resultado. Asi la hoja no solo dice
+   quien aprobo, tambien de que jornada salio: filtrando por el codigo queda la
+   lista de asistencia de ese dia en esa planta.
+
+   La sesion no necesita servidor: todo lo que la identifica va en el enlace,
+   que es justo lo que el QR sabe llevar. */
+var SESION = null;
+
+/* Sin I, O, 0 ni 1: el codigo se lee en voz alta y se teclea a mano cuando la
+   camara no colabora, y esas cuatro se confunden entre si. */
+function codigoSesion(){
+  var abc = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789', out = '';
+  for(var i = 0; i < 6; i++) out += abc.charAt(Math.floor(Math.random() * abc.length));
+  return out;
+}
+
+function leerSesionDeURL(){
+  try{
+    var q = new URLSearchParams(location.search);
+    var id = (q.get('ses') || '').trim();
+    if(!id) return null;
+    return { id: id.slice(0, 12).toUpperCase(),
+             planta: (q.get('sp') || '').slice(0, 60),
+             fecha:  (q.get('sf') || '').slice(0, 10),
+             hora:   (q.get('sh') || '').slice(0, 5) };
+  }catch(e){ return null; }
+}
+
+/* dd/mm/aaaa a partir del aaaa-mm-dd del campo date, sin pasar por Date(): en
+   Colombia "2026-09-14" lo interpreta como UTC y se va un dia para atras. */
+function fechaCorta(iso){
+  var t = String(iso || '').split('-');
+  return t.length === 3 ? t[2] + '/' + t[1] + '/' + t[0] : String(iso || '');
+}
+
+function textoSesion(s){
+  if(!s) return '';
+  return [s.planta, fechaCorta(s.fecha), s.hora, 'código ' + s.id]
+         .filter(function(x){ return x; }).join(' · ');
+}
+
 /* ====== TEMA DE LA PRESENTACION  (auto / claro / oscuro) ======
    El curso alterna laminas oscuras y claras a proposito: es el ritmo visual
    con el que esta dibujado. Pero proyectar tiene dos enemigos distintos —una
@@ -8018,6 +8110,138 @@ function aplicarTema(){
   aplicarTema();
 })();
 
+/* ====== El popup de modalidad ======
+   Sale al terminar la presentacion, ya en la lamina del examen, y una sola vez:
+   quien ya eligio no tiene que volver a contestar cada vez que pase por ahi.
+   Quien llega escaneando un QR de sesion NO lo ve —su modalidad ya la decidio
+   quien creo la sesion—, y quien entra por el atajo suelto tampoco: ese es
+   individual por definicion. */
+var yaPreguntoModalidad = false;
+
+function montarSesion(){
+  var panel = document.getElementById('sespanel');
+  if(!panel) return;
+  var p1 = document.getElementById('sesPaso1'), p2 = document.getElementById('sesPaso2'),
+      bInd = document.getElementById('sesIndiv'), bGru = document.getElementById('sesGrupal'),
+      selPlanta = document.getElementById('sesPlanta'), campoOtra = document.getElementById('sesOtraCampo'),
+      inOtra = document.getElementById('sesOtra'), inFecha = document.getElementById('sesFecha'),
+      inHora = document.getElementById('sesHora'), err = document.getElementById('sesErr'),
+      bCrear = document.getElementById('sesCrear'), bVolver = document.getElementById('sesVolver');
+
+  /* La misma lista de sedes del examen: una sola fuente, para que no se
+     escriban de dos maneras distintas y luego no cuadren al filtrar. */
+  (typeof SEDES !== 'undefined' ? SEDES : []).forEach(function(v){
+    var o = document.createElement('option'); o.value = o.textContent = v; selPlanta.appendChild(o);
+  });
+  selPlanta.insertBefore(new Option('Selecciona…', ''), selPlanta.firstChild);
+  selPlanta.value = '';
+  selPlanta.addEventListener('change', function(){
+    campoOtra.hidden = selPlanta.value !== 'Otra';
+    if(!campoOtra.hidden) inOtra.focus();
+  });
+
+  function dosDigitos(n){ return (n < 10 ? '0' : '') + n; }
+  function ahora(){
+    var d = new Date();
+    return { f: d.getFullYear() + '-' + dosDigitos(d.getMonth()+1) + '-' + dosDigitos(d.getDate()),
+             h: dosDigitos(d.getHours()) + ':' + dosDigitos(d.getMinutes()) };
+  }
+
+  function abrir(directoAGrupal){
+    var n = ahora();
+    inFecha.value = n.f; inHora.value = n.h;      // se rellenan, pero se pueden corregir
+    var aGrupal = directoAGrupal === 'grupal';
+    p1.hidden = aGrupal; p2.hidden = !aGrupal; err.textContent = '';
+    panel.classList.add('show');
+    if(aGrupal) setTimeout(function(){ try{ selPlanta.focus(); }catch(e){} }, 40);
+  }
+  function cerrar(){ panel.classList.remove('show'); }
+  window.__abrirModalidad = abrir;
+  /* Salir sin elegir es quedarse como se estaba: individual, que es lo que el
+     curso hacia antes de existir esta pregunta. Un modal sin salida por un
+     clic de mas seria peor que la pregunta misma. */
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && panel.classList.contains('show')) cerrar();
+  });
+  panel.addEventListener('click', function(e){ if(e.target === panel) cerrar(); });
+
+  bInd.addEventListener('click', function(){
+    SESION = null; yaPreguntoModalidad = true; cerrar();
+  });
+  bGru.addEventListener('click', function(){
+    p1.hidden = true; p2.hidden = false;
+    setTimeout(function(){ try{ selPlanta.focus(); }catch(e){} }, 40);
+  });
+  bVolver.addEventListener('click', function(){ p1.hidden = false; p2.hidden = true; });
+
+  bCrear.addEventListener('click', function(){
+    var planta = selPlanta.value === 'Otra' ? inOtra.value.trim() : selPlanta.value;
+    if(!planta){ err.textContent = 'Elige la planta o centro de trabajo.'; return; }
+    if(!inFecha.value){ err.textContent = 'Falta la fecha.'; return; }
+    if(!inHora.value){ err.textContent = 'Falta la hora.'; return; }
+    err.textContent = '';
+    SESION = { id: codigoSesion(), planta: planta, fecha: inFecha.value, hora: inHora.value };
+    yaPreguntoModalidad = true;
+    anotarSesion(SESION);
+    cerrar();
+    /* Se abre el QR en el acto: crear la sesion y no ver el codigo dejaria la
+       jornada a medias, con la gente esperando delante. */
+    var b = document.getElementById('shareBtn');
+    if(b) b.click();
+  });
+
+  /* Queda constancia de la jornada aunque nadie llegue a terminar el examen:
+     si el QR se proyecto, la sesion existio. Va por la misma via que todo lo
+     demas, con tipo "Sesiones", y Apps Script crea esa pestaña la primera vez. */
+  function anotarSesion(ses){
+    var datos = {
+      tipo: 'Sesiones', fecha: new Date().toLocaleString('es-CO'),
+      Codigo: ses.id, Planta: ses.planta, FechaSesion: fechaCorta(ses.fecha), HoraSesion: ses.hora,
+      Curso: (typeof NOMBRE_CAPACITACION !== 'undefined') ? NOMBRE_CAPACITACION : '',
+      Enlace: location.origin + location.pathname + '?ir=examen&ses=' + encodeURIComponent(ses.id),
+      Navegador: navigator.userAgent
+    };
+    try{
+      if(typeof REPORTE_URL !== 'undefined' && REPORTE_URL && REPORTE_URL.indexOf('http') === 0)
+        fetch(REPORTE_URL, { method:'POST', mode:'no-cors',
+          headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify(datos) })
+          .catch(function(){});
+    }catch(e){}
+  }
+
+  /* Quien llega con un QR de sesion: ni popup ni preguntas, derecho a sus datos
+     con la jornada ya puesta. */
+  SESION = leerSesionDeURL();
+  if(SESION) yaPreguntoModalidad = true;
+  pintarSesionEnFormulario();
+}
+
+/* El cartel y la planta preseleccionada de quien llega por el QR.
+   Se llama dos veces a proposito —al montar y en cuanto el examen termina de
+   llenar el desplegable de sedes— porque cual de los dos ocurre primero depende
+   del orden del script, y de eso no puede depender que la planta salga puesta. */
+function pintarSesionEnFormulario(){
+  var cartel = document.getElementById('exSesion');
+  if(!SESION || !cartel) return;
+  cartel.hidden = false;
+  var txt = document.getElementById('exSesionTxt');
+  if(txt) txt.textContent = textoSesion(SESION);
+  /* La planta de la jornada queda preseleccionada, pero se puede cambiar: en
+     una sesion puede haber un contratista que no sea de esa sede. */
+  var sel = document.getElementById('exEmpresa');
+  if(sel && SESION.planta && !sel.value){
+    for(var i = 0; i < sel.options.length; i++){
+      if(sel.options[i].value === SESION.planta){
+        sel.value = SESION.planta;
+        try{ sel.dispatchEvent(new Event('change')); }catch(e){}
+        break;
+      }
+    }
+  }
+}
+if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', montarSesion);
+else montarSesion();
+
 /* El panel vive al final del <body>, despues de este script, asi que montarlo
    de inmediato no encontraria nada: se espera a que el documento este listo. */
 function montarCompartir(){
@@ -8039,12 +8263,25 @@ function montarCompartir(){
   }
   /* Solo el examen: el curso completo ya se reparte por su enlace de siempre,
      y tener dos opciones aqui solo obligaba a elegir cada vez. */
-  function destino(){ return base() + '?ir=examen'; }
+  function destino(){
+    var u = base() + '?ir=examen';
+    /* En sesion grupal el enlace ademas dice DE QUE jornada es. Sin esto el QR
+       llevaria al examen pero nadie sabria despues quien estuvo en cual. */
+    if(SESION) u += '&ses=' + encodeURIComponent(SESION.id) +
+                    '&sf=' + encodeURIComponent(SESION.fecha || '') +
+                    '&sh=' + encodeURIComponent(SESION.hora || '') +
+                    '&sp=' + encodeURIComponent(SESION.planta || '');
+    return u;
+  }
   function pintar(){
     var url = destino();
     campo.value = url;
+    panel.classList.toggle('sesion', !!SESION);
     try {
-      var r = qrDibujar(lienzo, url, 220);
+      /* Se dibuja a la medida real del lienzo en pantalla —no a 220 fijos— o el
+         QR grande saldria escalado y borroso justo cuando mas falta hace. */
+      var lado = Math.max(200, Math.round(lienzo.getBoundingClientRect().width || 220));
+      var r = qrDibujar(lienzo, url, lado);
       nota.textContent = 'Apunta con la cámara del móvil. Código versión ' + r.version +
         ', corrección ' + r.nivel + '.';
     } catch(e){
@@ -8054,7 +8291,18 @@ function montarCompartir(){
     }
   }
 
-  function mostrar(){ panel.classList.add('show'); pintar(); setTimeout(function(){ campo.focus(); campo.select(); }, 40); }
+  function mostrar(){
+    var h3 = panel.querySelector('.qrhead h3'), intro = panel.querySelector('.qrintro');
+    if(SESION){
+      h3.textContent = 'QR de la sesión · ' + SESION.id;
+      intro.innerHTML = 'Sesión grupal de <b>' + textoSesion(SESION) + '</b>.<br>' +
+        'Proyecta este QR: cada asistente lo escanea, pone sus datos y presenta el examen ' +
+        'desde su celular. Todos los resultados quedan marcados con este código.';
+    }
+    if(cajaHacer) cajaHacer.hidden = !!SESION;   // ya hay sesion: nada que convertir
+    panel.classList.add('show'); pintar();
+    setTimeout(function(){ campo.focus(); campo.select(); }, 40);
+  }
   function ocultar(){ panel.classList.remove('show'); }
 
   if(abrir) abrir.addEventListener('click', mostrar);
@@ -8072,6 +8320,15 @@ function montarCompartir(){
     setTimeout(function(){ bCopiar.textContent = 'Copiar enlace'; }, 1800);
   });
 
+  /* Sin esto, quien eligio "individual" —o quien entro en modo administrador y
+     nunca vio la pregunta— se quedaba sin manera de abrir una jornada grupal. */
+  var bHacer = document.getElementById('qrHacerSesion'),
+      cajaHacer = document.getElementById('qrHacerSesionCaja');
+  if(bHacer) bHacer.addEventListener('click', function(){
+    ocultar();
+    if(window.__abrirModalidad) window.__abrirModalidad('grupal');
+  });
+
   bBajar.addEventListener('click', function(){
     /* Se dibuja mas grande solo para el archivo: el de pantalla se ve bien a
        220 px, pero impreso en una cartelera hace falta resolucion. */
@@ -8079,7 +8336,7 @@ function montarCompartir(){
     try { qrDibujar(grande, destino(), 900); } catch(e){ return; }
     var a = document.createElement('a');
     a.href = grande.toDataURL('image/png');
-    a.download = 'QR HSE-001 examen.png';
+    a.download = SESION ? ('QR HSE-001 sesion ' + SESION.id + '.png') : 'QR HSE-001 examen.png';
     document.body.appendChild(a); a.click(); a.remove();
   });
 
@@ -9093,6 +9350,8 @@ document.addEventListener('DOMContentLoaded', function(){
 
   llenar(inTipo, TIPOS_USUARIO, '— Elige una opción —');
   llenar(inEmpresa, SEDES, '— Elige tu centro de trabajo —');
+  /* Ya hay sedes: si se entro por el QR de una sesion, se marca la de la jornada. */
+  if(window.pintarSesionEnFormulario) pintarSesionEnFormulario();
   inEmpresa.addEventListener('change', function(){
     campoOtra.hidden = (inEmpresa.value !== 'Otra');
     if(campoOtra.hidden) inOtra.value = '';
@@ -9536,6 +9795,15 @@ document.addEventListener('DOMContentLoaded', function(){
       fecha: new Date().toLocaleString('es-CO'),
       aciertos: aciertos, total: sorteadas.length, porcentaje: pct,
       tipo: 'examen', aprobado: aprobo ? 'SÍ' : 'NO', segundos: seg,
+      /* De que jornada salio este examen. En individual se guarda igual, con
+         la modalidad y los demas campos vacios: asi TODAS las filas dicen que
+         fueron, y no hay que adivinarlo por el hueco. Apps Script anade estas
+         columnas al final la primera vez, sin tocar lo ya guardado. */
+      modalidad:    SESION ? 'Grupal' : 'Individual',
+      sesion:       SESION ? SESION.id : '',
+      sesionPlanta: SESION ? SESION.planta : '',
+      sesionFecha:  SESION ? fechaCorta(SESION.fecha) : '',
+      sesionHora:   SESION ? SESION.hora : '',
       navegador: navigator.userAgent, respuestas: detalle
     };
 
@@ -9789,12 +10057,65 @@ document.addEventListener('DOMContentLoaded', function(){
           <button id="qrcopiar" type="button">Copiar enlace</button>
           <button id="qrbajar" type="button" class="sec">Descargar QR</button>
         </div>
+        <div class="qrbtns" id="qrHacerSesionCaja">
+          <button id="qrHacerSesion" type="button" class="sec">Convertir en sesión grupal</button>
+        </div>
         <label class="qrrot" for="qrpara" style="margin-top:14px">Registrar envío <span style="text-transform:none;letter-spacing:0;font-weight:600">(opcional)</span></label>
         <input id="qrpara" type="text" placeholder="A quién se lo mandas: persona, planta, grupo…" maxlength="90">
         <div class="qrbtns">
           <button id="qrregistrar" type="button" class="sec">Anotar en la hoja</button>
         </div>
         <p class="qrnota" id="qrnota">Apunta con la cámara del móvil. El QR lleva al mismo enlace de arriba.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="sespanel" role="dialog" aria-modal="true" aria-label="Modalidad de la (Re) Inducción">
+  <div class="qrbox">
+    <div class="qrhead"><h3 id="sesTitulo">¿Cómo vas a presentar esta (Re) Inducción?</h3></div>
+
+    <div id="sesPaso1">
+      <p class="qrintro">Esto solo cambia cómo se registran los resultados. El examen es el mismo.</p>
+      <div class="sesopts">
+        <button class="sesopt" id="sesIndiv" type="button">
+          <b>Individual</b>
+          <small>Una sola persona presenta el examen en este equipo, como hasta ahora.</small>
+        </button>
+        <button class="sesopt" id="sesGrupal" type="button">
+          <b>Grupal</b>
+          <small>Varias personas a la vez. Se crea una sesión con su QR: cada quien lo
+            escanea, pone sus datos y presenta el examen desde su celular.</small>
+        </button>
+      </div>
+    </div>
+
+    <div id="sesPaso2" hidden>
+      <p class="qrintro">Datos de la sesión. Quedan guardados con el resultado de cada asistente,
+        así que después puedes sacar de la hoja quién asistió a esta jornada.</p>
+      <div class="sescampos">
+        <div class="excampo">
+          <label for="sesPlanta">Planta / centro de trabajo</label>
+          <select id="sesPlanta"></select>
+        </div>
+        <div class="excampo" id="sesOtraCampo" hidden>
+          <label for="sesOtra">Escribe el centro de trabajo</label>
+          <input id="sesOtra" type="text" placeholder="Nombre del centro de trabajo" maxlength="60">
+        </div>
+        <div class="sesfila">
+          <div class="excampo">
+            <label for="sesFecha">Fecha</label>
+            <input id="sesFecha" type="date">
+          </div>
+          <div class="excampo">
+            <label for="sesHora">Hora</label>
+            <input id="sesHora" type="time">
+          </div>
+        </div>
+        <p class="exerr" id="sesErr"></p>
+        <div class="qrbtns">
+          <button id="sesCrear" type="button">Crear sesión y mostrar el QR</button>
+          <button id="sesVolver" type="button" class="sec">Atrás</button>
+        </div>
       </div>
     </div>
   </div>
