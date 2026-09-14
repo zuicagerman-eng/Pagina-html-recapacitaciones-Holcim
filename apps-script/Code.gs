@@ -152,7 +152,7 @@ var URL_CURSO = "https://zuicagerman-eng.github.io/Pagina-html-recapacitaciones-
    siguen atendidos por el codigo viejo. Este sello es lo que permite verlo:
    comprobarPublicacion() se lo pregunta a la implementacion y compara.
    Subelo cada vez que cambie algo de fondo. */
-var VERSION_GS = "2026-09-14-a";
+var VERSION_GS = "2026-09-14-b";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    LISTA DE PERSONAL  ·  la cédula como llave del examen
@@ -229,15 +229,15 @@ function traducirCentro_(valor) {
  */
 function verCentrosDeLaLista() {
   var h = libroDePersonal_().getSheetByName(PESTANA_PERSONAL);
-  if (!h) { SpreadsheetApp.getUi().alert('No existe la pestaña "' + PESTANA_PERSONAL + '".'); return; }
+  if (!h) { Logger.log('No existe la pestaña "' + PESTANA_PERSONAL + '".'); return; }
   var datos = h.getDataRange().getValues();
-  if (datos.length < 2) { SpreadsheetApp.getUi().alert('La lista está vacía.'); return; }
+  if (datos.length < 2) { Logger.log('La lista está vacía.'); return; }
 
   var titulos = datos[0].map(normalizarTitulo_);
   var c = -1;
   ['Centro', 'DivisionDePersonal', 'Division', 'CentroDeTrabajo', 'Sede', 'Planta']
     .forEach(function (n) { if (c < 0) c = titulos.indexOf(normalizarTitulo_(n)); });
-  if (c < 0) { SpreadsheetApp.getUi().alert('No encontré una columna de centro/división.'); return; }
+  if (c < 0) { Logger.log('No encontré una columna de centro/división.'); return; }
 
   var cuenta = {};
   for (var f = 1; f < datos.length; f++) {
@@ -252,7 +252,7 @@ function verCentrosDeLaLista() {
     if (carpetas.indexOf(t) >= 0) bien.push(linea);
     else faltan.push(linea + '   ⚠ SIN CARPETA');
   });
-  SpreadsheetApp.getUi().alert(
+  Logger.log(
     'DIVISIONES EN "' + PESTANA_PERSONAL + '"\n\n' +
     (bien.length ? 'Con carpeta:\n' + bien.join('\n') + '\n\n' : '') +
     (faltan.length
@@ -443,6 +443,11 @@ function anotarConsulta_(cedula, resultado) {
   } catch (err) { /* que no se pueda anotar no puede impedir el examen */ }
 }
 
+/* OJO al tocar estas tres funciones: este script es AUTONOMO, no esta pegado
+   a la hoja, asi que SpreadsheetApp.getUi() no existe aqui y lanza "Cannot call
+   SpreadsheetApp.getUi() from this context". Todo lo que quieras ver va por
+   Logger.log y sale en el "Registro de ejecucion" del editor. */
+
 /**
  * Crea la pestaña de personal con sus títulos. Ejecútala una vez y luego pega
  * ahí tu base: una fila por persona.
@@ -455,7 +460,7 @@ function prepararListaPersonal() {
   var ss = libroDePersonal_();
   var h = ss.getSheetByName(PESTANA_PERSONAL);
   if (h) {
-    SpreadsheetApp.getUi().alert(
+    Logger.log(
       'La pestaña "' + PESTANA_PERSONAL + '" ya existe, con ' +
       Math.max(0, h.getLastRow() - 1) + ' personas.\n\n' +
       'No se toca nada. Si quieres empezar de cero, bórrala a mano y vuelve a ejecutar.');
@@ -466,7 +471,7 @@ function prepararListaPersonal() {
   h.setFrozenRows(1);
   h.getRange('A:A').setNumberFormat('@');      // texto: la cedula no es un numero, no debe perder ceros
   h.setColumnWidths(1, 8, 140);
-  SpreadsheetApp.getUi().alert(
+  Logger.log(
     'Lista creada: pestaña "' + PESTANA_PERSONAL + '".\n\n' +
     'Pega ahí tu base, una fila por persona. Solo "Cedula" es obligatoria.\n' +
     'La columna A ya está en formato texto para que no se pierdan los ceros.\n\n' +
@@ -482,7 +487,7 @@ function revisarListaPersonal() {
   var ss = libroDePersonal_();
   var h = ss.getSheetByName(PESTANA_PERSONAL);
   if (!h) {
-    SpreadsheetApp.getUi().alert('No existe la pestaña "' + PESTANA_PERSONAL +
+    Logger.log('No existe la pestaña "' + PESTANA_PERSONAL +
       '".\nEjecuta prepararListaPersonal() para crearla.');
     return;
   }
@@ -491,7 +496,7 @@ function revisarListaPersonal() {
   var n = Math.max(0, datos.length - 1);
   var ejemplo = n ? soloDigitos_(datos[1][0]) : '';
   var prueba = ejemplo ? buscarPersona_(ejemplo) : null;
-  SpreadsheetApp.getUi().alert(
+  Logger.log(
     'LISTA DE PERSONAL\n\n' +
     'Personas: ' + n + '\n' +
     'Columnas: ' + titulos + '\n\n' +
