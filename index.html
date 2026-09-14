@@ -6253,7 +6253,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-14-i";
+var VERSION_CURSO = "2026-09-14-j";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas preguntas tiene el examen EN TOTAL. Las
@@ -6817,9 +6817,18 @@ function chrome(){
   /* Y al pisar el examen por primera vez, la pregunta: individual o grupal.
      Se espera un instante a que la lamina termine de entrar, para que el popup
      no aparezca encima de una transicion a medias. */
-  if(enExamen && !yaPreguntoModalidad && !window.ADMIN && window.__abrirModalidad){
+  /* Solo si la pantalla de DATOS esta a la vista. Si la persona ya esta
+     respondiendo, o mirando su resultado, o volviendo a presentar, el popup
+     se le pondria encima y se tragaria el clic de "Comenzar examen": desde
+     fuera parece que el boton no responde. */
+  var datos = document.getElementById('exDatos');
+  if(enExamen && !yaPreguntoModalidad && !window.ADMIN && window.__abrirModalidad &&
+     datos && !datos.hidden){
     yaPreguntoModalidad = true;
-    setTimeout(function(){ window.__abrirModalidad(); }, 420);
+    setTimeout(function(){
+      var d = document.getElementById('exDatos');
+      if(d && !d.hidden) window.__abrirModalidad();   // se recomprueba: 420 ms dan para mucho
+    }, 420);
   }
   if(idx===N-1) marcarCompletado();
   if(window.revisarScroll){ setTimeout(window.revisarScroll, 60); setTimeout(window.revisarScroll, 1500); }
@@ -8222,6 +8231,9 @@ function montarSesion(){
     setTimeout(function(){ try{ selPlanta.focus(); }catch(e){} }, 40);
   });
   bVolver.addEventListener('click', function(){ p1.hidden = false; p2.hidden = true; });
+  /* Cerrar = individual, lo mismo que Escape. Una ventana sin salida visible
+     delante del examen es justo lo que no puede pasar. */
+  document.getElementById('sesCerrar').addEventListener('click', cerrar);
 
   bCrear.addEventListener('click', function(){
     var planta = selPlanta.value === 'Otra' ? inOtra.value.trim() : selPlanta.value;
@@ -9603,6 +9615,15 @@ document.addEventListener('DOMContentLoaded', function(){
 
     btn.addEventListener('click', pedir);
     inp.addEventListener('keydown', function(e){ if(e.key === 'Enter'){ e.preventDefault(); pedir(); } });
+
+    window.reiniciarLlave = function(){
+      inp.value = ''; err.textContent = ''; inp.classList.remove('mal');
+      [inApe1, inApe2, inNombres, inCedula].forEach(function(x){ x.value = ''; });
+      bloquear(false);
+      verif.hidden = true; verificado = 'SIN LISTA';
+      caja.hidden = false; campos.hidden = true;
+      setTimeout(function(){ try{ inp.focus(); }catch(e){} }, 60);
+    };
   }
   montarLlave();
 
@@ -10082,6 +10103,19 @@ document.addEventListener('DOMContentLoaded', function(){
   btnRep.addEventListener('click', function(){
     respuestas = []; sorteadas = []; elLista.innerHTML = '';
     document.getElementById('exRevision').innerHTML = '';
+    elErr.textContent = '';
+    /* En una jornada grupal el siguiente en la fila usa la MISMA tablet. Si se
+       quedaran los datos del anterior, presentaria a su nombre sin darse
+       cuenta. Se vuelve a pedir la cedula y se limpia lo que la identifica;
+       el centro y el tipo se dejan, que casi siempre se repiten. */
+    /* Se limpia SIEMPRE, con lista o sin ella: el riesgo de que el siguiente
+       presente a nombre del anterior no depende de si hay lista. El centro y
+       el tipo se dejan, que en una misma jornada casi siempre se repiten. */
+    [inApe1, inApe2, inNombres, inCedula].forEach(function(x){ x.value = ''; x.readOnly = false; });
+    [inTipo, inEmpresa].forEach(function(x){ x.disabled = false; });
+    var vf = document.getElementById('exVerif'); if(vf) vf.hidden = true;
+    verificado = 'SIN LISTA';
+    if(window.reiniciarLlave) window.reiniciarLlave();
     fase('datos');
     try{ elDatos.scrollIntoView({block:'start'}); }catch(e){}
   });
@@ -10258,7 +10292,8 @@ document.addEventListener('DOMContentLoaded', function(){
 </div>
 <div id="sespanel" role="dialog" aria-modal="true" aria-label="Modalidad de la (Re) Inducción">
   <div class="qrbox">
-    <div class="qrhead"><h3 id="sesTitulo">¿Cómo vas a presentar esta (Re) Inducción?</h3></div>
+    <div class="qrhead"><h3 id="sesTitulo">¿Cómo vas a presentar esta (Re) Inducción?</h3>
+      <button id="sesCerrar" type="button">Cerrar</button></div>
 
     <div id="sesPaso1">
       <p class="qrintro">Esto solo cambia cómo se registran los resultados. El examen es el mismo.</p>
