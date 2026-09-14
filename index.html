@@ -6322,16 +6322,21 @@ var NOTA_MINIMA      = 90;
    anota como "SIN LISTA". Dejar a media planta fuera por una caida seria peor
    que el problema que esto resuelve. */
 var USAR_LISTA_PERSONAL = true;
-/* ARRANCA EN false A PROPOSITO, no es un olvido.
-   Con 870 personas, encender la llave de golpe significa que cualquiera que
-   falte en el maestro —un ingreso reciente, un contratista, una cedula escrita
-   con un digito de mas— se queda sin poder presentar y sin a quien recurrir en
-   ese momento.
 
-   Asi, quien no aparece PUEDE presentar escribiendo sus datos, y su fila queda
-   marcada "verificado: NO". Deja pasar unas jornadas, filtra esa columna en la
-   hoja y tendras exactamente quien falta en el maestro. Cuando la lista este
-   cuadrada, pon esto en true y la cedula pasa a ser una llave de verdad. */
+/* EXIGIR_LISTA en false a proposito, y no es prudencia de mas: el Maestro
+   People son los empleados de Holcim, y el curso tambien lo presentan
+   CONTRATISTAS, TEMPORALES y VISITANTES, que por definicion no estan ahi. Con
+   esto en true, ninguno de ellos podria presentar —y son justo los que mas
+   rotan y mas (Re) Induccion necesitan—. Se sumarian los ingresos recientes
+   que aun no esten cargados.
+
+   Como queda: quien aparece en el maestro no escribe nada, sale todo puesto y
+   su fila dice "verificado: SI". Quien no aparece presenta escribiendo sus
+   datos y queda "verificado: NO". Filtrando esa columna en la hoja ves quien
+   falta por cargar y quien es de verdad externo.
+
+   Para cerrar la puerta del todo —solo presenta quien este en la lista—
+   cambia esta linea a true. Nada mas. */
 var EXIGIR_LISTA        = false;
 /* El Maestro People no tiene columna de tipo de usuario: todo el que esta ahi
    es personal propio de Holcim. Con esto, a quien sale de la lista no se le
