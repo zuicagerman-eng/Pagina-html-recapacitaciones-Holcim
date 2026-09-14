@@ -231,6 +231,45 @@
   .exerr{font-size:12.5px;color:#ff9c95;margin-top:6px;min-height:16px}
   /* Pista del modo administrador: la respuesta correcta se señala, no se
      marca. Fuera del modo administrador no existe visualmente. */
+  /* ===== Compartir / QR (solo con el modo administrador) ===== */
+  #qrpanel{position:fixed;inset:0;z-index:120;background:rgba(3,12,22,.72);
+    display:none;place-items:center;padding:20px;backdrop-filter:blur(3px)}
+  #qrpanel.show{display:grid}
+  .qrbox{background:#0d2036;border:1px solid rgba(255,255,255,.14);border-radius:16px;
+    width:min(680px,100%);max-height:92vh;overflow:auto;box-shadow:0 24px 60px -20px rgba(0,0,0,.8)}
+  .qrhead{display:flex;align-items:center;gap:12px;padding:16px 20px;
+    border-bottom:1px solid rgba(255,255,255,.12)}
+  .qrhead h3{margin:0;flex:1;font-size:17px;color:#eaf1fb}
+  .qrhead button{background:rgba(255,255,255,.1);color:#dce8f5;border:1px solid rgba(255,255,255,.18);
+    border-radius:8px;padding:7px 14px;font:inherit;font-weight:700;cursor:pointer}
+  .qrhead button:hover{background:rgba(255,255,255,.18)}
+  .qropts{display:grid;gap:8px;padding:16px 20px 4px}
+  .qropt{display:flex;gap:11px;align-items:flex-start;background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:11px 13px;cursor:pointer}
+  .qropt:hover{background:rgba(255,255,255,.1)}
+  .qropt input{margin-top:3px;accent-color:#1bb4e4;flex:none;width:17px;height:17px}
+  .qropt b{display:block;color:#eaf1fb;font-size:14px}
+  .qropt small{display:block;color:#9fb6cd;font-size:12.5px;line-height:1.35;margin-top:2px}
+  .qrsalida{display:flex;gap:18px;padding:16px 20px 20px;align-items:flex-start}
+  #qrlienzo{flex:none;background:#fff;border-radius:10px;padding:0;
+    width:220px;height:220px;image-rendering:pixelated}
+  .qrlado{flex:1;min-width:0}
+  .qrrot{display:block;font-size:11px;font-weight:800;letter-spacing:.5px;
+    text-transform:uppercase;color:#9fb6cd;margin-bottom:5px}
+  #qrenlace{width:100%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);
+    border-radius:9px;padding:10px 12px;color:#eaf1fb;font:inherit;font-size:13px}
+  .qrbtns{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+  .qrbtns button{background:var(--cyan);color:#04121f;border:none;border-radius:9px;
+    padding:10px 16px;font:inherit;font-weight:800;cursor:pointer}
+  .qrbtns button:hover{background:#3fc6f0}
+  .qrbtns button.sec{background:rgba(255,255,255,.1);color:#dce8f5;border:1px solid rgba(255,255,255,.18)}
+  .qrbtns button.sec:hover{background:rgba(255,255,255,.18)}
+  .qrnota{margin:11px 0 0;font-size:12.5px;color:#9fb6cd;line-height:1.45}
+  @media(max-width:560px){
+    .qrsalida{flex-direction:column;align-items:center}
+    #qrlienzo{width:200px;height:200px}
+    .qrlado{width:100%}
+  }
   body.admin .exopt[data-ok]{border-color:var(--ok);background:rgba(46,178,94,.13)}
   /* En un bloque no cabe la palabra "correcta" dentro de la casilla: se marca
      con un anillo verde, que es lo unico que entra en 52 px. */
@@ -6105,7 +6144,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-09-c";
+var VERSION_CURSO = "2026-09-14-a";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 52 en cada intento.
@@ -6369,6 +6408,27 @@ document.addEventListener('DOMContentLoaded', function(){
     caja.classList.add('hide');
     guardarAvance();
   });
+
+  /* ====== ATAJO "IR DIRECTO AL EXAMEN"  (?ir=examen) ======
+     Es lo que llevan el QR y el enlace para compartir. Salta la guia y las 103
+     laminas, pero NO la identificacion: el examen empieza pidiendo los datos
+     igual que siempre, y termina con el resultado y el certificado.
+     No se guarda avance: quien entra por aqui no esta haciendo el curso, y
+     dejarle marcado "vas por el paso 103" seria mentirle la proxima vez. */
+  var atajo = '';
+  try { atajo = new URLSearchParams(location.search).get('ir') || ''; } catch(e){}
+  if(atajo === 'examen'){
+    var iEx = -1;
+    for(var k = 0; k < slides.length; k++)
+      if(slides[k].getAttribute('data-mod') === 'EX'){ iEx = k; break; }
+    if(iEx >= 0){
+      caja.classList.add('hide');
+      maxUnlocked = Math.max(maxUnlocked, iEx);
+      videoEnded = true;              // si no, la puerta del video corta el salto
+      goTo(iEx, 1);
+      chrome();
+    }
+  }
 
   window.addEventListener('beforeunload', guardarAvance);
   document.addEventListener('visibilitychange', function(){ if(document.hidden) guardarAvance(); });
@@ -7569,6 +7629,318 @@ document.querySelectorAll('.pueBox').forEach(function(box){
   });
   mostrar(0);
 });
+
+
+/* ====== CODIGO QR ======
+   Se dibuja aqui, sin libreria externa. Un CDN es una peticion mas que la red
+   de una planta puede bloquear, y entonces el QR no saldria justo donde mas
+   falta: delante de la gente, con el movil en la mano.
+   Comprobado modulo a modulo contra la implementacion de referencia: para una
+   misma version, nivel y mascara, la matriz sale identica. */
+/* Codificador QR en modo byte, versiones 1-10, correccion L y M. */
+function qrMatriz(texto, nivel, forzar){
+  nivel = nivel || 'M';
+  var TOT = [0,26,44,70,100,134,172,196,242,292,346];
+  var BLQ = {
+    L:[0,[7,1,19,0,0],[10,1,34,0,0],[15,1,55,0,0],[20,1,80,0,0],[26,1,108,0,0],
+         [18,2,68,0,0],[20,2,78,0,0],[24,2,97,0,0],[30,2,116,0,0],[18,2,68,2,69]],
+    M:[0,[10,1,16,0,0],[16,1,28,0,0],[26,1,44,0,0],[18,2,32,0,0],[24,2,43,0,0],
+         [16,4,27,0,0],[18,4,31,0,0],[22,2,38,2,39],[22,3,36,2,37],[26,4,43,1,44]]
+  };
+  var ALI = [[],[],[6,18],[6,22],[6,26],[6,30],[6,34],[6,22,38],[6,24,42],[6,26,46],[6,28,50]];
+  var REST= [0,0,7,7,7,7,7,0,0,0,0];
+
+  // texto a bytes UTF-8
+  var datos = [];
+  for(var i=0;i<texto.length;i++){
+    var c = texto.charCodeAt(i);
+    if(c < 0x80) datos.push(c);
+    else if(c < 0x800){ datos.push(0xC0|(c>>6), 0x80|(c&63)); }
+    else { datos.push(0xE0|(c>>12), 0x80|((c>>6)&63), 0x80|(c&63)); }
+  }
+
+  // version mas pequeña que quepa
+  var v = 0, b;
+  for(var t=1;t<=10;t++){
+    b = BLQ[nivel][t];
+    var cap = b[1]*b[2] + b[3]*b[4];
+    var cabecera = 4 + (t<10 ? 8 : 16);
+    if(datos.length + Math.ceil(cabecera/8) <= cap){ v = t; break; }
+  }
+  if(!v) throw new Error('El texto no cabe en un QR de version 10');
+  b = BLQ[nivel][v];
+  var ecPorBloque = b[0], nB1 = b[1], dB1 = b[2], nB2 = b[3], dB2 = b[4];
+  var totalDatos = nB1*dB1 + nB2*dB2;
+
+  // flujo de bits: modo + longitud + datos + terminador
+  var bits = [];
+  function meter(valor, n){ for(var k=n-1;k>=0;k--) bits.push((valor>>k)&1); }
+  meter(4, 4);
+  meter(datos.length, v<10 ? 8 : 16);
+  datos.forEach(function(x){ meter(x,8); });
+  var libres = totalDatos*8 - bits.length;
+  meter(0, Math.min(4, libres));
+  while(bits.length % 8) bits.push(0);
+  var cw = [];
+  for(var k=0;k<bits.length;k+=8){
+    var x=0; for(var j=0;j<8;j++) x = (x<<1) | bits[k+j];
+    cw.push(x);
+  }
+  var relleno = [0xEC, 0x11], r = 0;
+  while(cw.length < totalDatos) cw.push(relleno[r++ % 2]);
+
+  // Reed-Solomon en GF(256)
+  var EXP = new Array(512), LOG = new Array(256), x2 = 1;
+  for(var k=0;k<255;k++){ EXP[k]=x2; LOG[x2]=k; x2<<=1; if(x2 & 0x100) x2 ^= 0x11D; }
+  for(var k=255;k<512;k++) EXP[k]=EXP[k-255];
+  function mul(a,c){ return (a===0||c===0) ? 0 : EXP[LOG[a]+LOG[c]]; }
+  function generador(n){
+    var g=[1];
+    for(var k=0;k<n;k++){
+      var ng = new Array(g.length+1).fill(0);
+      for(var j=0;j<g.length;j++){ ng[j] ^= g[j]; ng[j+1] ^= mul(g[j], EXP[k]); }
+      g = ng;
+    }
+    return g;
+  }
+  var gen = generador(ecPorBloque);
+  function ecc(bloque){
+    var res = bloque.concat(new Array(ecPorBloque).fill(0));
+    for(var k=0;k<bloque.length;k++){
+      var coef = res[k];
+      if(coef === 0) continue;
+      for(var j=1;j<gen.length;j++) res[k+j] ^= mul(gen[j], coef);
+    }
+    return res.slice(bloque.length);
+  }
+
+  // partir en bloques, calcular EC, entrelazar
+  var bloques=[], ecs=[], pos=0;
+  for(var k=0;k<nB1;k++){ var bl=cw.slice(pos,pos+dB1); pos+=dB1; bloques.push(bl); ecs.push(ecc(bl)); }
+  for(var k=0;k<nB2;k++){ var bl=cw.slice(pos,pos+dB2); pos+=dB2; bloques.push(bl); ecs.push(ecc(bl)); }
+  var salida=[];
+  for(var k=0;k<Math.max(dB1,dB2);k++)
+    for(var j=0;j<bloques.length;j++) if(k<bloques[j].length) salida.push(bloques[j][k]);
+  for(var k=0;k<ecPorBloque;k++)
+    for(var j=0;j<ecs.length;j++) salida.push(ecs[j][k]);
+
+  // matriz y patrones fijos
+  var n = v*4 + 17;
+  var m = [], usado = [];
+  for(var k=0;k<n;k++){ m.push(new Array(n).fill(0)); usado.push(new Array(n).fill(false)); }
+  function poner(f,c,val){ m[f][c]=val; usado[f][c]=true; }
+  function buscador(f,c){
+    for(var i2=-1;i2<=7;i2++) for(var j2=-1;j2<=7;j2++){
+      var ff=f+i2, cc=c+j2;
+      if(ff<0||cc<0||ff>=n||cc>=n) continue;
+      var dentro = (i2>=0&&i2<=6&&(j2===0||j2===6)) || (j2>=0&&j2<=6&&(i2===0||i2===6)) ||
+                   (i2>=2&&i2<=4&&j2>=2&&j2<=4);
+      poner(ff,cc, dentro?1:0);
+    }
+  }
+  buscador(0,0); buscador(0,n-7); buscador(n-7,0);
+  for(var k=8;k<n-8;k++){ poner(6,k,(k%2===0)?1:0); poner(k,6,(k%2===0)?1:0); }
+  var ali = ALI[v];
+  for(var a=0;a<ali.length;a++) for(var c2=0;c2<ali.length;c2++){
+    var f=ali[a], c=ali[c2];
+    if((f<=8&&c<=8)||(f<=8&&c>=n-9)||(f>=n-9&&c<=8)) continue;
+    for(var i2=-2;i2<=2;i2++) for(var j2=-2;j2<=2;j2++)
+      poner(f+i2,c+j2, (Math.abs(i2)===2||Math.abs(j2)===2||(i2===0&&j2===0))?1:0);
+  }
+  poner(n-8,8,1);
+  for(var k=0;k<9;k++){ if(!usado[8][k]) usado[8][k]=true; if(!usado[k][8]) usado[k][8]=true; }
+  for(var k=0;k<8;k++){ usado[8][n-1-k]=true; usado[n-1-k][8]=true; }
+  if(v>=7) for(var i2=0;i2<6;i2++) for(var j2=0;j2<3;j2++){ usado[i2][n-11+j2]=true; usado[n-11+j2][i2]=true; }
+
+  // datos en zigzag desde abajo a la derecha
+  var bitsSal=[];
+  salida.forEach(function(x){ for(var k=7;k>=0;k--) bitsSal.push((x>>k)&1); });
+  for(var k=0;k<REST[v];k++) bitsSal.push(0);
+  var idx=0, arriba=true;
+  for(var c=n-1;c>0;c-=2){
+    if(c===6) c--;
+    for(var paso=0;paso<n;paso++){
+      var f = arriba ? n-1-paso : paso;
+      for(var d=0;d<2;d++){
+        var cc = c-d;
+        if(usado[f][cc]) continue;
+        m[f][cc] = idx < bitsSal.length ? bitsSal[idx] : 0;
+        idx++;
+      }
+    }
+    arriba = !arriba;
+  }
+
+  // mascaras y penalizacion
+  var MASC = [
+    function(f,c){return (f+c)%2===0;}, function(f,c){return f%2===0;},
+    function(f,c){return c%3===0;},     function(f,c){return (f+c)%3===0;},
+    function(f,c){return (Math.floor(f/2)+Math.floor(c/3))%2===0;},
+    function(f,c){return ((f*c)%2 + (f*c)%3)===0;},
+    function(f,c){return (((f*c)%2 + (f*c)%3)%2)===0;},
+    function(f,c){return (((f+c)%2 + (f*c)%3)%2)===0;}
+  ];
+  function conMascara(mk){
+    var q=[]; for(var f=0;f<n;f++){ q.push(m[f].slice()); }
+    for(var f=0;f<n;f++) for(var c=0;c<n;c++)
+      if(!usado[f][c] && MASC[mk](f,c)) q[f][c] ^= 1;
+    // informacion de formato
+    var NIV = {L:1, M:0, Q:3, H:2};
+    var fmt = (NIV[nivel]<<3) | mk, d2 = fmt<<10;
+    for(var k=14;k>=10;k--) if((d2>>k)&1) d2 ^= 0x537<<(k-10);
+    var f15 = ((fmt<<10) | d2) ^ 0x5412;
+    for(var k=0;k<15;k++){
+      var bit = (f15>>k)&1;
+      if(k<6) q[k][8]=bit; else if(k<8) q[k+1][8]=bit;
+      else if(k===8) q[8][7]=bit; else q[8][14-k]=bit;
+      if(k<8) q[8][n-1-k]=bit; else q[n-15+k][8]=bit;
+    }
+    if(v>=7){
+      var d3 = v<<12;
+      for(var k=17;k>=12;k--) if((d3>>k)&1) d3 ^= 0x1F25<<(k-12);
+      var v18 = (v<<12) | d3;
+      for(var k=0;k<18;k++){
+        var bit=(v18>>k)&1, f=Math.floor(k/3), c=k%3;
+        q[f][n-11+c]=bit; q[n-11+c][f]=bit;
+      }
+    }
+    return q;
+  }
+  function penaliza(q){
+    var p=0;
+    for(var f=0;f<n;f++){
+      for(var eje=0;eje<2;eje++){
+        var run=1, ant=eje? q[0][f] : q[f][0];
+        for(var c=1;c<n;c++){
+          var val = eje? q[c][f] : q[f][c];
+          if(val===ant) run++; else { if(run>=5) p += 3+(run-5); run=1; ant=val; }
+        }
+        if(run>=5) p += 3+(run-5);
+      }
+    }
+    for(var f=0;f<n-1;f++) for(var c=0;c<n-1;c++){
+      var a=q[f][c];
+      if(a===q[f][c+1] && a===q[f+1][c] && a===q[f+1][c+1]) p += 3;
+    }
+    var PAT=[1,0,1,1,1,0,1,0,0,0,0], PAT2=[0,0,0,0,1,0,1,1,1,0,1];
+    for(var f=0;f<n;f++) for(var c=0;c<=n-11;c++){
+      var ok1=true, ok2=true, ok3=true, ok4=true;
+      for(var k=0;k<11;k++){
+        if(q[f][c+k]!==PAT[k]) ok1=false;
+        if(q[f][c+k]!==PAT2[k]) ok2=false;
+        if(q[c+k][f]!==PAT[k]) ok3=false;
+        if(q[c+k][f]!==PAT2[k]) ok4=false;
+      }
+      if(ok1) p+=40; if(ok2) p+=40; if(ok3) p+=40; if(ok4) p+=40;
+    }
+    var oscuros=0;
+    for(var f=0;f<n;f++) for(var c=0;c<n;c++) if(q[f][c]) oscuros++;
+    var pct = oscuros*100/(n*n);
+    p += Math.floor(Math.abs(pct-50)/5)*10;
+    return p;
+  }
+  var mejor=null, mejorP=Infinity, mejorMk=0;
+  if(forzar !== undefined && forzar !== null){
+    return { matriz: conMascara(forzar), n: n, version: v, mascara: forzar, nivel: nivel };
+  }
+  for(var mk=0;mk<8;mk++){
+    var q=conMascara(mk), pp=penaliza(q);
+    if(pp<mejorP){ mejorP=pp; mejor=q; mejorMk=mk; }
+  }
+  return { matriz: mejor, n: n, version: v, mascara: mejorMk, nivel: nivel };
+}
+
+/* Dibuja la matriz en un canvas, con su zona de silencio: sin ese margen
+   blanco de cuatro modulos, muchos lectores no encuentran el codigo. */
+function qrDibujar(canvas, texto, lado){
+  var r = qrMatriz(texto, 'M');
+  var borde = 4, total = r.n + borde*2;
+  var esc = Math.max(2, Math.floor((lado || 260) / total));
+  canvas.width = canvas.height = total * esc;
+  var cx = canvas.getContext('2d');
+  cx.fillStyle = '#fff'; cx.fillRect(0, 0, canvas.width, canvas.height);
+  cx.fillStyle = '#000';
+  for(var f = 0; f < r.n; f++) for(var c = 0; c < r.n; c++)
+    if(r.matriz[f][c]) cx.fillRect((c+borde)*esc, (f+borde)*esc, esc, esc);
+  return r;
+}
+
+
+/* ====== COMPARTIR: ENLACE Y QR ======
+   Vive dentro del panel de administrador, asi que no lo ve nadie que haga el
+   curso: se abre con Ctrl+Shift+A y el boton "Compartir / QR".
+
+   La direccion se toma de la barra del navegador, no de una constante: asi el
+   enlace que sale es SIEMPRE el del sitio desde donde se esta abriendo, y el
+   dia que el curso cambie de dominio no hay que acordarse de tocar nada. */
+/* El panel vive al final del <body>, despues de este script, asi que montarlo
+   de inmediato no encontraria nada: se espera a que el documento este listo. */
+function montarCompartir(){
+  var panel = document.getElementById('qrpanel');
+  if(!panel) return;
+  var abrir  = document.getElementById('admqr'),
+      cerrar = document.getElementById('qrcerrar'),
+      lienzo = document.getElementById('qrlienzo'),
+      campo  = document.getElementById('qrenlace'),
+      nota   = document.getElementById('qrnota'),
+      bCopiar= document.getElementById('qrcopiar'),
+      bBajar = document.getElementById('qrbajar');
+
+  function base(){
+    /* Sin parametros ni ancla: si se comparte estando en ?ir=examen, el enlace
+       del "curso completo" tiene que salir limpio. */
+    return location.origin + location.pathname;
+  }
+  function destino(){
+    var sel = panel.querySelector('input[name="qrdest"]:checked');
+    return (sel && sel.value === 'examen') ? base() + '?ir=examen' : base();
+  }
+  function pintar(){
+    var url = destino();
+    campo.value = url;
+    try {
+      var r = qrDibujar(lienzo, url, 220);
+      nota.textContent = 'Apunta con la cámara del móvil. Código versión ' + r.version +
+        ', corrección ' + r.nivel + '.';
+    } catch(e){
+      /* Que falle el QR no puede dejar sin enlace: el enlace es lo que de
+         verdad hace falta, el QR es la comodidad. */
+      nota.textContent = 'No se pudo generar el QR (' + e.message + '). El enlace de arriba sirve igual.';
+    }
+  }
+
+  function mostrar(){ panel.classList.add('show'); pintar(); setTimeout(function(){ campo.focus(); campo.select(); }, 40); }
+  function ocultar(){ panel.classList.remove('show'); }
+
+  if(abrir) abrir.addEventListener('click', mostrar);
+  if(cerrar) cerrar.addEventListener('click', ocultar);
+  panel.addEventListener('click', function(e){ if(e.target === panel) ocultar(); });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && panel.classList.contains('show')) ocultar(); });
+  panel.querySelectorAll('input[name="qrdest"]').forEach(function(x){ x.addEventListener('change', pintar); });
+
+  bCopiar.addEventListener('click', function(){
+    campo.select();
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch(e){}
+    if(!ok && navigator.clipboard){ navigator.clipboard.writeText(campo.value); ok = true; }
+    bCopiar.textContent = ok ? '✓ Copiado' : 'Copia a mano (Ctrl+C)';
+    setTimeout(function(){ bCopiar.textContent = 'Copiar enlace'; }, 1800);
+  });
+
+  bBajar.addEventListener('click', function(){
+    /* Se dibuja mas grande solo para el archivo: el de pantalla se ve bien a
+       220 px, pero impreso en una cartelera hace falta resolucion. */
+    var grande = document.createElement('canvas');
+    try { qrDibujar(grande, destino(), 900); } catch(e){ return; }
+    var sel = panel.querySelector('input[name="qrdest"]:checked');
+    var a = document.createElement('a');
+    a.href = grande.toDataURL('image/png');
+    a.download = 'QR HSE-001 ' + ((sel && sel.value === 'examen') ? 'examen' : 'curso') + '.png';
+    document.body.appendChild(a); a.click(); a.remove();
+  });
+}
+if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', montarCompartir);
+else montarCompartir();
 
 /* ====== INDICADOR "hay más contenido abajo" ======
    Evita que el usuario se pierda tarjetas que quedan fuera de la pantalla
@@ -9082,11 +9454,33 @@ document.addEventListener('DOMContentLoaded', function(){
 });
 </script>
 <div id="admbadge">MODO ADMINISTRADOR · Ctrl+Shift+A para salir</div>
+<div id="qrpanel" role="dialog" aria-modal="true" aria-label="Compartir el curso">
+  <div class="qrbox">
+    <div class="qrhead"><h3>Compartir el curso</h3><button id="qrcerrar" type="button">Cerrar</button></div>
+    <div class="qropts">
+      <label class="qropt"><input type="radio" name="qrdest" value="curso" checked><span><b>Curso completo</b><small>Empieza por el principio, con la guía</small></span></label>
+      <label class="qropt"><input type="radio" name="qrdest" value="examen"><span><b>Directo al examen</b><small>Se salta las láminas. Pide los datos igual y entrega el certificado</small></span></label>
+    </div>
+    <div class="qrsalida">
+      <canvas id="qrlienzo" aria-label="Código QR del enlace"></canvas>
+      <div class="qrlado">
+        <label class="qrrot" for="qrenlace">Enlace</label>
+        <input id="qrenlace" type="text" readonly>
+        <div class="qrbtns">
+          <button id="qrcopiar" type="button">Copiar enlace</button>
+          <button id="qrbajar" type="button" class="sec">Descargar QR</button>
+        </div>
+        <p class="qrnota" id="qrnota">Apunta con la cámara del móvil. El QR lleva al mismo enlace de arriba.</p>
+      </div>
+    </div>
+  </div>
+</div>
 <div id="admpanel" role="dialog" aria-modal="true" aria-label="Panel de administrador">
   <div class="admbox">
     <div class="admhead">
       <h3>Panel de administrador</h3>
       <input id="admbuscar" type="search" placeholder="Buscar diapositiva por texto o número…" aria-label="Buscar diapositiva">
+      <button id="admqr" type="button">Compartir / QR</button>
       <button id="admcerrar" type="button">Cerrar</button>
     </div>
     <div class="admlist" id="admlist"></div>
