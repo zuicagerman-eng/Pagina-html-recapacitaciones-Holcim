@@ -32,6 +32,10 @@
   .hudbar{position:absolute;left:0;bottom:-1px;height:3px;width:100%;background:rgba(255,255,255,.08)}
   #hudfill{height:100%;width:0;background:var(--grad);transition:width .45s ease}
   @media(max-width:560px){.brand small{display:none}.brandlong{display:none}.step{font-size:11.5px}.brand .logo{width:26px;height:26px}}
+  /* Con cuatro botones en la barra, en pantallas de 360 px el contador se salia
+     por la derecha. La palabra "Paso" es la que sobra: el numero se entiende
+     solo, y asi caben los cuatro sin apretar el pulgar contra el borde. */
+  @media(max-width:430px){.stepw{display:none}header.hud{gap:10px;padding:0 12px}}
   /* ===== Deck ===== */
   .deck{position:fixed;left:0;right:0;top:var(--hud);bottom:calc(var(--footer) + var(--bar2));overflow:hidden;background:var(--navy)}
   .slide{position:absolute;inset:0;overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch;transform:translateX(100%);
@@ -233,6 +237,10 @@
      marca. Fuera del modo administrador no existe visualmente. */
   /* El de compartir va en verde: el azul es "ayuda" y el naranja "algo va
      mal", y este no es ninguna de las dos cosas. */
+  /* Ni azul (ayuda), ni naranja (algo va mal), ni verde (QR): el tema no es
+     ninguna de las tres cosas, asi que se queda en gris de la propia barra. */
+  .fab.fab-tema{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22)}
+  .fab.fab-tema:hover{background:rgba(255,255,255,.2)}
   .fab.fab-qr{background:var(--green);border-color:var(--green)}
   /* .fab pone display:flex, que le gana al atributo hidden: sin esto el boton
      del QR se veria igual antes de terminar la presentacion. */
@@ -3534,6 +3542,27 @@
   .slide.light.mint .beh,.slide.light.mint .eppcard,.slide.light.mint .cat,
   .slide.light.mint .pdfcard,.slide.light.mint .s3,.slide.light.mint .opt{background:#fff}
 
+  /* ---- Piezas que solo vivian en laminas oscuras ----
+     Nacieron con texto claro porque nunca les toco un fondo blanco: al forzar
+     el tema claro se quedaban en gris sobre gris, o directamente en blanco
+     sobre blanco. Esto es su version clara, y no estorba en "auto" porque solo
+     aplica a las laminas que de verdad esten en claro. */
+  .slide.light .chip,
+  .slide.light .pill{background:#fff;border-color:rgba(11,37,69,.2);color:var(--ink)}
+  .slide.light .pill-go:hover{background:rgba(11,37,69,.06);border-color:rgba(11,37,69,.45)}
+  .slide.light .atajos-lbl{color:#44566d}
+  .slide.light .hero-sub{color:#10608f}
+  /* El globo de la rueda era un cristal blanco translucido sobre fondo oscuro;
+     en claro hay que darle cuerpo o no se distingue de la lamina. */
+  .slide.light .wglobo{background:#fff;border-color:rgba(11,37,69,.16)}
+  .slide.light .wglobo .wt{color:var(--ink)}
+  .slide.light .wglobo .wd{color:#44566d}
+  .slide.light .gtit.hacer{color:#4a7a10}
+  .slide.light .gtit.gno{color:#c02a21}
+  /* El verde Holcim es marca, no tinta: sobre blanco se deshace. En claro se
+     usa una version oscurecida que sigue leyendose como el mismo verde. */
+  .slide.light .solej figcaption{color:#527d0d}
+
   /* 23) Lista sin numerar: viñeta discreta en lugar de círculos */
   .steplist-dot li:before{content:"";flex:none;width:8px;height:8px;border-radius:50%;
     background:rgba(255,255,255,.75);margin-top:7px}
@@ -3721,12 +3750,16 @@
       <svg viewBox="0 0 24 24"><path d="M12 3l9 16H3z"/><path d="M12 9v5M12 17h0"/></svg>
       <span class="fab-tip">Reportar</span>
     </button>
+    <button class="fab fab-tema" id="temaBtn" title="Cambiar entre claro y oscuro" aria-label="Tema de la presentación">
+      <svg viewBox="0 0 24 24" id="temaIcono"></svg>
+      <span class="fab-tip" id="temaTip">Tema</span>
+    </button>
     <button class="fab fab-qr" id="shareBtn" hidden title="QR y enlace para que los asistentes hagan el examen" aria-label="QR del examen">
       <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM19 14h2M14 19h3M19 19h2"/></svg>
       <span class="fab-tip">QR</span>
     </button>
   </div>
-  <div class="step">Paso <span id="cur">1</span> / <span id="tot">15</span></div>
+  <div class="step"><span class="stepw">Paso </span><span id="cur">1</span> / <span id="tot">15</span></div>
   <div class="hudbar"><div id="hudfill"></div></div>
 </header>
 <div class="deck" id="deck">
@@ -6157,7 +6190,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-14-f";
+var VERSION_CURSO = "2026-09-14-g";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas preguntas tiene el examen EN TOTAL. Las
@@ -7910,6 +7943,81 @@ function qrDibujar(canvas, texto, lado){
    La direccion se toma de la barra del navegador, no de una constante: asi el
    enlace que sale es SIEMPRE el del sitio desde donde se esta abriendo, y el
    dia que el curso cambie de dominio no hay que acordarse de tocar nada. */
+/* ====== TEMA DE LA PRESENTACION  (auto / claro / oscuro) ======
+   El curso alterna laminas oscuras y claras a proposito: es el ritmo visual
+   con el que esta dibujado. Pero proyectar tiene dos enemigos distintos —una
+   sala a oscuras con una lamina blanca deslumbra, y una sala con ventanas
+   deja el fondo azul en gris sucio—, asi que se puede forzar todo a claro o
+   todo a oscuro sin rehacer el curso.
+
+   No se duplica la hoja de estilos: cada lamina ya sabe pintarse de las dos
+   maneras (.slide.dark y .slide.light, con .teal y .mint como variantes), asi
+   que forzar el tema es cambiarle la clase a la lamina y ya. Lo unico que se
+   guarda es cual era la original, para poder volver a "auto".
+
+   El examen queda fuera: su formulario, sus casillas y el repaso estan
+   dibujados sobre fondo oscuro con colores fijos, no con las clases de tema,
+   y en claro quedarian ilegibles. Ademas no es presentacion, es evaluacion. */
+var TEMAS = ['auto', 'claro', 'oscuro'];
+var ICONO_TEMA = {
+  /* medio sol medio luna: "se adapta" */
+  auto:   '<circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 010 16z" fill="currentColor" stroke="none"/>',
+  claro:  '<circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.4M12 19.6V22M2 12h2.4M19.6 12H22M4.9 4.9l1.7 1.7M17.4 17.4l1.7 1.7M19.1 4.9l-1.7 1.7M6.6 17.4l-1.7 1.7"/>',
+  oscuro: '<path d="M20 13.5A8.2 8.2 0 1110.5 4a6.6 6.6 0 009.5 9.5z"/>'
+};
+var temaActual = 'auto';
+
+function recordarOriginal(s){
+  if(s.hasAttribute('data-tema0')) return;
+  s.setAttribute('data-tema0',
+    (s.classList.contains('dark') ? 'dark' : 'light') +
+    (s.classList.contains('teal') ? ' teal' : '') +
+    (s.classList.contains('mint') ? ' mint' : ''));
+}
+
+function aplicarTema(){
+  var iEx = iExamen();
+  slides.forEach(function(s, i){
+    if(i === iEx) return;                 // el examen no se toca
+    recordarOriginal(s);
+    var orig = s.getAttribute('data-tema0') || 'dark';
+    var eraAlterna = orig.indexOf('teal') >= 0 || orig.indexOf('mint') >= 0;
+    s.classList.remove('dark','light','teal','mint');
+    if(temaActual === 'auto'){
+      orig.split(' ').forEach(function(c){ if(c) s.classList.add(c); });
+      return;
+    }
+    /* Se conserva si la lamina era de la variante alterna: con 103 pantallas
+       identicas el ojo deja de distinguir donde empieza cada una. */
+    if(temaActual === 'oscuro'){ s.classList.add('dark'); if(eraAlterna) s.classList.add('teal'); }
+    else { s.classList.add('light'); if(eraAlterna) s.classList.add('mint'); }
+  });
+  var ico = document.getElementById('temaIcono'), tip = document.getElementById('temaTip'),
+      bt = document.getElementById('temaBtn');
+  if(ico) ico.innerHTML = ICONO_TEMA[temaActual];
+  if(tip) tip.textContent = temaActual === 'auto' ? 'Tema' : (temaActual === 'claro' ? 'Claro' : 'Oscuro');
+  if(bt) bt.title = (temaActual === 'auto'
+      ? 'Tema: como está diseñado, alternando claro y oscuro'
+      : 'Tema: todo ' + temaActual) + ' · pulsa para cambiar';
+  try{ localStorage.setItem('hse001_tema', temaActual); }catch(e){}
+}
+
+(function montarTema(){
+  try{
+    var g = localStorage.getItem('hse001_tema');
+    if(TEMAS.indexOf(g) >= 0) temaActual = g;
+  }catch(e){}
+  var bt = document.getElementById('temaBtn');
+  if(bt) bt.addEventListener('click', function(){
+    temaActual = TEMAS[(TEMAS.indexOf(temaActual) + 1) % TEMAS.length];
+    aplicarTema();
+    if(window.toast) toast(temaActual === 'auto'
+      ? 'Tema original: alterna claro y oscuro'
+      : 'Toda la presentación en ' + temaActual);
+  });
+  aplicarTema();
+})();
+
 /* El panel vive al final del <body>, despues de este script, asi que montarlo
    de inmediato no encontraria nada: se espera a que el documento este listo. */
 function montarCompartir(){
