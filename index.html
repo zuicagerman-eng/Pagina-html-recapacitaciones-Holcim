@@ -234,6 +234,9 @@
   /* El de compartir va en verde: el azul es "ayuda" y el naranja "algo va
      mal", y este no es ninguna de las dos cosas. */
   .fab.fab-qr{background:var(--green);border-color:var(--green)}
+  /* .fab pone display:flex, que le gana al atributo hidden: sin esto el boton
+     del QR se veria igual antes de terminar la presentacion. */
+  .fab[hidden]{display:none}
   .fab.fab-qr svg{stroke:#04121f}
   .fab.fab-qr:hover{background:#a8e04a;border-color:#a8e04a}
   /* ===== Compartir / QR ===== */
@@ -3718,9 +3721,9 @@
       <svg viewBox="0 0 24 24"><path d="M12 3l9 16H3z"/><path d="M12 9v5M12 17h0"/></svg>
       <span class="fab-tip">Reportar</span>
     </button>
-    <button class="fab fab-qr" id="shareBtn" title="¿Ya hiciste el curso? Ve directo al examen" aria-label="Ya lo hice: ir al examen">
+    <button class="fab fab-qr" id="shareBtn" hidden title="QR y enlace para que los asistentes hagan el examen" aria-label="QR del examen">
       <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM19 14h2M14 19h3M19 19h2"/></svg>
-      <span class="fab-tip">Ya lo hice</span>
+      <span class="fab-tip">QR</span>
     </button>
   </div>
   <div class="step">Paso <span id="cur">1</span> / <span id="tot">15</span></div>
@@ -6154,11 +6157,13 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-14-e";
+var VERSION_CURSO = "2026-09-14-f";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
-   PREGUNTAS_EXAMEN: cuántas se sortean del banco de 52 en cada intento.
-   NOTA_MINIMA: porcentaje de aciertos necesario para aprobar.
+   PREGUNTAS_EXAMEN: cuántas preguntas tiene el examen EN TOTAL. Las
+   obligatorias van dentro de esa cuenta, no aparte: con 30 y 21 obligatorias,
+   se sortean las 9 que faltan del resto del banco.
+   NOTA_MINIMA: hay que SUPERARLO. Con ese porcentaje justo o menos, se reprueba.
    EXIGIR_EXAMEN: si es true, la capacitación solo se da por completada al aprobar. */
 /* NOMBRE DE LA CAPACITACION: es lo que queda en la columna "Capacitacion" de la
    hoja de resultados. Si copias este curso para otra capacitacion, cambialo. */
@@ -6192,7 +6197,7 @@ var SEDES = [
   'VALLE',
   'Otra'
 ];
-var PREGUNTAS_EXAMEN = 20;
+var PREGUNTAS_EXAMEN = 30;
 var NOTA_MINIMA      = 90;
 /* PREGUNTAS OBLIGATORIAS (las marcadas con ob:1 en el banco)
    Salen SIEMPRE, todas, agrupadas al principio del examen, y ademas del
@@ -6402,6 +6407,10 @@ document.addEventListener('DOMContentLoaded', function(){
   btnSeguir.addEventListener('click', function(){
     caja.classList.add('hide');
     maxUnlocked = reMax;
+    /* Quien retoma un avance que ya llegaba al examen no tiene que volver a
+       pasar las 103 laminas. El atajo ?ir=examen no guarda avance, asi que
+       por aqui no se cuela. */
+    if(iExamen() >= 0 && reMax >= iExamen()) vioPresentacion = true;
     Object.keys(reHechas).forEach(function(i){
       var reqs = slides[i] && slides[i].querySelectorAll('.req'); if(!reqs) return;
       reHechas[i].forEach(function(k){ if(reqs[k]) reqs[k].classList.add('done'); });
@@ -6540,6 +6549,19 @@ document.getElementById('t_conf').innerHTML = tri('<ellipse cx="24" cy="34" rx="
 /* ====== NAVEGACIÓN ====== */
 var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
 var N = slides.length, idx = 0, maxUnlocked = 0, videoEnded = false, completed = false;
+/* El boton del QR solo aparece al terminar la presentacion, ya en la lamina
+   del examen. La idea es que el curso se proyecte entero y el QR sea el cierre:
+   quien no vio las 103 laminas no puede repartir el atajo. Por eso NO basta con
+   estar en la ultima lamina —al atajo ?ir=examen se llega igual—, hace falta
+   haber pasado por ellas: eso es lo que marca esta variable. */
+var vioPresentacion = false;
+/* Posicion de la lamina del examen. Se busca, no se escribe: si maniana se
+   aniade o se quita una lamina, el numero cambiaria y nadie se acordaria. */
+function iExamen(){
+  for(var k = 0; k < slides.length; k++)
+    if(slides[k].getAttribute('data-mod') === 'EX') return k;
+  return -1;
+}
 var elCur = document.getElementById('cur'), elTot = document.getElementById('tot'), fill = document.getElementById('hudfill');
 var prevBtn = document.getElementById('prev'), nextBtn = document.getElementById('next'), pips = document.getElementById('pips');
 elTot.textContent = N;
@@ -6671,6 +6693,9 @@ function chrome(){
   refreshNext();
   pipEls.forEach(function(p,k){ p.className = ''; if(k===idx) p.classList.add('on'); if(k>maxUnlocked) p.classList.add('lock'); });
   pipFlags.forEach(function(f){ f.classList.toggle('lock', (+f.getAttribute('data-i')) > maxUnlocked); });
+  /* Fuera de la lamina del examen el boton estorba: el QR es para el final. */
+  var bQR = document.getElementById('shareBtn');
+  if(bQR) bQR.hidden = !(vioPresentacion && idx === iExamen());
   if(idx===N-1) marcarCompletado();
   if(window.revisarScroll){ setTimeout(window.revisarScroll, 60); setTimeout(window.revisarScroll, 1500); }
   if(window.actualizarAtajos) window.actualizarAtajos();
@@ -6696,6 +6721,8 @@ function next(){
   if(r.total>0 && r.done<r.total){ toast('Explora todas las tarjetas para continuar ('+r.done+'/'+r.total+')'); return; }
   if(idx>=N-1) return;
   maxUnlocked = Math.max(maxUnlocked, idx+1);
+  var iEx = iExamen();
+  if(iEx >= 0 && idx+1 >= iEx) vioPresentacion = true;
   goTo(idx+1, 1);
 }
 function prev(){ if(idx>0) goTo(idx-1, -1); }
@@ -8983,10 +9010,11 @@ document.addEventListener('DOMContentLoaded', function(){
   /* El total se cuenta, no se escribe: del sorteo salen como mucho las que
      haya disponibles, y anunciar PREGUNTAS_EXAMEN cuando el banco es mas
      pequeño prometia un examen de 41 que en realidad tenia 27. */
-  var nTotal = nOb + Math.min(PREGUNTAS_EXAMEN, sorteables());
+  var nTotal = nOb + Math.min(aSortear(), sorteables());
   document.getElementById('exReglas').innerHTML =
-    'El examen tiene ' + nTotal + ' preguntas y se aprueba con ' + NOTA_MINIMA +
-    '% o más. Puedes repetirlo las veces que necesites; cada intento queda registrado.' +
+    'El examen tiene ' + nTotal + ' preguntas y se aprueba con <b>más del ' + NOTA_MINIMA +
+    '%</b>: con ' + NOTA_MINIMA + '% o menos se reprueba. ' +
+    'Puedes repetirlo las veces que necesites; cada intento queda registrado.' +
     (nOb && EXIGIR_OBLIGATORIAS
       ? '<br><b>Las ' + nOb + ' primeras son obligatorias</b>: hay que acertarlas ' +
         'todas, aparte del porcentaje.'
@@ -9004,6 +9032,12 @@ document.addEventListener('DOMContentLoaded', function(){
   /* Cuantas preguntas distintas puede sacar el sorteo: las que no son
      obligatorias, contando cada grupo de rotables como UNA, porque de cada
      grupo solo sale una. Contarlas todas prometeria mas variedad de la que hay. */
+  /* PREGUNTAS_EXAMEN es el total del examen, obligatorias incluidas: lo que se
+     sortea es lo que sobra despues de apartarlas. Si algun dia hubiera mas
+     obligatorias que el total, el sorteo queda en cero y el examen son ellas:
+     mas vale pasarse de preguntas que dejar fuera una regla que no se negocia. */
+  function aSortear(){ return Math.max(0, PREGUNTAS_EXAMEN - nObligatorias()); }
+
   function sorteables(){
     var vistos = {}, n = 0;
     BANCO.forEach(function(q){
@@ -9070,18 +9104,19 @@ document.addEventListener('DOMContentLoaded', function(){
     var obligatorias = usable.filter(function(q){ return q.ob; });
     var resto        = usable.filter(function(q){ return !q.ob; });
 
+    var nSorteo = aSortear();
     var porMod={}; resto.forEach(function(q){ (porMod[q.m]=porMod[q.m]||[]).push(q); });
     var mods=Object.keys(porMod).sort(), tomadas=[];
     mods.forEach(function(m){
-      var cuantas=Math.max(1, Math.round(PREGUNTAS_EXAMEN * porMod[m].length / resto.length));
+      var cuantas=Math.max(1, Math.round(nSorteo * porMod[m].length / resto.length));
       tomadas = tomadas.concat(mezclar(porMod[m].slice()).slice(0, cuantas));
     });
     tomadas = mezclar(tomadas);
-    if(tomadas.length > PREGUNTAS_EXAMEN) tomadas = tomadas.slice(0, PREGUNTAS_EXAMEN);
+    if(tomadas.length > nSorteo) tomadas = tomadas.slice(0, nSorteo);
     // si faltan, se completan con cualquiera que no esté ya
-    if(tomadas.length < PREGUNTAS_EXAMEN){
+    if(tomadas.length < nSorteo){
       mezclar(resto.slice()).forEach(function(q){
-        if(tomadas.length < PREGUNTAS_EXAMEN && tomadas.indexOf(q) < 0) tomadas.push(q);
+        if(tomadas.length < nSorteo && tomadas.indexOf(q) < 0) tomadas.push(q);
       });
     }
     /* Delante y seguidas: si se repartieran entre las demas, nadie notaria que
@@ -9235,7 +9270,7 @@ document.addEventListener('DOMContentLoaded', function(){
       '<b>' + persona.nombre + '</b> · C.C. ' + persona.cedula +
       ' · ' + persona.tipo + ' · ' + persona.empresa +
       (persona.razonSocial ? ' · ' + persona.razonSocial : '') +
-      ' — se aprueba con ' + NOTA_MINIMA + '% o más' +
+      ' — se aprueba con más del ' + NOTA_MINIMA + '%' +
       /* El aviso se repite aqui a proposito: la pantalla de datos ya lo dijo,
          pero entre rellenar el formulario y responder se olvida, y esto decide
          si aprueba. */
@@ -9316,7 +9351,11 @@ document.addEventListener('DOMContentLoaded', function(){
        aunque el porcentaje llegue. Aprobar sabiendo siete de las ocho reglas
        que no se negocian no significa nada. */
     var porObligatorias = EXIGIR_OBLIGATORIAS && obFalladas > 0;
-    var aprobo = pct >= NOTA_MINIMA && !porObligatorias;
+    /* Hay que SUPERAR el minimo: con 90% justo se reprueba. Se compara con los
+       aciertos en crudo y no con "pct", porque pct viene redondeado y un 89,6
+       que se muestra como 90 no puede aprobar. */
+    var llegaNota = aciertos * 100 > NOTA_MINIMA * sorteadas.length;
+    var aprobo = llegaNota && !porObligatorias;
     var seg = Math.round((Date.now() - inicio) / 1000);
 
     document.getElementById('exMarca').className = 'exmarca ' + (aprobo ? 'ok' : 'no');
@@ -9326,8 +9365,12 @@ document.addEventListener('DOMContentLoaded', function(){
       '<b>' + persona.nombre + '</b> · C.C. ' + persona.cedula + '<br>' +
       persona.tipo + ' · ' + persona.empresa +
       (persona.razonSocial ? ' · ' + persona.razonSocial : '') + '<br>' +
-      aciertos + ' de ' + sorteadas.length + ' respuestas correctas · nota mínima ' + NOTA_MINIMA + '%.' +
-      /* Sin esta linea, sacar 90% y no aprobar es incomprensible. */
+      aciertos + ' de ' + sorteadas.length + ' respuestas correctas · hay que superar el ' + NOTA_MINIMA + '%.' +
+      /* Sin estas lineas, sacar 90% y no aprobar es incomprensible. */
+      (!llegaNota
+        ? '<br>Te quedaste en el ' + NOTA_MINIMA + '% o por debajo: para aprobar hay que ' +
+          '<b>superar</b> ese porcentaje.'
+        : '') +
       (porObligatorias
         ? '<br><b>Fallaste ' + obFalladas + ' de las ' + nObligatorias() + ' preguntas obligatorias</b> ' +
           '(las marcadas con ★). Esas hay que acertarlas todas, ' +
@@ -9566,7 +9609,7 @@ document.addEventListener('DOMContentLoaded', function(){
   function activar(silencioso){
     window.ADMIN = true;
     document.body.classList.add('admin');
-    maxUnlocked = N-1; videoEnded = true;
+    maxUnlocked = N-1; videoEnded = true; vioPresentacion = true;
     try{ sessionStorage.setItem('hse_admin','1'); }catch(e){}
     chrome();
     if(!silencioso) abrir();
@@ -9625,9 +9668,10 @@ document.addEventListener('DOMContentLoaded', function(){
 <div id="admbadge">MODO ADMINISTRADOR · Ctrl+Shift+A para salir</div>
 <div id="qrpanel" role="dialog" aria-modal="true" aria-label="Compartir el curso">
   <div class="qrbox">
-    <div class="qrhead"><h3>Ya lo hice: ir al examen</h3><button id="qrcerrar" type="button">Cerrar</button></div>
-    <p class="qrintro">Si ya viste el curso, este enlace lleva directo al examen. Te pedirá
-      tus datos igual y, si apruebas, te entrega el certificado.</p>
+    <div class="qrhead"><h3>QR del examen</h3><button id="qrcerrar" type="button">Cerrar</button></div>
+    <p class="qrintro">Para los asistentes que acaban de ver la presentación: este QR
+      —o el enlace— los lleva directo al examen, sin repetir las 103 diapositivas. Les pedirá
+      sus datos igual y, si aprueban, les entrega el certificado.</p>
     <div class="qrsalida">
       <canvas id="qrlienzo" aria-label="Código QR del enlace"></canvas>
       <div class="qrlado">
@@ -9652,7 +9696,7 @@ document.addEventListener('DOMContentLoaded', function(){
     <div class="admhead">
       <h3>Panel de administrador</h3>
       <input id="admbuscar" type="search" placeholder="Buscar diapositiva por texto o número…" aria-label="Buscar diapositiva">
-      <button id="admqr" type="button">Compartir / QR</button>
+      <button id="admqr" type="button">QR del examen</button>
       <button id="admcerrar" type="button">Cerrar</button>
     </div>
     <div class="admlist" id="admlist"></div>
