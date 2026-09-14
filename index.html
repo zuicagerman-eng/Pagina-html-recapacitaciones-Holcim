@@ -248,6 +248,7 @@
   .qrhead button{background:rgba(255,255,255,.1);color:#dce8f5;border:1px solid rgba(255,255,255,.18);
     border-radius:8px;padding:7px 14px;font:inherit;font-weight:700;cursor:pointer}
   .qrhead button:hover{background:rgba(255,255,255,.18)}
+  .qrintro{margin:0;padding:16px 20px 4px;font-size:13.5px;line-height:1.5;color:#c3d4e6}
   .qropts{display:grid;gap:8px;padding:16px 20px 4px}
   .qropt{display:flex;gap:11px;align-items:flex-start;background:rgba(255,255,255,.05);
     border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:11px 13px;cursor:pointer}
@@ -3717,9 +3718,9 @@
       <svg viewBox="0 0 24 24"><path d="M12 3l9 16H3z"/><path d="M12 9v5M12 17h0"/></svg>
       <span class="fab-tip">Reportar</span>
     </button>
-    <button class="fab fab-qr" id="shareBtn" title="Compartir el curso: enlace y código QR" aria-label="Compartir el curso">
+    <button class="fab fab-qr" id="shareBtn" title="¿Ya hiciste el curso? Ve directo al examen" aria-label="Ya lo hice: ir al examen">
       <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM19 14h2M14 19h3M19 19h2"/></svg>
-      <span class="fab-tip">Compartir</span>
+      <span class="fab-tip">Ya lo hice</span>
     </button>
   </div>
   <div class="step">Paso <span id="cur">1</span> / <span id="tot">15</span></div>
@@ -6153,7 +6154,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-14-b";
+var VERSION_CURSO = "2026-09-14-c";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas se sortean del banco de 52 en cada intento.
@@ -7901,10 +7902,9 @@ function montarCompartir(){
        del "curso completo" tiene que salir limpio. */
     return location.origin + location.pathname;
   }
-  function destino(){
-    var sel = panel.querySelector('input[name="qrdest"]:checked');
-    return (sel && sel.value === 'examen') ? base() + '?ir=examen' : base();
-  }
+  /* Solo el examen: el curso completo ya se reparte por su enlace de siempre,
+     y tener dos opciones aqui solo obligaba a elegir cada vez. */
+  function destino(){ return base() + '?ir=examen'; }
   function pintar(){
     var url = destino();
     campo.value = url;
@@ -7927,7 +7927,6 @@ function montarCompartir(){
   if(cerrar) cerrar.addEventListener('click', ocultar);
   panel.addEventListener('click', function(e){ if(e.target === panel) ocultar(); });
   document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && panel.classList.contains('show')) ocultar(); });
-  panel.querySelectorAll('input[name="qrdest"]').forEach(function(x){ x.addEventListener('change', pintar); });
 
   bCopiar.addEventListener('click', function(){
     campo.select();
@@ -7943,10 +7942,9 @@ function montarCompartir(){
        220 px, pero impreso en una cartelera hace falta resolucion. */
     var grande = document.createElement('canvas');
     try { qrDibujar(grande, destino(), 900); } catch(e){ return; }
-    var sel = panel.querySelector('input[name="qrdest"]:checked');
     var a = document.createElement('a');
     a.href = grande.toDataURL('image/png');
-    a.download = 'QR HSE-001 ' + ((sel && sel.value === 'examen') ? 'examen' : 'curso') + '.png';
+    a.download = 'QR HSE-001 examen.png';
     document.body.appendChild(a); a.click(); a.remove();
   });
 
@@ -7959,12 +7957,11 @@ function montarCompartir(){
     var para = campoPara.value.trim();
     if(!para){ campoPara.focus(); bReg.textContent = 'Escribe a quién primero'; 
                setTimeout(function(){ bReg.textContent = 'Anotar en la hoja'; }, 1800); return; }
-    var sel = panel.querySelector('input[name="qrdest"]:checked');
     var datos = {
       tipo: 'Envios',
       fecha: new Date().toLocaleString(),
       Para: para,
-      Destino: (sel && sel.value === 'examen') ? 'Directo al examen' : 'Curso completo',
+      Destino: 'Directo al examen',
       Enlace: destino(),
       Curso: (typeof NOMBRE_CAPACITACION !== 'undefined') ? NOMBRE_CAPACITACION : '',
       Navegador: navigator.userAgent
@@ -9505,11 +9502,9 @@ document.addEventListener('DOMContentLoaded', function(){
 <div id="admbadge">MODO ADMINISTRADOR · Ctrl+Shift+A para salir</div>
 <div id="qrpanel" role="dialog" aria-modal="true" aria-label="Compartir el curso">
   <div class="qrbox">
-    <div class="qrhead"><h3>Compartir el curso</h3><button id="qrcerrar" type="button">Cerrar</button></div>
-    <div class="qropts">
-      <label class="qropt"><input type="radio" name="qrdest" value="curso" checked><span><b>Curso completo</b><small>Empieza por el principio, con la guía</small></span></label>
-      <label class="qropt"><input type="radio" name="qrdest" value="examen"><span><b>Directo al examen</b><small>Se salta las láminas. Pide los datos igual y entrega el certificado</small></span></label>
-    </div>
+    <div class="qrhead"><h3>Ya lo hice: ir al examen</h3><button id="qrcerrar" type="button">Cerrar</button></div>
+    <p class="qrintro">Si ya viste el curso, este enlace lleva directo al examen. Te pedirá
+      tus datos igual y, si apruebas, te entrega el certificado.</p>
     <div class="qrsalida">
       <canvas id="qrlienzo" aria-label="Código QR del enlace"></canvas>
       <div class="qrlado">
