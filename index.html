@@ -6253,7 +6253,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-14-k";
+var VERSION_CURSO = "2026-09-14-l";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas preguntas tiene el examen EN TOTAL. Las
@@ -6266,10 +6266,11 @@ var PIN_ADMIN = "2026";
 var NOMBRE_CAPACITACION = "HSE-001 · (Re) Inducción H&S";
 /* TIPOS DE USUARIO: la lista del primer desplegable de la pantalla del examen. */
 var TIPOS_USUARIO = ['Propio', 'Contratista', 'Temporal', 'Visitante'];
-/* SEDES / EMPRESAS: la lista del segundo desplegable. AÑADE AQUI LAS DEMAS, una
-   por linea y entre comillas, tal como quieres que queden escritas en la hoja.
-   La ultima opcion, "Otra", abre una casilla para escribirla a mano: quitala de
-   la lista cuando tengas todas las sedes cargadas. */
+/* SEDES: RESPALDO. Los centros de verdad son las divisiones del Maestro People
+   —HC-NOBSA CEMENTO, HC-CHIA...— y el curso se las pide al Apps Script al
+   abrir, asi no hay dos listas que mantener de acuerdo ni centros que ya no
+   existen. Esta lista solo se usa si esa consulta falla, para que el examen
+   nunca se quede sin desplegable. "Otra" siempre queda al final. */
 /* Tipos de usuario que no son de Holcim y a los que si se les pregunta la
    empresa (razon social). Si mañana cambia la lista de tipos, esto es lo
    unico que hay que revisar. */
@@ -8191,13 +8192,20 @@ function montarSesion(){
       inHora = document.getElementById('sesHora'), err = document.getElementById('sesErr'),
       bCrear = document.getElementById('sesCrear'), bVolver = document.getElementById('sesVolver');
 
-  /* La misma lista de sedes del examen: una sola fuente, para que no se
+  /* La misma lista de centros del examen: una sola fuente, para que no se
      escriban de dos maneras distintas y luego no cuadren al filtrar. */
-  (typeof SEDES !== 'undefined' ? SEDES : []).forEach(function(v){
-    var o = document.createElement('option'); o.value = o.textContent = v; selPlanta.appendChild(o);
-  });
-  selPlanta.insertBefore(new Option('Selecciona…', ''), selPlanta.firstChild);
-  selPlanta.value = '';
+  function ponerPlantas(lista){
+    var elegido = selPlanta.value;
+    selPlanta.innerHTML = '';
+    selPlanta.appendChild(new Option('Selecciona…', ''));
+    (lista || []).forEach(function(v){
+      var o = document.createElement('option'); o.value = o.textContent = v; selPlanta.appendChild(o);
+    });
+    selPlanta.value = elegido || '';
+  }
+  ponerPlantas(typeof SEDES !== 'undefined' ? SEDES : []);
+  /* Cuando lleguen las divisiones de verdad, se cambian aqui tambien. */
+  window.rellenarPlantasSesion = ponerPlantas;
   selPlanta.addEventListener('change', function(){
     campoOtra.hidden = selPlanta.value !== 'Otra';
     if(!campoOtra.hidden) inOtra.focus();
@@ -9418,6 +9426,24 @@ document.addEventListener('DOMContentLoaded', function(){
   llenar(inEmpresa, SEDES, '— Elige tu centro de trabajo —');
   /* Ya hay sedes: si se entro por el QR de una sesion, se marca la de la jornada. */
   if(window.pintarSesionEnFormulario) pintarSesionEnFormulario();
+
+  /* Y se piden las de verdad. Mientras llegan, el desplegable ya funciona con
+     el respaldo: si la consulta falla, nadie se entera y nadie se queda sin
+     poder elegir su centro. */
+  pedirDivisiones(function(lista){
+    if(!lista || !lista.length) return;
+    var antes = inEmpresa.value;
+    CENTROS_VIGENTES = lista.slice();
+    llenar(inEmpresa, lista.concat(['Otra']), '— Elige tu centro de trabajo —');
+    /* Si ya habia algo elegido —por el QR de una sesion, o porque la persona
+       fue mas rapida que la consulta— se respeta. */
+    if(antes){
+      for(var i = 0; i < inEmpresa.options.length; i++)
+        if(inEmpresa.options[i].value === antes){ inEmpresa.value = antes; break; }
+    }
+    if(window.pintarSesionEnFormulario) pintarSesionEnFormulario();
+    if(window.rellenarPlantasSesion) window.rellenarPlantasSesion(lista);
+  });
   inEmpresa.addEventListener('change', function(){
     campoOtra.hidden = (inEmpresa.value !== 'Otra');
     if(campoOtra.hidden) inOtra.value = '';
@@ -9517,6 +9543,30 @@ document.addEventListener('DOMContentLoaded', function(){
     et.onerror = function(){ terminar({ ok:false, motivo:'sin-red' }); };
     et.src = url + (url.indexOf('?') >= 0 ? '&' : '?') +
              'cedula=' + encodeURIComponent(ced) + '&callback=' + fn;
+    document.head.appendChild(et);
+  }
+
+  /* Los centros que manda el maestro. Arranca con el respaldo y se sustituye
+     en cuanto llega la lista de verdad. */
+  var CENTROS_VIGENTES = SEDES.filter(function(x){ return x !== 'Otra'; });
+
+  /* Mismo camino que la consulta de cedula —JSONP— y por la misma razon. */
+  function pedirDivisiones(listo){
+    var url = (typeof REPORTE_URL !== 'undefined') ? REPORTE_URL : '';
+    if(!url || url.indexOf('http') !== 0){ listo(null); return; }
+    var fn = '__hse_div_' + Date.now();
+    var et = document.createElement('script'), acabado = false;
+    function terminar(r){
+      if(acabado) return; acabado = true;
+      clearTimeout(reloj);
+      try{ delete window[fn]; }catch(e){ window[fn] = undefined; }
+      if(et.parentNode) et.parentNode.removeChild(et);
+      listo(r && r.ok ? r.divisiones : null);
+    }
+    var reloj = setTimeout(function(){ terminar(null); }, 10000);
+    window[fn] = function(r){ terminar(r); };
+    et.onerror = function(){ terminar(null); };
+    et.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'divisiones=1&callback=' + fn;
     document.head.appendChild(et);
   }
 

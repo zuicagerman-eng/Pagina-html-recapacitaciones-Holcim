@@ -66,6 +66,19 @@ var ID_CARPETA_FINAL = "";
 
       Cuando termines, ejecuta verCarpetasDeCentros() para ver los quince de
       una vez antes de confiar en el reparto. */
+/* ¿Se reparten los certificados por carpeta de centro?
+   APAGADO a proposito. La lista de personal usa las divisiones del Maestro
+   People ("HC-NOBSA CEMENTO") y las carpetas de abajo estan nombradas como las
+   llamaba el curso ("NOBSA CEM"): no coinciden. Con el reparto encendido, los
+   265 de Nobsa y los 198 de Puente Aranda acabarian en la carpeta "otros", que
+   es peor que tenerlos todos juntos y ordenados en una sola.
+
+   Mientras esto sea false, TODO certificado va a ID_CARPETA_CERTIFICADOS. La
+   tabla de abajo se queda intacta, sin usarse, para el dia que se decidan las
+   carpetas: entonces se renombran sus llaves con las divisiones de verdad
+   —verCentrosDeLaLista() las lista— y se pone esto en true. */
+var USAR_CARPETAS_POR_CENTRO = false;
+
 var CARPETAS_POR_CENTRO = {
   'BARRANCA GEO'        : "https://drive.google.com/drive/u/0/folders/1l-Z_FIYFWGGUDWkxwIjsvwzBgKShU3-r",
   'BELLO RMX'           : "https://drive.google.com/drive/u/0/folders/16NoHm433BSUJxUGyV1Gf-7jEyN5mxFGO",
@@ -152,7 +165,7 @@ var URL_CURSO = "https://zuicagerman-eng.github.io/Pagina-html-recapacitaciones-
    siguen atendidos por el codigo viejo. Este sello es lo que permite verlo:
    comprobarPublicacion() se lo pregunta a la implementacion y compara.
    Subelo cada vez que cambie algo de fondo. */
-var VERSION_GS = "2026-09-14-b";
+var VERSION_GS = "2026-09-14-c";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    LISTA DE PERSONAL  ·  la cédula como llave del examen
@@ -185,47 +198,42 @@ var PESTANA_PERSONAL = "Maestro People";
    por un permiso. */
 var ID_HOJA_PERSONAL = "";
 
-/* ═══════════════════════════════════════════════════════════════════════════
-   EQUIVALENCIAS DE CENTRO  ·  del Maestro People al curso
-   ───────────────────────────────────────────────────────────────────────────
-   El Maestro People llama a las plantas "HC-NOBSA CEMENTO", "HC-TELEPORT"...
-   y el curso las llama "NOBSA CEM", "TELEPORT CORP". Hay que traducirlas o el
-   certificado no encuentra su carpeta y acaba en CARPETA_OTROS.
+/* Las divisiones distintas de la lista, ordenadas. Cacheado seis horas: son
+   870 filas y esto se pide al abrir el examen, no hay que releerlas cada vez. */
+function listaDeDivisiones_() {
+  var cache = CacheService.getScriptCache();
+  try {
+    var guardado = cache.get('DIVISIONES');
+    if (guardado) return { ok: true, divisiones: JSON.parse(guardado) };
+  } catch (e) {}
 
-   A la izquierda va tal cual aparece en la columna "División de personal"; a
-   la derecha, EXACTAMENTE uno de los nombres de CARPETAS_POR_CENTRO.
+  var h;
+  try { h = libroDePersonal_().getSheetByName(PESTANA_PERSONAL); }
+  catch (err) { return { ok: false, motivo: 'sin-acceso' }; }
+  if (!h) return { ok: false, motivo: 'sin-lista' };
 
-   Lo que no esté aquí pasa tal cual y caerá en "otros". Ejecuta
-   verCentrosDeLaLista() para que te diga qué divisiones hay de verdad en tu
-   hoja y cuáles todavía no tienen equivalencia: es la unica forma de
-   completar esta tabla sin adivinar.
-   ═══════════════════════════════════════════════════════════════════════════ */
-var EQUIVALENCIAS_CENTRO = {
-  'HC-TELEPORT'      : 'TELEPORT CORP',
-  'HC-NOBSA CEMENTO' : 'NOBSA CEM',
-  'HC-BELLO'         : 'BELLO RMX',
-  'HC-CHIA'          : 'CHIA RMX',
-  'HC-PUENTE ARANDA' : 'PUENTE ARANDA RMX'
-  // 'HC-PALMIRA'    : '',     ← no hay equivalente en la lista del curso: complétalo
-};
+  var datos = h.getDataRange().getValues();
+  if (datos.length < 2) return { ok: false, motivo: 'sin-lista' };
 
-/* La comparación ignora mayúsculas, tildes y espacios de sobra, para que
-   "HC-NOBSA CEMENTO" y "HC-Nobsa  Cemento" sean lo mismo. */
-function traducirCentro_(valor) {
-  var v = String(valor || '').trim();
-  if (!v) return '';
-  var k = normalizarTitulo_(v);
-  for (var orig in EQUIVALENCIAS_CENTRO) {
-    if (EQUIVALENCIAS_CENTRO.hasOwnProperty(orig) && normalizarTitulo_(orig) === k) {
-      return EQUIVALENCIAS_CENTRO[orig] || v;
-    }
+  var titulos = datos[0].map(normalizarTitulo_), c = -1;
+  ['Centro', 'DivisionDePersonal', 'Division', 'CentroDeTrabajo', 'Sede', 'Planta']
+    .forEach(function (n) { if (c < 0) c = titulos.indexOf(normalizarTitulo_(n)); });
+  if (c < 0) return { ok: false, motivo: 'sin-columna-centro' };
+
+  var vistos = {}, fuera = [];
+  for (var f = 1; f < datos.length; f++) {
+    var v = String(datos[f][c] || '').trim();
+    if (v && !vistos[v]) { vistos[v] = 1; fuera.push(v); }
   }
-  return v;   // sin equivalencia: pasa tal cual y el certificado irá a "otros"
+  fuera.sort();
+  try { cache.put('DIVISIONES', JSON.stringify(fuera), 21600); } catch (e) {}
+  return { ok: true, divisiones: fuera };
 }
 
 /**
- * Qué divisiones hay REALMENTE en tu lista y cuáles no tienen equivalencia.
- * Ejecútala después de cargar la base: es lo que te dice qué falta por mapear.
+ * Las divisiones que hay en tu lista y cuánta gente tiene cada una.
+ * Sirve para dos cosas: ver que la columna se lee bien, y tener el listado
+ * exacto el día que se decidan las carpetas por centro.
  */
 function verCentrosDeLaLista() {
   var h = libroDePersonal_().getSheetByName(PESTANA_PERSONAL);
@@ -244,21 +252,21 @@ function verCentrosDeLaLista() {
     var v = String(datos[f][c] || '').trim();
     if (v) cuenta[v] = (cuenta[v] || 0) + 1;
   }
-  var carpetas = Object.keys(CARPETAS_POR_CENTRO);
-  var bien = [], faltan = [];
-  Object.keys(cuenta).sort().forEach(function (v) {
-    var t = traducirCentro_(v);
-    var linea = '  ' + v + '  (' + cuenta[v] + ')  →  ' + t;
-    if (carpetas.indexOf(t) >= 0) bien.push(linea);
-    else faltan.push(linea + '   ⚠ SIN CARPETA');
+  var nombres = Object.keys(cuenta).sort();
+  var total = 0;
+  var lineas = nombres.map(function (v) {
+    total += cuenta[v];
+    return '  ' + v + '   (' + cuenta[v] + ')';
   });
   Logger.log(
-    'DIVISIONES EN "' + PESTANA_PERSONAL + '"\n\n' +
-    (bien.length ? 'Con carpeta:\n' + bien.join('\n') + '\n\n' : '') +
-    (faltan.length
-      ? 'SIN EQUIVALENCIA (sus certificados irían a la carpeta "otros"):\n' +
-        faltan.join('\n') + '\n\nAñádelas a EQUIVALENCIAS_CENTRO, arriba en este archivo.'
-      : 'Todas las divisiones tienen carpeta. No falta nada.'));
+    'DIVISIONES EN "' + PESTANA_PERSONAL + '"  ·  ' + nombres.length +
+    ' divisiones, ' + total + ' personas\n\n' + lineas.join('\n') +
+    '\n\nEstas son las que ve el curso en el desplegable.\n' +
+    (USAR_CARPETAS_POR_CENTRO
+      ? ''
+      : 'El reparto de certificados por carpeta está APAGADO: van todos juntos\n' +
+        'a la carpeta general. Cuando se decidan las carpetas, usa esta lista\n' +
+        'para renombrar las llaves de CARPETAS_POR_CENTRO.'));
 }
 
 /* Cada consulta queda anotada aqui: cedula preguntada, si aparecio y cuando.
@@ -284,6 +292,14 @@ function doGet(e) {
      Se responde SOLO la persona preguntada, nunca la lista. */
   if (e && e.parameter && e.parameter.cedula) {
     return responderJSONP_(e.parameter.callback, buscarPersona_(e.parameter.cedula));
+  }
+
+  /* ?divisiones=1&callback=fn  →  la lista de centros para el desplegable.
+     Se saca de la propia columna B del Maestro, asi que el curso nunca enseña
+     un centro que ya no existe ni se queda sin uno nuevo: no hay dos listas
+     que mantener de acuerdo. Solo nombres de division, ninguna persona. */
+  if (e && e.parameter && e.parameter.divisiones) {
+    return responderJSONP_(e.parameter.callback, listaDeDivisiones_());
   }
   var destino = URL_CURSO.replace(/"/g, '');
   return HtmlService.createHtmlOutput(
@@ -365,8 +381,8 @@ function buscarPersona_(cedulaPedida) {
       cNom = col('Nombres', 'Nombre'),
       cTip = col('Tipo', 'TipoUsuario', 'Vinculacion'),
       /* "Division de personal" es la columna B del Maestro People: HC-NOBSA
-         CEMENTO, HC-TELEPORT... No son los nombres de los centros que usa el
-         curso, por eso existe EQUIVALENCIAS_CENTRO mas abajo. */
+         CEMENTO, HC-TELEPORT... Se usa TAL CUAL, sin traducir: es el nombre
+         que Holcim usa de verdad, y el curso ahora ensenia esas mismas. */
       cCen = col('Centro', 'DivisionDePersonal', 'Division', 'CentroDeTrabajo',
                  'CentroTrabajo', 'Sede', 'Planta'),
       cEmp = col('Empresa', 'RazonSocial'),
@@ -415,8 +431,7 @@ function buscarPersona_(cedulaPedida) {
         cedula: ced,
         apellido1: ap1, apellido2: ap2, nombres: nom,
         tipo:    cTip >= 0 ? String(datos[f][cTip] || '').trim() : '',
-        centro:  traducirCentro_(centroCrudo),
-        centroOriginal: centroCrudo,
+        centro:  centroCrudo,
         cargo:   cCar >= 0 ? String(datos[f][cCar] || '').trim() : '',
         empresa: cEmp >= 0 ? String(datos[f][cEmp] || '').trim() : ''
       }
@@ -731,6 +746,12 @@ function normaliza_(t) {
  */
 function destinoDelCertificado_(d) {
   d = d || {};
+  /* Reparto apagado: ni por centro ni a "otros". Todo se queda junto en la
+     carpeta general. Un solo sitio y ordenado es mejor que repartido a medias
+     mientras las divisiones y las carpetas no coincidan. */
+  if (!USAR_CARPETAS_POR_CENTRO) {
+    return { carpeta: null, motivo: 'reparto por centro apagado (USAR_CARPETAS_POR_CENTRO)' };
+  }
   var tipo = String(d.tipoUsuario || '').trim();
   var centro = String(d.empresa || '').trim();
 
@@ -776,6 +797,9 @@ function destinoDelCertificado_(d) {
  * mueven las carpetas, ejecuta olvidarLoRecordado().
  */
 function carpetaDelCentro_(centro) {
+  /* Apagado: nadie se reparte. Devolver null hace que el certificado se quede
+     en la carpeta general, que es justo lo que se quiere mientras tanto. */
+  if (!USAR_CARPETAS_POR_CENTRO) return null;
   var clave = normaliza_(centro);
   if (!clave) return null;
 
@@ -892,6 +916,15 @@ function bajarPorSubruta_(carpeta, centro) {
  * Pega entre los corchetes los mismos nombres del desplegable del curso.
  */
 function verCarpetasDeCentros() {
+  if (!USAR_CARPETAS_POR_CENTRO) {
+    Logger.log('EL REPARTO POR CENTRO ESTA APAGADO.\n\n' +
+      'Todos los certificados se guardan juntos en la carpeta general\n' +
+      '(ID_CARPETA_CERTIFICADOS), sin repartirse por planta.\n\n' +
+      'Para encenderlo: renombra las llaves de CARPETAS_POR_CENTRO con las\n' +
+      'divisiones que salen en verCentrosDeLaLista() y pon\n' +
+      'USAR_CARPETAS_POR_CENTRO en true.');
+    return 'apagado';
+  }
   var CENTROS = [
     'BARRANCA GEO', 'BELLO RMX', 'CHIA RMX', 'FUNDACION', 'GEOCYCLE - AF NOBSA',
     'MEDELLIN', 'MONDOÑEDO AGG', 'NOBSA - TUNJA RMX', 'NOBSA CEM',
