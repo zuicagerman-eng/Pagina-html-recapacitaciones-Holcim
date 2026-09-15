@@ -196,7 +196,7 @@ var URL_CURSO = "https://zuicagerman-eng.github.io/Pagina-html-recapacitaciones-
    siguen atendidos por el codigo viejo. Este sello es lo que permite verlo:
    comprobarPublicacion() se lo pregunta a la implementacion y compara.
    Subelo cada vez que cambie algo de fondo. */
-var VERSION_GS = "2026-09-15-f";
+var VERSION_GS = "2026-09-15-g";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    LISTA DE PERSONAL  ·  la cédula como llave del examen
@@ -1799,8 +1799,23 @@ function diagnostico() {
 
   try {
     var url = ScriptApp.getService().getUrl();
-    lineas.push('URL /exec de ESTA implementación: ' + (url || '(sin publicar)'));
-    lineas.push('→ Debe ser idéntica a REPORTE_URL en el index.html de GitHub.');
+    lineas.push('');
+    if (!url) {
+      lineas.push('Todavia no hay ninguna implementacion publicada.');
+    } else if (/\/dev$/.test(url)) {
+      /* Ejecutando desde el editor, Google devuelve la direccion de PRUEBAS, que
+         termina en /dev. Antes esta linea decia "debe ser identica a REPORTE_URL",
+         y comparar una /dev con la publicada da una diferencia que no significa
+         nada: manda a arreglar algo que no esta roto. */
+      lineas.push('Direccion de PRUEBAS (la del editor, termina en /dev):');
+      lineas.push('  ' + url);
+      lineas.push('NO la compares con REPORTE_URL: son distintas a proposito.');
+      lineas.push('Para saber si lo PUBLICADO esta al dia: comprobarPublicacion()');
+    } else {
+      lineas.push('URL /exec de ESTA implementacion:');
+      lineas.push('  ' + url);
+      lineas.push('Tiene que ser IDENTICA a REPORTE_URL en el index.html de GitHub.');
+    }
   } catch (e) { lineas.push('ERROR con la URL: ' + e.message); }
 
   /* Cuota de correo. Es la explicacion mas comun de "no me llegan los correos":
