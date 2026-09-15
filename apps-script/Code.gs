@@ -45,6 +45,37 @@ var ID_HOJA = "https://docs.google.com/spreadsheets/d/1xD-o9cXWLWf78x-58dUhow2-z
 // 3) Carpeta de certificados (drive.google.com/drive/folders/...)
 var ID_CARPETA_CERTIFICADOS = "https://drive.google.com/drive/folders/1LExNIvC0PP0CSRVn79bg1m4yPfdvXJ4l";
 
+/* 3-bis) NOBSA Y TUNJA, ADEMAS, APARTE
+      Todo lo que venga de Nobsa o de Tunja —"AF-NOBSA", "HC-NOBSA CEMENTO",
+      "HC-NOBSA CONCRETO", "TUNJA", cualquier centro que lleve esa palabra—
+      sigue quedando en el registro de siempre, igual que ahora. Ademas se
+      anota en OTRA hoja (la de Holcim) y su diploma se guarda en CARPETA_APARTE.
+
+      La carpeta de abajo es hoy la MISMA que ID_CARPETA_CERTIFICADOS, asi que
+      por ahora ningun PDF cambia de sitio. Se escribe aparte a proposito: si
+      algun dia se enciende el reparto por centro, o cambia la carpeta general,
+      los de Nobsa y Tunja seguiran cayendo aqui sin que nadie tenga que
+      acordarse.
+
+      La hoja hay que pegarla en ID_HOJA_APARTE. Mientras este vacia esta parte
+      no hace absolutamente nada: ni escribe, ni estorba, ni falla.
+
+      REGLA QUE NO SE NEGOCIA: esa hoja no es nuestra. Aqui solo se rellenan
+      celdas VACIAS. Nunca se pisa nada de lo que ya haya escrito, ni una sola
+      celda, pase lo que pase. */
+var CARPETA_APARTE = "https://drive.google.com/drive/folders/1LExNIvC0PP0CSRVn79bg1m4yPfdvXJ4l";
+var ID_HOJA_APARTE = "";       // pega aqui el enlace de la hoja de Nobsa/Tunja
+var PESTANA_APARTE = "";       // vacio = la primera pestaña de esa hoja
+var CENTROS_APARTE = ['NOBSA', 'TUNJA'];
+
+/* Que hacer cuando la persona YA tiene fila en esa hoja y las celdas que nos
+   tocan ya estan llenas (por ejemplo, porque presenta el examen por segunda
+   vez):
+     'dejar' (por defecto) → no se toca nada. Queda anotado en Ejecuciones.
+     'nueva'               → se agrega otra fila al final con este intento.
+   En ninguno de los dos casos se sobrescribe lo que ya estaba. */
+var FILA_LLENA_APARTE = 'dejar';
+
 /* 4) OPCIONAL — Carpeta FINAL, normalmente la de la unidad compartida de Holcim.
       Si la pones, cada certificado se guarda primero en la carpeta de arriba y
       enseguida se traslada aquí. Sirve para que los datos personales acaben en
@@ -165,7 +196,7 @@ var URL_CURSO = "https://zuicagerman-eng.github.io/Pagina-html-recapacitaciones-
    siguen atendidos por el codigo viejo. Este sello es lo que permite verlo:
    comprobarPublicacion() se lo pregunta a la implementacion y compara.
    Subelo cada vez que cambie algo de fondo. */
-var VERSION_GS = "2026-09-15-b";
+var VERSION_GS = "2026-09-15-c";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    LISTA DE PERSONAL  ·  la cédula como llave del examen
@@ -720,6 +751,24 @@ function carpetaCertificados_() {
   return carpeta;
 }
 
+/**
+ * La carpeta donde van los diplomas de Nobsa y Tunja.
+ *
+ * Si no se puede abrir devuelve null en vez de reventar: entonces el PDF se
+ * guarda en la carpeta de siempre, que es mucho mejor que perderlo. El fallo
+ * queda escrito en Ejecuciones para que se pueda arreglar.
+ */
+function carpetaAparte_() {
+  var id = soloId_(CARPETA_APARTE);
+  if (!id) return null;
+  try { return DriveApp.getFolderById(id); }
+  catch (e) {
+    console.error('CARPETA_APARTE no se pudo abrir (' + e.message +
+                  '). El certificado va a la carpeta general.');
+    return null;
+  }
+}
+
 /* Para comparar nombres de carpeta con lo que eligió la persona sin que un
    acento, un espacio de más o unas mayúsculas lo estropeen. */
 function pad_(t, n) {
@@ -1076,7 +1125,11 @@ function guardarCertificado_(d) {
     var nombre = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy.MM.dd') +
                  ' ' + (d.nombre || 'SIN NOMBRE') + '.pdf';
     var blob = Utilities.newBlob(bytes, 'application/pdf', nombre);
-    var archivo = carpetaCertificados_().createFile(blob);
+    /* Nobsa y Tunja van siempre a CARPETA_APARTE, y ademas no se trasladan
+       despues. Hoy esa carpeta es la misma de todos, asi que no cambia nada;
+       lo que cambia es que deja de depender de que nadie toque la de todos. */
+    var aparte = esAparte_(d) ? carpetaAparte_() : null;
+    var archivo = (aparte || carpetaCertificados_()).createFile(blob);
     if (CERTIFICADOS_PUBLICOS) {
       try {
         archivo.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
@@ -1085,7 +1138,8 @@ function guardarCertificado_(d) {
     /* Se traslada a la carpeta de Holcim si esta configurada. El enlace se lee
        DESPUES del traslado: el identificador no cambia al mover, pero asi se
        devuelve lo que de verdad quedo. */
-    trasladar_(archivo, d);
+    if (aparte) console.log('Certificado de ' + (d.empresa || '?') + ': a la carpeta aparte.');
+    else trasladar_(archivo, d);
     console.log('Certificado guardado: ' + archivo.getUrl());
     return archivo.getUrl();
   } catch (e) {
@@ -1343,11 +1397,17 @@ function guardarExamen(d) {
      un fallo del correo no impida que el resultado quede registrado. */
   var copia = enviarCopiaCertificado_(d, enlaceCert);
 
+  /* Y si es de Nobsa o de Tunja, tambien en la hoja de Holcim. Va al final y
+     con su propio try adentro: es un registro de mas, no puede costar el de
+     verdad, que ya esta escrito unas lineas arriba. */
+  var aparte = registrarAparte_(d, enlaceCert);
+
   return {
     ok: true,
     certificado: enlaceCert ? 'guardado' : (d.certificado ? 'falló' : 'no llegó'),
     copiaCorreo: copia,
-    fila: dondeEscribio
+    fila: dondeEscribio,
+    aparte: aparte || 'no aplica'
   };
 }
 
@@ -2198,7 +2258,12 @@ function recibirCertificado(d) {
   var enlace = guardarCertificado_(d);
   var correo = enviarCopiaCertificado_(d, enlace);
   var fila = enlace ? escribirVinculo_(d, enlace) : 'sin enlace';
-  return { ok: true, certificado: enlace ? 'guardado' : 'falló', correo: correo, fila: fila };
+  /* El enlace tambien en la hoja aparte. La fila ya la creo guardarExamen, asi
+     que aqui lo unico que queda vacio es la celda del certificado: justo la que
+     se llena. */
+  var aparte = enlace ? registrarAparte_(d, enlace) : '';
+  return { ok: true, certificado: enlace ? 'guardado' : 'falló', correo: correo,
+           fila: fila, aparte: aparte || 'no aplica' };
 }
 
 /**
@@ -2236,6 +2301,347 @@ function escribirVinculo_(d, enlace) {
     console.error('No se pudo escribir el enlace del certificado: ' + e.message);
     return 'error: ' + e.message;
   }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+ * NOBSA Y TUNJA: EL SEGUNDO REGISTRO
+ *
+ * Lo de Nobsa y Tunja se anota dos veces: en la hoja de siempre, que es
+ * nuestra, y en la hoja de Holcim, que no lo es. Esa diferencia manda en todo
+ * lo que hay aqui abajo.
+ *
+ * En una hoja ajena no se sabe que depende de cada celda —un BuscarV, un
+ * informe, el trabajo de alguien— asi que la unica operacion permitida es
+ * escribir donde no hay nada. Si la celda tiene algo, se deja como esta y se
+ * anota en Ejecuciones lo que se quiso escribir. Preferir un dato perdido a un
+ * dato pisado es una decision, no un descuido: el perdido se ve y se arregla,
+ * el pisado no se nota hasta que ya es tarde.
+ *
+ * Tampoco se escribe la fila entera de una vez. Se va celda por celda, solo en
+ * las columnas que nos tocan. Escribir la fila completa convertiria en texto
+ * cualquier formula que hubiera al lado, y eso ya seria romper la hoja.
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Como se puede llamar cada columna en esa hoja. Se compara sin acentos, sin
+   mayusculas y sin nada que no sea letra o numero, asi que "Nº Documento",
+   "no. documento" y "NO_DOCUMENTO" son la misma cosa.
+
+   Si en la hoja hay un encabezado que no este en estas listas, esa columna
+   simplemente se queda sin llenar, y verHojaAparte() lo dice por su nombre para
+   que se pueda agregar aqui. */
+var ALIAS_APARTE = {
+  cedula:       ['ID_Identificacion', 'Identificacion', 'Identificación', 'Cedula', 'Cédula',
+                 'Documento', 'No Documento', 'Numero de documento', 'Numero ID', 'Número ID',
+                 'ID', 'Numero de identificacion', 'CC'],
+  nombre:       ['Nombre_Completo', 'Nombre Completo', 'Nombre', 'Nombres', 'Nombres y apellidos',
+                 'Trabajador', 'Empleado', 'Participante', 'Asistente'],
+  empresa:      ['Centro_Trabajo', 'Centro de trabajo', 'Centro', 'Empresa', 'Planta', 'Sede',
+                 'Division', 'División', 'Division de personal', 'Ubicacion', 'Ubicación'],
+  cargo:        ['Cargo', 'Posicion', 'Posición', 'Puesto', 'Cargo desempeñado'],
+  tipo:         ['Tipo_Usuario', 'Tipo de usuario', 'Tipo', 'Vinculacion', 'Vinculación',
+                 'Tipo de vinculacion', 'Contratista o propio'],
+  fecha:        ['Fecha', 'Fecha_Realizacion', 'Fecha de realizacion', 'Fecha de realización',
+                 'Fecha capacitacion', 'Fecha de la capacitacion', 'Fecha de formacion'],
+  capacitacion: ['Capacitacion', 'Capacitación', 'Curso', 'Nombre del curso', 'Tema',
+                 'Formacion', 'Formación', 'Nombre de la capacitacion'],
+  puntaje:      ['Puntaje', 'Punt', 'Nota', 'Calificacion', 'Calificación', 'Porcentaje',
+                 'Resultado numerico'],
+  resultado:    ['Resultado', 'Estado', 'Aprobacion', 'Aprobación', 'Aprobado', 'Concepto'],
+  modalidad:    ['Modalidad', 'Individual o grupal', 'Tipo de jornada'],
+  sesion:       ['Sesion', 'Sesión', 'Codigo', 'Código', 'Codigo de jornada', 'Jornada', 'Grupo'],
+  vinculo:      ['Vinculo', 'Vínculo', 'Certificado', 'Diploma', 'Enlace', 'Link', 'Constancia',
+                 'Soporte', 'Evidencia', 'URL']
+};
+
+/* Deja del encabezado solo lo comparable. Aparte de acentos y mayusculas quita
+   espacios, puntos y guiones, que es donde estas hojas nunca se ponen de
+   acuerdo consigo mismas. */
+function clavecol_(t) {
+  return String(t == null ? '' : t)
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase().replace(/[^a-z0-9]/g, '');
+}
+
+/**
+ * ¿Este examen es de Nobsa o de Tunja?
+ *
+ * Se mira el CENTRO DE TRABAJO y nada mas. La razon social de un contratista no
+ * cuenta a proposito: una empresa que se llame "Tunja S.A.S." trabajando en
+ * Medellin no es de Tunja, y colarla aqui ensuciaria la hoja de otra planta.
+ */
+function esAparte_(d) {
+  var centro = normaliza_((d && d.empresa) || '');
+  if (!centro) return false;
+  for (var i = 0; i < CENTROS_APARTE.length; i++) {
+    var k = normaliza_(CENTROS_APARTE[i]);
+    if (k && centro.indexOf(k) >= 0) return true;
+  }
+  return false;
+}
+
+/** La pestaña de la hoja aparte, o null si todavia no se configuro. */
+function hojaAparte_() {
+  var id = soloId_(ID_HOJA_APARTE);
+  if (!id) return null;
+  var ss = SpreadsheetApp.openById(id);
+  var hoja = PESTANA_APARTE ? ss.getSheetByName(PESTANA_APARTE) : ss.getSheets()[0];
+  if (!hoja) {
+    throw new Error('Esa hoja no tiene ninguna pestaña llamada "' + PESTANA_APARTE +
+      '". Las que tiene: ' + ss.getSheets().map(function (h) { return h.getName(); }).join(', '));
+  }
+  return hoja;
+}
+
+/**
+ * Encuentra la fila de encabezados y en que columna cayo cada dato.
+ *
+ * No se da por hecho que los titulos esten en la fila 1: estas hojas suelen
+ * traer un logo, un titulo o dos renglones en blanco encima. Se miran las
+ * primeras quince filas y gana la que reconozca mas columnas.
+ *
+ * Devuelve { fila, cols, aciertos, sueltos }, donde "sueltos" son los
+ * encabezados que no se supo a que corresponden.
+ */
+function mapaAparte_(hoja) {
+  var alto = Math.min(15, Math.max(1, hoja.getLastRow()));
+  var ancho = Math.max(1, hoja.getLastColumn());
+  var rejilla = hoja.getRange(1, 1, alto, ancho).getValues();
+  var mejor = { fila: 0, cols: {}, aciertos: 0, sueltos: [] };
+
+  for (var f = 0; f < alto; f++) {
+    var cols = {}, aciertos = 0, sueltos = [];
+    for (var c = 0; c < ancho; c++) {
+      var k = clavecol_(rejilla[f][c]);
+      if (!k) continue;
+      var hallado = '';
+      for (var campo in ALIAS_APARTE) {
+        if (cols[campo] !== undefined) continue;   // la primera columna manda
+        var lista = ALIAS_APARTE[campo];
+        for (var i = 0; i < lista.length; i++) {
+          if (clavecol_(lista[i]) === k) { hallado = campo; break; }
+        }
+        if (hallado) break;
+      }
+      if (hallado) { cols[hallado] = c; aciertos++; }
+      else sueltos.push(String(rejilla[f][c]).trim());
+    }
+    if (aciertos > mejor.aciertos) {
+      mejor = { fila: f + 1, cols: cols, aciertos: aciertos, sueltos: sueltos };
+    }
+  }
+  return mejor;
+}
+
+/** Los datos del examen con los nombres que usa ALIAS_APARTE. */
+function valoresAparte_(d, enlace) {
+  d = d || {};
+  return {
+    cedula:       String(d.cedula || ''),
+    nombre:       d.nombre || '',
+    empresa:      d.empresa || '',
+    cargo:        d.cargo || '',
+    tipo:         d.tipoUsuario || '',
+    fecha:        d.fecha || '',
+    capacitacion: d.capacitacion || '',
+    puntaje:      d.puntaje || (d.porcentaje != null ? d.porcentaje + '%' : ''),
+    resultado:    d.resultado || '',
+    modalidad:    d.modalidad || '',
+    sesion:       d.sesion || '',
+    vinculo:      enlace || ''
+  };
+}
+
+/* Una cedula se escribe como numero si de verdad lo es. En la hoja de Holcim
+   esa columna ya viene con numeros, y meter texto en medio rompe los BuscarV
+   sin que se vea. Solo se deja como texto lo que no cabe en un numero o lo que
+   empieza por cero, que es justo lo que un numero perderia. */
+function cedulaParaHoja_(ced) {
+  var t = String(ced || '').trim();
+  if (!/^[0-9]+$/.test(t)) return t;
+  if (t.length > 1 && t.charAt(0) === '0') return t;
+  var n = Number(t);
+  return (isFinite(n) && String(n) === t) ? n : t;
+}
+
+/**
+ * Anota el examen en la hoja aparte. Devuelve una frase con lo que hizo.
+ *
+ * El orden es: buscar a la persona por cedula, de abajo hacia arriba —la fila
+ * que importa es la ultima, igual que en escribirVinculo_—; llenarle las
+ * celdas vacias; y si no aparece por ningun lado, agregarla al final.
+ *
+ * Esta funcion se llama dos veces por examen: una al guardar el resultado, sin
+ * enlace todavia, y otra cuando llega el PDF. La segunda vez se encuentra la
+ * fila de la primera y solo le cae el enlace en la celda que quedo vacia. Eso
+ * no es casualidad: es la misma regla de "solo lo vacio" haciendo su trabajo.
+ */
+function registrarAparte_(d, enlace) {
+  if (!esAparte_(d)) return '';
+  if (!soloId_(ID_HOJA_APARTE)) return 'ID_HOJA_APARTE vacia: no se anoto aparte';
+
+  try {
+    var hoja = hojaAparte_();
+    var m = mapaAparte_(hoja);
+    if (!m.fila || m.cols.cedula === undefined) {
+      var aviso = 'No se reconocieron los encabezados de la hoja aparte, o no tiene ' +
+        'columna de cedula. No se escribio nada. Ejecuta verHojaAparte() para ver que ' +
+        'encontro.';
+      console.error(aviso);
+      return aviso;
+    }
+
+    var v = valoresAparte_(d, enlace);
+    var ced = soloDigitos_(v.cedula);
+    if (!ced) return 'sin cedula: no se anoto aparte';
+
+    var ancho = Math.max(1, hoja.getLastColumn());
+    var desde = m.fila + 1;
+    var ultima = hoja.getLastRow();
+    var objetivo = 0, fila = null;
+
+    if (ultima >= desde) {
+      var datos = hoja.getRange(desde, 1, ultima - desde + 1, ancho).getValues();
+      for (var i = datos.length - 1; i >= 0; i--) {
+        if (soloDigitos_(datos[i][m.cols.cedula]) === ced) {
+          objetivo = desde + i; fila = datos[i]; break;
+        }
+      }
+    }
+
+    /* La persona ya esta: se le llenan solo los huecos. */
+    if (objetivo) {
+      var puestas = [], respetadas = [];
+      for (var campo in m.cols) {
+        var c = m.cols[campo];
+        var valor = v[campo];
+        if (valor === undefined || valor === '') continue;
+        var actual = fila[c];
+        if (actual !== '' && actual !== null && actual !== undefined) {
+          respetadas.push(campo);          // tiene algo: NO se toca
+          continue;
+        }
+        hoja.getRange(objetivo, c + 1)
+            .setValue(campo === 'cedula' ? cedulaParaHoja_(valor) : valor);
+        puestas.push(campo);
+      }
+      if (puestas.length) {
+        if (m.cols.vinculo !== undefined && puestas.indexOf('vinculo') >= 0 && enlace) {
+          enlazar_celda_(hoja, objetivo, m.cols.vinculo + 1, enlace);
+        }
+        return 'fila ' + objetivo + ': se llenaron ' + puestas.join(', ') +
+               (respetadas.length ? ' (ya tenian dato, no se tocaron: ' + respetadas.join(', ') + ')' : '');
+      }
+      if (FILA_LLENA_APARTE !== 'nueva') {
+        var yaEstaba = 'La fila ' + objetivo + ' de ' + (v.nombre || ced) +
+          ' ya estaba diligenciada; no se toco nada. Si querias otra fila por cada ' +
+          'intento, pon FILA_LLENA_APARTE = "nueva".';
+        console.log(yaEstaba);
+        return yaEstaba;
+      }
+      /* FILA_LLENA_APARTE = 'nueva': cae abajo y agrega una fila nueva. */
+    }
+
+    /* No esta —o esta pero llena y se pidio fila nueva—: se agrega al final.
+       Se escribe celda por celda, nunca appendRow, para no meter vacios en
+       columnas que quiza tengan formulas. */
+    var nueva = hoja.getLastRow() + 1;
+    if (nueva > hoja.getMaxRows()) hoja.insertRowsAfter(hoja.getMaxRows(), 1);
+    var escritas = 0;
+    for (var campo2 in m.cols) {
+      var valor2 = v[campo2];
+      if (valor2 === undefined || valor2 === '') continue;
+      hoja.getRange(nueva, m.cols[campo2] + 1)
+          .setValue(campo2 === 'cedula' ? cedulaParaHoja_(valor2) : valor2);
+      escritas++;
+    }
+    if (m.cols.vinculo !== undefined && enlace) {
+      enlazar_celda_(hoja, nueva, m.cols.vinculo + 1, enlace);
+    }
+    var hecho = 'fila nueva ' + nueva + ' (' + escritas + ' datos) para ' + (v.nombre || ced);
+    console.log('Hoja aparte: ' + hecho);
+    return hecho;
+
+  } catch (e) {
+    /* Que falle el segundo registro no puede costar el primero. Queda en
+       Ejecuciones y el examen sigue su camino. */
+    console.error('Hoja aparte (Nobsa/Tunja): ' + e.message);
+    return 'error: ' + e.message;
+  }
+}
+
+/** Como enlazar_, pero por numero de columna en vez de por nombre. */
+function enlazar_celda_(hoja, fila, columna, url) {
+  try {
+    var texto = SpreadsheetApp.newRichTextValue().setText(url).setLinkUrl(url).build();
+    hoja.getRange(fila, columna).setRichTextValue(texto);
+  } catch (e) { /* si no se puede, queda la URL en texto plano, que sirve igual */ }
+}
+
+/**
+ * ═══════════════════════════════════════════════════════════════════════════
+ * EJECUTA ESTO ANTES DE CONFIAR EN LA HOJA APARTE
+ *
+ * No escribe nada. Abre la hoja, dice que pestaña va a usar, en que fila creyo
+ * ver los encabezados, que columna reconocio para cada dato y cuales no supo
+ * interpretar. Al final muestra lo que escribiria para un examen de ejemplo de
+ * Nobsa, para poder compararlo con la hoja antes de que entre nadie de verdad.
+ * ═══════════════════════════════════════════════════════════════════════════
+ */
+function verHojaAparte() {
+  if (!soloId_(ID_HOJA_APARTE)) {
+    Logger.log('ID_HOJA_APARTE esta vacia. Pega ahi el enlace de la hoja de Nobsa/Tunja ' +
+               'y vuelve a ejecutar. Mientras tanto el segundo registro no hace nada.');
+    return;
+  }
+  var hoja;
+  try { hoja = hojaAparte_(); }
+  catch (e) { Logger.log('No se pudo abrir: ' + e.message); return; }
+
+  Logger.log('Hoja:    ' + hoja.getParent().getName());
+  Logger.log('Pestaña: ' + hoja.getName() + '   (' + hoja.getLastRow() + ' filas × ' +
+             hoja.getLastColumn() + ' columnas)');
+
+  var m = mapaAparte_(hoja);
+  if (!m.fila) { Logger.log('No se reconocio ningun encabezado en las primeras 15 filas.'); return; }
+  Logger.log('Encabezados en la fila ' + m.fila + ', reconocidos ' + m.aciertos + '.');
+  Logger.log('');
+
+  var titulos = hoja.getRange(m.fila, 1, 1, Math.max(1, hoja.getLastColumn())).getValues()[0];
+  var campos = ['cedula', 'nombre', 'empresa', 'cargo', 'tipo', 'fecha', 'capacitacion',
+                'puntaje', 'resultado', 'modalidad', 'sesion', 'vinculo'];
+  for (var i = 0; i < campos.length; i++) {
+    var c = m.cols[campos[i]];
+    Logger.log('  ' + pad_(campos[i], 14) +
+      (c === undefined ? '— sin columna en esa hoja —'
+                       : 'columna ' + (c + 1) + '  "' + String(titulos[c]).trim() + '"'));
+  }
+  if (m.sueltos.length) {
+    Logger.log('');
+    Logger.log('Encabezados que no supe interpretar (se quedan como estan):');
+    Logger.log('  ' + m.sueltos.join(' · '));
+  }
+  if (m.cols.cedula === undefined) {
+    Logger.log('');
+    Logger.log('OJO: sin columna de cedula no se puede buscar a nadie, asi que el segundo ' +
+               'registro NO va a escribir. Agrega el nombre real de esa columna a ' +
+               'ALIAS_APARTE.cedula.');
+  }
+
+  Logger.log('');
+  Logger.log('Con un examen de ejemplo de Nobsa se escribiria:');
+  var v = valoresAparte_({
+    cedula: '1020304050', nombre: 'PRUEBA PRUEBA PRUEBA', empresa: 'HC-NOBSA CEMENTO',
+    cargo: 'Operario', tipoUsuario: 'propio', fecha: new Date().toLocaleString('es-CO'),
+    capacitacion: 'Uso, mantenimiento adecuado y recambio de Elementos de proteccion personal',
+    puntaje: '100%', resultado: 'APROBADO', modalidad: 'Individual', sesion: ''
+  }, 'https://drive.google.com/file/d/EJEMPLO/view');
+  for (var j = 0; j < campos.length; j++) {
+    var cc = m.cols[campos[j]];
+    if (cc === undefined || !v[campos[j]]) continue;
+    Logger.log('  ' + pad_(String(titulos[cc]).trim(), 24) + String(v[campos[j]]).substring(0, 60));
+  }
+  Logger.log('');
+  Logger.log('Y solo en las celdas que esten vacias. Lo que ya tenga algo se queda igual.');
 }
 
 function enviarCorreoReporte(d) {
