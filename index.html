@@ -6260,10 +6260,18 @@
         </p>
         <div class="card rv up" style="--d:3;margin-top:18px">
           <div id="exLlave" hidden>
-            <div class="excampo">
+            <!-- La contraseña solo la ve quien llega escaneando el QR de una
+                 jornada. Quien la abrio no la necesita: ya estaba en la sala. -->
+            <div class="excampo" id="exClaveCampo" hidden>
+              <label for="exClave">Contraseña de la jornada</label>
+              <input id="exClave" type="password" autocomplete="off"
+                     placeholder="••••••••••" inputmode="text" maxlength="40">
+            </div>
+            <div class="excampo" id="exCedCampo">
               <label for="exLlaveCed">Número de cédula</label>
               <input id="exLlaveCed" type="text" inputmode="numeric" autocomplete="off"
                      placeholder="1020304050" maxlength="15">
+            </div>
             </div>
             <p class="exerr" id="exLlaveErr"></p>
             <button class="exbtn" id="exLlaveBtn" type="button">Continuar</button>
@@ -6459,7 +6467,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-15-h";
+var VERSION_CURSO = "2026-09-15-i";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas preguntas tiene el examen EN TOTAL. Las
@@ -6550,11 +6558,13 @@ var EXIGIR_LISTA        = false;
    columna "Tipo" y esto deja de aplicarse solo. */
 var TIPO_POR_DEFECTO_LISTA = 'Propio';
 
-/* Contraseña para ABRIR una jornada grupal. No protege el examen —el que llega
-   por el QR no la necesita, y es a proposito: si se la pidieras a los treinta,
-   la jornada se convierte en teclear contraseñas—. Lo que evita es que
-   cualquiera que termine el curso se ponga a repartir examenes en su nombre.
-   Para cambiarla, cambia esta linea. */
+/* Contraseña de la jornada. Se la pide el examen a quien llega escaneando el
+   QR, junto con la cedula: ahi es donde sirve, porque el QR se reenvia solo —una
+   foto por WhatsApp y lo presenta cualquiera desde su casa— y la contraseña la
+   dicta el ponente a la sala en ese momento.
+
+   Quien ABRE la jornada no la necesita: ya esta delante de la gente, y pedirsela
+   solo le estorbaba. Para cambiarla, cambia esta linea. */
 var CLAVE_JORNADA = 'Holcim2026';
 
 var EXIGIR_OBLIGATORIAS = true;
@@ -8594,12 +8604,7 @@ function montarSesion(){
     panel.classList.add('show');
     if(aGrupal) setTimeout(function(){ try{ selPlanta.focus(); }catch(e){} }, 40);
   }
-  function cerrar(){
-    panel.classList.remove('show');
-    /* La clave no se queda escrita: el equipo que proyecta lo usa mucha gente. */
-    var c = document.getElementById('sesClave');
-    if(c){ c.value = ''; c.classList.remove('mal'); }
-  }
+  function cerrar(){ panel.classList.remove('show'); }
   window.__abrirModalidad = abrir;
 
   /* ── El boton de emergencia ──
@@ -8651,24 +8656,14 @@ function montarSesion(){
   });
   bGru.addEventListener('click', function(){
     p1.hidden = true; p2.hidden = false;
-    setTimeout(function(){ try{ document.getElementById('sesClave').focus(); }catch(e){} }, 40);
+    setTimeout(function(){ try{ selPlanta.focus(); }catch(e){} }, 40);
   });
   bVolver.addEventListener('click', function(){ p1.hidden = false; p2.hidden = true; });
   /* Cerrar = individual, lo mismo que Escape. Una ventana sin salida visible
      delante del examen es justo lo que no puede pasar. */
   document.getElementById('sesCerrar').addEventListener('click', cerrar);
 
-  var inClave = document.getElementById('sesClave');
   bCrear.addEventListener('click', function(){
-    /* La clave primero: si esta mal, no tiene sentido revisar lo demas ni
-       hacerle rellenar el formulario entero para negarselo al final. */
-    if(String(inClave.value || '') !== CLAVE_JORNADA){
-      inClave.classList.add('mal');
-      err.textContent = 'Contraseña incorrecta. Pídesela a Salud y Seguridad.';
-      try{ inClave.focus(); inClave.select(); }catch(e){}
-      return;
-    }
-    inClave.classList.remove('mal');
     var planta = selPlanta.value === 'Otra' ? inOtra.value.trim() : selPlanta.value;
     if(!planta){ err.textContent = 'Elige la planta o centro de trabajo.'; return; }
     if(!inFecha.value){ err.textContent = 'Falta la fecha.'; return; }
@@ -9908,12 +9903,47 @@ document.addEventListener('DOMContentLoaded', function(){
      ver de un vistazo que perfiles han pasado por la (Re) Induccion. */
   var cargo = '';
 
+  /* ¿Hay que pedirle la contraseña a quien esta delante?
+     Solo a quien llego escaneando el QR de una jornada. Quien la abrio ya
+     estaba en la sala, y a quien presenta por su cuenta no le aplica ninguna
+     jornada. Se pregunta cada vez: el QR se reenvia, la contraseña no. */
+  var claveJornadaOK = false;
+  function faltaClave(){
+    return !claveJornadaOK && typeof SESION !== 'undefined' && !!SESION && !SESION.yoLaCree;
+  }
+
   function montarLlave(){
     var caja = document.getElementById('exLlave'), campos = document.getElementById('exCampos'),
         inp = document.getElementById('exLlaveCed'), btn = document.getElementById('exLlaveBtn'),
         err = document.getElementById('exLlaveErr'), verif = document.getElementById('exVerif'),
-        verifTxt = document.getElementById('exVerifTxt'), bCorregir = document.getElementById('exCorregir');
-    if(!caja || !USAR_LISTA_PERSONAL) return;      // apagada: el formulario de siempre
+        verifTxt = document.getElementById('exVerifTxt'), bCorregir = document.getElementById('exCorregir'),
+        inClave = document.getElementById('exClave'), campoClave = document.getElementById('exClaveCampo'),
+        campoCed = document.getElementById('exCedCampo'), nota = document.getElementById('exLlaveNota');
+
+    /* La contraseña NO puede depender de que la lista de personal este
+       encendida. Si algun dia se apaga —porque el Maestro no responda, por
+       ejemplo— este paso se seguiria enseñando, pero solo con la contraseña:
+       un candado que desaparece al cambiar una opcion no es un candado. */
+    if(!caja) return;
+    if(!USAR_LISTA_PERSONAL){
+      if(!faltaClave()) return;                    // ni lista ni jornada: formulario de siempre
+      caja.hidden = false; campos.hidden = true;
+      campoClave.hidden = false; campoCed.hidden = true;
+      if(nota) nota.textContent = 'Escribe la contraseña que te dicta quien dirige la jornada.';
+      function soloClave(){
+        if(String(inClave.value || '') !== CLAVE_JORNADA){
+          inClave.classList.add('mal');
+          err.textContent = 'Contraseña incorrecta. Pídesela a quien dirige la jornada.';
+          try{ inClave.select(); }catch(e){}
+          return;
+        }
+        claveJornadaOK = true;
+        caja.hidden = true; campos.hidden = false;
+      }
+      btn.addEventListener('click', soloClave);
+      inClave.addEventListener('keydown', function(e){ if(e.key === 'Enter'){ e.preventDefault(); soloClave(); } });
+      return;
+    }
 
     caja.hidden = false; campos.hidden = true;
 
@@ -9932,7 +9962,32 @@ document.addEventListener('DOMContentLoaded', function(){
 
     function abrirCampos(){ caja.hidden = true; campos.hidden = false; }
 
+    /* Se enseña o se esconde segun quien este delante. Se llama tambien desde
+       reiniciarLlave, porque entre una persona y la siguiente puede haberse
+       creado o cerrado una jornada. */
+    function pintarClave(){
+      var hace = faltaClave();
+      campoClave.hidden = !hace;
+      if(hace && nota) nota.textContent =
+        'Escribe la contraseña que te dicta quien dirige la jornada y tu cédula.';
+    }
+    pintarClave();
+    window.pintarClaveJornada = pintarClave;
+
     function pedir(){
+      /* La contraseña primero: si esta mal, no hay por que ir a buscar a nadie
+         a la lista ni gastar una consulta al Maestro. */
+      if(faltaClave()){
+        if(String(inClave.value || '') !== CLAVE_JORNADA){
+          inClave.classList.add('mal');
+          err.textContent = 'Contraseña incorrecta. Pídesela a quien dirige la jornada.';
+          try{ inClave.focus(); inClave.select(); }catch(e){}
+          return;
+        }
+        claveJornadaOK = true;
+        inClave.classList.remove('mal'); inClave.value = '';
+        campoClave.hidden = true; err.textContent = '';
+      }
       var ced = inp.value.replace(/\D/g, '');
       if(ced.length < 6 || ced.length > 12){
         inp.classList.add('mal'); err.textContent = 'La cédula debe tener entre 6 y 12 dígitos, sin puntos ni espacios.';
@@ -10041,6 +10096,11 @@ document.addEventListener('DOMContentLoaded', function(){
     inp.addEventListener('keydown', function(e){ if(e.key === 'Enter'){ e.preventDefault(); pedir(); } });
 
     window.reiniciarLlave = function(){
+      /* El siguiente de la fila vuelve a escribirla: el QR se reenvia y la
+         contraseña es lo unico que dice "estuve en la sala". */
+      claveJornadaOK = false;
+      if(inClave){ inClave.value = ''; inClave.classList.remove('mal'); }
+      pintarClave();
       inp.value = ''; err.textContent = ''; inp.classList.remove('mal');
       escondidos.forEach(function(c){ c.hidden = false; }); escondidos = [];
       cargo = '';
@@ -11035,15 +11095,10 @@ document.addEventListener('DOMContentLoaded', function(){
     </div>
 
     <div id="sesPaso2" hidden>
-      <p class="qrintro">Abrir una jornada reparte el examen a toda una sala, así que la
-        pide. Los datos quedan guardados con el resultado de cada asistente: después
-        puedes sacar de la hoja quién asistió a esta jornada.</p>
+      <p class="qrintro">Estos datos quedan guardados con el resultado de cada asistente:
+        después puedes sacar de la hoja quién asistió a esta jornada. La contraseña
+        no va aquí: se la pide el examen a cada quien, al escribir su cédula.</p>
       <div class="sescampos">
-        <div class="excampo">
-          <label for="sesClave">Contraseña de la jornada</label>
-          <input id="sesClave" type="password" autocomplete="off" placeholder="••••••••••"
-                 inputmode="text" maxlength="40">
-        </div>
         <div class="excampo">
           <label for="sesPlanta">Planta / centro de trabajo</label>
           <select id="sesPlanta"></select>
