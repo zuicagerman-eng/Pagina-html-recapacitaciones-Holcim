@@ -6467,7 +6467,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-15-k";
+var VERSION_CURSO = "2026-09-15-l";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas preguntas tiene el examen EN TOTAL. Las
@@ -9858,7 +9858,21 @@ document.addEventListener('DOMContentLoaded', function(){
        alarga la espera cuando responde rapido: es un tope, no una pausa. */
     var reloj = setTimeout(function(){ terminar({ ok:false, motivo:'tardo' }); }, 20000);
     window[fn] = function(r){ terminar(r || { ok:false, motivo:'vacio' }); };
-    et.onerror = function(){ terminar({ ok:false, motivo:'sin-red' }); };
+    /* "onerror" junta dos causas que no tienen nada que ver:
+         a) la peticion NO salio del equipo — antivirus, extension, red;
+         b) SI salio, pero el script contesto una pagina de error, y el
+            navegador la rechaza porque Google la manda con nosniff y no es
+            JavaScript. Desde una etiqueta <script> las dos se ven igual.
+       Se separan con un fetch: si la promesa se RESUELVE, la peticion llego a
+       Google y el problema esta en el script; si se rechaza, esta en el camino.
+       Con no-cors la respuesta no se puede leer, pero para esto no hace falta:
+       basta con saber si hubo respuesta o no. */
+    et.onerror = function(){
+      if(!window.fetch){ terminar({ ok:false, motivo:'sin-red' }); return; }
+      fetch(et.src, { mode:'no-cors', cache:'no-store' })
+        .then(function(){ terminar({ ok:false, motivo:'script-con-error' }); })
+        .catch(function(){ terminar({ ok:false, motivo:'sin-red' }); });
+    };
     /* Si la implementacion publicada es vieja y no conoce ?cedula, contesta la
        pagina HTML de siempre. Como <script> eso revienta al interpretarse, y un
        error de sintaxis NO dispara 'error': dispara 'load'. Sin esto habria
@@ -10017,9 +10031,11 @@ document.addEventListener('DOMContentLoaded', function(){
              el permiso o la red obliga a adivinar. */
           var porque = {
             'sin-url'             : 'no hay dirección del script configurada',
-            /* Ya no puede ser un error del script: doGet los contesta por
-               JSONP. Lo que queda es que la peticion no salio del equipo. */
-            'sin-red'             : 'el navegador no pudo llegar al script: puede estar bloqueado por un antivirus, una extension o la red de la empresa',
+            /* Comprobado con un fetch: la peticion ni siquiera llego a Google. */
+            'sin-red'             : 'la petición no salió de este equipo: antivirus, extensión del navegador o la red de la empresa',
+            /* Comprobado con un fetch: Google SI respondio, pero con una pagina
+               de error en vez de datos. La causa esta en el script. */
+            'script-con-error'    : 'Google respondió, pero el script devolvió una página de error. Mira Apps Script → Ejecuciones, o abre la URL del script en una pestaña',
             'error-script'        : 'el script falló al consultar la lista',
             /* Las dos causas que dan este sintoma: o la implementacion no
                conoce ?cedula porque no se publico version nueva, o pide iniciar
