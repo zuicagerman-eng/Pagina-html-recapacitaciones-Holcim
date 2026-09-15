@@ -410,6 +410,16 @@
   .sesbanner b{display:block;color:#bfe87a;font-size:12px;font-weight:800;
     letter-spacing:1.2px;text-transform:uppercase;margin-bottom:3px}
   .sesbanner span{color:#e7f3d6;font-size:13.5px;font-weight:700}
+  /* La modalidad, siempre a la vista, con su boton para volver a elegir.
+     Discreta a proposito: es un seguro, no un paso del formulario. */
+  .exmodo{display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+    margin:0 0 16px;font-size:13px;color:#9fb6cd}
+  .exmodo b{color:#e8f1f8;font-weight:800}
+  .exmodo button{background:transparent;border:1px solid rgba(151,209,59,.5);
+    color:#bfe87a;border-radius:999px;padding:5px 13px;font:inherit;font-weight:700;
+    cursor:pointer;line-height:1.2}
+  .exmodo button:hover{background:rgba(151,209,59,.14)}
+  .exmodo button:focus-visible{outline:2px solid #97d13b;outline-offset:2px}
   /* Datos traidos de la lista: se ven confirmados, no editables por descuido,
      pero con la puerta abierta a corregirlos —una lista siempre tiene erratas
      y nadie deberia quedarse sin certificado por una tilde ajena—. */
@@ -6160,7 +6170,7 @@
            planta conviven: quien trae celular lo escanea, quien no, lo hace en
            papel. -->
       <div id="exJornada" hidden>
-        <div class="eyebrow rv up">Jornada grupal</div>
+        <div class="eyebrow rv up">Yo aprendo</div>
         <h2 class="rv up" style="--d:1">Examen final &middot; HSE-001</h2>
         <div class="jorcabeza rv up" style="--d:2">
           <span id="jorPlanta">—</span>
@@ -6213,8 +6223,17 @@
         <h2 class="rv up" style="--d:1">Examen final &middot; HSE-001</h2>
         <p class="lead rv up" style="--d:2" id="exIntro">Antes de comenzar, identifícate. Las preguntas se toman al azar y cambian en cada intento.</p>
         <div class="sesbanner rv up" id="exSesion" style="--d:2" hidden>
-          <b>Sesión grupal</b><span id="exSesionTxt"></span>
+          <b>Yo aprendo</b><span id="exSesionTxt"></span>
         </div>
+        <!-- El boton de emergencia. La pregunta de modalidad sale sola al llegar
+             aqui, pero se cierra con Escape o con un clic fuera, y entonces no
+             habia forma de volver a abrirla sin recargar la pagina: se perdia el
+             avance de la presentacion. Esto la devuelve, y de paso deja a la
+             vista en que modalidad se esta. -->
+        <p class="exmodo rv up" id="exModo" style="--d:2">
+          <span>Modalidad: <b id="exModoTxt">Individual</b></span>
+          <button type="button" id="exModoBtn">Cambiar</button>
+        </p>
         <div class="card rv up" style="--d:3;margin-top:18px">
           <div id="exLlave" hidden>
             <div class="excampo">
@@ -6416,7 +6435,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-15-f";
+var VERSION_CURSO = "2026-09-15-g";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas preguntas tiene el examen EN TOTAL. Las
@@ -8378,7 +8397,7 @@ function qrDibujar(canvas, texto, lado){
 
    Individual es lo de siempre: una persona, este equipo, su examen.
 
-   Grupal es para la jornada con publico: se crea UNA sesion —planta, fecha y
+   "Yo aprendo" es para la jornada con publico: se crea UNA sesion —planta, fecha y
    hora— con un codigo irrepetible, y su QR. Cada asistente lo escanea, pone
    SUS datos en su propio telefono y presenta el examen; el codigo viaja en el
    enlace y termina guardado junto a su resultado. Asi la hoja no solo dice
@@ -8556,6 +8575,29 @@ function montarSesion(){
     if(c){ c.value = ''; c.classList.remove('mal'); }
   }
   window.__abrirModalidad = abrir;
+
+  /* ── El boton de emergencia ──
+     La pregunta sale sola, pero se cierra con Escape, con un clic fuera o con
+     "Cerrar", y hasta ahora eso no tenia vuelta atras: para recuperarla habia
+     que recargar, y recargar cuesta toda la presentacion recorrida. Esta linea
+     la devuelve.
+
+     Al asistente que llega escaneando el QR NO se le enseña: su modalidad ya la
+     decidio quien abrio la jornada, y dejarsela cambiar solo serviria para que
+     su resultado se perdiera de la sesion. */
+  function pintarModalidad(){
+    var linea = document.getElementById('exModo'), txt = document.getElementById('exModoTxt');
+    if(!linea || !txt) return;
+    var deOtro = !!(SESION && !SESION.yoLaCree);
+    linea.hidden = deOtro;
+    txt.textContent = SESION
+      ? 'Yo aprendo' + (SESION.id ? ' · código ' + SESION.id : '')
+      : 'Individual';
+  }
+  window.pintarModalidad = pintarModalidad;
+  var bModo = document.getElementById('exModoBtn');
+  if(bModo) bModo.addEventListener('click', function(){ abrir(); });
+  pintarModalidad();
   /* Salir sin elegir es quedarse como se estaba: individual, que es lo que el
      curso hacia antes de existir esta pregunta. Un modal sin salida por un
      clic de mas seria peor que la pregunta misma. */
@@ -8565,7 +8607,7 @@ function montarSesion(){
   panel.addEventListener('click', function(e){ if(e.target === panel) cerrar(); });
 
   bInd.addEventListener('click', function(){
-    SESION = null; yaPreguntoModalidad = true; cerrar();
+    SESION = null; yaPreguntoModalidad = true; cerrar(); pintarModalidad();
   });
   bGru.addEventListener('click', function(){
     p1.hidden = true; p2.hidden = false;
@@ -8638,6 +8680,7 @@ function montarSesion(){
    del orden del script, y de eso no puede depender que la planta salga puesta. */
 function pintarSesionEnFormulario(){
   var cartel = document.getElementById('exSesion');
+  if(window.pintarModalidad) window.pintarModalidad();
   if(!SESION || !cartel) return;
   cartel.hidden = false;
   var txt = document.getElementById('exSesionTxt');
@@ -9381,8 +9424,11 @@ function dibujarDiploma(datos){
       if(datos.modalidad){
         cx.font = '700 17px ' + D.gorda;
         cx.fillStyle = D.azul;
-        var pie = datos.modalidad === 'Grupal'
-          ? 'Presentado en jornada grupal' + (datos.sesion ? ' · código ' + datos.sesion : '')
+        /* Por descarte y no por igualdad: asi el pie sigue bien si un dia
+           cambia el nombre de la modalidad, y los certificados que se
+           reimpriman de filas viejas —que dicen "Grupal"— tampoco se rompen. */
+        var pie = datos.modalidad !== 'Individual'
+          ? 'Presentado en jornada Yo aprendo' + (datos.sesion ? ' · código ' + datos.sesion : '')
           : 'Presentado de forma individual';
         /* Abajo del todo y a la izquierda: lejos de la columna derecha, que con
            cargo baja hasta los 740. */
@@ -10405,6 +10451,9 @@ document.addEventListener('DOMContentLoaded', function(){
   document.getElementById('jorYo').addEventListener('click', function(){
     jornadaApartada = true;
     fase('datos');
+    /* Quien dirige la jornada y ademas la presenta sigue dentro de ella: la
+       linea tiene que decirlo, con su codigo, no "Individual". */
+    if(window.pintarModalidad) window.pintarModalidad();
     if(window.reiniciarLlave) window.reiniciarLlave();
     try{ elDatos.scrollIntoView({ block:'start' }); }catch(e){}
   });
@@ -10544,7 +10593,7 @@ document.addEventListener('DOMContentLoaded', function(){
         /* El cargo solo si lo trajo la lista de personal: no se le pregunta a
            nadie, asi que o viene del maestro o el certificado no lo lleva. */
         cargo: cargo || '',
-        modalidad: SESION ? 'Grupal' : 'Individual',
+        modalidad: SESION ? 'Yo aprendo' : 'Individual',
         sesion: SESION ? SESION.id : '',
         capacitacion: NOMBRE_CAPACITACION, fecha: fechaLarga(new Date()),
         resultado: 'APROBADO', puntaje: pct + '%',
@@ -10588,7 +10637,7 @@ document.addEventListener('DOMContentLoaded', function(){
          esta columna, viendo un resultado no hay forma de saberlo. */
       verificado:   verificado,
       cargo:        cargo,
-      modalidad:    SESION ? 'Grupal' : 'Individual',
+      modalidad:    SESION ? 'Yo aprendo' : 'Individual',
       sesion:       SESION ? SESION.id : '',
       sesionPlanta: SESION ? SESION.planta : '',
       sesionFecha:  SESION ? fechaCorta(SESION.fecha) : '',
@@ -10659,7 +10708,7 @@ document.addEventListener('DOMContentLoaded', function(){
          aparte de Nobsa y Tunja veria dos personas distintas en el mismo
          examen y no sabria a que fila pertenece el diploma. */
       cargo: cargo || '',
-      modalidad: SESION ? 'Grupal' : 'Individual',
+      modalidad: SESION ? 'Yo aprendo' : 'Individual',
       sesion: SESION ? SESION.id : '',
       certificado: b64
     };
@@ -10938,7 +10987,7 @@ document.addEventListener('DOMContentLoaded', function(){
           <small>Una sola persona presenta el examen en este equipo, como hasta ahora.</small>
         </button>
         <button class="sesopt" id="sesGrupal" type="button">
-          <b>Grupal</b>
+          <b>Yo aprendo</b>
           <small>Varias personas a la vez. Se crea una sesión con su QR: cada quien lo
             escanea, pone sus datos y presenta el examen desde su celular.</small>
         </button>
