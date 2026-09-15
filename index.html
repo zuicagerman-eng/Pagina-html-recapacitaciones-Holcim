@@ -240,22 +240,10 @@
   .exerr{font-size:12.5px;color:#ff9c95;margin-top:6px;min-height:16px}
   /* Pista del modo administrador: la respuesta correcta se señala, no se
      marca. Fuera del modo administrador no existe visualmente. */
-  /* El de compartir va en verde: el azul es "ayuda" y el naranja "algo va
-     mal", y este no es ninguna de las dos cosas. */
-  /* Ni azul (ayuda), ni naranja (algo va mal), ni verde (QR): el tema no es
-     ninguna de las tres cosas, asi que se queda en gris de la propia barra. */
-  .fab.fab-tema{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22)}
-  .fab.fab-tema:hover{background:rgba(255,255,255,.2)}
-  .fab.fab-qr{background:var(--green);border-color:var(--green)}
-  /* .fab pone display:flex, que le gana al atributo hidden: sin esto el boton
-     del QR se veria igual antes de terminar la presentacion. */
-  .fab[hidden]{display:none}
-  .fab.fab-qr svg{stroke:#04121f}
-  .fab.fab-qr:hover{background:#a8e04a;border-color:#a8e04a}
   /* ===== Compartir / QR ===== */
-  #qrpanel,#sespanel{position:fixed;inset:0;z-index:120;background:rgba(3,12,22,.72);
+  #sespanel{position:fixed;inset:0;z-index:120;background:rgba(3,12,22,.72);
     display:none;place-items:center;padding:20px;backdrop-filter:blur(3px)}
-  #qrpanel.show,#sespanel.show{display:grid}
+  #sespanel.show{display:grid}
   /* La de sesion va por encima: se contesta antes de repartir el QR. */
   #sespanel{z-index:130}
   .qrbox{background:#0d2036;border:1px solid rgba(255,255,255,.14);border-radius:16px;
@@ -297,6 +285,125 @@
   @media(max-width:560px){.sesfila{grid-template-columns:1fr}}
   .sesaviso{margin:0 20px 16px;background:rgba(27,180,228,.12);border:1px solid rgba(27,180,228,.35);
     border-radius:10px;padding:11px 13px;font-size:13px;line-height:1.45;color:#cfe6f5}
+  /* ===== EXAMEN EN PAPEL =====
+     Todo esto solo existe al imprimir. En pantalla el contenedor esta oculto;
+     al imprimir se esconde el curso entero y se saca solo el papel. */
+  #impresion{display:none}
+  /* Solo al imprimir: apagar el curso y sacar el papel. El resto de estilos
+     del papel viven fuera de @media print a proposito, para poder medir cuantas
+     hojas van a salir ANTES de mandar a imprimir; como #impresion esta oculto
+     en pantalla, no estorban a nadie. */
+  @media print{
+    @page{ size: letter; margin: 14mm 13mm; }
+    html,body{background:#fff !important;overflow:visible !important;height:auto !important}
+    body>*{display:none !important}
+    body>#impresion{display:block !important}
+  }
+  #impresion{color:#000;font-family:"Segoe UI",system-ui,Arial,sans-serif;font-size:10.5pt}
+  /* Cada examen empieza en hoja nueva; el ultimo no arrastra una en blanco. */
+  .pgexamen{break-after:page;page-break-after:always}
+  .pgexamen:last-child{break-after:auto;page-break-after:auto}
+  .pgcab{display:flex;align-items:flex-start;gap:12px;border-bottom:2.5pt solid #0b2545;
+    padding-bottom:7pt;margin-bottom:9pt}
+  .pgcab .pgtit{flex:1}
+  .pgcab h1{font-size:15pt;color:#0b2545;line-height:1.15;margin-bottom:2pt}
+  .pgcab .pgsub{font-size:9pt;color:#444}
+  .pgcab .pgfolio{text-align:right;font-size:9pt;color:#444;white-space:nowrap}
+  .pgcab .pgfolio b{display:block;font-size:13pt;color:#0b2545;letter-spacing:1.5pt}
+  /* Renglones para rellenar a mano: sin esto no hay forma de saber de quien
+     es cada hoja cuando vuelven treinta juntas. */
+  .pgdatos{display:grid;grid-template-columns:1fr 1fr;gap:6pt 16pt;margin-bottom:9pt}
+  .pgdatos div{font-size:9.5pt;border-bottom:.8pt solid #999;padding-bottom:9pt}
+  .pgdatos span{color:#555}
+  .pgreglas{background:#eef3f9;border-left:3pt solid #1877c4;padding:6pt 9pt;
+    font-size:9pt;line-height:1.4;margin-bottom:10pt}
+  .pgq{margin-bottom:9pt;break-inside:avoid;page-break-inside:avoid}
+  .pgq .pgenun{font-weight:700;font-size:10.5pt;line-height:1.35;margin-bottom:3pt}
+  .pgq .pgenun .pgn{color:#1877c4}
+  .pgq .pgaviso{font-size:8.5pt;color:#b23;font-weight:700;margin-bottom:3pt}
+  .pgops{list-style:none;margin-left:6pt}
+  .pgops li{display:flex;gap:7pt;align-items:flex-start;font-size:10pt;line-height:1.35;
+    margin-bottom:2.5pt}
+  .pgcaja{flex:none;width:11pt;height:11pt;border:1pt solid #333;border-radius:2pt;margin-top:1pt}
+  .pgletra{flex:none;font-weight:700;width:12pt}
+  .pgtabla{width:100%;border-collapse:collapse;font-size:9.5pt}
+  .pgtabla th,.pgtabla td{border:.8pt solid #999;padding:3.5pt 5pt;text-align:left}
+  .pgtabla th{background:#eef3f9;font-size:9pt}
+  .pgtabla td.pgmarca{text-align:center;width:52pt}
+  .pgpie{margin-top:10pt;border-top:.8pt solid #999;padding-top:5pt;
+    font-size:8.5pt;color:#555;display:flex;justify-content:space-between}
+  /* Hoja de respuestas: va al final y se avisa por todos lados, porque
+     repartirla por error con los examenes arruina la jornada entera. */
+  .pgclave{background:#fff4f3;border:1.5pt solid #c02a21;padding:8pt 10pt;margin-bottom:10pt}
+  .pgclave h2{color:#c02a21;font-size:13pt;margin-bottom:3pt}
+  .pgclave p{font-size:9pt;color:#7a1a14}
+  .pgclaveg{display:grid;grid-template-columns:repeat(2,1fr);gap:4pt 14pt;font-size:9pt}
+  .pgclaveg div{border-bottom:.5pt solid #ddd;padding:2pt 0;break-inside:avoid}
+
+  /* Compacto: 30 preguntas ocupan seis hojas por persona, y en una jornada de
+     treinta eso son ciento ochenta. Apretando la letra y poniendo las
+     opciones cortas en dos columnas baja a la mitad sin volverse ilegible. */
+  #impresion.apretado{font-size:9pt}
+  #impresion.apretado .pgcab{padding-bottom:5pt;margin-bottom:6pt}
+  #impresion.apretado .pgcab h1{font-size:13pt}
+  #impresion.apretado .pgdatos{gap:4pt 14pt;margin-bottom:6pt}
+  #impresion.apretado .pgdatos div{padding-bottom:7pt;font-size:8.5pt}
+  #impresion.apretado .pgreglas{padding:4pt 7pt;font-size:8pt;margin-bottom:7pt}
+  #impresion.apretado .pgq{margin-bottom:6pt}
+  #impresion.apretado .pgq .pgenun{font-size:9.2pt;line-height:1.25}
+  #impresion.apretado .pgops li{font-size:8.8pt;line-height:1.22;margin-bottom:1.2pt}
+  #impresion.apretado .pgcaja{width:9pt;height:9pt}
+  /* Dos columnas solo cuando las opciones son cortas: partir un parrafo
+     largo en dos columnas estrechas se lee peor que la hoja de mas. */
+  #impresion.apretado .pgops.pgdoble{column-count:2;column-gap:14pt}
+  #impresion.apretado .pgops.pgdoble li{break-inside:avoid}
+  #impresion.apretado .pgtabla{font-size:8.5pt}
+  #impresion.apretado .pgtabla th,#impresion.apretado .pgtabla td{padding:2.5pt 4pt}
+  
+
+  /* ===== Pantalla de jornada grupal ===== */
+  .jorcabeza{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin-top:10px;
+    font-size:14px;font-weight:700;color:#bfe87a}
+  .jorcabeza>span{background:rgba(151,209,59,.13);border:1px solid rgba(151,209,59,.4);
+    border-radius:999px;padding:5px 13px}
+  .jorcabeza .jorcod{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.2);color:#eaf1fb}
+  .jorcabeza .jorcod b{letter-spacing:2px}
+
+  /* Dos columnas de igual peso: ninguna de las dos formas de presentar es la
+     de repuesto. En movil se apilan, que es como lo mira quien va pasando. */
+  .jorpartes{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+  @media(max-width:860px){.jorpartes{grid-template-columns:1fr}}
+  .jorparte{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);
+    border-radius:15px;padding:16px 18px;display:flex;flex-direction:column}
+  .jorparte h3{font-size:16.5px;color:#eaf1fb;display:flex;align-items:center;gap:9px;margin-bottom:7px}
+  .jornum{flex:none;width:25px;height:25px;border-radius:50%;background:var(--grad);color:#04121f;
+    font-size:13.5px;font-weight:800;display:grid;place-items:center}
+  .jorparte p{font-size:13.2px;line-height:1.5;color:#c3d4e6;margin-bottom:12px}
+  #jorQR{align-self:center;background:#fff;border-radius:12px;
+    width:min(330px,100%);height:auto;aspect-ratio:1;image-rendering:pixelated}
+  .jorrot{display:block;font-size:11px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;
+    color:#9fb6cd;margin:13px 0 5px}
+  #jorEnlace{width:100%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);
+    border-radius:9px;padding:9px 11px;color:#eaf1fb;font:inherit;font-size:12.5px}
+  .jorbtns{display:flex;gap:8px;margin-top:11px;flex-wrap:wrap}
+  .jorbtns button{background:var(--cyan);color:#04121f;border:none;border-radius:9px;
+    padding:10px 16px;font:inherit;font-weight:800;cursor:pointer}
+  .jorbtns button.sec{background:rgba(255,255,255,.12);color:#dce8f5;
+    border:1px solid rgba(255,255,255,.22)}
+  .jorbtns button:hover{filter:brightness(1.08)}
+  .jorbtns button:disabled{opacity:.55;cursor:default}
+  .jorcampo{display:flex;align-items:center;gap:11px;margin-bottom:11px}
+  .jorcampo label{font-size:13.2px;font-weight:700;color:#c3d4e6}
+  .jorcampo input{width:86px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);
+    border-radius:9px;padding:9px 11px;color:#eaf1fb;font:inherit;font-size:14px;text-align:center}
+  .jorcheck{display:flex;gap:9px;align-items:flex-start;font-size:12.8px;line-height:1.4;
+    color:#c3d4e6;cursor:pointer}
+  .jorcheck input{margin-top:2px;accent-color:var(--cyan);width:16px;height:16px;flex:none}
+  .jornota{font-size:12.5px;color:#9fb6cd;margin-top:10px;min-height:16px}
+  .jorpie{margin-top:16px;text-align:center}
+  .jorpie button{background:none;border:0;padding:0;font:inherit;font-size:13px;font-weight:700;
+    color:#74c4ec;cursor:pointer;text-decoration:underline}
+
   /* Cartel de la sesion en la pantalla de datos de quien escanea el QR. */
   .sesbanner{background:rgba(151,209,59,.13);border:1px solid rgba(151,209,59,.4);
     border-radius:11px;padding:11px 14px;margin-bottom:16px}
@@ -331,11 +438,9 @@
   /* En sesion grupal el QR no se mira de cerca: se proyecta para una sala que
      lo escanea desde su sitio. A 220 px la ultima fila no lo alcanza, asi que
      la ventana se ensancha y el codigo ocupa lo que la pantalla permita. */
-  #qrpanel.sesion .qrbox{width:min(860px,100%)}
-  #qrpanel.sesion #qrlienzo{width:min(380px,52vh);height:min(380px,52vh)}
   @media(max-width:620px){
     .qrsalida{flex-direction:column;align-items:stretch}
-    #qrpanel.sesion #qrlienzo,#qrlienzo{width:min(300px,78vw);height:min(300px,78vw);align-self:center}
+    #qrlienzo{width:min(300px,78vw);height:min(300px,78vw);align-self:center}
   }
   .qrbtns{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
   .qrbtns button{background:var(--cyan);color:#04121f;border:none;border-radius:9px;
@@ -3816,10 +3921,6 @@
       <svg viewBox="0 0 24 24" id="temaIcono"></svg>
       <span class="fab-tip" id="temaTip">Tema</span>
     </button>
-    <button class="fab fab-qr" id="shareBtn" hidden title="QR y enlace para que los asistentes hagan el examen" aria-label="QR del examen">
-      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM19 14h2M14 19h3M19 19h2"/></svg>
-      <span class="fab-tip">QR</span>
-    </button>
   </div>
   <div class="step"><span class="stepw">Paso </span><span id="cur">1</span> / <span id="tot">15</span></div>
   <div class="hudbar"><div id="hudfill"></div></div>
@@ -6075,6 +6176,59 @@
 </section>
   <section class="slide dark nogate encogesiempre" data-mod="EX">
     <div class="wrap exwrap">
+      <!-- Pantalla de jornada grupal: sustituye al formulario en la lamina del
+           examen. Dos mitades porque hay dos formas de presentarlo, y en una
+           planta conviven: quien trae celular lo escanea, quien no, lo hace en
+           papel. -->
+      <div id="exJornada" hidden>
+        <div class="eyebrow rv up">Jornada grupal</div>
+        <h2 class="rv up" style="--d:1">Examen final &middot; HSE-001</h2>
+        <div class="jorcabeza rv up" style="--d:2">
+          <span id="jorPlanta">—</span>
+          <span id="jorCuando">—</span>
+          <span class="jorcod">Código <b id="jorCodigo">—</b></span>
+        </div>
+
+        <div class="jorpartes rv up" style="--d:3">
+          <section class="jorparte">
+            <h3><span class="jornum">1</span> En el celular</h3>
+            <p>Que cada asistente apunte la cámara. Le pedirá sus datos y presentará
+              el examen desde su teléfono; el resultado queda registrado solo.</p>
+            <canvas id="jorQR" aria-label="Código QR del examen de esta jornada"></canvas>
+            <label class="jorrot" for="jorEnlace">O con este enlace</label>
+            <input id="jorEnlace" type="text" readonly>
+            <div class="jorbtns">
+              <button type="button" id="jorCopiar">Copiar enlace</button>
+              <button type="button" id="jorBajar" class="sec">Descargar QR</button>
+            </div>
+          </section>
+
+          <section class="jorparte">
+            <h3><span class="jornum">2</span> En papel</h3>
+            <p>Para quien no trae teléfono. Se imprime en tamaño carta y
+              <b>cada copia sale distinta</b>: otras preguntas del banco y en otro orden,
+              así nadie copia del de al lado.</p>
+            <div class="jorcampo">
+              <label for="jorCopias">¿Cuántos exámenes?</label>
+              <input id="jorCopias" type="number" min="1" max="60" value="10" inputmode="numeric">
+            </div>
+            <label class="jorcheck"><input type="checkbox" id="jorCompacto" checked>
+              <span>Modo compacto: letra más apretada y opciones en dos columnas.
+                Gasta casi la mitad de hojas.</span></label>
+            <label class="jorcheck" style="margin-top:8px"><input type="checkbox" id="jorClave" checked>
+              <span>Añadir al final la hoja de respuestas para calificar</span></label>
+            <div class="jorbtns">
+              <button type="button" id="jorImprimir">Preparar e imprimir</button>
+            </div>
+            <p class="jornota" id="jorNota"></p>
+          </section>
+        </div>
+
+        <p class="jorpie rv up" style="--d:4">
+          <button type="button" id="jorYo">También quiero presentarlo yo en este equipo</button>
+        </p>
+      </div>
+
       <div id="exDatos">
         <div class="eyebrow rv up">Evaluación final</div>
         <h2 class="rv up" style="--d:1">Examen final &middot; HSE-001</h2>
@@ -6280,7 +6434,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-15-a";
+var VERSION_CURSO = "2026-09-15-b";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas preguntas tiene el examen EN TOTAL. Las
@@ -6858,10 +7012,11 @@ function chrome(){
   refreshNext();
   pipEls.forEach(function(p,k){ p.className = ''; if(k===idx) p.classList.add('on'); if(k>maxUnlocked) p.classList.add('lock'); });
   pipFlags.forEach(function(f){ f.classList.toggle('lock', (+f.getAttribute('data-i')) > maxUnlocked); });
-  /* Fuera de la lamina del examen el boton estorba: el QR es para el final. */
-  var bQR = document.getElementById('shareBtn');
   var enExamen = vioPresentacion && idx === iExamen();
-  if(bQR) bQR.hidden = !enExamen;
+  /* Al volver a la lamina, quien dirige la jornada recupera su pantalla de
+     reparto en vez del formulario. */
+  if(enExamen && typeof SESION !== 'undefined' && SESION && SESION.yoLaCree &&
+     window.pintarJornada && !window.__enExamenYa) window.pintarJornada();
   /* Y al pisar el examen por primera vez, la pregunta: individual o grupal.
      Se espera un instante a que la lamina termine de entrar, para que el popup
      no aparezca encima de una transicion a medias. */
@@ -8433,14 +8588,18 @@ function montarSesion(){
     if(!inFecha.value){ err.textContent = 'Falta la fecha.'; return; }
     if(!inHora.value){ err.textContent = 'Falta la hora.'; return; }
     err.textContent = '';
-    SESION = { id: codigoSesion(), planta: planta, fecha: inFecha.value, hora: inHora.value };
+    /* "yoLaCree" separa al que dirige del que escanea. Los dos acaban con la
+       misma SESION, pero uno tiene que ver el reparto —QR y papel— y el otro
+       su formulario de datos. Sin esta marca, al asistente le saldria la
+       pantalla de repartir en vez del examen. */
+    SESION = { id: codigoSesion(), planta: planta, fecha: inFecha.value,
+               hora: inHora.value, yoLaCree: true };
     yaPreguntoModalidad = true;
     anotarSesion(SESION);
     cerrar();
-    /* Se abre el QR en el acto: crear la sesion y no ver el codigo dejaria la
-       jornada a medias, con la gente esperando delante. */
-    var b = document.getElementById('shareBtn');
-    if(b) b.click();
+    /* La lamina del examen se convierte en la pantalla de la jornada: el QR a
+       un lado y el examen en papel al otro. */
+    if(window.pintarJornada) window.pintarJornada();
   });
 
   /* Queda constancia de la jornada aunque nadie llegue a terminar el examen:
@@ -8495,143 +8654,6 @@ function pintarSesionEnFormulario(){
 if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', montarSesion);
 else montarSesion();
 
-/* El panel vive al final del <body>, despues de este script, asi que montarlo
-   de inmediato no encontraria nada: se espera a que el documento este listo. */
-function montarCompartir(){
-  var panel = document.getElementById('qrpanel');
-  if(!panel) return;
-  var abrir  = document.getElementById('shareBtn'),
-      abrir2 = document.getElementById('admqr'),
-      cerrar = document.getElementById('qrcerrar'),
-      lienzo = document.getElementById('qrlienzo'),
-      campo  = document.getElementById('qrenlace'),
-      nota   = document.getElementById('qrnota'),
-      bCopiar= document.getElementById('qrcopiar'),
-      bBajar = document.getElementById('qrbajar');
-
-  function base(){
-    /* Sin parametros ni ancla: si se comparte estando en ?ir=examen, el enlace
-       del "curso completo" tiene que salir limpio. */
-    return location.origin + location.pathname;
-  }
-  /* Solo el examen: el curso completo ya se reparte por su enlace de siempre,
-     y tener dos opciones aqui solo obligaba a elegir cada vez. */
-  function destino(){
-    var u = base() + '?ir=examen';
-    /* En sesion grupal el enlace ademas dice DE QUE jornada es. Sin esto el QR
-       llevaria al examen pero nadie sabria despues quien estuvo en cual. */
-    if(SESION) u += '&ses=' + encodeURIComponent(SESION.id) +
-                    '&sf=' + encodeURIComponent(SESION.fecha || '') +
-                    '&sh=' + encodeURIComponent(SESION.hora || '') +
-                    '&sp=' + encodeURIComponent(SESION.planta || '');
-    return u;
-  }
-  function pintar(){
-    var url = destino();
-    campo.value = url;
-    panel.classList.toggle('sesion', !!SESION);
-    try {
-      /* Se dibuja a la medida real del lienzo en pantalla —no a 220 fijos— o el
-         QR grande saldria escalado y borroso justo cuando mas falta hace. */
-      var lado = Math.max(200, Math.round(lienzo.getBoundingClientRect().width || 220));
-      var r = qrDibujar(lienzo, url, lado);
-      nota.textContent = 'Apunta con la cámara del móvil. Código versión ' + r.version +
-        ', corrección ' + r.nivel + '.';
-    } catch(e){
-      /* Que falle el QR no puede dejar sin enlace: el enlace es lo que de
-         verdad hace falta, el QR es la comodidad. */
-      nota.textContent = 'No se pudo generar el QR (' + e.message + '). El enlace de arriba sirve igual.';
-    }
-  }
-
-  function mostrar(){
-    var h3 = panel.querySelector('.qrhead h3'), intro = panel.querySelector('.qrintro');
-    if(SESION){
-      h3.textContent = 'QR de la sesión · ' + SESION.id;
-      intro.innerHTML = 'Sesión grupal de <b>' + textoSesion(SESION) + '</b>.<br>' +
-        'Proyecta este QR: cada asistente lo escanea, pone sus datos y presenta el examen ' +
-        'desde su celular. Todos los resultados quedan marcados con este código.';
-    }
-    if(cajaHacer) cajaHacer.hidden = !!SESION;   // ya hay sesion: nada que convertir
-    panel.classList.add('show'); pintar();
-    setTimeout(function(){ campo.focus(); campo.select(); }, 40);
-  }
-  function ocultar(){ panel.classList.remove('show'); }
-
-  if(abrir) abrir.addEventListener('click', mostrar);
-  if(abrir2) abrir2.addEventListener('click', mostrar);   // el del panel de administrador sigue valiendo
-  if(cerrar) cerrar.addEventListener('click', ocultar);
-  panel.addEventListener('click', function(e){ if(e.target === panel) ocultar(); });
-  document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && panel.classList.contains('show')) ocultar(); });
-
-  bCopiar.addEventListener('click', function(){
-    campo.select();
-    var ok = false;
-    try { ok = document.execCommand('copy'); } catch(e){}
-    if(!ok && navigator.clipboard){ navigator.clipboard.writeText(campo.value); ok = true; }
-    bCopiar.textContent = ok ? '✓ Copiado' : 'Copia a mano (Ctrl+C)';
-    setTimeout(function(){ bCopiar.textContent = 'Copiar enlace'; }, 1800);
-  });
-
-  /* Sin esto, quien eligio "individual" —o quien entro en modo administrador y
-     nunca vio la pregunta— se quedaba sin manera de abrir una jornada grupal. */
-  var bHacer = document.getElementById('qrHacerSesion'),
-      cajaHacer = document.getElementById('qrHacerSesionCaja');
-  if(bHacer) bHacer.addEventListener('click', function(){
-    ocultar();
-    if(window.__abrirModalidad) window.__abrirModalidad('grupal');
-  });
-
-  bBajar.addEventListener('click', function(){
-    /* Se dibuja mas grande solo para el archivo: el de pantalla se ve bien a
-       220 px, pero impreso en una cartelera hace falta resolucion. */
-    var grande = document.createElement('canvas');
-    try { qrDibujar(grande, destino(), 900); } catch(e){ return; }
-    var a = document.createElement('a');
-    a.href = grande.toDataURL('image/png');
-    a.download = SESION ? ('QR HSE-001 sesion ' + SESION.id + '.png') : 'QR HSE-001 examen.png';
-    document.body.appendChild(a); a.click(); a.remove();
-  });
-
-  /* Queda anotado en la hoja de Holcim, no en este navegador: un registro que
-     solo existe en el equipo de quien lo escribio no sirve para seguimiento.
-     Va por la misma direccion que los examenes, con tipo "Envios", y el script
-     crea esa pestaña solo la primera vez. */
-  var bReg = document.getElementById('qrregistrar'), campoPara = document.getElementById('qrpara');
-  if(bReg) bReg.addEventListener('click', function(){
-    var para = campoPara.value.trim();
-    if(!para){ campoPara.focus(); bReg.textContent = 'Escribe a quién primero'; 
-               setTimeout(function(){ bReg.textContent = 'Anotar en la hoja'; }, 1800); return; }
-    var datos = {
-      tipo: 'Envios',
-      fecha: new Date().toLocaleString(),
-      Para: para,
-      Destino: 'Directo al examen',
-      Enlace: destino(),
-      Curso: (typeof NOMBRE_CAPACITACION !== 'undefined') ? NOMBRE_CAPACITACION : '',
-      Navegador: navigator.userAgent
-    };
-    bReg.textContent = 'Anotando…'; bReg.disabled = true;
-    var listo = function(ok){
-      bReg.disabled = false;
-      bReg.textContent = ok ? '✓ Anotado' : 'No se pudo anotar';
-      if(ok) campoPara.value = '';
-      setTimeout(function(){ bReg.textContent = 'Anotar en la hoja'; }, 2200);
-    };
-    /* Con no-cors no se puede leer la respuesta, asi que "enviado" es lo unico
-       que se puede afirmar. Si el script fallara, quedaria en su registro. */
-    try {
-      if(REPORTE_URL && REPORTE_URL.indexOf('http') === 0){
-        fetch(REPORTE_URL, { method:'POST', mode:'no-cors',
-          headers:{'Content-Type':'text/plain;charset=utf-8'},
-          body: JSON.stringify(datos) })
-          .then(function(){ listo(true); }).catch(function(){ listo(false); });
-      } else listo(false);
-    } catch(e){ listo(false); }
-  });
-}
-if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', montarCompartir);
-else montarCompartir();
 
 /* ====== INDICADOR "hay más contenido abajo" ======
    Evita que el usuario se pierda tarjetas que quedan fuera de la pantalla
@@ -10113,12 +10135,247 @@ document.addEventListener('DOMContentLoaded', function(){
     btnCal.disabled = hechas < sorteadas.length;
   }
 
+  var elJornada = document.getElementById('exJornada');
+
   function fase(cual){
-    elDatos.hidden = (cual!=='datos');
-    elPreg.hidden  = (cual!=='preguntas');
-    elRes.hidden   = (cual!=='resultado');
+    elDatos.hidden   = (cual!=='datos');
+    elPreg.hidden    = (cual!=='preguntas');
+    elRes.hidden     = (cual!=='resultado');
+    elJornada.hidden = (cual!=='jornada');
     if(window.revisarScroll) setTimeout(window.revisarScroll, 80);
   }
+
+  /* ====== PANTALLA DE LA JORNADA GRUPAL ======
+     La ve quien dirige la sesion, en el equipo que proyecta. No es el
+     formulario: es el reparto. A un lado el QR para los que traen telefono, al
+     otro los examenes en papel para los que no. En una planta conviven los dos
+     casos, por eso ninguna de las dos mitades es la de repuesto. */
+  function urlDeLaSesion(){
+    var u = location.origin + location.pathname + '?ir=examen';
+    if(SESION) u += '&ses=' + encodeURIComponent(SESION.id) +
+                    '&sf=' + encodeURIComponent(SESION.fecha || '') +
+                    '&sh=' + encodeURIComponent(SESION.hora || '') +
+                    '&sp=' + encodeURIComponent(SESION.planta || '');
+    return u;
+  }
+
+  /* Se levanta cuando quien dirige pide presentar el examen en este equipo:
+     desde ahi la lamina es suya y la jornada no vuelve a taparla. */
+  var jornadaApartada = false;
+
+  window.pintarJornada = function(){
+    if(!SESION || !SESION.yoLaCree) return;      // el asistente ve su formulario
+    if(jornadaApartada) return;                  // pidio presentarlo el mismo
+    if(!elPreg.hidden || !elRes.hidden) return;  // examen en curso o resultado a la vista
+    document.getElementById('jorPlanta').textContent = SESION.planta || '—';
+    document.getElementById('jorCuando').textContent =
+      fechaCorta(SESION.fecha) + (SESION.hora ? ' · ' + SESION.hora : '');
+    document.getElementById('jorCodigo').textContent = SESION.id;
+    var url = urlDeLaSesion();
+    document.getElementById('jorEnlace').value = url;
+    var lienzo = document.getElementById('jorQR');
+    try{
+      /* Se dibuja a la medida real que tiene en pantalla: proyectado, un QR
+         escalado desde 220 px se ve sucio justo cuando treinta personas lo
+         estan apuntando con la camara. */
+      var lado = Math.max(260, Math.round(lienzo.getBoundingClientRect().width || 330));
+      qrDibujar(lienzo, url, lado);
+    }catch(e){}
+    fase('jornada');
+  };
+
+  document.getElementById('jorCopiar').addEventListener('click', function(){
+    var campo = document.getElementById('jorEnlace');
+    campo.select();
+    var ok = false;
+    try{ ok = document.execCommand('copy'); }catch(e){}
+    if(!ok && navigator.clipboard){ navigator.clipboard.writeText(campo.value); ok = true; }
+    this.textContent = ok ? '✓ Copiado' : 'Copia a mano (Ctrl+C)';
+    var b = this;
+    setTimeout(function(){ b.textContent = 'Copiar enlace'; }, 1800);
+  });
+
+  document.getElementById('jorBajar').addEventListener('click', function(){
+    var grande = document.createElement('canvas');
+    try{ qrDibujar(grande, urlDeLaSesion(), 900); }catch(e){ return; }
+    var a = document.createElement('a');
+    a.href = grande.toDataURL('image/png');
+    a.download = 'QR HSE-001 jornada ' + SESION.id + '.png';
+    document.body.appendChild(a); a.click(); a.remove();
+  });
+
+  /* ====== EXAMEN EN PAPEL ======
+     Cada copia se sortea por separado, asi que dos hojas vecinas no traen ni
+     las mismas preguntas ni en el mismo orden: copiar del de al lado no sirve
+     de nada, que es justo lo que se quiere en una sala llena.
+
+     Se arman las N hojas en un contenedor y se llama a print(). Podria hacerse
+     un PDF, pero el dialogo de impresion del navegador ya deja elegir
+     "Guardar como PDF", asi que ese camino sale gratis. */
+  var LETRAS = 'ABCDEFGHIJ';
+
+  function escapar(t){
+    return String(t == null ? '' : t)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function hojaDeExamen(n, total, sorteo){
+    var h = '<div class="pgexamen">';
+    h += '<div class="pgcab"><div class="pgtit">' +
+         '<h1>' + escapar(NOMBRE_CAPACITACION) + '</h1>' +
+         '<div class="pgsub">Examen final · ' + escapar(SESION.planta || '') +
+         ' · ' + escapar(fechaCorta(SESION.fecha)) +
+         (SESION.hora ? ' · ' + escapar(SESION.hora) : '') + '</div></div>' +
+         '<div class="pgfolio">Formulario<b>' + escapar(SESION.id) + '-' +
+         (n < 10 ? '0' : '') + n + '</b>' + n + ' de ' + total + '</div></div>';
+
+    h += '<div class="pgdatos">' +
+         '<div><span>Apellidos y nombres</span></div>' +
+         '<div><span>Cédula</span></div>' +
+         '<div><span>Cargo</span></div>' +
+         '<div><span>Firma</span></div></div>';
+
+    var nOb = sorteo.filter(function(it){ return it.q.ob; }).length;
+    h += '<div class="pgreglas"><b>Cómo se califica.</b> ' + sorteo.length +
+         ' preguntas; se aprueba con <b>más del ' + NOTA_MINIMA + '%</b> (con ' +
+         NOTA_MINIMA + '% o menos se reprueba).' +
+         (nOb && EXIGIR_OBLIGATORIAS
+           ? ' Las <b>' + nOb + ' marcadas con ★ son obligatorias</b>: hay que acertarlas todas, ' +
+             'aparte del porcentaje.'
+           : '') +
+         ' Marca con una X dentro del recuadro.</div>';
+
+    sorteo.forEach(function(it, i){
+      h += '<div class="pgq"><div class="pgenun"><span class="pgn">' + (i+1) + '.</span> ' +
+           (it.q.ob && EXIGIR_OBLIGATORIAS ? '★ ' : '') +
+           escapar(it.q.p || it.q.rotulo || '') + '</div>';
+
+      if(it.q.matriz){
+        /* Bloque de relacionar: una tabla, que en papel es mas claro que una
+           lista de casillas sueltas. */
+        var cols = columnasDe(it.q);
+        h += '<table class="pgtabla"><tr><th></th>';
+        cols.forEach(function(c){ h += '<th class="pgmarca">' + escapar(c) + '</th>'; });
+        h += '</tr>';
+        it.filas.forEach(function(f){
+          h += '<tr><td>' + escapar(it.q.matriz[f][0]) + '</td>';
+          cols.forEach(function(){ h += '<td class="pgmarca"></td>'; });
+          h += '</tr>';
+        });
+        h += '</table>';
+      } else {
+        if(it.varias) h += '<div class="pgaviso">Marca ' + it.correcta.length + ' opciones.</div>';
+        /* Si todas las opciones caben en un renglon corto, en compacto van a
+           dos columnas. El umbral es por el texto mas largo, no por la media:
+           basta una opcion larga para que las dos columnas queden mal. */
+        var masLarga = 0;
+        it.orden.forEach(function(oi){ masLarga = Math.max(masLarga, String(it.q.o[oi] || '').length); });
+        h += '<ul class="pgops' + (masLarga <= 42 && it.orden.length >= 4 ? ' pgdoble' : '') + '">';
+        it.orden.forEach(function(oi, k){
+          h += '<li><span class="pgcaja"></span><span class="pgletra">' + LETRAS.charAt(k) +
+               '.</span><span>' + escapar(it.q.o[oi]) + '</span></li>';
+        });
+        h += '</ul>';
+      }
+      h += '</div>';
+    });
+
+    h += '<div class="pgpie"><span>' + escapar(NOMBRE_CAPACITACION) + '</span>' +
+         '<span>Formulario ' + escapar(SESION.id) + '-' + (n < 10 ? '0' : '') + n + '</span></div>';
+    return h + '</div>';
+  }
+
+  /* La hoja del que califica: por folio, porque cada examen es distinto y sin
+     el folio no hay forma de saber que respuestas corresponden a que hoja. */
+  function hojaDeRespuestas(sorteos){
+    var h = '<div class="pgexamen"><div class="pgclave"><h2>HOJA DE RESPUESTAS</h2>' +
+            '<p>Solo para quien califica. <b>No repartir con los exámenes.</b> ' +
+            'Cada formulario tiene preguntas distintas: busca el folio impreso ' +
+            'arriba a la derecha de cada hoja.</p></div>';
+    sorteos.forEach(function(sorteo, k){
+      var n = k + 1;
+      h += '<div style="break-inside:avoid;page-break-inside:avoid;margin-bottom:9pt">' +
+           '<div style="font-weight:700;color:#0b2545;font-size:11pt;margin-bottom:3pt">Formulario ' +
+           escapar(SESION.id) + '-' + (n < 10 ? '0' : '') + n + '</div><div class="pgclaveg">';
+      sorteo.forEach(function(it, i){
+        var resp;
+        if(it.q.matriz){
+          var cols = columnasDe(it.q);
+          resp = it.filas.map(function(f, j){
+            return (j+1) + ') ' + cols[ +it.q.matriz[f][1] ];
+          }).join('  ');
+        } else if(it.varias){
+          resp = it.correcta.map(function(c){ return LETRAS.charAt(c); }).join(' + ');
+        } else {
+          resp = LETRAS.charAt(it.correcta);
+        }
+        h += '<div><b>' + (i+1) + '.</b> ' + escapar(resp) + '</div>';
+      });
+      h += '</div></div>';
+    });
+    return h + '</div>';
+  }
+
+  document.getElementById('jorImprimir').addEventListener('click', function(){
+    var btn = this, nota = document.getElementById('jorNota');
+    var cuantas = Math.max(1, Math.min(60, parseInt(document.getElementById('jorCopias').value, 10) || 1));
+    document.getElementById('jorCopias').value = cuantas;
+
+    btn.disabled = true; btn.textContent = 'Preparando…';
+    nota.textContent = 'Armando ' + cuantas + ' exámenes distintos…';
+
+    /* Un respiro antes de armar: con 40 copias el navegador se queda quieto un
+       momento y sin esto el boton ni llega a cambiar de texto. */
+    setTimeout(function(){
+      var sorteos = [], html = '';
+      for(var n = 1; n <= cuantas; n++){
+        var sorteo = sortear();          // uno nuevo por hoja: ahi esta la gracia
+        sorteos.push(sorteo);
+        html += hojaDeExamen(n, cuantas, sorteo);
+      }
+      if(document.getElementById('jorClave').checked) html += hojaDeRespuestas(sorteos);
+
+      var caja = document.getElementById('impresion');
+      caja.className = document.getElementById('jorCompacto').checked ? 'apretado' : '';
+      caja.innerHTML = html;
+
+      /* Cuantas hojas van a salir. Se mide de verdad, no se estima a ojo: en
+         una jornada de treinta la diferencia entre tres y seis hojas por
+         persona son noventa hojas, y eso se sabe ANTES de darle a imprimir. */
+      var hojas = 0;
+      try{
+        var antes = caja.style.cssText;
+        caja.style.cssText = 'display:block;position:absolute;left:-9999px;top:0;width:7.48in';
+        /* Carta son 11in; menos 14mm de margen arriba y abajo quedan ~9.6in. */
+        var util = caja.querySelector('.pgexamen') ? 9.6 * 96 : 0;
+        Array.prototype.forEach.call(caja.querySelectorAll('.pgexamen'), function(el){
+          hojas += Math.max(1, Math.ceil(el.getBoundingClientRect().height / util));
+        });
+        caja.style.cssText = antes;
+      }catch(e){ hojas = 0; }
+
+      btn.disabled = false; btn.textContent = 'Preparar e imprimir';
+      nota.textContent = cuantas + ' exámenes listos, cada uno distinto' +
+        (document.getElementById('jorClave').checked ? ', más la hoja de respuestas' : '') +
+        (hojas ? ' · unas ' + hojas + ' hojas en total' : '') +
+        '. Si la impresión no se abrió, vuelve a pulsar.';
+      /* Se vacia al terminar: son decenas de hojas en memoria y ya no hacen
+         falta. Va por afterprint y tambien por tiempo, porque Safari no
+         siempre dispara el evento. */
+      var limpiar = function(){ caja.innerHTML = ''; window.removeEventListener('afterprint', limpiar); };
+      window.addEventListener('afterprint', limpiar);
+      setTimeout(limpiar, 120000);
+      try{ window.print(); }catch(e){ nota.textContent = 'No se pudo abrir la impresión: ' + e.message; }
+    }, 60);
+  });
+
+  /* Quien dirige tambien puede presentarlo: la jornada no le quita el examen. */
+  document.getElementById('jorYo').addEventListener('click', function(){
+    jornadaApartada = true;
+    fase('datos');
+    if(window.reiniciarLlave) window.reiniciarLlave();
+    try{ elDatos.scrollIntoView({ block:'start' }); }catch(e){}
+  });
 
   btnIni.addEventListener('click', function(){
     var e = validar(); elErr.textContent = e; if(e) return;
@@ -10391,6 +10648,14 @@ document.addEventListener('DOMContentLoaded', function(){
     respuestas = []; sorteadas = []; elLista.innerHTML = '';
     document.getElementById('exRevision').innerHTML = '';
     elErr.textContent = '';
+    /* Si esto es una jornada y quien dirige ya presento lo suyo, al repetir
+       vuelve el reparto: lo normal es que siga la fila, no que presente el
+       mismo dos veces seguidas. */
+    if(SESION && SESION.yoLaCree && window.pintarJornada){
+      jornadaApartada = false;
+      window.pintarJornada();
+      return;
+    }
     /* En una jornada grupal el siguiente en la fila usa la MISMA tablet. Si se
        quedaran los datos del anterior, presentaria a su nombre sin darse
        cuenta. Se vuelve a pedir la cedula y se limpia lo que la identifica;
@@ -10549,34 +10814,9 @@ document.addEventListener('DOMContentLoaded', function(){
 });
 </script>
 <div id="admbadge">MODO ADMINISTRADOR · Ctrl+Shift+A para salir</div>
-<div id="qrpanel" role="dialog" aria-modal="true" aria-label="Compartir el curso">
-  <div class="qrbox">
-    <div class="qrhead"><h3>QR del examen</h3><button id="qrcerrar" type="button">Cerrar</button></div>
-    <p class="qrintro">Para los asistentes que acaban de ver la presentación: este QR
-      —o el enlace— los lleva directo al examen, sin repetir las 103 diapositivas. Les pedirá
-      sus datos igual y, si aprueban, les entrega el certificado.</p>
-    <div class="qrsalida">
-      <canvas id="qrlienzo" aria-label="Código QR del enlace"></canvas>
-      <div class="qrlado">
-        <label class="qrrot" for="qrenlace">Enlace</label>
-        <input id="qrenlace" type="text" readonly>
-        <div class="qrbtns">
-          <button id="qrcopiar" type="button">Copiar enlace</button>
-          <button id="qrbajar" type="button" class="sec">Descargar QR</button>
-        </div>
-        <div class="qrbtns" id="qrHacerSesionCaja">
-          <button id="qrHacerSesion" type="button" class="sec">Convertir en sesión grupal</button>
-        </div>
-        <label class="qrrot" for="qrpara" style="margin-top:14px">Registrar envío <span style="text-transform:none;letter-spacing:0;font-weight:600">(opcional)</span></label>
-        <input id="qrpara" type="text" placeholder="A quién se lo mandas: persona, planta, grupo…" maxlength="90">
-        <div class="qrbtns">
-          <button id="qrregistrar" type="button" class="sec">Anotar en la hoja</button>
-        </div>
-        <p class="qrnota" id="qrnota">Apunta con la cámara del móvil. El QR lleva al mismo enlace de arriba.</p>
-      </div>
-    </div>
-  </div>
-</div>
+<!-- Aqui se arma el examen en papel justo antes de imprimir, y se vacia al
+     terminar: son decenas de hojas y no tienen por que vivir en memoria. -->
+<div id="impresion" aria-hidden="true"></div>
 <div id="sespanel" role="dialog" aria-modal="true" aria-label="Modalidad de la (Re) Inducción">
   <div class="qrbox">
     <div class="qrhead"><h3 id="sesTitulo">¿Cómo vas a presentar esta (Re) Inducción?</h3>
@@ -10633,7 +10873,6 @@ document.addEventListener('DOMContentLoaded', function(){
     <div class="admhead">
       <h3>Panel de administrador</h3>
       <input id="admbuscar" type="search" placeholder="Buscar diapositiva por texto o número…" aria-label="Buscar diapositiva">
-      <button id="admqr" type="button">QR del examen</button>
       <button id="admcerrar" type="button">Cerrar</button>
     </div>
     <div class="admlist" id="admlist"></div>
