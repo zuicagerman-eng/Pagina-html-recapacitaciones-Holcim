@@ -19,6 +19,11 @@
     --radius:16px; --radius-sm:14px; --gap:16px;
   }
   *{box-sizing:border-box;margin:0;padding:0}
+  /* El atributo hidden lo pisa cualquier regla con display:flex o grid, y eso
+     deja cajas "ocultas" a la vista y vacias. Ya paso con el boton del QR, con
+     el recuadro de datos confirmados y con la previa del reporte. Esta linea lo
+     zanja de una vez para todo el curso. */
+  [hidden]{display:none !important}
   body{font-family:var(--font);color:var(--ink);background:var(--navy);overflow:hidden;-webkit-font-smoothing:antialiased}
   /* ===== HUD superior ===== */
   header.hud{position:fixed;top:0;left:0;right:0;height:var(--hud);z-index:60;
@@ -6275,7 +6280,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-14-n";
+var VERSION_CURSO = "2026-09-15-a";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas preguntas tiene el examen EN TOTAL. Las
@@ -9804,8 +9809,23 @@ document.addEventListener('DOMContentLoaded', function(){
         if(!r || !r.ok){
           verificado = 'SIN LISTA';
           bloquear(false);
+          verif.hidden = true;
           abrirCampos();
-          elErr.textContent = 'No se pudo consultar la lista de personal. Escribe tus datos y continúa.';
+          /* El motivo, no solo "fallo": sin el, averiguar si es la publicacion,
+             el permiso o la red obliga a adivinar. */
+          var porque = {
+            'sin-url'             : 'no hay dirección del script configurada',
+            'sin-red'             : 'no hubo respuesta del script',
+            /* Las dos causas que dan este sintoma: o la implementacion no
+               conoce ?cedula porque no se publico version nueva, o pide iniciar
+               sesion y lo que vuelve es la pagina de Google. */
+            'respuesta-no-valida' : 'el script devolvió una página en vez de datos: falta publicar la nueva versión, o la implementación no está abierta a "cualquier usuario"',
+            'tardo'               : 'el script tardó demasiado',
+            'sin-acceso'          : 'el script no pudo abrir la hoja de personal',
+            'sin-lista'           : 'no se encontró la pestaña de personal',
+            'sin-columna-cedula'  : 'la hoja de personal no tiene columna de cédula'
+          }[r && r.motivo] || (r && r.motivo) || 'sin respuesta';
+          elErr.textContent = 'No se pudo consultar la lista (' + porque + '). Escribe tus datos y continúa.';
           return;
         }
 
