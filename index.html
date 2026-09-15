@@ -6467,7 +6467,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-15-j";
+var VERSION_CURSO = "2026-09-15-k";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas preguntas tiene el examen EN TOTAL. Las
@@ -10017,7 +10017,10 @@ document.addEventListener('DOMContentLoaded', function(){
              el permiso o la red obliga a adivinar. */
           var porque = {
             'sin-url'             : 'no hay dirección del script configurada',
-            'sin-red'             : 'no hubo respuesta del script',
+            /* Ya no puede ser un error del script: doGet los contesta por
+               JSONP. Lo que queda es que la peticion no salio del equipo. */
+            'sin-red'             : 'el navegador no pudo llegar al script: puede estar bloqueado por un antivirus, una extension o la red de la empresa',
+            'error-script'        : 'el script falló al consultar la lista',
             /* Las dos causas que dan este sintoma: o la implementacion no
                conoce ?cedula porque no se publico version nueva, o pide iniciar
                sesion y lo que vuelve es la pagina de Google. */
@@ -10027,6 +10030,9 @@ document.addEventListener('DOMContentLoaded', function(){
             'sin-lista'           : 'no se encontró la pestaña de personal',
             'sin-columna-cedula'  : 'la hoja de personal no tiene columna de cédula'
           }[r && r.motivo] || (r && r.motivo) || 'sin respuesta';
+          /* El detalle que mande el script, si lo manda. Es la diferencia entre
+             "falló" y saber que fallo: sin esto hay que ir a Ejecuciones. */
+          if(r && r.detalle) porque += ' — ' + String(r.detalle).substring(0, 160);
           elErr.textContent = 'No se pudo consultar la lista (' + porque + '). Escribe tus datos y continúa.';
           return;
         }

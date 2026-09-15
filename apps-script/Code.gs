@@ -64,7 +64,12 @@ var ID_CARPETA_CERTIFICADOS = "https://drive.google.com/drive/folders/1LExNIvC0P
       celdas VACIAS. Nunca se pisa nada de lo que ya haya escrito, ni una sola
       celda, pase lo que pase. */
 var CARPETA_APARTE = "https://drive.google.com/drive/folders/1LExNIvC0PP0CSRVn79bg1m4yPfdvXJ4l";
-var ID_HOJA_APARTE = "https://docs.google.com/spreadsheets/d/1Y85SUO7kmTFYRGOPKMXao0CPm9KvLLlzOusJluAbQTs/edit";
+/* APAGADO a peticion de German, hasta que revise Holcim TW con su historial
+   de versiones. Vacia = esta parte no hace absolutamente nada: no abre ese
+   libro, no lo lee y no le escribe. Para volver a encenderlo, basta con
+   devolver el enlace a esta linea:
+   https://docs.google.com/spreadsheets/d/1Y85SUO7kmTFYRGOPKMXao0CPm9KvLLlzOusJluAbQTs/edit */
+var ID_HOJA_APARTE = "";
 var PESTANA_APARTE = "Resultados";   // la pestaña de ESE libro, no la del nuestro
 var CENTROS_APARTE = ['NOBSA', 'TUNJA'];
 
@@ -201,7 +206,7 @@ var URL_CURSO = "https://zuicagerman-eng.github.io/Pagina-html-recapacitaciones-
    siguen atendidos por el codigo viejo. Este sello es lo que permite verlo:
    comprobarPublicacion() se lo pregunta a la implementacion y compara.
    Subelo cada vez que cambie algo de fondo. */
-var VERSION_GS = "2026-09-15-h";
+var VERSION_GS = "2026-09-15-j";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    LISTA DE PERSONAL  ·  la cédula como llave del examen
@@ -327,7 +332,27 @@ function doGet(e) {
      un fetch se queda sin poder leer la respuesta. Con JSONP siempre llega.
      Se responde SOLO la persona preguntada, nunca la lista. */
   if (e && e.parameter && e.parameter.cedula) {
-    return responderJSONP_(e.parameter.callback, buscarPersona_(e.parameter.cedula));
+    /* El try no es adorno. Sin el, cualquier fallo de buscarPersona_ —un permiso
+       retirado, la pestaña renombrada, la hoja de personal que no abre— hace que
+       Apps Script sirva SU pagina de error con estado 500. El curso pide esto con
+       una etiqueta <script>, y una pagina HTML con estado 500 no dispara "load"
+       sino "error": al curso le llega "no hubo respuesta del script", que es el
+       mismo mensaje que da un corte de red. Dos causas muy distintas con el mismo
+       sintoma, y ninguna pista de cual es.
+
+       Contestando el motivo por JSONP, el fallo viaja como una respuesta normal
+       y el curso puede enseñar lo que de verdad paso. */
+    try {
+      return responderJSONP_(e.parameter.callback, buscarPersona_(e.parameter.cedula));
+    } catch (err) {
+      var msg = String((err && err.message) || err);
+      console.error('doGet(cedula) reventó: ' + msg);
+      if (e.parameter.callback) {
+        return responderJSONP_(e.parameter.callback,
+          { ok: false, motivo: 'error-script', detalle: msg });
+      }
+      throw err;   // sin callback no hay a quien contestar: que se vea en Ejecuciones
+    }
   }
 
   /* ?divisiones=1&callback=fn  →  la lista de centros para el desplegable.
@@ -335,7 +360,15 @@ function doGet(e) {
      un centro que ya no existe ni se queda sin uno nuevo: no hay dos listas
      que mantener de acuerdo. Solo nombres de division, ninguna persona. */
   if (e && e.parameter && e.parameter.divisiones) {
-    return responderJSONP_(e.parameter.callback, listaDeDivisiones_());
+    try {
+      return responderJSONP_(e.parameter.callback, listaDeDivisiones_());
+    } catch (err2) {
+      console.error('doGet(divisiones) reventó: ' + String((err2 && err2.message) || err2));
+      if (e.parameter.callback) {
+        return responderJSONP_(e.parameter.callback, { ok: false, motivo: 'error-script' });
+      }
+      throw err2;
+    }
   }
   var destino = URL_CURSO.replace(/"/g, '');
   return HtmlService.createHtmlOutput(
