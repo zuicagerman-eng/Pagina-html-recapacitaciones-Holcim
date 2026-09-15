@@ -165,7 +165,7 @@ var URL_CURSO = "https://zuicagerman-eng.github.io/Pagina-html-recapacitaciones-
    siguen atendidos por el codigo viejo. Este sello es lo que permite verlo:
    comprobarPublicacion() se lo pregunta a la implementacion y compara.
    Subelo cada vez que cambie algo de fondo. */
-var VERSION_GS = "2026-09-15-a";
+var VERSION_GS = "2026-09-15-b";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    LISTA DE PERSONAL  ·  la cédula como llave del examen
@@ -1063,7 +1063,9 @@ function moverPendientes() {
  */
 function guardarCertificado_(d) {
   if (!d || !d.certificado) {
-    console.warn('El curso no mandó certificado en este intento.');
+    /* Normal desde 2026-09-15: el curso manda la fila primero y el PDF despues,
+       en su propio envio, para que cerrar la ventana pronto no cueste el
+       registro. Que aqui no venga certificado ya no es una señal de nada. */
     return '';
   }
   try {
@@ -1741,6 +1743,23 @@ function diagnostico() {
     lineas.push('→ Debe ser idéntica a REPORTE_URL en el index.html de GitHub.');
   } catch (e) { lineas.push('ERROR con la URL: ' + e.message); }
 
+  /* Cuota de correo. Es la explicacion mas comun de "no me llegan los correos":
+     cuando se agota, MailApp lanza, el fallo queda solo en el registro y todo
+     lo demas sigue funcionando, asi que desde fuera parece que no pasa nada.
+     Una cuenta gratuita tiene 100 destinatarios al dia; una de Workspace, 1500. */
+  try {
+    var quedan = MailApp.getRemainingDailyQuota();
+    lineas.push('');
+    lineas.push('Correos que aun puede enviar hoy: ' + quedan);
+    lineas.push('  (cada examen aprobado gasta 1, mas 1 si responden la encuesta)');
+    if (quedan <= 0) {
+      lineas.push('  ⚠ SIN CUOTA: hoy ya no sale ningun correo. Se repone cada 24 h.');
+      lineas.push('    Los certificados SI se siguen guardando en Drive y las filas en la hoja.');
+    } else if (quedan < 20) {
+      lineas.push('  ⚠ Queda poca. Con una jornada grande se agota hoy mismo.');
+    }
+  } catch (e) { lineas.push('No se pudo consultar la cuota de correo: ' + e.message); }
+
   var txt = lineas.join('\n');
   Logger.log(txt);
   return txt;
@@ -2149,6 +2168,7 @@ function doPost(e) {
     var d = JSON.parse((e && e.postData && e.postData.contents) || "{}");
     var r;
     if (d.tipo === 'examen')                      r = guardarExamen(d);
+    else if (d.tipo === 'certificado')            r = recibirCertificado(d);
     else if (!d.tipo || d.tipo === 'reporte')     r = enviarCorreoReporte(d);
     else                                          r = guardarFormulario(d);
     r = r || { ok: true };
@@ -2158,6 +2178,63 @@ function doPost(e) {
   } catch (err) {
     return ContentService.createTextOutput(JSON.stringify({ ok: false, error: String(err) }))
       .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+/**
+ * EL CERTIFICADO, QUE LLEGA APARTE
+ *
+ * El curso manda primero la fila —unos pocos KB, para que quede registrada
+ * enseguida— y despues el PDF, que pesa mas de un mega. Aqui llega ese segundo
+ * envio: se archiva en Drive, se manda la copia por correo y se escribe el
+ * enlace en la fila que ya existe.
+ *
+ * Si no encuentra la fila no pasa nada grave: el PDF queda igual en Drive y en
+ * el correo. Perder el enlace en una celda es molesto; perder el certificado
+ * seria otra cosa.
+ */
+function recibirCertificado(d) {
+  d = d || {};
+  var enlace = guardarCertificado_(d);
+  var correo = enviarCopiaCertificado_(d, enlace);
+  var fila = enlace ? escribirVinculo_(d, enlace) : 'sin enlace';
+  return { ok: true, certificado: enlace ? 'guardado' : 'falló', correo: correo, fila: fila };
+}
+
+/**
+ * Escribe el enlace del certificado en la fila de esa persona. Se busca de
+ * abajo hacia arriba porque la fila que interesa es la ultima: alguien que
+ * presenta dos veces tiene dos filas, y la buena es la de ahora.
+ */
+function escribirVinculo_(d, enlace) {
+  try {
+    var ss = obtenerHoja_();
+    var hoja = ss.getSheetByName(PESTANA_RESUMEN);
+    if (!hoja) return 'sin pestaña';
+    var ultima = hoja.getLastRow();
+    if (ultima < 2) return 'hoja vacia';
+
+    var titulos = hoja.getRange(1, 1, 1, hoja.getLastColumn()).getValues()[0].map(String);
+    var cCed = titulos.indexOf('ID_Identificacion');
+    var cVin = titulos.indexOf('Vinculo');
+    if (cCed < 0 || cVin < 0) return 'faltan columnas';
+
+    var ced = soloDigitos_(d.cedula);
+    /* Como mucho las 200 ultimas: con una jornada de treinta basta de sobra, y
+       evita leer la hoja entera cada vez que alguien aprueba. */
+    var desde = Math.max(2, ultima - 199);
+    var n = ultima - desde + 1;
+    var datos = hoja.getRange(desde, 1, n, hoja.getLastColumn()).getValues();
+    for (var i = datos.length - 1; i >= 0; i--) {
+      if (soloDigitos_(datos[i][cCed]) === ced) {
+        hoja.getRange(desde + i, cVin + 1).setValue(enlace);
+        return 'fila ' + (desde + i);
+      }
+    }
+    return 'no se encontro la fila';
+  } catch (e) {
+    console.error('No se pudo escribir el enlace del certificado: ' + e.message);
+    return 'error: ' + e.message;
   }
 }
 

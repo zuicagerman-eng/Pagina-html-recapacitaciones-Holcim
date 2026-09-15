@@ -6306,6 +6306,9 @@
         <h2 style="text-align:center" id="exVeredicto"></h2>
         <p class="lead" style="text-align:center;max-width:56ch;margin:12px auto 0" id="exDetalle"></p>
         <div class="exguardado" id="exGuardado"></div>
+        <!-- Aviso propio del certificado: va aparte del registro porque son dos
+             envios distintos y el lento es este. -->
+        <div class="exguardado" id="exCert" hidden></div>
         <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:18px">
           <button class="exbtn" id="exDiploma" type="button" hidden>Descargar certificado (PDF)</button>
           <button class="exbtn sec" id="exRepetir" type="button">Presentar de nuevo</button>
@@ -6434,7 +6437,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-15-c";
+var VERSION_CURSO = "2026-09-15-d";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas preguntas tiene el examen EN TOTAL. Las
@@ -10540,7 +10543,8 @@ document.addEventListener('DOMContentLoaded', function(){
           '(las marcadas con ★). Esas hay que acertarlas todas, ' +
           'sin importar el porcentaje.'
         : '') +
-      (aprobo ? '<br>Tu resultado quedó registrado. Descarga tu <b>certificado</b> y ya puedes cerrar esta ventana.'
+      (aprobo ? '<br>Descarga tu <b>certificado</b> con el botón de abajo. ' +
+                '<b>No cierres esta ventana</b> hasta que el aviso diga que terminó de guardarse.'
               : '<br>Revisa abajo las preguntas falladas y presenta el examen de nuevo.');
 
     document.getElementById('exRevision').innerHTML = aprobo ? '' :
@@ -10613,21 +10617,85 @@ document.addEventListener('DOMContentLoaded', function(){
       navegador: navigator.userAgent, respuestas: detalle
     };
 
-    /* Al aprobar, el certificado viaja con el resultado para que Apps Script lo
-       archive en Drive. Si tarda o falla, se guarda igual el resultado sin el
-       PDF: perder el certificado no puede costarle a nadie su registro. */
+    /* El registro va PRIMERO y solo, sin el PDF. Antes viajaban juntos y el
+       resultado esperaba a que el certificado estuviera dibujado y subido: son
+       1,3 MB desde un celular en planta, y mientras tanto la pantalla ya decia
+       "quedo registrado, puedes cerrar". Quien cerraba en esos segundos se
+       quedaba sin fila, sin PDF en Drive y sin correo. Ahora la fila son unos
+       pocos KB y sale enseguida; el certificado va detras por su cuenta. */
+    guardar(envio);
+
     if(aprobo){
-      var yaFue = false;
-      var seguir = function(b64){
-        if(yaFue) return; yaFue = true;
-        if(b64) envio.certificado = b64;
-        guardar(envio);
-      };
-      setTimeout(function(){ seguir(null); }, 40000);
-      diplomaEnBase64(datosDip).then(seguir).catch(function(){ seguir(null); });
-    } else {
-      guardar(envio);
+      diplomaEnBase64(datosDip)
+        .then(function(b64){
+          if(b64) mandarCertificado(b64, datosDip.puntaje);
+          else marcarCert('falló');
+        })
+        .catch(function(e){
+          /* El motivo al registro: un "no se pudo" a secas obliga a adivinar. */
+          try{ console.error('Certificado:', e && e.message ? e.message : e); }catch(_){}
+          marcarCert('falló');
+        });
     }
+  }
+
+  /* ====== EL CERTIFICADO, POR SU CUENTA ======
+     Va en su propio envio, con lo justo para que Apps Script sepa de quien es:
+     lo archiva en Drive, manda la copia por correo y escribe el enlace en la
+     fila que ya existe. */
+  var certEstado = null;
+  function marcarCert(estado){
+    certEstado = estado;
+    var caja = document.getElementById('exCert');
+    if(!caja) return;
+    caja.hidden = false;
+    if(estado === 'subiendo'){
+      caja.className = 'exguardado no';
+      caja.innerHTML = '⏳ <b>Guardando tu certificado…</b> Puede tardar un poco. ' +
+                       '<b>No cierres esta ventana</b> hasta que diga que terminó.';
+    } else if(estado === 'listo'){
+      caja.className = 'exguardado ok';
+      caja.innerHTML = '✓ Certificado guardado. Ya puedes cerrar esta ventana.';
+    } else {
+      caja.className = 'exguardado no';
+      caja.innerHTML = '⚠ No se pudo guardar la copia del certificado. Tu resultado ' +
+                       'sí quedó registrado: descarga el PDF con el botón de abajo y guárdalo.';
+    }
+  }
+
+  /* Recibe el puntaje en vez de ir a buscarlo: "datosDip" es local a la
+     funcion que califica, y desde aqui no existe. Iba a dar ReferenceError
+     dentro del .then, que el .catch se tragaba dejando un "no se pudo" sin
+     explicacion. */
+  function mandarCertificado(b64, puntaje){
+    var d = {
+      tipo: 'certificado',
+      nombre: persona.nombre, cedula: persona.cedula,
+      tipoUsuario: persona.tipo, empresa: persona.empresa,
+      razonSocial: persona.razonSocial || '',
+      capacitacion: NOMBRE_CAPACITACION,
+      puntaje: puntaje || '', resultado: 'APROBADO',
+      fecha: new Date().toLocaleString('es-CO'),
+      certificado: b64
+    };
+    marcarCert('subiendo');
+    if(window.google && google.script && google.script.run){
+      google.script.run
+        .withSuccessHandler(function(){ marcarCert('listo'); })
+        .withFailureHandler(function(){ marcarCert('falló'); })
+        .guardarFormulario(d);
+      return;
+    }
+    if(!(REPORTE_URL && REPORTE_URL.indexOf('http') === 0)){ marcarCert('falló'); return; }
+    /* Con no-cors la respuesta no se puede leer, pero la promesa SI se resuelve
+       cuando la subida termina: eso es lo que hace falta para poder decir
+       "ya puedes cerrar" cuando de verdad se puede. */
+    try{
+      fetch(REPORTE_URL, { method:'POST', mode:'no-cors',
+        headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify(d) })
+        .then(function(){ marcarCert('listo'); })
+        .catch(function(){ marcarCert('falló'); });
+    }catch(e){ marcarCert('falló'); }
   }
 
   /* Guarda el intento en la hoja de cálculo a través de Apps Script. Si el curso
@@ -10664,31 +10732,31 @@ document.addEventListener('DOMContentLoaded', function(){
        plano a propósito: así el navegador no hace la consulta previa de CORS,
        que Apps Script no responde. */
     if(REPORTE_URL && REPORTE_URL.indexOf('http') === 0){
-      fetch(REPORTE_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify(datos)
+      /* UN SOLO envio, con no-cors desde el principio.
+
+         Antes se intentaba primero un fetch normal para poder leer la
+         respuesta. Desde github.io ese fetch SIEMPRE falla por CORS —Apps
+         Script no manda las cabeceras— pero el POST si llega al servidor,
+         porque con Content-Type de texto plano no hay consulta previa. Y el
+         catch mandaba un segundo POST identico. Resultado: cada examen se
+         guardaba DOS veces, con fila duplicada en la hoja, dos PDF en Drive y
+         dos correos. Con cuota de correo de 100 al dia, eso son 50 examenes en
+         vez de 100 antes de quedarse sin correos.
+
+         La respuesta no se puede leer, pero la promesa se resuelve cuando la
+         subida termina, que es lo que de verdad hace falta saber. */
+      fetch(REPORTE_URL, { method:'POST', mode:'no-cors',
+        headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify(datos) })
+      .then(function(){
+        caja.className = 'exguardado ok';
+        caja.textContent = '✓ Resultado enviado a nombre de ' + datos.nombre +
+                           ' (C.C. ' + datos.cedula + ').';
       })
-      .then(function(r){ return r.json(); })
-      .then(function(r){
-        if(r && r.ok){
-          caja.className = 'exguardado ok';
-          caja.textContent = '✓ Resultado registrado a nombre de ' + datos.nombre +
-                             ' (C.C. ' + datos.cedula + ').' + avisoCert(r);
-        } else {
-          throw new Error((r && r.error) || 'respuesta inesperada');
-        }
-      })
-      .catch(function(err){
-        // Segundo intento a ciegas: sirve cuando el navegador bloquea la lectura
-        // de la respuesta pero sí deja enviar. No podemos confirmar, y se dice.
-        try{
-          fetch(REPORTE_URL, { method:'POST', mode:'no-cors',
-            headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify(datos) });
-        }catch(e){}
+      .catch(function(){
         caja.className = 'exguardado no';
-        caja.innerHTML = '⚠ <b>No se pudo confirmar el registro.</b> El resultado se envió, pero el navegador no ' +
-                         'permitió leer la respuesta. Toma una captura de esta pantalla por si acaso.';
+        caja.innerHTML = '⚠ <b>No se pudo enviar el resultado.</b> Revisa tu conexión y ' +
+                         'presenta de nuevo, o toma una captura de esta pantalla y avisa a ' +
+                         'Salud y Seguridad.';
       });
       return;
     }
