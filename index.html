@@ -6434,7 +6434,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-15-b";
+var VERSION_CURSO = "2026-09-15-c";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas preguntas tiene el examen EN TOTAL. Las
@@ -6524,6 +6524,13 @@ var EXIGIR_LISTA        = false;
    pregunta nada mas. Si algun dia la lista incluye contratistas, aniade una
    columna "Tipo" y esto deja de aplicarse solo. */
 var TIPO_POR_DEFECTO_LISTA = 'Propio';
+
+/* Contraseña para ABRIR una jornada grupal. No protege el examen —el que llega
+   por el QR no la necesita, y es a proposito: si se la pidieras a los treinta,
+   la jornada se convierte en teclear contraseñas—. Lo que evita es que
+   cualquiera que termine el curso se ponga a repartir examenes en su nombre.
+   Para cambiarla, cambia esta linea. */
+var CLAVE_JORNADA = 'Holcim2026';
 
 var EXIGIR_OBLIGATORIAS = true;
 var EXIGIR_EXAMEN    = true;
@@ -8560,7 +8567,12 @@ function montarSesion(){
     panel.classList.add('show');
     if(aGrupal) setTimeout(function(){ try{ selPlanta.focus(); }catch(e){} }, 40);
   }
-  function cerrar(){ panel.classList.remove('show'); }
+  function cerrar(){
+    panel.classList.remove('show');
+    /* La clave no se queda escrita: el equipo que proyecta lo usa mucha gente. */
+    var c = document.getElementById('sesClave');
+    if(c){ c.value = ''; c.classList.remove('mal'); }
+  }
   window.__abrirModalidad = abrir;
   /* Salir sin elegir es quedarse como se estaba: individual, que es lo que el
      curso hacia antes de existir esta pregunta. Un modal sin salida por un
@@ -8575,14 +8587,24 @@ function montarSesion(){
   });
   bGru.addEventListener('click', function(){
     p1.hidden = true; p2.hidden = false;
-    setTimeout(function(){ try{ selPlanta.focus(); }catch(e){} }, 40);
+    setTimeout(function(){ try{ document.getElementById('sesClave').focus(); }catch(e){} }, 40);
   });
   bVolver.addEventListener('click', function(){ p1.hidden = false; p2.hidden = true; });
   /* Cerrar = individual, lo mismo que Escape. Una ventana sin salida visible
      delante del examen es justo lo que no puede pasar. */
   document.getElementById('sesCerrar').addEventListener('click', cerrar);
 
+  var inClave = document.getElementById('sesClave');
   bCrear.addEventListener('click', function(){
+    /* La clave primero: si esta mal, no tiene sentido revisar lo demas ni
+       hacerle rellenar el formulario entero para negarselo al final. */
+    if(String(inClave.value || '') !== CLAVE_JORNADA){
+      inClave.classList.add('mal');
+      err.textContent = 'Contraseña incorrecta. Pídesela a Salud y Seguridad.';
+      try{ inClave.focus(); inClave.select(); }catch(e){}
+      return;
+    }
+    inClave.classList.remove('mal');
     var planta = selPlanta.value === 'Otra' ? inOtra.value.trim() : selPlanta.value;
     if(!planta){ err.textContent = 'Elige la planta o centro de trabajo.'; return; }
     if(!inFecha.value){ err.textContent = 'Falta la fecha.'; return; }
@@ -9340,22 +9362,50 @@ function dibujarDiploma(datos){
         cx.fillText(l, i === 0 ? 741 : 532, 397 + i * 50.7);
       });
 
-      cx.fillStyle = D.azul;
-      /* "Centro de trabajo:" es mas del doble de largo que "Empresa:", que iba a
-         32 px: a ese tamaño se metia debajo del valor, que empieza en x=1020.
-         Baja a 20 px, el mismo de "Identificacion:" y "Fecha de" justo debajo,
-         con lo que ademas las tres etiquetas quedan por fin iguales. */
-      cx.font = '900 20px ' + D.negra;
-      cx.fillText('Centro de trabajo:', 799, 542);
-      textoAjustado(cx, datos.empresa, 1020, 542, 33, D.negra, D.azul, 380);
+      /* Columna derecha. Se arma como una lista y se reparte sola, porque el
+         cargo es opcional: con el son cuatro filas y sin el tres, y dejar los
+         huecos a mano obligaba a tener dos juegos de coordenadas.
+         "Centro de trabajo:" es mas del doble de largo que "Empresa:", que iba
+         a 32 px: a ese tamaño se metia debajo del valor, que empieza en x=1020.
+         A 20 px las etiquetas quedan por fin todas iguales. */
+      var filas = [{ et:['Centro de trabajo:'], val: datos.empresa, tam: 33 }];
+      if(datos.cargo) filas.push({ et:['Cargo:'], val: datos.cargo, tam: 26 });
+      filas.push({ et:['Identificación:'], val: datos.cedula, tam: 20 });
+      filas.push({ et:['Fecha de', 'realización:'], val: datos.fecha, tam: 20 });
 
-      cx.font = '900 20px ' + D.negra;
-      cx.fillStyle = D.azul;
-      cx.fillText('Identificación:', 799, 626);
-      cx.fillText(datos.cedula, 1020, 626);
-      cx.fillText('Fecha de', 799, 683);
-      cx.fillText('realización:', 799, 707);
-      cx.fillText(datos.fecha, 1020, 683);
+      /* Alturas fijas por numero de filas, no repartidas: las de tres son las
+         que ya estaban ajustadas a mano contra la plantilla —y no van a paso
+         regular—, y las de cuatro suben para que "realizacion:" no se meta
+         encima del pie. Repartir a paso igual rompia una de las dos. */
+      var ALTURAS = { 3: [542, 626, 683], 4: [542, 600, 658, 716] };
+      var alturas = ALTURAS[filas.length] || ALTURAS[3];
+      filas.forEach(function(f, k){
+        var y = alturas[k];
+        cx.font = '900 20px ' + D.negra;
+        cx.fillStyle = D.azul;
+        f.et.forEach(function(linea, j){ cx.fillText(linea, 799, y + j * 24); });
+        if(f.tam > 20) textoAjustado(cx, f.val, 1020, y, f.tam, D.negra, D.azul, 380);
+        else {
+          cx.font = '900 20px ' + D.negra;
+          cx.fillStyle = D.azul;
+          cx.fillText(f.val, 1020, y);
+        }
+      });
+
+      /* Pie: como se presento y, si fue jornada, su codigo. Va abajo y pequeño
+         porque no es un dato de la persona sino de la sesion, pero tiene que
+         estar: es lo que permite cruzar un certificado con la jornada de la
+         que salio cuando llegan treinta juntos. */
+      if(datos.modalidad){
+        cx.font = '700 17px ' + D.gorda;
+        cx.fillStyle = D.azul;
+        var pie = datos.modalidad === 'Grupal'
+          ? 'Presentado en jornada grupal' + (datos.sesion ? ' · código ' + datos.sesion : '')
+          : 'Presentado de forma individual';
+        /* Abajo del todo y a la izquierda: lejos de la columna derecha, que con
+           cargo baja hasta los 740. */
+        cx.fillText(pie, 532, 770);
+      }
     }
   });
 }
@@ -10508,6 +10558,11 @@ document.addEventListener('DOMContentLoaded', function(){
       marcarCompletado();
       datosDip = {
         nombre: persona.nombre, cedula: persona.cedula, empresa: persona.empresa,
+        /* El cargo solo si lo trajo la lista de personal: no se le pregunta a
+           nadie, asi que o viene del maestro o el certificado no lo lleva. */
+        cargo: cargo || '',
+        modalidad: SESION ? 'Grupal' : 'Individual',
+        sesion: SESION ? SESION.id : '',
         capacitacion: NOMBRE_CAPACITACION, fecha: fechaLarga(new Date()),
         resultado: 'APROBADO', puntaje: pct + '%',
         aciertos: aciertos, total: sorteadas.length, respuestas: detalle
@@ -10838,9 +10893,15 @@ document.addEventListener('DOMContentLoaded', function(){
     </div>
 
     <div id="sesPaso2" hidden>
-      <p class="qrintro">Datos de la sesión. Quedan guardados con el resultado de cada asistente,
-        así que después puedes sacar de la hoja quién asistió a esta jornada.</p>
+      <p class="qrintro">Abrir una jornada reparte el examen a toda una sala, así que la
+        pide. Los datos quedan guardados con el resultado de cada asistente: después
+        puedes sacar de la hoja quién asistió a esta jornada.</p>
       <div class="sescampos">
+        <div class="excampo">
+          <label for="sesClave">Contraseña de la jornada</label>
+          <input id="sesClave" type="password" autocomplete="off" placeholder="••••••••••"
+                 inputmode="text" maxlength="40">
+        </div>
         <div class="excampo">
           <label for="sesPlanta">Planta / centro de trabajo</label>
           <select id="sesPlanta"></select>
