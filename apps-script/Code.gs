@@ -206,7 +206,7 @@ var URL_CURSO = "https://zuicagerman-eng.github.io/Pagina-html-recapacitaciones-
    siguen atendidos por el codigo viejo. Este sello es lo que permite verlo:
    comprobarPublicacion() se lo pregunta a la implementacion y compara.
    Subelo cada vez que cambie algo de fondo. */
-var VERSION_GS = "2026-09-15-j";
+var VERSION_GS = "2026-09-15-k";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    LISTA DE PERSONAL  ·  la cédula como llave del examen
@@ -417,22 +417,31 @@ function buscarPersona_(cedulaPedida) {
   var ced = soloDigitos_(cedulaPedida);
   if (ced.length < 4) return { ok: false, motivo: 'cedula-invalida' };
 
-  var hoja;
+  /* El try tiene que cubrir tambien la LECTURA, no solo la apertura.
+     Antes solo envolvia openById y getSheetByName, y el getValues de abajo
+     quedaba fuera: si esa linea fallaba —permiso que deja abrir pero no leer,
+     la hoja demasiado grande, un tropiezo de Google— reventaba sin que nadie lo
+     recogiera, Apps Script servia SU pagina de error, y al curso le llegaba
+     "no hubo respuesta del script". La causa real no aparecia por ningun lado. */
+  var hoja, datos;
   try {
     var libro = ID_HOJA_PERSONAL
       ? SpreadsheetApp.openById(soloId_(ID_HOJA_PERSONAL))
       : obtenerHoja_();
     hoja = libro.getSheetByName(PESTANA_PERSONAL);
+    if (!hoja) {
+      return { ok: false, motivo: 'sin-lista',
+               detalle: 'No hay ninguna pestaña llamada "' + PESTANA_PERSONAL + '" en ese libro. ' +
+                        'Las que tiene: ' + libro.getSheets().map(function (h) { return h.getName(); }).join(', ') };
+    }
+    datos = hoja.getDataRange().getValues();
   } catch (err) {
-    /* La hoja no se pudo abrir: es un fallo tecnico, no "esta persona no
-       existe". El curso tiene que poder distinguirlo para no dejar a nadie
-       fuera por una caida de Google. */
+    /* Es un fallo tecnico, no "esta persona no existe". El curso tiene que
+       poder distinguirlo para no dejar a nadie fuera por una caida de Google. */
+    console.error('buscarPersona_: ' + String(err && err.message || err));
     return { ok: false, motivo: 'sin-acceso', detalle: String(err && err.message || err) };
   }
-  if (!hoja) return { ok: false, motivo: 'sin-lista' };
-
-  var datos = hoja.getDataRange().getValues();
-  if (datos.length < 2) return { ok: false, motivo: 'sin-lista' };
+  if (datos.length < 2) return { ok: false, motivo: 'sin-lista', detalle: 'la pestaña está vacía' };
 
   var titulos = datos[0].map(normalizarTitulo_);
   function col(/* alternativas */) {
