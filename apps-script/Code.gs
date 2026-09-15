@@ -196,7 +196,7 @@ var URL_CURSO = "https://zuicagerman-eng.github.io/Pagina-html-recapacitaciones-
    siguen atendidos por el codigo viejo. Este sello es lo que permite verlo:
    comprobarPublicacion() se lo pregunta a la implementacion y compara.
    Subelo cada vez que cambie algo de fondo. */
-var VERSION_GS = "2026-09-15-c";
+var VERSION_GS = "2026-09-15-d";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    LISTA DE PERSONAL  ·  la cédula como llave del examen
@@ -227,7 +227,7 @@ var PESTANA_PERSONAL = "Maestro People";
    Si no puede, el curso no bloquea a nadie: deja escribir los datos a mano y
    lo marca como "sin verificar", que es mejor que dejar a media planta fuera
    por un permiso. */
-var ID_HOJA_PERSONAL = "";
+var ID_HOJA_PERSONAL = "115kergzc1aaUJHOC8EF63JxQr9yor0ovkO6MGUWsV4A";
 
 /* Las divisiones distintas de la lista, ordenadas. Cacheado seis horas: son
    870 filas y esto se pide al abrir el examen, no hay que releerlas cada vez. */
@@ -371,7 +371,7 @@ function soloDigitos_(v) { return String(v == null ? '' : v).replace(/\D/g, '');
    "Cédula", "CEDULA" y "cedula" sean la misma columna. */
 function normalizarTitulo_(v) {
   return String(v == null ? '' : v)
-    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
     .toLowerCase().replace(/[^a-z0-9]/g, '');
 }
 
@@ -2481,6 +2481,24 @@ function registrarAparte_(d, enlace) {
 
   try {
     var hoja = hojaAparte_();
+
+    /* EL SEGURO QUE MAS FALTA HACE
+       Si ID_HOJA_APARTE apunta al mismo libro y a la misma pestaña donde ya
+       escribe guardarExamen, cada examen de Nobsa se anotaria DOS VECES: una
+       por la via normal y otra por aqui. Es justo el problema de las filas
+       repetidas que ya hubo, pero automatizado. Antes de escribir nada se
+       comprueba, y si coinciden esta parte se queda quieta. */
+    try {
+      if (hoja.getParent().getId() === obtenerHoja_().getId() &&
+          hoja.getName() === PESTANA_RESUMEN) {
+        var mismo = 'La hoja aparte apunta a la MISMA pestaña "' + PESTANA_RESUMEN +
+          '" donde ya se guarda todo. No se anota nada: seria duplicar cada fila. ' +
+          'Si el destino es otra pestaña del mismo libro, ponla en PESTANA_APARTE.';
+        console.warn(mismo);
+        return mismo;
+      }
+    } catch (ePadre) { /* si no se puede comparar, se sigue: el resto ya no pisa nada */ }
+
     var m = mapaAparte_(hoja);
     if (!m.fila || m.cols.cedula === undefined) {
       var aviso = 'No se reconocieron los encabezados de la hoja aparte, o no tiene ' +
