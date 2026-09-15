@@ -412,14 +412,17 @@
   .sesbanner span{color:#e7f3d6;font-size:13.5px;font-weight:700}
   /* La modalidad, siempre a la vista, con su boton para volver a elegir.
      Discreta a proposito: es un seguro, no un paso del formulario. */
-  .exmodo{display:flex;align-items:center;gap:10px;flex-wrap:wrap;
-    margin:0 0 16px;font-size:13px;color:#9fb6cd}
-  .exmodo b{color:#e8f1f8;font-weight:800}
-  .exmodo button{background:transparent;border:1px solid rgba(151,209,59,.5);
-    color:#bfe87a;border-radius:999px;padding:5px 13px;font:inherit;font-weight:700;
-    cursor:pointer;line-height:1.2}
-  .exmodo button:hover{background:rgba(151,209,59,.14)}
-  .exmodo button:focus-visible{outline:2px solid #97d13b;outline-offset:2px}
+  .exmodo{display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+    margin:0 0 18px;font-size:15px;color:#c3d5e6}
+  .exmodo b{color:#fff;font-weight:800}
+  /* Relleno y no contorno: en la primera version era un boton fantasma y habia
+     que buscarlo. Con el fondo verde se ve de una. */
+  .exmodo button{background:linear-gradient(160deg,#97d13b,#5da31e);border:none;
+    color:#0b2036;border-radius:999px;padding:9px 20px;font:inherit;font-weight:800;
+    font-size:14.5px;cursor:pointer;line-height:1.2;
+    box-shadow:0 8px 20px -9px rgba(93,163,30,.85)}
+  .exmodo button:hover{filter:brightness(1.08);transform:translateY(-1px)}
+  .exmodo button:focus-visible{outline:3px solid #cbe98f;outline-offset:2px}
   /* Datos traidos de la lista: se ven confirmados, no editables por descuido,
      pero con la puerta abierta a corregirlos —una lista siempre tiene erratas
      y nadie deberia quedarse sin certificado por una tilde ajena—. */
@@ -3486,6 +3489,18 @@
   .fab::after{content:"";position:absolute;inset:0;border-radius:999px;animation:pulse 2.2s infinite}
   #helpBtn{background:linear-gradient(160deg,#1bb4e4,#1877c4);box-shadow:0 8px 20px -8px rgba(24,119,196,.7)}
   #reportBtn{background:linear-gradient(160deg,#f5b700,#ef7d00);box-shadow:0 8px 20px -8px rgba(239,125,0,.75)}
+  /* .fab-tema no tenia NINGUN estilo, asi que el boton se quedaba con el fondo
+     gris por defecto del navegador y encima el color:#fff de .fab: letra blanca
+     sobre gris claro, ilegible. Se le pone su propio fondo, oscuro y con borde,
+     para que se distinga de Ayuda y Reportar sin competir con ellos. */
+  #temaBtn{background:linear-gradient(160deg,#33506f,#1d3145);
+    border:1px solid rgba(255,255,255,.28);
+    box-shadow:0 8px 20px -8px rgba(0,0,0,.6)}
+  /* El de modalidad, en verde Holcim: es el unico que cambia como se registra
+     el examen, asi que se separa a la vista de los otros tres. */
+  #modoBtn{background:linear-gradient(160deg,#97d13b,#5da31e);
+    box-shadow:0 8px 20px -8px rgba(93,163,30,.75);color:#0b2036}
+  #modoBtn svg{stroke:#0b2036}
   .fab-tip{pointer-events:none}
   /* En pantallas angostas queda solo el ícono, para no empujar el "Paso X / Y" */
   @media(max-width:760px){.fab-tip{display:none} .fab{padding:0;width:32px;justify-content:center}}
@@ -3926,6 +3941,15 @@
     <button class="fab" id="reportBtn" title="Reportar un problema en esta diapositiva" aria-label="Reportar un problema">
       <svg viewBox="0 0 24 24"><path d="M12 3l9 16H3z"/><path d="M12 9v5M12 17h0"/></svg>
       <span class="fab-tip">Reportar</span>
+    </button>
+    <!-- Solo aparece en la lamina del examen: fuera de ahi no hay nada que
+         elegir. Se pone ANTES del de tema para que quede junto a Reportar,
+         que es donde la vista ya esta acostumbrada a buscar acciones. -->
+    <button class="fab" id="modoBtn" hidden
+            title="Elegir si la (Re) Inducción es individual o Yo aprendo"
+            aria-label="Cambiar la modalidad">
+      <svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.1"/><path d="M2.6 20c0-3.4 2.9-5.2 6.4-5.2s6.4 1.8 6.4 5.2"/><path d="M16.4 10.9a3.1 3.1 0 1 0-1.7-5.7"/><path d="M18 14.9c2.1.7 3.4 2.3 3.4 5.1"/></svg>
+      <span class="fab-tip" id="modoTip">Modalidad</span>
     </button>
     <button class="fab fab-tema" id="temaBtn" title="Cambiar entre claro y oscuro" aria-label="Tema de la presentación">
       <svg viewBox="0 0 24 24" id="temaIcono"></svg>
@@ -6435,7 +6459,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-15-g";
+var VERSION_CURSO = "2026-09-15-h";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas preguntas tiene el examen EN TOTAL. Las
@@ -7021,6 +7045,8 @@ function chrome(){
   pipEls.forEach(function(p,k){ p.className = ''; if(k===idx) p.classList.add('on'); if(k>maxUnlocked) p.classList.add('lock'); });
   pipFlags.forEach(function(f){ f.classList.toggle('lock', (+f.getAttribute('data-i')) > maxUnlocked); });
   var enExamen = vioPresentacion && idx === iExamen();
+  /* El boton de modalidad de la barra entra y sale con la lamina del examen. */
+  if(window.pintarModalidad) window.pintarModalidad();
   /* Al volver a la lamina, quien dirige la jornada recupera su pantalla de
      reparto en vez del formulario. */
   if(enExamen && typeof SESION !== 'undefined' && SESION && SESION.yoLaCree &&
@@ -8587,16 +8613,30 @@ function montarSesion(){
      su resultado se perdiera de la sesion. */
   function pintarModalidad(){
     var linea = document.getElementById('exModo'), txt = document.getElementById('exModoTxt');
-    if(!linea || !txt) return;
     var deOtro = !!(SESION && !SESION.yoLaCree);
-    linea.hidden = deOtro;
-    txt.textContent = SESION
+    var como = SESION
       ? 'Yo aprendo' + (SESION.id ? ' · código ' + SESION.id : '')
       : 'Individual';
+    if(linea && txt){ linea.hidden = deOtro; txt.textContent = como; }
+
+    /* El mismo boton arriba, en la barra. Se enseña solo estando en la lamina
+       del examen: en el resto de la presentacion no hay nada que elegir y solo
+       seria un boton mas que estorba. */
+    var arriba = document.getElementById('modoBtn');
+    if(arriba){
+      var enExamen = typeof idx !== 'undefined' && typeof iExamen === 'function' &&
+                     idx === iExamen() && typeof vioPresentacion !== 'undefined' && vioPresentacion;
+      arriba.hidden = deOtro || !enExamen;
+      var tip = document.getElementById('modoTip');
+      if(tip) tip.textContent = SESION ? 'Yo aprendo' : 'Individual';
+      arriba.setAttribute('title', 'Modalidad: ' + como + '. Pulsa para cambiarla.');
+    }
   }
   window.pintarModalidad = pintarModalidad;
-  var bModo = document.getElementById('exModoBtn');
-  if(bModo) bModo.addEventListener('click', function(){ abrir(); });
+  ['exModoBtn', 'modoBtn'].forEach(function(id){
+    var b = document.getElementById(id);
+    if(b) b.addEventListener('click', function(){ abrir(); });
+  });
   pintarModalidad();
   /* Salir sin elegir es quedarse como se estaba: individual, que es lo que el
      curso hacia antes de existir esta pregunta. Un modal sin salida por un
