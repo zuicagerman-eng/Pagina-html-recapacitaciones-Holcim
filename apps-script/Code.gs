@@ -69,12 +69,17 @@ var PESTANA_APARTE = "Resultados";   // la pestaña de ESE libro, no la del nues
 var CENTROS_APARTE = ['NOBSA', 'TUNJA'];
 
 /* Que hacer cuando la persona YA tiene fila en esa hoja y las celdas que nos
-   tocan ya estan llenas (por ejemplo, porque presenta el examen por segunda
-   vez):
-     'dejar' (por defecto) → no se toca nada. Queda anotado en Ejecuciones.
-     'nueva'               → se agrega otra fila al final con este intento.
-   En ninguno de los dos casos se sobrescribe lo que ya estaba. */
-var FILA_LLENA_APARTE = 'dejar';
+   tocan ya estan llenas: por ejemplo porque presenta el examen por segunda vez,
+   o porque ya figuraba de una jornada anterior.
+     'nueva' → se agrega otra fila al final con este intento.
+     'dejar' → no se toca nada y queda anotado en Ejecuciones.
+   En ninguno de los dos casos se sobrescribe lo que ya estaba.
+
+   Puesto en 'nueva' porque esa pestaña es un REGISTRO de examenes —600 y pico
+   filas del mismo curso—, no un listado de personas. En un registro, un segundo
+   intento tiene que dejar su propia fila; con 'dejar' no quedaria constancia de
+   que esa persona volvio a presentarlo. */
+var FILA_LLENA_APARTE = 'nueva';
 
 /* 4) OPCIONAL — Carpeta FINAL, normalmente la de la unidad compartida de Holcim.
       Si la pones, cada certificado se guarda primero en la carpeta de arriba y
@@ -196,7 +201,7 @@ var URL_CURSO = "https://zuicagerman-eng.github.io/Pagina-html-recapacitaciones-
    siguen atendidos por el codigo viejo. Este sello es lo que permite verlo:
    comprobarPublicacion() se lo pregunta a la implementacion y compara.
    Subelo cada vez que cambie algo de fondo. */
-var VERSION_GS = "2026-09-15-g";
+var VERSION_GS = "2026-09-15-h";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    LISTA DE PERSONAL  ·  la cédula como llave del examen
