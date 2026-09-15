@@ -64,7 +64,7 @@ var ID_CARPETA_CERTIFICADOS = "https://drive.google.com/drive/folders/1LExNIvC0P
       celdas VACIAS. Nunca se pisa nada de lo que ya haya escrito, ni una sola
       celda, pase lo que pase. */
 var CARPETA_APARTE = "https://drive.google.com/drive/folders/1LExNIvC0PP0CSRVn79bg1m4yPfdvXJ4l";
-var ID_HOJA_APARTE = "";       // ►► FALTA: el enlace del OTRO libro (no el de ID_HOJA)
+var ID_HOJA_APARTE = "https://docs.google.com/spreadsheets/d/1Y85SUO7kmTFYRGOPKMXao0CPm9KvLLlzOusJluAbQTs/edit";
 var PESTANA_APARTE = "Resultados";   // la pestaña de ESE libro, no la del nuestro
 var CENTROS_APARTE = ['NOBSA', 'TUNJA'];
 
@@ -196,7 +196,7 @@ var URL_CURSO = "https://zuicagerman-eng.github.io/Pagina-html-recapacitaciones-
    siguen atendidos por el codigo viejo. Este sello es lo que permite verlo:
    comprobarPublicacion() se lo pregunta a la implementacion y compara.
    Subelo cada vez que cambie algo de fondo. */
-var VERSION_GS = "2026-09-15-e";
+var VERSION_GS = "2026-09-15-f";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    LISTA DE PERSONAL  ·  la cédula como llave del examen

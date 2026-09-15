@@ -6467,7 +6467,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-15-i";
+var VERSION_CURSO = "2026-09-15-j";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas preguntas tiene el examen EN TOTAL. Las
@@ -9852,7 +9852,11 @@ document.addEventListener('DOMContentLoaded', function(){
       if(et.parentNode) et.parentNode.removeChild(et);
       listo(r);
     }
-    var reloj = setTimeout(function(){ terminar({ ok:false, motivo:'tardo' }); }, 12000);
+    /* Veinte segundos. El Maestro son 870 filas y Apps Script puede tardar lo
+       suyo en despertar si lleva rato sin que nadie lo llame; rendirse a los
+       doce dejaba fuera a gente que solo tenia que esperar un poco mas. Esto no
+       alarga la espera cuando responde rapido: es un tope, no una pausa. */
+    var reloj = setTimeout(function(){ terminar({ ok:false, motivo:'tardo' }); }, 20000);
     window[fn] = function(r){ terminar(r || { ok:false, motivo:'vacio' }); };
     et.onerror = function(){ terminar({ ok:false, motivo:'sin-red' }); };
     /* Si la implementacion publicada es vieja y no conoce ?cedula, contesta la
@@ -9884,7 +9888,10 @@ document.addEventListener('DOMContentLoaded', function(){
       if(et.parentNode) et.parentNode.removeChild(et);
       listo(r && r.ok ? r.divisiones : null);
     }
-    var reloj = setTimeout(function(){ terminar(null); }, 10000);
+    /* El mismo tope que la consulta de cedula: lee la misma hoja. Aqui esperar
+       no le cuesta nada a nadie —el desplegable arranca con la lista de
+       respaldo y se sustituye cuando llega la de verdad—. */
+    var reloj = setTimeout(function(){ terminar(null); }, 20000);
     window[fn] = function(r){ terminar(r); };
     et.onerror = function(){ terminar(null); };
     /* Igual que en la consulta de cedula: una implementacion vieja contesta
