@@ -64,8 +64,8 @@ var ID_CARPETA_CERTIFICADOS = "https://drive.google.com/drive/folders/1LExNIvC0P
       celdas VACIAS. Nunca se pisa nada de lo que ya haya escrito, ni una sola
       celda, pase lo que pase. */
 var CARPETA_APARTE = "https://drive.google.com/drive/folders/1LExNIvC0PP0CSRVn79bg1m4yPfdvXJ4l";
-var ID_HOJA_APARTE = "";       // pega aqui el enlace de la hoja de Nobsa/Tunja
-var PESTANA_APARTE = "";       // vacio = la primera pestaña de esa hoja
+var ID_HOJA_APARTE = "";       // ►► FALTA: el enlace del OTRO libro (no el de ID_HOJA)
+var PESTANA_APARTE = "Resultados";   // la pestaña de ESE libro, no la del nuestro
 var CENTROS_APARTE = ['NOBSA', 'TUNJA'];
 
 /* Que hacer cuando la persona YA tiene fila en esa hoja y las celdas que nos
@@ -196,7 +196,7 @@ var URL_CURSO = "https://zuicagerman-eng.github.io/Pagina-html-recapacitaciones-
    siguen atendidos por el codigo viejo. Este sello es lo que permite verlo:
    comprobarPublicacion() se lo pregunta a la implementacion y compara.
    Subelo cada vez que cambie algo de fondo. */
-var VERSION_GS = "2026-09-15-d";
+var VERSION_GS = "2026-09-15-e";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    LISTA DE PERSONAL  ·  la cédula como llave del examen
