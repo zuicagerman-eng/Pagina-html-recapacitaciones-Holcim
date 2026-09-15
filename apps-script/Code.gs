@@ -165,7 +165,7 @@ var URL_CURSO = "https://zuicagerman-eng.github.io/Pagina-html-recapacitaciones-
    siguen atendidos por el codigo viejo. Este sello es lo que permite verlo:
    comprobarPublicacion() se lo pregunta a la implementacion y compara.
    Subelo cada vez que cambie algo de fondo. */
-var VERSION_GS = "2026-09-14-d";
+var VERSION_GS = "2026-09-15-a";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    LISTA DE PERSONAL  ·  la cédula como llave del examen
@@ -1550,10 +1550,17 @@ function comprobarPublicacion(otraUrl) {
   }
 
   var igual = publicada === VERSION_GS;
+  /* Se dice de que versiones se habla. Las dos se parecen demasiado a la del
+     curso —misma forma de fecha— y ya hubo quien comparo "publicada: 2026-09-14-c"
+     con la "Version 2026-09-15-a" de la ventana de bienvenida pensando que
+     tenian que coincidir. Son dos archivos distintos y llevan su propia cuenta. */
   var txt2 = (igual ? 'AL DIA.' : 'NO COINCIDEN.') +
     '\n  url:       ' + url +
-    '\n  publicada: ' + publicada +
-    '\n  editor:    ' + VERSION_GS +
+    '\n  publicada: ' + publicada + '   (version del SCRIPT, no del curso)' +
+    '\n  editor:    ' + VERSION_GS + '   (version del SCRIPT, no del curso)' +
+    '\n\n  Ojo: la "Version" que sale en la ventana de bienvenida del curso es\n' +
+    '  la del index.html y lleva su propia cuenta. NO tiene por que coincidir\n' +
+    '  con estas dos, y que sean distintas no significa que falte nada.' +
     (igual
       ? (esLaDelCurso
           ? '\n\nLo que atiende al curso es este mismo codigo.'
