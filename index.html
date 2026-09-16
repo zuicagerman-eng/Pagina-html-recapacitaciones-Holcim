@@ -229,6 +229,21 @@
   .excampo input,.excampo select{width:100%;background:rgba(255,255,255,.07);border:2px solid rgba(255,255,255,.16);
     border-radius:11px;padding:12px 14px;color:#fff;font-size:15px;font-family:inherit}
   .excampo input:focus,.excampo select:focus{outline:0;border-color:var(--cyan)}
+  /* Cedula + "Buscar mis datos" en la misma fila. En pantalla estrecha el boton
+     se pasa debajo y ocupa el ancho: partirlo en dos columnas de 150px no lo
+     haria mas pulsable, solo mas dificil de acertar con el pulgar. */
+  .exbuscafila{display:flex;gap:9px;align-items:stretch}
+  .exbuscafila input{flex:1;min-width:0}
+  .exbuscabtn{flex:none;white-space:nowrap;border:none;border-radius:11px;
+    padding:0 17px;font:inherit;font-weight:800;font-size:13.5px;cursor:pointer;
+    background:linear-gradient(160deg,#97d13b,#5da31e);color:#0b2036;
+    box-shadow:0 8px 20px -10px rgba(93,163,30,.9)}
+  .exbuscabtn:hover{filter:brightness(1.08)}
+  .exbuscabtn:focus-visible{outline:3px solid #cbe98f;outline-offset:2px}
+  .exbuscabtn[disabled]{opacity:.5;cursor:default;filter:none}
+  @media(max-width:560px){
+    .exbuscafila{flex-wrap:wrap}
+    .exbuscabtn{width:100%;padding:12px 17px}}
   .excampo input.mal,.excampo select.mal{border-color:var(--danger)}
   /* El desplegable nativo se pinta con los colores del sistema: hay que forzar
      la flecha y, sobre todo, el color de las opciones desplegadas, que en un
@@ -4288,7 +4303,7 @@
       <figure class="mediaBox heroMedia rv right" data-media="imagenes/m2-portada" style="--d:3"></figure>
     </div>
   
-  </section>
+  </div></section>
 <section class="slide dark teal" data-mod="2">
     <div class="wrap">
       <div class="eyebrow rv up">Planeación estratégica H&amp;S</div>
@@ -4405,7 +4420,7 @@
       <figure class="mediaBox heroMedia rv right" data-media="imagenes/m3-portada" data-loop="no" style="--d:3"></figure>
     </div>
   
-</section>
+</div></section>
 <section class="slide light" data-mod="3">
   <div class="wrap">
     <div class="eyebrow rv up">Control operacional</div>
@@ -4678,7 +4693,7 @@
       <figure class="mediaBox heroMedia rv right" data-media="imagenes/m4p1-portada" style="--d:3"></figure>
     </div>
   
-</section>
+</div></section>
 <section class="slide nogate dark" data-mod="4">
   <div class="wrap">
     <div class="eyebrow rv up">HSE-001 · Sistema de gestión</div>
@@ -4856,7 +4871,7 @@
     <p class="lead rv up" style="--d:2">Por qué conviene reportar a tiempo:</p>
     <div class="accgrid" style="margin-top:12px"><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>Protege a las personas de forma inmediata</h4><span class="chev">+</span></div><div class="acc-body"><p>Permite activar oportunamente la atención médica, el acompañamiento y las medidas de control, reduciendo riesgos de complicaciones y facilitando la recuperación.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1bb4e4"></span><h4>Evita la repetición de eventos</h4><span class="chev">+</span></div><div class="acc-body"><p>Facilita la identificación de causas y la implementación de acciones correctivas, evitando que otros se expongan a riesgos ya identificados.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#1877c4"></span><h4>Fortalece la cultura de Seguridad y Salud</h4><span class="chev">+</span></div><div class="acc-body"><p>Promueve la confianza, el aprendizaje organizacional y la mejora continua.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#97d13b"></span><h4>Permite una gestión legal adecuada</h4><span class="chev">+</span></div><div class="acc-body"><p>Garantiza el cumplimiento de las obligaciones ante la ARL y las autoridades, evitando reprocesos y pérdida de credibilidad.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#ef7d00"></span><h4>Enfoque proactivo de recursos</h4><span class="chev">+</span></div><div class="acc-body"><p>Evita desvíos innecesarios de tiempo y presupuesto, enfocando los recursos en capacitación, prevención y mejores condiciones de trabajo.</p></div></div><div class="acc rv up"><div class="acc-head"><span class="stripe" style="background:#e6007e"></span><h4>Genera beneficios reales para todos</h4><span class="chev">+</span></div><div class="acc-body"><p>El reporte oportuno no es una carga ni una sanción: es una acción de corresponsabilidad que protege a las personas y fortalece la organización.</p></div></div>
   </div>
-</section>
+</div></section>
 <section class="slide nogate dark teal" data-mod="4">
   <div class="wrap">
     <div class="eyebrow rv up">HSE-003 · Elementos de protección personal</div>
@@ -5955,7 +5970,7 @@
       <figure class="mediaBox heroMedia rv right" data-media="imagenes/m5-portada" style="--d:3"></figure>
     </div>
   
-</section>
+</div></section>
 <section class="slide light mint" data-mod="5">
 <div class="wrap"><div class="eyebrow rv up">Gestión de Controles Críticos</div>
 <h2 class="rv up" style="--d:1">PUE y CCM</h2>
@@ -6107,7 +6122,7 @@
       <figure class="mediaBox heroMedia rv right" data-media="imagenes/m6-portada" style="--d:3"></figure>
     </div>
   
-</section>
+</div></section>
 <section class="slide light" data-mod="6">
 <div class="wrap"><div class="eyebrow rv up">Comunicación, participación y consulta</div>
 <h2 class="rv up" style="--d:1">Promoción y mecanismos</h2>
@@ -6297,7 +6312,6 @@
               <input id="exLlaveCed" type="text" inputmode="numeric" autocomplete="off"
                      placeholder="1020304050" maxlength="15">
             </div>
-            </div>
             <p class="exerr" id="exLlaveErr"></p>
             <button class="exbtn" id="exLlaveBtn" type="button">Continuar</button>
             <p class="exerr" id="exLlaveNota" style="color:#9fb6cd;min-height:0;margin-top:14px">
@@ -6336,7 +6350,14 @@
           </div>
           <div class="excampo">
             <label for="exCedula">Número de cédula</label>
-            <input id="exCedula" type="text" inputmode="numeric" autocomplete="off" placeholder="1020304050" maxlength="15">
+            <!-- El boton de rescate: si la cedula se escribio mal en la pantalla
+                 anterior, aqui se corrige y se vuelve a buscar, en vez de tener
+                 que recargar y perder el avance de la presentacion. -->
+            <div class="exbuscafila">
+              <input id="exCedula" type="text" inputmode="numeric" autocomplete="off" placeholder="1020304050" maxlength="15">
+              <button class="exbuscabtn" id="exBuscar" type="button" hidden>Buscar mis datos</button>
+            </div>
+            <p class="exerr" id="exBuscarMsg" style="min-height:0;margin-top:7px"></p>
           </div>
           <p class="exerr" id="exErr"></p>
           <button class="exbtn" id="exIniciar" type="button">Comenzar examen</button>
@@ -6492,7 +6513,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-16-f";
+var VERSION_CURSO = "2026-09-16-h";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas preguntas tiene el examen EN TOTAL. Las
@@ -10093,38 +10114,102 @@ document.addEventListener('DOMContentLoaded', function(){
           return;
         }
 
-        // encontrada: se rellena lo que venga y se deja lo demas a la persona
-        var p = r.p || {};
-        if(p.apellido1) inApe1.value = p.apellido1;
-        if(p.apellido2) inApe2.value = p.apellido2;
-        if(p.nombres)   inNombres.value = p.nombres;
-        /* Sin columna de tipo, quien esta en el maestro de Holcim es propio. */
-        ponerSiExiste(inTipo, p.tipo || TIPO_POR_DEFECTO_LISTA);
-        if(p.centro)    ponerSiExiste(inEmpresa, p.centro);
-        try{ inTipo.dispatchEvent(new Event('change')); }catch(e){}
-        try{ inEmpresa.dispatchEvent(new Event('change')); }catch(e){}
-        if(p.empresa && pideEmpresa()) inRazon.value = p.empresa;
-        cargo = p.cargo || '';
+        rellenarConPersona(ced, r.p || {});
+      });
+    }
 
-        verificado = 'SI';
-        verif.hidden = false;
-        verifTxt.innerHTML = '<b style="display:block;font-size:14.5px;letter-spacing:0;text-transform:none">' +
-          [p.apellido1, p.apellido2, p.nombres].filter(Boolean).join(' ') + '</b>' +
-          'C.C. ' + ced +
-          (inEmpresa.value ? ' · ' + inEmpresa.value : '') +
-          (p.cargo ? ' · ' + p.cargo : '');
+    /* El relleno vive aparte porque lo usan DOS caminos: el paso de la cedula y
+       el boton "Buscar mis datos" del formulario. Copiarlo en los dos era
+       condenarlos a separarse en cuanto cambiara uno. */
+    function rellenarConPersona(ced, p){
+      if(p.apellido1) inApe1.value = p.apellido1;
+      if(p.apellido2) inApe2.value = p.apellido2;
+      if(p.nombres)   inNombres.value = p.nombres;
+      /* Sin columna de tipo, quien esta en el maestro de Holcim es propio. */
+      ponerSiExiste(inTipo, p.tipo || TIPO_POR_DEFECTO_LISTA);
+      if(p.centro)    ponerSiExiste(inEmpresa, p.centro);
+      try{ inTipo.dispatchEvent(new Event('change')); }catch(e){}
+      try{ inEmpresa.dispatchEvent(new Event('change')); }catch(e){}
+      if(p.empresa && pideEmpresa()) inRazon.value = p.empresa;
+      cargo = p.cargo || '';
+      inCedula.value = ced;
 
-        /* Lo que trajo la lista ya no se pregunta: el campo desaparece en vez
-           de quedarse gris. Lo que vino vacio si se queda, para escribirlo. */
-        inApe1.readOnly = !!p.apellido1; inApe2.readOnly = !!p.apellido1;
-        inNombres.readOnly = !!p.nombres; inCedula.readOnly = true;
-        ocultarCampo(inTipo,    !!inTipo.value);
-        ocultarCampo(inEmpresa, !!inEmpresa.value);
-        ocultarCampo(inApe1,    !!p.apellido1);
-        ocultarCampo(inApe2,    !!p.apellido1);
-        ocultarCampo(inNombres, !!p.nombres);
-        ocultarCampo(inCedula,  true);
-        abrirCampos();
+      verificado = 'SI';
+      verif.hidden = false;
+      verifTxt.innerHTML = '<b style="display:block;font-size:14.5px;letter-spacing:0;text-transform:none">' +
+        [p.apellido1, p.apellido2, p.nombres].filter(Boolean).join(' ') + '</b>' +
+        'C.C. ' + ced +
+        (inEmpresa.value ? ' · ' + inEmpresa.value : '') +
+        (p.cargo ? ' · ' + p.cargo : '');
+
+      /* Lo que trajo la lista ya no se pregunta: el campo desaparece en vez
+         de quedarse gris. Lo que vino vacio si se queda, para escribirlo. */
+      inApe1.readOnly = !!p.apellido1; inApe2.readOnly = !!p.apellido1;
+      inNombres.readOnly = !!p.nombres; inCedula.readOnly = true;
+      ocultarCampo(inTipo,    !!inTipo.value);
+      ocultarCampo(inEmpresa, !!inEmpresa.value);
+      ocultarCampo(inApe1,    !!p.apellido1);
+      ocultarCampo(inApe2,    !!p.apellido1);
+      ocultarCampo(inNombres, !!p.nombres);
+      ocultarCampo(inCedula,  true);
+      abrirCampos();
+    }
+
+    /* ── EL BOTON DE RESCATE ──
+       Quien escribio mal la cedula en la pantalla anterior acaba aqui, en el
+       formulario a mano, y hasta ahora no tenia forma de volver a intentarlo:
+       habia que recargar, y recargar cuesta toda la presentacion recorrida.
+       Este boton corrige la cedula y vuelve a preguntarle al Maestro. */
+    var bBuscar = document.getElementById('exBuscar'),
+        msgBuscar = document.getElementById('exBuscarMsg');
+    if(bBuscar && msgBuscar){
+      bBuscar.hidden = false;
+      var buscando = false;
+      function reintentar(){
+        if(buscando) return;
+        var ced2 = inCedula.value.replace(/\D/g, '');
+        if(ced2.length < 6 || ced2.length > 12){
+          inCedula.classList.add('mal');
+          msgBuscar.style.color = '';
+          msgBuscar.textContent = 'La cédula debe tener entre 6 y 12 dígitos, sin puntos ni espacios.';
+          try{ inCedula.focus(); }catch(e){}
+          return;
+        }
+        inCedula.classList.remove('mal');
+        buscando = true;
+        bBuscar.disabled = true;
+        var decia = bBuscar.textContent;
+        bBuscar.textContent = 'Buscando…';
+        msgBuscar.style.color = '#9fb6cd';
+        msgBuscar.textContent = 'Consultando la lista…';
+        consultarCedula(ced2, function(r){
+          buscando = false;
+          bBuscar.disabled = false;
+          bBuscar.textContent = decia;
+          if(!r || !r.ok){
+            msgBuscar.style.color = '';
+            msgBuscar.textContent = 'No se pudo consultar la lista. Escribe tus datos y continúa.';
+            return;
+          }
+          if(!r.encontrado){
+            msgBuscar.style.color = '';
+            msgBuscar.textContent = r.motivo === 'inactivo'
+              ? 'Esa cédula figura como inactiva. Escribe a Salud y Seguridad.'
+              : 'Esa cédula tampoco aparece en la lista. Revísala o escribe tus datos.';
+            inCedula.classList.add('mal');
+            return;
+          }
+          msgBuscar.style.color = '#bfe87a';
+          msgBuscar.textContent = 'Listo: tus datos se trajeron de la lista.';
+          /* El "no apareces en la lista" del intento anterior tiene que irse: si
+             se queda, la pantalla dice dos cosas contrarias a la vez. */
+          elErr.textContent = '';
+          rellenarConPersona(ced2, r.p || {});
+        });
+      }
+      bBuscar.addEventListener('click', reintentar);
+      inCedula.addEventListener('keydown', function(e){
+        if(e.key === 'Enter' && !inCedula.readOnly){ e.preventDefault(); reintentar(); }
       });
     }
 
@@ -10148,6 +10233,15 @@ document.addEventListener('DOMContentLoaded', function(){
 
     btn.addEventListener('click', pedir);
     inp.addEventListener('keydown', function(e){ if(e.key === 'Enter'){ e.preventDefault(); pedir(); } });
+
+    /* Corregir vuelve a abrir el campo de la cedula: si sigue de solo lectura,
+       el boton de rescate no serviria de nada. */
+    var bCorr2 = document.getElementById('exCorregir');
+    if(bCorr2) bCorr2.addEventListener('click', function(){
+      inCedula.readOnly = false;
+      var m = document.getElementById('exBuscarMsg');
+      if(m){ m.textContent = ''; m.style.color = ''; }
+    });
 
     window.reiniciarLlave = function(){
       /* El siguiente de la fila vuelve a escribirla: el QR se reenvia y la
