@@ -66,8 +66,11 @@
 
   /* Campos */
   .slide.light .excampo label{color:#3b556f}
+  /* background-color, NO el atajo "background": el atajo reinicia tambien
+     el no-repeat, la posicion y el tamano de la flecha del desplegable, y
+     la flecha quedaba repetida en zigzag a todo lo ancho del campo. */
   .slide.light .excampo input,
-  .slide.light .excampo select{background:#fff;border-color:rgba(11,37,69,.22);color:var(--ink)}
+  .slide.light .excampo select{background-color:#fff;border-color:rgba(11,37,69,.22);color:var(--ink)}
   .slide.light .excampo input::placeholder{color:#9aabbd}
   .slide.light .excampo select option{background:#fff;color:var(--ink)}
   /* La flecha del desplegable venia en celeste claro, pensada para fondo oscuro. */
@@ -6637,7 +6640,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-16-l";
+var VERSION_CURSO = "2026-09-16-m";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas preguntas tiene el examen EN TOTAL. Las
