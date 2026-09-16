@@ -6513,7 +6513,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-16-h";
+var VERSION_CURSO = "2026-09-16-i";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas preguntas tiene el examen EN TOTAL. Las
@@ -6525,16 +6525,21 @@ var PIN_ADMIN = "2026";
    hoja de resultados. Si copias este curso para otra capacitacion, cambialo. */
 var NOMBRE_CAPACITACION = "HSE-001 · (Re) Inducción H&S";
 /* TIPOS DE USUARIO: la lista del primer desplegable de la pantalla del examen. */
-var TIPOS_USUARIO = ['Propio', 'Contratista', 'Temporal', 'Visitante'];
+var TIPOS_USUARIO = ['Propio', 'Temporal'];
 /* SEDES: RESPALDO. Los centros de verdad son las divisiones del Maestro People
    —HC-NOBSA CEMENTO, HC-CHIA...— y el curso se las pide al Apps Script al
    abrir, asi no hay dos listas que mantener de acuerdo ni centros que ya no
    existen. Esta lista solo se usa si esa consulta falla, para que el examen
    nunca se quede sin desplegable. "Otra" siempre queda al final. */
-/* Tipos de usuario que no son de Holcim y a los que si se les pregunta la
-   empresa (razon social). Si mañana cambia la lista de tipos, esto es lo
-   unico que hay que revisar. */
-var TIPOS_CON_EMPRESA = ['Contratista', 'Visitante'];
+/* Tipos de usuario a los que se les pregunta la empresa (razon social).
+   Vacia desde que la lista quedo en Propio y Temporal: antes aqui estaban
+   Contratista y Visitante, que ya no existen, y dejarlos escritos habria
+   prometido un campo que no puede salir nunca.
+
+   Si algun dia hay que saber por que empresa temporal llega cada persona,
+   este es el cambio entero:  var TIPOS_CON_EMPRESA = ['Temporal'];
+   Ojo: ese campo es OBLIGATORIO para los tipos que esten aqui. */
+var TIPOS_CON_EMPRESA = [];
 
 var SEDES = [
   'BARRANCA GEO',
