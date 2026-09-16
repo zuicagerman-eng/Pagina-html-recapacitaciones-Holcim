@@ -52,6 +52,88 @@
     .ht-reloj{text-align:center}}
   @media(max-width:820px){.ht-reloj{display:none}}
   @media(max-width:430px){.hudtiempo{gap:8px}.ht-cuenta{padding:4px 9px;font-size:12px}}
+
+  /* ═══════════ EL EXAMEN EN CLARO ═══════════
+     El examen estaba dibujado suponiendo fondo oscuro: paneles de blanco al 5%,
+     bordes de blanco al 10%, textos casi blancos. Sobre el gris claro de
+     .slide.light todo eso desaparece —blanco translucido sobre blanco no se ve—
+     asi que aqui va la otra mitad del dibujo. Cada regla es la misma de arriba
+     con los papeles cambiados: paneles blancos opacos, bordes de tinta al 12%,
+     y los textos en var(--ink).
+
+     No se toca ninguna de las reglas oscuras: el modo oscuro y el automatico
+     quedan exactamente como estaban. */
+
+  /* Campos */
+  .slide.light .excampo label{color:#3b556f}
+  .slide.light .excampo input,
+  .slide.light .excampo select{background:#fff;border-color:rgba(11,37,69,.22);color:var(--ink)}
+  .slide.light .excampo input::placeholder{color:#9aabbd}
+  .slide.light .excampo select option{background:#fff;color:var(--ink)}
+  /* La flecha del desplegable venia en celeste claro, pensada para fondo oscuro. */
+  .slide.light .excampo select{background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%231d4a72' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")}
+  .slide.light .card p.exerr.exnotagris{color:#4a6484}
+
+  /* Datos confirmados */
+  .slide.light .exverif{background:rgba(31,140,64,.1);border-color:rgba(31,140,64,.38)}
+  .slide.light .exverif b{color:#1b6e36}
+  .slide.light .exverif span{color:#123a20}
+  .slide.light .exverif button{background:rgba(11,37,69,.08);color:#2a4460;border-color:rgba(11,37,69,.2)}
+  .slide.light .exverif button:hover{background:rgba(11,37,69,.15)}
+
+  /* Preguntas y opciones */
+  .slide.light .exq{background:#fff;border-color:rgba(11,37,69,.12)}
+  .slide.light .exq .qh{color:var(--ink)}
+  .slide.light .exq .qn{color:#12688f}
+  /* "Marca N opciones": el selector correcto es .exnota, no .qcuantas. Con el
+     nombre equivocado la nota se quedaba en celeste claro sobre blanco —1,61 de
+     contraste, invisible— y solo aparecio al medirlo. */
+  .slide.light .exnota{color:#0f6486}
+  .slide.light .exq .qfoto{background:rgba(11,37,69,.05)}
+  .slide.light .exq .qob{color:#9c1f18;background:rgba(226,59,50,.13);border-color:rgba(226,59,50,.4)}
+  .slide.light .exopt{background:#fff;border-color:rgba(11,37,69,.17);color:var(--ink)}
+  .slide.light .exopt:hover{background:#e9f0f8}
+  .slide.light .exopt.sel{background:rgba(27,180,228,.16)}
+  .slide.light .exopt.bien{background:rgba(63,181,89,.2)}
+  .slide.light .exopt.mal{background:rgba(226,59,50,.16)}
+
+  /* Matrices */
+  .slide.light .exmz .mzcab{color:#4a6484}
+  .slide.light .exmz .mzfila,
+  .slide.light .exmz .mzfila span{background:#fff;border-color:rgba(11,37,69,.13);color:var(--ink)}
+  .slide.light .exmz .mzfila span{background:none}
+  .slide.light .exmz.muchas .mzop{background:#fff;border-color:rgba(11,37,69,.15)}
+  .slide.light .exmz.muchas .mzet{color:var(--ink)}
+  .slide.light .exmz .mzfila.bien{background:rgba(63,181,89,.2)}
+  .slide.light .exmz .mzfila.mal{background:rgba(226,59,50,.16)}
+
+  /* Barra de abajo y botones */
+  .slide.light .exbar{background:linear-gradient(180deg,rgba(238,243,249,0),rgba(238,243,249,.97) 38%)}
+  .slide.light .exbar .cont{color:#3b556f}
+  .slide.light .exbtn.sec{background:rgba(11,37,69,.1);color:var(--ink)}
+
+  /* Resultado y repaso */
+  .slide.light .exrevi h3{color:var(--ink)}
+  .slide.light .exguardado.ok{background:rgba(31,140,64,.12);border-color:rgba(31,140,64,.45);color:#14532a}
+  .slide.light .exguardado.no{background:rgba(196,140,0,.14);border-color:rgba(196,140,0,.5);color:#6b4a00}
+
+  /* Linea de modalidad y cartel de la jornada */
+  .slide.light .exmodo{color:#3b556f}
+  .slide.light .exmodo b{color:var(--ink)}
+  .slide.light .sesbanner{background:rgba(93,163,30,.14);border-color:rgba(93,163,30,.45)}
+  .slide.light .sesbanner b{color:#3d6b12}
+  .slide.light .sesbanner span{color:#22400a}
+
+  /* Pantalla de reparto de la jornada */
+  .slide.light .jorcabeza>span{background:rgba(11,37,69,.07);color:#3b556f}
+  .slide.light .jorcabeza .jorcod{background:rgba(93,163,30,.16);color:#3d6b12}
+  .slide.light .jorparte{background:#fff;border-color:rgba(11,37,69,.12)}
+  .slide.light .jorparte h3{color:var(--ink)}
+  .slide.light .jorparte p{color:#3b556f}
+  .slide.light .jorrot,.slide.light .jornota{color:#4a6484}
+  .slide.light .jorcheck{color:#3b556f}
+  .slide.light #jorEnlace{background:#fff;border-color:rgba(11,37,69,.2);color:var(--ink)}
+  .slide.light .jorbtns button.sec{background:rgba(11,37,69,.1);color:var(--ink)}
   .hudbar{position:absolute;left:0;bottom:-1px;height:3px;width:100%;background:rgba(255,255,255,.08)}
   #hudfill{height:100%;width:0;background:var(--grad);transition:width .45s ease}
   @media(max-width:560px){.brand small{display:none}.brandlong{display:none}.step{font-size:11.5px}.brand .logo{width:26px;height:26px}}
@@ -271,6 +353,16 @@
     background-repeat:no-repeat;background-position:right 14px center;background-size:12px 8px}
   .excampo select option{background:#0d2036;color:#fff}
   .exerr{font-size:12.5px;color:#ff9c95;margin-top:6px;min-height:16px}
+  /* Dos avisos que NO son errores —la nota de la cedula y las reglas del
+     examen— aunque comparten la etiqueta .exerr. Esto era un style= en el HTML;
+     al sacarlo para poder tematizarlo hay que repetir aqui las tres cosas que
+     hacia, no solo el color: sin min-height dejaba 16px de hueco vacio y sin el
+     margen se pegaba al boton de arriba. */
+  /* El selector lleva .card y p a proposito: dentro hay un
+     ".slide.dark .card p{color:#c2d0e6}" que gana a una clase suelta. Antes esto
+     era un style= en linea, que le ganaba a todo; al sacarlo hay que igualar el
+     peso o el aviso cambia de color sin que nadie lo pida. */
+  .slide .card p.exerr.exnotagris{color:#9fb6cd;min-height:0;margin-top:14px}
   /* Pista del modo administrador: la respuesta correcta se señala, no se
      marca. Fuera del modo administrador no existe visualmente. */
   /* ===== Compartir / QR ===== */
@@ -6340,7 +6432,7 @@
             </div>
             <p class="exerr" id="exLlaveErr"></p>
             <button class="exbtn" id="exLlaveBtn" type="button">Continuar</button>
-            <p class="exerr" id="exLlaveNota" style="color:#9fb6cd;min-height:0;margin-top:14px">
+            <p class="exerr exnotagris" id="exLlaveNota">
               Escribe tu cédula: con ella traemos tus datos y no tienes que escribirlos.</p>
           </div>
           <div id="exCampos">
@@ -6393,7 +6485,7 @@
           </div>
           <p class="exerr" id="exErr"></p>
           <button class="exbtn" id="exIniciar" type="button">Comenzar examen</button>
-          <p class="exerr" id="exReglas" style="color:#9fb6cd;min-height:0;margin-top:14px"></p>
+          <p class="exerr exnotagris" id="exReglas"></p>
           </div>
         </div>
       </div>
@@ -6545,7 +6637,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-16-k";
+var VERSION_CURSO = "2026-09-16-l";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas preguntas tiene el examen EN TOTAL. Las
@@ -8625,9 +8717,11 @@ function textoSesion(s){
    que forzar el tema es cambiarle la clase a la lamina y ya. Lo unico que se
    guarda es cual era la original, para poder volver a "auto".
 
-   El examen queda fuera: su formulario, sus casillas y el repaso estan
-   dibujados sobre fondo oscuro con colores fijos, no con las clases de tema,
-   y en claro quedarian ilegibles. Ademas no es presentacion, es evaluacion. */
+   El examen tambien entra. Durante mucho tiempo quedo fuera porque su
+   formulario, sus casillas y el repaso estaban dibujados con colores fijos
+   sobre fondo oscuro y en claro quedaban ilegibles; ahora cada uno tiene su
+   variante clara —ver "EL EXAMEN EN CLARO" en la hoja de estilos— asi que el
+   tema vale para las 101 laminas sin excepciones. */
 var TEMAS = ['auto', 'claro', 'oscuro'];
 var ICONO_TEMA = {
   /* medio sol medio luna: "se adapta" */
@@ -8646,9 +8740,7 @@ function recordarOriginal(s){
 }
 
 function aplicarTema(){
-  var iEx = iExamen();
-  slides.forEach(function(s, i){
-    if(i === iEx) return;                 // el examen no se toca
+  slides.forEach(function(s){
     recordarOriginal(s);
     var orig = s.getAttribute('data-tema0') || 'dark';
     var eraAlterna = orig.indexOf('teal') >= 0 || orig.indexOf('mint') >= 0;
