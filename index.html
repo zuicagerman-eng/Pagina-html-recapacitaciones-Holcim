@@ -6320,34 +6320,12 @@
           <div id="exCampos">
           <div class="exverif" id="exVerif" hidden><b>Datos confirmados</b><span id="exVerifTxt"></span>
             <button type="button" id="exCorregir">Corregir</button></div>
-          <div class="excampo">
-            <label for="exTipo">Tipo de usuario</label>
-            <select id="exTipo"></select>
-          </div>
-          <div class="excampo" id="exRazonCampo" hidden>
-            <label for="exRazon">Empresa</label>
-            <input id="exRazon" class="exmayus" type="text" autocomplete="organization" placeholder="Razón social" maxlength="70">
-          </div>
-          <div class="excampo">
-            <label for="exEmpresa">Centro de trabajo</label>
-            <select id="exEmpresa"></select>
-          </div>
-          <div class="excampo" id="exOtraCampo" hidden>
-            <label for="exOtra">Escribe el centro de trabajo</label>
-            <input id="exOtra" type="text" autocomplete="organization" placeholder="Nombre del centro de trabajo" maxlength="60">
-          </div>
-          <div class="excampo">
-            <label for="exApe1">Primer apellido</label>
-            <input id="exApe1" class="exmayus" type="text" autocomplete="family-name" placeholder="RESTREPO" maxlength="40">
-          </div>
-          <div class="excampo">
-            <label for="exApe2">Segundo apellido <span class="exopc">(si no tienes, déjalo vacío)</span></label>
-            <input id="exApe2" class="exmayus" type="text" autocomplete="additional-name" placeholder="GÓMEZ" maxlength="40">
-          </div>
-          <div class="excampo">
-            <label for="exNombres">Nombres</label>
-            <input id="exNombres" class="exmayus" type="text" autocomplete="given-name" placeholder="DAVID ANDRÉS" maxlength="60">
-          </div>
+          <!-- ORDEN: cedula, centro, nombres, apellidos y al final el tipo.
+               La cedula va primero porque es la llave: con ella el boton
+               "Buscar mis datos" rellena el resto y no hay que escribir nada.
+               Los dos campos que salen solos —"Otra" y Empresa— van pegados al
+               desplegable que los dispara; separarlos los dejaria apareciendo
+               lejos de lo que la persona acaba de elegir. -->
           <div class="excampo">
             <label for="exCedula">Número de cédula</label>
             <!-- El boton de rescate: si la cedula se escribio mal en la pantalla
@@ -6358,6 +6336,34 @@
               <button class="exbuscabtn" id="exBuscar" type="button" hidden>Buscar mis datos</button>
             </div>
             <p class="exerr" id="exBuscarMsg" style="min-height:0;margin-top:7px"></p>
+          </div>
+          <div class="excampo">
+            <label for="exEmpresa">Centro de trabajo</label>
+            <select id="exEmpresa"></select>
+          </div>
+          <div class="excampo" id="exOtraCampo" hidden>
+            <label for="exOtra">Escribe el centro de trabajo</label>
+            <input id="exOtra" type="text" autocomplete="organization" placeholder="Nombre del centro de trabajo" maxlength="60">
+          </div>
+          <div class="excampo">
+            <label for="exNombres">Nombres</label>
+            <input id="exNombres" class="exmayus" type="text" autocomplete="given-name" placeholder="DAVID ANDRÉS" maxlength="60">
+          </div>
+          <div class="excampo">
+            <label for="exApe1">Primer apellido</label>
+            <input id="exApe1" class="exmayus" type="text" autocomplete="family-name" placeholder="RESTREPO" maxlength="40">
+          </div>
+          <div class="excampo">
+            <label for="exApe2">Segundo apellido <span class="exopc">(si no tienes, déjalo vacío)</span></label>
+            <input id="exApe2" class="exmayus" type="text" autocomplete="additional-name" placeholder="GÓMEZ" maxlength="40">
+          </div>
+          <div class="excampo">
+            <label for="exTipo">Tipo de usuario</label>
+            <select id="exTipo"></select>
+          </div>
+          <div class="excampo" id="exRazonCampo" hidden>
+            <label for="exRazon">Empresa</label>
+            <input id="exRazon" class="exmayus" type="text" autocomplete="organization" placeholder="Razón social" maxlength="70">
           </div>
           <p class="exerr" id="exErr"></p>
           <button class="exbtn" id="exIniciar" type="button">Comenzar examen</button>
@@ -6513,7 +6519,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-16-i";
+var VERSION_CURSO = "2026-09-16-j";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas preguntas tiene el examen EN TOTAL. Las
