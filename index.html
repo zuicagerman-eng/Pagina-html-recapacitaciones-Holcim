@@ -3535,8 +3535,8 @@
     .wbox p{font-size:13.5px;line-height:1.45;margin-bottom:9px}
     .wdemo{margin:10px 0}
     .wdemo span{padding:7px 15px;font-size:12.5px}
-    .wtools{gap:8px;margin:10px 0 4px}
-    .wtool{padding:9px 12px;gap:10px}
+    /* Los apoyos se compactan mas abajo, despues de sus reglas base: puestas
+       aqui no ganaban, porque a igual especificidad manda la ultima. */
     .wacts{margin:0 -24px;padding:12px 24px 4px}
     .wfoot{margin:16px -24px 0;padding:12px}
   }
@@ -3838,15 +3838,26 @@
 
   /* 18) Guía de inicio: explicación de los botones de apoyo y logo del pie */
   .wbox{max-height:92vh;overflow-y:auto}
-  .wtools{display:flex;flex-direction:column;gap:10px;margin:14px 0 6px;text-align:left}
-  .wtool{display:flex;align-items:center;gap:12px;background:#fff;border-radius:13px;
-    padding:11px 14px;box-shadow:0 8px 20px -14px rgba(8,25,55,.6)}
-  .wtool-ic{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center}
+  .wtools{display:flex;flex-direction:column;gap:6px;margin:10px 0 4px;text-align:left}
+  .wtool{display:flex;align-items:center;gap:11px;background:#fff;border-radius:13px;
+    padding:7px 13px;box-shadow:0 8px 20px -14px rgba(8,25,55,.6)}
+  .wtool-ic{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center}
   .wtool-help{background:linear-gradient(160deg,#1bb4e4,#1877c4)}
   .wtool-rep{background:linear-gradient(160deg,#f5b700,#ef7d00)}
-  .wtool-ic svg{width:20px;height:20px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+  .wtool-tema{background:linear-gradient(160deg,#33506f,#1d3145)}
+  .wtool-hora{background:linear-gradient(160deg,#8bbf3a,#5da31e)}
+  .wtool-ic svg{width:17px;height:17px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
   .wtool-tx{font-size:12.5px;line-height:1.45;color:var(--ink)}
   .wtool-tx b{color:var(--blue)}
+  /* En pantalla baja los cuatro apoyos se aprietan. Va DESPUES de las reglas
+     de arriba a proposito: con la misma especificidad gana la ultima. */
+  @media(max-height:900px){
+    .wtools{gap:6px;margin:8px 0 3px}
+    .wtool{padding:6px 11px;gap:9px}
+    .wtool-ic{width:28px;height:28px}
+    .wtool-ic svg{width:15px;height:15px}
+    .wtool-tx{font-size:12px;line-height:1.36}
+  }
   .wfoot .wlogo{width:auto;height:32px;display:inline-flex;align-items:center}
   .wfoot .wlogo img{height:32px;width:auto;display:block}
   .wfoot .wlogo svg{width:28px;height:28px}
@@ -6577,7 +6588,7 @@
     <p>◆ Realiza las <b>actividades interactivas</b> que se presentan a lo largo del contenido. Son necesarias para avanzar.</p>
     <p><span class="wn">2.</span> Utiliza los botones de navegación para moverte entre los temas: <b>“Siguiente”</b> o <b>“Anterior”</b>.</p>
     <div class="wdemo"><span class="a">← Anterior</span><span class="s">Siguiente →</span></div>
-    <p><span class="wn">3.</span> Arriba a la derecha, en la barra superior, tienes dos botones de apoyo:</p>
+    <p><span class="wn">3.</span> Arriba a la derecha, en la barra superior, tienes estos apoyos:</p>
     <div class="wtools">
       <div class="wtool">
         <span class="wtool-ic wtool-help"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.2 9a2.8 2.8 0 0 1 5.4 1c0 1.8-2.6 2-2.6 4"/><path d="M12 17h0"/></svg></span>
@@ -6586,6 +6597,14 @@
       <div class="wtool">
         <span class="wtool-ic wtool-rep"><svg viewBox="0 0 24 24"><path d="M12 3l9 16H3z"/><path d="M12 9v5M12 17h0"/></svg></span>
         <span class="wtool-tx"><b>Reportar un problema</b> · el botón naranja, al lado. Si encuentras un error, presiónalo y cuéntanos.</span>
+      </div>
+      <div class="wtool">
+        <span class="wtool-ic wtool-tema"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3v18a9 9 0 0 0 0-18z" fill="#fff" stroke="none"/></svg></span>
+        <span class="wtool-tx"><b>Tema</b> · alterna el fondo <b>oscuro</b> y <b>claro</b>. Con mucha luz o proyectando, el claro se lee mejor.</span>
+      </div>
+      <div class="wtool">
+        <span class="wtool-ic wtool-hora"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+        <span class="wtool-tx"><b>Hora y cuenta atrás</b> · el contador marca la <b>hora</b> que dura la (Re) Inducción sin examen. Es solo de referencia: al llegar a cero no se cierra nada.</span>
       </div>
     </div>
     <p>Ahora usa el botón de abajo para comenzar.</p>
@@ -6673,7 +6692,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-17-j";
+var VERSION_CURSO = "2026-09-17-k";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas preguntas tiene el examen EN TOTAL. Las
