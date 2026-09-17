@@ -6697,7 +6697,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-17-l";
+var VERSION_CURSO = "2026-09-17-m";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas preguntas tiene el examen EN TOTAL. Las
@@ -9869,6 +9869,15 @@ function enviarASheet(pestana, datos){
 var DIPLOMA = {
   ancho: 1440, alto: 810,
   fondo: 'imagenes/certificado(D95).png',
+  /* El logo viene incrustado en la plantilla, que mide 2160x1215 y se dibuja
+     sobre un lienzo de 2880x1620: se agranda un 33% y sale borroso. Encima se
+     pone el archivo del logo en alta —4004 px de ancho, de sobra—.
+     Medido sobre la plantilla: ocupa de (1849,34) a (2107,93) de sus 2160 px
+     de ancho, que llevados a 1440 son los numeros de abajo. La tapa lleva
+     margen y cae sobre blanco puro (comprobado pixel a pixel), asi que no
+     borra nada mas que el logo viejo. */
+  logo: 'imagenes/logo-barra.png',
+  logoCaja: { tapa:[1226, 14, 184, 56], derecha: 1405, y: 22, alto: 40 },
   escala: 2,                       // el doble de pixeles: se imprime nitido
   escalaTexto: 1.7, calidadTexto: 0.82,   // las hojas de preguntas pesan menos
   azul: '#041738', cyan: '#04baf0',
@@ -9920,27 +9929,43 @@ function dibujarDiploma(datos){
   cx.scale(e, e);
   cx.textBaseline = 'top';
 
-  return new Promise(function(listo, falla){
-    /* Se prueban las mismas rutas que usa el resto del curso. Se pide con
-       crossOrigin porque si el curso se sirve desde Apps Script, la plantilla
-       viene de otro dominio y sin permiso CORS el lienzo queda "manchado" y el
-       navegador no deja exportarlo. */
-    var rutas = (typeof candidatos === 'function' ? candidatos(D.fondo) : [D.fondo]);
-    var i = 0;
-    (function intentar(){
-      if(i >= rutas.length){
-        falla(new Error('no se encontró la plantilla del certificado'));
-        return;
-      }
-      var img = new Image();
-      img.crossOrigin = 'anonymous';
-      img.onload = function(){ pintar(img); listo(lienzo); };
-      img.onerror = function(){ i++; intentar(); };
-      img.src = rutas[i];
-    })();
+  /* Se prueban las mismas rutas que usa el resto del curso. Se pide con
+     crossOrigin porque si el curso se sirve desde Apps Script, la plantilla
+     viene de otro dominio y sin permiso CORS el lienzo queda "manchado" y el
+     navegador no deja exportarlo. Devuelve null si no se pudo: el que llama
+     decide si eso es fatal. */
+  function cargar(ruta){
+    return new Promise(function(listo){
+      var rutas = (typeof candidatos === 'function' ? candidatos(ruta) : [ruta]);
+      var i = 0;
+      (function intentar(){
+        if(i >= rutas.length){ listo(null); return; }
+        var img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = function(){ listo(img); };
+        img.onerror = function(){ i++; intentar(); };
+        img.src = rutas[i];
+      })();
+    });
+  }
 
-    function pintar(fondo){
+  return Promise.all([cargar(D.fondo), cargar(D.logo)]).then(function(par){
+    if(!par[0]) throw new Error('no se encontró la plantilla del certificado');
+    pintar(par[0], par[1]);
+    return lienzo;
+
+    function pintar(fondo, logo){
       cx.drawImage(fondo, 0, 0, D.ancho, D.alto);
+
+      /* Solo si el logo en alta cargo. Si no, se deja el de la plantilla:
+         borroso es mejor que un hueco blanco donde deberia ir el logo. */
+      if(logo && logo.naturalWidth && logo.naturalHeight){
+        var L = D.logoCaja;
+        cx.fillStyle = '#fff';
+        cx.fillRect(L.tapa[0], L.tapa[1], L.tapa[2], L.tapa[3]);
+        var alLogo = L.alto, anLogo = alLogo * (logo.naturalWidth / logo.naturalHeight);
+        cx.drawImage(logo, L.derecha - anLogo, L.y, anLogo, alLogo);
+      }
 
       // titulo sobre la cuña oscura
       cx.fillStyle = '#fff';
@@ -9950,6 +9975,15 @@ function dibujarDiploma(datos){
 
       // nombre
       textoAjustado(cx, datos.nombre, 532, 253, 69, D.negra, D.azul, 860);
+
+      /* La identificacion va aqui, pegada al nombre: es lo que dice de QUIEN es
+         el certificado, y en la columna de la derecha quedaba suelta entre
+         datos de la jornada. */
+      if(datos.cedula){
+        cx.font = '900 24px ' + D.negra;
+        cx.fillStyle = D.azul;
+        cx.fillText('Identificación: ' + datos.cedula, 532, 336);
+      }
 
       // capacitacion: etiqueta azul + valor cyan, que puede ocupar dos lineas
       cx.font = '900 26.4px ' + D.negra;
@@ -9969,15 +10003,13 @@ function dibujarDiploma(datos){
          a 32 px: a ese tamaño se metia debajo del valor, que empieza en x=1020.
          A 20 px las etiquetas quedan por fin todas iguales. */
       var filas = [{ et:['Centro de trabajo:'], val: datos.empresa, tam: 33 }];
-      if(datos.cargo) filas.push({ et:['Cargo:'], val: datos.cargo, tam: 26 });
-      filas.push({ et:['Identificación:'], val: datos.cedula, tam: 20 });
       filas.push({ et:['Fecha de', 'realización:'], val: datos.fecha, tam: 20 });
 
       /* Alturas fijas por numero de filas, no repartidas: las de tres son las
          que ya estaban ajustadas a mano contra la plantilla —y no van a paso
          regular—, y las de cuatro suben para que "realizacion:" no se meta
          encima del pie. Repartir a paso igual rompia una de las dos. */
-      var ALTURAS = { 3: [542, 626, 683], 4: [542, 600, 658, 716] };
+      var ALTURAS = { 2: [542, 626], 3: [542, 626, 683], 4: [542, 600, 658, 716] };
       var alturas = ALTURAS[filas.length] || ALTURAS[3];
       filas.forEach(function(f, k){
         var y = alturas[k];
@@ -10005,9 +10037,9 @@ function dibujarDiploma(datos){
         var pie = datos.modalidad !== 'Individual'
           ? 'Presentado en jornada grupal' + (datos.sesion ? ' · código ' + datos.sesion : '')
           : 'Presentado de forma individual';
-        /* Abajo del todo y a la izquierda: lejos de la columna derecha, que con
-           cargo baja hasta los 740. */
-        cx.fillText(pie, 532, 770);
+        /* Abajo del todo. Corrido a la derecha respecto del bloque de texto,
+           para que no parezca otra linea mas del cuerpo del certificado. */
+        cx.fillText(pie, 640, 770);
       }
     }
   });
