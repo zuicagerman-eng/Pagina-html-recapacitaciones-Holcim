@@ -2955,11 +2955,11 @@
     stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
   .slide.light .fotoancha svg{stroke:var(--panel)}
   @media(max-height:820px){.fotoancha img{max-height:158px}.fotoancha svg{height:104px}}
-  .apretado .fotoancha img{max-height:126px} .apretado .fotoancha svg{height:84px}
+  .apretado .fotoancha img{max-height:180px} .apretado .fotoancha svg{height:84px}
   .apretado .fotoancha{margin-top:7px}
-  .muy-apretado .fotoancha img{max-height:104px} .muy-apretado .fotoancha svg{height:72px}
+  .muy-apretado .fotoancha img{max-height:140px} .muy-apretado .fotoancha svg{height:72px}
   /* Foto rectangular al lado del texto, con la franja de marca al pie. */
-  .fotorect{width:clamp(150px,20vw,232px);flex:none;border-radius:10px;overflow:hidden;
+  .fotorect{width:clamp(170px,23vw,300px);flex:none;border-radius:10px;overflow:hidden;
     border-bottom:5px solid;border-image:var(--grad) 1;box-shadow:var(--shadow);
     background:rgba(255,255,255,.06);display:block}
   .slide.light .fotorect{background:#e9f0f8}
@@ -2977,6 +2977,25 @@
   @media(max-height:820px){.fotorect img{max-height:140px}.fotorect svg{height:100px}}
   .apretado .fotorect img{max-height:116px} .apretado .fotorect svg{height:86px}
   .muy-apretado .fotorect img{max-height:98px} .muy-apretado .fotorect svg{height:74px}
+  /* Con la ventana alta sobra sitio y las fotos se estaban viendo a la mitad de
+     su tamano real (la cuadrada mide 344 de alto y se dibujaba a 172). Va aqui,
+     despues de las reglas base: con la misma especificidad manda la ultima.
+     El tope de la ancha no pasa de 214px, el alto real de su archivo; por
+     encima se agrandarian los pixeles. El hueco crece con ella, porque si no
+     max-width:100% le recorta la altura y el cambio no se nota. */
+  @media(min-height:1060px){
+    .fotoancha img{max-height:214px}
+    /* Fuera tambien las .gr, que ya se ven a 320px: este selector es mas
+       especifico que el suyo y, sin excluirlas, las ENCOGERIA a 262. */
+    .fotorect:not(.nocrece):not(.gr){width:clamp(170px,23vw,300px)}
+    .fotorect:not(.nocrece):not(.gr) img{max-height:clamp(172px,24vh,262px)}
+    /* La de "Personas y capacitacion" crece de alto pero su hueco NO se
+       ensancha: ensancharlo reparte el texto de al lado en mas lineas y la
+       lamina, que ademas lleva la foto ancha, deja de caber. Sin tocar el
+       ancho, max-width:100% la deja en unos 211px, que ya es bastante mas
+       que los 172 de partida. */
+    .fotorect.nocrece img{max-height:214px}
+  }
 
   /* ===== RUEDA DE ESTÁNDARES =====
      Misma idea que la rueda del SG-SST: se pasa por cada gajo y su nombre se
@@ -4881,7 +4900,7 @@
           <li>Proceso de <b>onboarding</b> con acompañamiento (<i>coaching</i>) para trabajadores nuevos o transferidos.</li>
         </ul>
       </div>
-      <span class="fotorect" data-foto="induccion(D32)"><svg viewBox="0 0 120 90" aria-hidden="true"><circle cx="30" cy="24" r="9"/><path d="M20 18a10 10 0 0 1 20 0"/><path d="M16 62c0-9 6-16 14-16"/><circle cx="90" cy="24" r="9"/><path d="M80 18a10 10 0 0 1 20 0"/><path d="M104 62c0-9-6-16-14-16"/><path d="M44 48l10 6 12-6 10 6"/><path d="M44 48c-3 2-3 6 0 8l10 6 12-6 10 6c3-2 3-6 0-8"/></svg></span>
+      <span class="fotorect nocrece" data-foto="induccion(D32)"><svg viewBox="0 0 120 90" aria-hidden="true"><circle cx="30" cy="24" r="9"/><path d="M20 18a10 10 0 0 1 20 0"/><path d="M16 62c0-9 6-16 14-16"/><circle cx="90" cy="24" r="9"/><path d="M80 18a10 10 0 0 1 20 0"/><path d="M104 62c0-9-6-16-14-16"/><path d="M44 48l10 6 12-6 10 6"/><path d="M44 48c-3 2-3 6 0 8l10 6 12-6 10 6c3-2 3-6 0-8"/></svg></span>
     </div>
 
     <h3 class="subverde rv up" style="--d:5;margin-top:14px">Programa de capacitación HSE</h3>
@@ -6654,7 +6673,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-17-d";
+var VERSION_CURSO = "2026-09-17-f";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas preguntas tiene el examen EN TOTAL. Las
