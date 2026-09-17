@@ -147,7 +147,7 @@
   /* ===== Deck ===== */
   .deck{position:fixed;left:0;right:0;top:var(--hud);bottom:calc(var(--footer) + var(--bar2));overflow:hidden;background:var(--navy)}
   .slide{position:absolute;inset:0;overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch;transform:translateX(100%);
-    transition:transform .5s cubic-bezier(.6,.05,.2,1);padding:38px clamp(18px,6vw,80px);
+    transition:transform .38s cubic-bezier(.6,.05,.2,1);padding:38px clamp(18px,6vw,80px);
     display:flex;flex-direction:column}
   .slide.active{transform:translateX(0)}
   .slide::-webkit-scrollbar{width:8px}
@@ -210,7 +210,7 @@
     .nuevotag,.nuevotag svg,.nuevotag:after{animation:none}
     .nuevotag:after{display:none}}
 
-  .rv{opacity:0;transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1);transition-delay:calc(var(--d,0)*80ms)}
+  .rv{opacity:0;transition:opacity .45s cubic-bezier(.22,1,.36,1),transform .45s cubic-bezier(.22,1,.36,1);transition-delay:calc(var(--d,0)*55ms)}
   .rv.up{transform:translateY(30px)} .rv.left{transform:translateX(-40px)}
   .rv.right{transform:translateX(40px)} .rv.scale{transform:scale(.9)}
   .rv.in{opacity:1;transform:none}
@@ -6673,7 +6673,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-17-g";
+var VERSION_CURSO = "2026-09-17-h";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas preguntas tiene el examen EN TOTAL. Las
