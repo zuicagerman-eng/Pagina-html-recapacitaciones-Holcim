@@ -6673,7 +6673,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-17-i";
+var VERSION_CURSO = "2026-09-17-j";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas preguntas tiene el examen EN TOTAL. Las
@@ -6769,13 +6769,10 @@ var EXIGIR_LISTA        = false;
    columna "Tipo" y esto deja de aplicarse solo. */
 var TIPO_POR_DEFECTO_LISTA = 'Propio';
 
-/* Contraseña de la jornada. Se la pide el examen a quien llega escaneando el
-   QR, junto con la cedula: ahi es donde sirve, porque el QR se reenvia solo —una
-   foto por WhatsApp y lo presenta cualquiera desde su casa— y la contraseña la
-   dicta el ponente a la sala en ese momento.
-
-   Quien ABRE la jornada no la necesita: ya esta delante de la gente, y pedirsela
-   solo le estorbaba. Para cambiarla, cambia esta linea. */
+/* Contraseña de la jornada. Se pide para ABRIR una jornada grupal: sin ella no
+   se crea ninguna sesion, asi que nadie puede montar una y registrar asistencia
+   por su cuenta. Al asistente que escanea el QR no se le pide: solo su cedula.
+   Para cambiarla, cambia esta linea. */
 var CLAVE_JORNADA = 'Holcim2026';
 
 var EXIGIR_OBLIGATORIAS = true;
@@ -9123,6 +9120,16 @@ function montarSesion(){
   document.getElementById('sesCerrar').addEventListener('click', cerrar);
 
   bCrear.addEventListener('click', function(){
+    /* La contrasena, lo primero: si esta mal no se comprueba nada mas ni se
+       crea una sesion a medias. */
+    var inClaveSes = document.getElementById('sesClave');
+    if(inClaveSes && String(inClaveSes.value || '') !== CLAVE_JORNADA){
+      inClaveSes.classList.add('mal');
+      err.textContent = 'Contraseña incorrecta. Sin ella no se puede abrir una jornada.';
+      try{ inClaveSes.focus(); inClaveSes.select(); }catch(e){}
+      return;
+    }
+    if(inClaveSes) inClaveSes.classList.remove('mal');
     var planta = selPlanta.value === 'Otra' ? inOtra.value.trim() : selPlanta.value;
     if(!planta){ err.textContent = 'Elige la planta o centro de trabajo.'; return; }
     if(!inFecha.value){ err.textContent = 'Falta la fecha.'; return; }
@@ -10437,13 +10444,17 @@ document.addEventListener('DOMContentLoaded', function(){
      ver de un vistazo que perfiles han pasado por la (Re) Induccion. */
   var cargo = '';
 
-  /* ¿Hay que pedirle la contraseña a quien esta delante?
-     Solo a quien llego escaneando el QR de una jornada. Quien la abrio ya
-     estaba en la sala, y a quien presenta por su cuenta no le aplica ninguna
-     jornada. Se pregunta cada vez: el QR se reenvia, la contraseña no. */
+  /* ¿Hay que pedirle la contraseña a quien esta delante? Ahora no: la
+     contraseña se pide al ABRIR la jornada, no al presentar el examen, asi que
+     al asistente que escanea el QR solo se le pide la cedula.
+
+     La comprobacion se deja en su sitio, devolviendo false, en vez de arrancar
+     el paso entero: el campo, el mensaje de error y el aviso siguen montados y
+     probados, y volver a exigirla aqui —si algun dia el QR reenviado da
+     problemas— es cambiar este return por la condicion de antes. */
   var claveJornadaOK = false;
   function faltaClave(){
-    return !claveJornadaOK && typeof SESION !== 'undefined' && !!SESION && !SESION.yoLaCree;
+    return false;
   }
 
   function montarLlave(){
@@ -11711,9 +11722,14 @@ document.addEventListener('DOMContentLoaded', function(){
 
     <div id="sesPaso2" hidden>
       <p class="qrintro">Estos datos quedan guardados con el resultado de cada asistente:
-        después puedes sacar de la hoja quién asistió a esta jornada. La contraseña
-        no va aquí: se la pide el examen a cada quien, al escribir su cédula.</p>
+        después puedes sacar de la hoja quién asistió a esta jornada.</p>
       <div class="sescampos">
+        <!-- La contraseña abre la jornada: sin ella no se crea ninguna, así que
+             nadie puede montar una sesión y registrar asistencia por su cuenta. -->
+        <div class="excampo">
+          <label for="sesClave">Contraseña para abrir la jornada</label>
+          <input id="sesClave" type="password" autocomplete="off" placeholder="Contraseña">
+        </div>
         <div class="excampo">
           <label for="sesPlanta">Planta / centro de trabajo</label>
           <select id="sesPlanta"></select>
