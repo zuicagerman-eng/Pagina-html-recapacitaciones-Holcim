@@ -6654,7 +6654,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-17-b";
+var VERSION_CURSO = "2026-09-17-c";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas preguntas tiene el examen EN TOTAL. Las
@@ -11062,12 +11062,12 @@ document.addEventListener('DOMContentLoaded', function(){
       '<b>' + persona.nombre + '</b> · C.C. ' + persona.cedula +
       ' · ' + persona.tipo + ' · ' + persona.empresa +
       (persona.razonSocial ? ' · ' + persona.razonSocial : '') +
-      ' — se aprueba con más del ' + NOTA_MINIMA + '%' +
       /* El aviso se repite aqui a proposito: la pantalla de datos ya lo dijo,
          pero entre rellenar el formulario y responder se olvida, y esto decide
          si aprueba. */
-      (EXIGIR_OBLIGATORIAS && nObligatorias()
-        ? ', y hay que acertar TODAS las marcadas con ★.' : '.');
+      ' — ' + (EXIGIR_OBLIGATORIAS && nObligatorias()
+        ? 'Para aprobar, debes responder correctamente todas las preguntas obligatorias marcadas con ★ y obtener una calificación final mínima del ' + NOTA_MINIMA + '%.'
+        : 'Para aprobar, debes obtener una calificación final mínima del ' + NOTA_MINIMA + '%.');
     pintar(); fase('preguntas');
     try{ elPreg.scrollIntoView({block:'start'}); }catch(err){}
   });
