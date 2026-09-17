@@ -206,7 +206,7 @@ var URL_CURSO = "https://zuicagerman-eng.github.io/Pagina-html-recapacitaciones-
    siguen atendidos por el codigo viejo. Este sello es lo que permite verlo:
    comprobarPublicacion() se lo pregunta a la implementacion y compara.
    Subelo cada vez que cambie algo de fondo. */
-var VERSION_GS = "2026-09-15-k";
+var VERSION_GS = "2026-09-17-a";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    LISTA DE PERSONAL  ·  la cédula como llave del examen
@@ -2755,4 +2755,71 @@ function enviarCorreoReporte(d) {
 
   MailApp.sendEmail(CORREO_REPORTES, asunto, cuerpo, opciones);
   return { ok: true };
+}
+
+
+/**
+ * ═══════════════════════════════════════════════════════════════════════════
+ * LIMPIEZA DE LA HOJA "Ingresos"
+ *
+ * Cada persona que entra a una jornada deja una fila en la pestaña "Ingresos"
+ * (el curso la crea sola la primera vez). Esa hoja solo sirve para ver quién
+ * entró y no terminó el examen, así que no tiene por qué guardarse para
+ * siempre: pasado un mes deja de decir nada y solo estorba.
+ *
+ * Esta función borra las filas de más de DIAS_INGRESOS días. No toca ninguna
+ * otra pestaña: ni Resultados, ni Respuestas, ni Sesiones.
+ *
+ * PARA DEJARLA AUTOMÁTICA (una sola vez):
+ *   Apps Script → reloj "Activadores" (izquierda) → "Añadir activador"
+ *     Función:            limpiarIngresos
+ *     Origen del evento:  Según el tiempo
+ *     Tipo de activador:  Temporizador por días
+ *     Hora:               entre 1:00 y 2:00 a. m.
+ *   Guardar. A partir de ahí se ejecuta sola cada noche.
+ *
+ * Para probarla ahora mismo: seleccionar "limpiarIngresos" arriba y Ejecutar.
+ * Escribe en el registro cuántas filas borró.
+ * ═══════════════════════════════════════════════════════════════════════════
+ */
+var PESTANA_INGRESOS = "Ingresos";
+var DIAS_INGRESOS    = 30;
+
+function limpiarIngresos() {
+  var ss = obtenerHoja_();
+  var h  = ss.getSheetByName(PESTANA_INGRESOS);
+  if (!h) { Logger.log('No existe la pestaña "' + PESTANA_INGRESOS + '": nada que limpiar.'); return; }
+
+  var filas = h.getLastRow();
+  if (filas < 2) { Logger.log('La pestaña "' + PESTANA_INGRESOS + '" está vacía.'); return; }
+
+  // La columna "Fecha" es la primera: la crea guardarFormulario() al nacer la hoja.
+  var valores = h.getRange(1, 1, filas, 1).getValues();
+  var limite  = new Date().getTime() - DIAS_INGRESOS * 24 * 60 * 60 * 1000;
+
+  /* Se borra de abajo hacia arriba: borrando de arriba hacia abajo, cada fila
+     eliminada corre las siguientes y se saltarían la mitad. */
+  var borradas = 0;
+  for (var i = filas; i >= 2; i--) {
+    var cuando = fechaDeCelda_(valores[i - 1][0]);
+    /* Sin fecha legible no se borra: es preferible una fila de más que perder
+       un registro por no haber sabido leer su fecha. */
+    if (cuando && cuando.getTime() < limite) { h.deleteRow(i); borradas++; }
+  }
+  Logger.log('Ingresos: ' + borradas + ' fila(s) de más de ' + DIAS_INGRESOS +
+             ' días borradas; quedan ' + (h.getLastRow() - 1) + '.');
+}
+
+/**
+ * La fecha puede venir como fecha de verdad o como el texto que escribe el
+ * curso ("17/9/2026, 4:05:50 p. m."). Se aceptan las dos formas.
+ */
+function fechaDeCelda_(v) {
+  if (v instanceof Date && !isNaN(v.getTime())) return v;
+  var t = String(v || '').trim();
+  if (!t) return null;
+  var m = t.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);   // día/mes/año, como es-CO
+  if (m) return new Date(+m[3], +m[2] - 1, +m[1]);
+  var d = new Date(t);
+  return isNaN(d.getTime()) ? null : d;
 }

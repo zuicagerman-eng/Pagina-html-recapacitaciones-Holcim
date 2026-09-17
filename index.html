@@ -550,6 +550,9 @@
   .sesbanner b{display:block;color:#bfe87a;font-size:12px;font-weight:800;
     letter-spacing:1.2px;text-transform:uppercase;margin-bottom:3px}
   .sesbanner span{color:#e7f3d6;font-size:13.5px;font-weight:700}
+  .sesnota{display:block;margin-top:5px;font-size:11px;line-height:1.35;
+    font-style:normal;font-weight:500;color:#a9c79a}
+  .slide.light .sesnota{color:#4a6b38}
   /* La modalidad, siempre a la vista, con su boton para volver a elegir.
      Discreta a proposito: es un seguro, no un paso del formulario. */
   .exmodo{display:flex;align-items:center;gap:12px;flex-wrap:wrap;
@@ -6451,6 +6454,8 @@
         <p class="lead rv up" style="--d:2" id="exIntro">Antes de comenzar, identifícate. Las preguntas se toman al azar y cambian en cada intento.</p>
         <div class="sesbanner rv up" id="exSesion" style="--d:2" hidden>
           <b>Jornada grupal</b><span id="exSesionTxt"></span>
+          <!-- Aviso, no barrera: se lee de pasada y no pide aceptar nada. -->
+          <i class="sesnota">Se registra tu ingreso a esta jornada (fecha, hora y equipo) para el control de asistencia.</i>
         </div>
         <!-- El boton de emergencia. La pregunta de modalidad sale sola al llegar
              aqui, pero se cierra con Escape o con un clic fuera, y entonces no
@@ -6692,7 +6697,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-17-k";
+var VERSION_CURSO = "2026-09-17-l";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas preguntas tiene el examen EN TOTAL. Las
@@ -9171,6 +9176,56 @@ function montarSesion(){
   /* Queda constancia de la jornada aunque nadie llegue a terminar el examen:
      si el QR se proyecto, la sesion existio. Va por la misma via que todo lo
      demas, con tipo "Sesiones", y Apps Script crea esa pestaña la primera vez. */
+  /* ====== QUIEN ENTRA A UNA JORNADA ======
+     Hasta ahora solo quedaba constancia de quien TERMINA el examen. Quien entra
+     y no acaba no aparecia en ninguna parte, que es justo el hueco que hay que
+     ver.
+
+     Una aclaracion que ahorra buscar: la IP no se puede registrar. El navegador
+     no conoce su propia IP publica y Apps Script no entrega la de quien llama,
+     asi que no es cuestion de activar nada. Lo que si identifica sin preguntar
+     nada es un numero al azar guardado en ESTE navegador: no dice quien es la
+     persona, pero como el examen se guarda con el mismo numero, despues se
+     puede cruzar quien entro con quien termino. */
+  function idEquipo(){
+    var C = 'hse001_equipo', v = '';
+    try{ v = localStorage.getItem(C) || ''; }catch(e){}
+    if(!v){
+      v = 'EQ-' + Date.now().toString(36).toUpperCase().slice(-5) +
+          Math.random().toString(36).toUpperCase().slice(2, 6);
+      try{ localStorage.setItem(C, v); }catch(e){}
+    }
+    return v;
+  }
+  window.idEquipo = idEquipo;
+
+  function anotarIngreso(ses){
+    if(!ses || !ses.id) return;
+    /* Una sola fila por jornada y por equipo: recargar la pagina o volver
+       atras no puede llenar la hoja de repeticiones. Se guarda una sola clave,
+       no una por jornada, para no ir dejando basura en el navegador. */
+    try{
+      var prev = JSON.parse(localStorage.getItem('hse001_ing') || '{}');
+      if(prev && prev.id === ses.id) return;
+      localStorage.setItem('hse001_ing', JSON.stringify({ id: ses.id, t: Date.now() }));
+    }catch(e){}
+    var datos = {
+      tipo: 'Ingresos', fecha: new Date().toLocaleString('es-CO'),
+      Codigo: ses.id, Planta: ses.planta || '',
+      FechaSesion: fechaCorta(ses.fecha), HoraSesion: ses.hora || '',
+      Equipo: idEquipo(),
+      Pantalla: (screen.width || 0) + 'x' + (screen.height || 0),
+      Idioma: navigator.language || '',
+      Navegador: navigator.userAgent
+    };
+    try{
+      if(typeof REPORTE_URL !== 'undefined' && REPORTE_URL && REPORTE_URL.indexOf('http') === 0)
+        fetch(REPORTE_URL, { method:'POST', mode:'no-cors',
+          headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify(datos) })
+          .catch(function(){});
+    }catch(e){}
+  }
+
   function anotarSesion(ses){
     var datos = {
       tipo: 'Sesiones', fecha: new Date().toLocaleString('es-CO'),
@@ -9190,7 +9245,7 @@ function montarSesion(){
   /* Quien llega con un QR de sesion: ni popup ni preguntas, derecho a sus datos
      con la jornada ya puesta. */
   SESION = leerSesionDeURL();
-  if(SESION) yaPreguntoModalidad = true;
+  if(SESION){ yaPreguntoModalidad = true; anotarIngreso(SESION); }
   pintarSesionEnFormulario();
 }
 
@@ -11384,6 +11439,9 @@ document.addEventListener('DOMContentLoaded', function(){
       verificado:   verificado,
       cargo:        cargo,
       modalidad:    SESION ? 'Grupal' : 'Individual',
+      /* El mismo numero que quedo en la hoja de Ingresos: es lo que permite
+         ver quien entro y no termino. */
+      equipo:       (typeof idEquipo === 'function') ? idEquipo() : '',
       sesion:       SESION ? SESION.id : '',
       sesionPlanta: SESION ? SESION.planta : '',
       sesionFecha:  SESION ? fechaCorta(SESION.fecha) : '',
