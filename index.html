@@ -6640,7 +6640,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-16-m";
+var VERSION_CURSO = "2026-09-17-a";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas preguntas tiene el examen EN TOTAL. Las
@@ -7314,6 +7314,71 @@ function chrome(){
   // pausar video si salgo de su slide
   if(gate!=='video' && vplayer){ try{ vplayer.pause(); }catch(e){} }
 }
+/* ====== REARMAR LAS INTERACCIONES AL VOLVER ATRAS ======
+   Al regresar a una lamina ya explorada sus interacciones seguian marcadas
+   como hechas, asi que la flecha de avanzar no las repetia: pasaba de largo
+   a la lamina siguiente. Presentando, eso deja al ponente sin poder volver a
+   mostrar lo que acaba de explicar.
+
+   Entrar hacia atras es justo el gesto de "quiero verlo otra vez", asi que la
+   lamina se deja como recien abierta y la flecha vuelve a ejecutarla paso a
+   paso. Entrar hacia delante no rearma nada: quien solo retrocede a releer no
+   tiene que repetir todo el camino de vuelta.
+
+   El orden importa: primero se deshace el estado visual y despues se borran
+   las marcas. Si solo se borraran las marcas, la flecha volveria a pulsar
+   cosas que ya estaban abiertas —una tarjeta girada se desgiraria— o pulsaria
+   controles que ya no responden (el quiz contestado, el deslizador al tope):
+   la flecha se quedaria sin hacer nada y sin poder avanzar, que es peor que
+   el fallo que se quiere arreglar. */
+function rearmar(s){
+  if(!s || s.classList.contains('nogate')) return;
+  if(!s.querySelector('.req')) return;
+  if(slides[idx] === s && idx === iExamen()) return;   // el examen no se rearma
+
+  /* Los componentes que llevan su propia cuenta de lo visto (los controles
+     por PUE, la rueda de bienestar, los carruseles, la jerarquia) se vacian
+     desde dentro: por fuera no hay forma de saber que llevaban recorrido. */
+  s.querySelectorAll('.rearmable').forEach(function(c){
+    if(typeof c.__rearmar === 'function') c.__rearmar();
+  });
+
+  /* Tarjetas que giran y acordeones: a su cara inicial. Las de despliegue
+     automatico no llevan barrera y ya las recoge clearReveal(). */
+  s.querySelectorAll('.flip.req').forEach(function(f){ f.classList.remove('flipped'); });
+  s.querySelectorAll('.acc.req').forEach(function(a){
+    a.classList.remove('open'); a.setAttribute('aria-expanded','false'); });
+
+  /* Rueda de peligros: puntos apagados y globos recogidos. */
+  s.querySelectorAll('.wpoint').forEach(function(w){ w.classList.remove('active','visto'); });
+  s.querySelectorAll('.wglobo').forEach(function(g){ g.classList.remove('on'); });
+
+  /* Menu lateral de vistas: queda marcada solo la primera, como al empezar. */
+  s.querySelectorAll('.tabbtn.req').forEach(function(b,k){ b.classList.toggle('visto', k===0); });
+
+  /* Numeros de los controles por PUE: sin el punto de "ya visto", porque la
+     flecha busca justamente el primero que no lo tenga. */
+  s.querySelectorAll('.puenum').forEach(function(n){ n.classList.remove('vis'); });
+
+  /* Quiz sin responder: una vez contestado no admite otro clic. */
+  var q = s.querySelector('#quiz');
+  if(q){
+    q.classList.remove('answered');
+    q.querySelectorAll('.opt').forEach(function(o){ o.classList.remove('correct','wrong'); });
+    var v = s.querySelector('#verdict'); if(v) v.classList.remove('show');
+  }
+
+  /* Deslizadores al principio: en el tope la flecha no tendria hacia donde
+     moverlos. El evento repinta el panel, de ahi que se lance antes de
+     borrar las marcas. */
+  s.querySelectorAll('input[type=range]').forEach(function(r){
+    var min = +(r.min || 0);
+    if(+r.value !== min){ r.value = min; r.dispatchEvent(new Event('input', { bubbles:true })); }
+  });
+
+  s.querySelectorAll('.req.done').forEach(function(r){ r.classList.remove('done'); });
+}
+
 function goTo(i, dir){
   if(i<0||i>=N||i>maxUnlocked||i===idx) return;
   clearReveal(slides[idx]);
@@ -7323,6 +7388,7 @@ function goTo(i, dir){
   slides[idx].style.transform = 'translateX(0)';
   slides[idx].classList.add('active');
   slides[idx].scrollTop = 0;
+  if(dir < 0) rearmar(slides[idx]);
   reveal(slides[idx]);
   chrome();
 }
@@ -7770,6 +7836,11 @@ function cierraAuto(s){
     d.addEventListener('click',act);
     d.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){e.preventDefault();act();} });
   });
+  /* Punto de reanudacion: este componente guarda por dentro que partes ya se
+     vieron, y sin vaciarlo el repaso se daria por hecho en la primera
+     pulsacion. Lo llama rearmar() al volver a la lamina hacia atras. */
+  caja.classList.add('rearmable');
+  caja.__rearmar = function(){ alto = -1; pintar(0); };
 })();
 /* ====== CARRUSEL DE EJEMPLOS (excavaciones) ======
    Los tres ejemplos se recorren con las flechas o con los puntos. Cada punto
@@ -7791,6 +7862,11 @@ function cierraAuto(s){
     if(window.revisarScroll) setTimeout(window.revisarScroll, 500);
   }
   function ir(n){ if(n<0||n>=paneles.length) return; i=n; pintar(); }
+  /* Punto de reanudacion: este componente guarda por dentro que partes ya se
+     vieron, y sin vaciarlo el repaso se daria por hecho en la primera
+     pulsacion. Lo llama rearmar() al volver a la lamina hacia atras. */
+  caja.classList.add('rearmable');
+  caja.__rearmar = function(){ i = 0; pintar(); };
   ant.addEventListener('click', function(){ ir(i-1); });
   sig.addEventListener('click', function(){ ir(i+1); });
   puntos.forEach(function(p,k){ p.addEventListener('click', function(){ ir(k); }); });
@@ -8214,6 +8290,11 @@ var ENCUESTA = (function(){
     if(Object.keys(vistos).length===P.length) markDone(ring);
   }
   ring.classList.add('req');           // barrera: hay que recorrer los 6 pilares
+  /* Punto de reanudacion: este componente guarda por dentro que partes ya se
+     vieron, y sin vaciarlo el repaso se daria por hecho en la primera
+     pulsacion. Lo llama rearmar() al volver a la lamina hacia atras. */
+  ring.classList.add('rearmable');
+  ring.__rearmar = function(){ vistos = {}; slider.value = +(slider.min || 0); pintar(0); };
   slider.addEventListener('input', function(){ pintar(+slider.value); });
   pintar(0);
 })();
@@ -8357,6 +8438,11 @@ document.querySelectorAll('.qcarr').forEach(function(caja){
     b.addEventListener('click', function(){ ir(i, i > actual ? 1 : -1); });
     puntos.appendChild(b);
   });
+  /* Punto de reanudacion: este componente guarda por dentro que partes ya se
+     vieron, y sin vaciarlo el repaso se daria por hecho en la primera
+     pulsacion. Lo llama rearmar() al volver a la lamina hacia atras. */
+  caja.classList.add('rearmable');
+  caja.__rearmar = function(){ vistos = {}; actual = 0; pintar(0, 0); };
   ant.addEventListener('click', function(){ ir(actual - 1, -1); });
   sig.addEventListener('click', function(){ ir(actual + 1, 1); });
   pintar(0, 0);
@@ -8413,6 +8499,15 @@ document.querySelectorAll('.pueBox').forEach(function(box){
     b.addEventListener('click', function(){ mostrar(i); });
     nums.appendChild(b);
   });
+  /* Punto de reanudacion: este componente guarda por dentro que partes ya se
+     vieron, y sin vaciarlo el repaso se daria por hecho en la primera
+     pulsacion. Lo llama rearmar() al volver a la lamina hacia atras. */
+  box.classList.add('rearmable');
+  box.__rearmar = function(){
+    vistos = {};
+    Array.prototype.forEach.call(nums.children, function(n){ n.classList.remove('vis'); });
+    mostrar(0);
+  };
   mostrar(0);
 });
 
