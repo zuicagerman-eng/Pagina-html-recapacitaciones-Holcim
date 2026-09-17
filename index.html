@@ -356,6 +356,18 @@
     background-repeat:no-repeat;background-position:right 14px center;background-size:12px 8px}
   .excampo select option{background:#0d2036;color:#fff}
   .exerr{font-size:12.5px;color:#ff9c95;margin-top:6px;min-height:16px}
+  /* Detalle tecnico de un fallo de consulta. Sale solo cuando falla, asi que
+     no le quita sitio a nadie mientras las cosas funcionan. */
+  .exdiagbtn{display:block;width:-moz-fit-content;width:fit-content;
+    background:none;border:0;padding:0;margin:2px 0 10px;cursor:pointer;
+    font:inherit;font-size:12.5px;color:#74c4ec;text-decoration:underline}
+  .exdiag{margin:8px 0 12px;padding:10px 12px;border-radius:10px;
+    background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);
+    font-size:12px;line-height:1.55;color:#c2d0e6;word-break:break-word}
+  .exdiag b{color:#fff;font-weight:700}
+  .slide.light .exdiagbtn{color:#1d6ea8}
+  .slide.light .exdiag{background:rgba(11,37,69,.05);border-color:rgba(11,37,69,.14);color:#3b556f}
+  .slide.light .exdiag b{color:var(--ink)}
   /* Dos avisos que NO son errores —la nota de la cedula y las reglas del
      examen— aunque comparten la etiqueta .exerr. Esto era un style= en el HTML;
      al sacarlo para poder tematizarlo hay que repetir aqui las tres cosas que
@@ -6487,6 +6499,8 @@
             <input id="exRazon" class="exmayus" type="text" autocomplete="organization" placeholder="Razón social" maxlength="70">
           </div>
           <p class="exerr" id="exErr"></p>
+          <button class="exdiagbtn" id="exDiagBtn" type="button" hidden>Ver detalle técnico ▾</button>
+          <div class="exdiag" id="exDiag" hidden></div>
           <button class="exbtn" id="exIniciar" type="button">Comenzar examen</button>
           <p class="exerr exnotagris" id="exReglas"></p>
           </div>
@@ -6640,7 +6654,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-17-a";
+var VERSION_CURSO = "2026-09-17-b";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas preguntas tiene el examen EN TOTAL. Las
@@ -10161,6 +10175,60 @@ document.addEventListener('DOMContentLoaded', function(){
      cabeceras CORS de forma fiable —el POST de los resultados va con no-cors
      justo por eso, pero ahi da igual porque no hace falta leer la respuesta;
      aqui si hace falta—. Una etiqueta <script> no tiene esa limitacion. */
+  /* ====== DETALLE TECNICO DE UN FALLO DE CONSULTA ======
+     El mismo sintoma —"no se pudo consultar la lista"— sale por causas muy
+     distintas: una copia vieja del archivo alojada en otro sitio, la pagina
+     abierta dentro de un marco de otra web que bloquea la llamada, una red
+     que la corta, o el script mal publicado. Desde fuera no se distinguen, y
+     preguntarle a la persona "¿desde donde lo abriste?" rara vez aclara nada.
+
+     Este panel contesta eso con hechos, en la pantalla donde falla y sin
+     tener que tocar la direccion: version del archivo que se esta ejecutando,
+     de donde se sirvio, si esta dentro de un marco y de quien, y a que
+     direccion intento llamar. Sale solo cuando hay fallo. */
+  function mostrarDetalle(r){
+    var caja = document.getElementById('exDiag'),
+        bt   = document.getElementById('exDiagBtn');
+    if(!caja || !bt) return;
+
+    var dentroDeMarco = false;
+    try{ dentroDeMarco = (window.top !== window.self); }catch(e){ dentroDeMarco = true; }
+
+    /* Si el marco es de otro dominio, leer su direccion lanza excepcion: en ese
+       caso el referrer es lo unico que queda, y suele bastar para identificarlo. */
+    var quienEnmarca = '';
+    if(dentroDeMarco){
+      try{ quienEnmarca = window.top.location.origin; }
+      catch(e){ quienEnmarca = document.referrer ? document.referrer.split('/').slice(0,3).join('/') : 'otro dominio'; }
+    }
+
+    var url = (typeof REPORTE_URL !== 'undefined') ? String(REPORTE_URL) : '';
+    var filas = [
+      ['Versión del curso', (typeof VERSION_CURSO !== 'undefined') ? VERSION_CURSO : '—'],
+      ['Se está ejecutando desde', String(location.href).substring(0, 120)],
+      ['Dentro de un marco', dentroDeMarco ? ('sí — ' + (quienEnmarca || 'origen desconocido')) : 'no'],
+      ['Dirección del script', url ? (url.substring(0, 52) + '…') : 'sin configurar'],
+      ['Motivo técnico', (r && r.motivo) ? r.motivo : 'sin respuesta']
+    ];
+    if(r && r.detalle) filas.push(['Detalle del script', String(r.detalle).substring(0, 160)]);
+
+    caja.innerHTML = filas.map(function(f){
+      return '<div><b>' + f[0] + ':</b> ' + String(f[1])
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div>';
+    }).join('');
+
+    bt.hidden = false;
+    if(!bt.__puesto){
+      bt.__puesto = true;
+      bt.addEventListener('click', function(){
+        /* El atributo, no una clase: la hoja trae [hidden]{display:none !important}
+           y una clase no le puede ganar. */
+        caja.hidden = !caja.hidden;
+        bt.textContent = caja.hidden ? 'Ver detalle técnico ▾' : 'Ocultar detalle técnico ▴';
+      });
+    }
+  }
+
   var consultaN = 0;
   function consultarCedula(ced, listo){
     var url = (typeof REPORTE_URL !== 'undefined') ? REPORTE_URL : '';
@@ -10376,6 +10444,7 @@ document.addEventListener('DOMContentLoaded', function(){
              "falló" y saber que fallo: sin esto hay que ir a Ejecuciones. */
           if(r && r.detalle) porque += ' — ' + String(r.detalle).substring(0, 160);
           elErr.textContent = 'No se pudo consultar la lista (' + porque + '). Escribe tus datos y continúa.';
+          mostrarDetalle(r);
           return;
         }
 
