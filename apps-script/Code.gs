@@ -206,7 +206,7 @@ var URL_CURSO = "https://zuicagerman-eng.github.io/Pagina-html-recapacitaciones-
    siguen atendidos por el codigo viejo. Este sello es lo que permite verlo:
    comprobarPublicacion() se lo pregunta a la implementacion y compara.
    Subelo cada vez que cambie algo de fondo. */
-var VERSION_GS = "2026-09-17-a";
+var VERSION_GS = "2026-09-17-b";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    LISTA DE PERSONAL  ·  la cédula como llave del examen
@@ -2753,8 +2753,61 @@ function enviarCorreoReporte(d) {
     }
   }
 
-  MailApp.sendEmail(CORREO_REPORTES, asunto, cuerpo, opciones);
-  return { ok: true };
+  /* Primero se guarda, despues se manda el correo. Este orden es el arreglo:
+     hasta ahora el reporte solo viajaba por correo, asi que si el correo no
+     salia —cuota de Gmail agotada, la direccion mal escrita, un fallo de
+     Google— el comentario se perdia para siempre y nadie se enteraba.
+     Guardado en la hoja, el texto queda aunque el correo falle. */
+  var guardado = guardarReporte_(d);
+
+  /* Y por eso el correo va dentro de un try: que no salga es un fastidio, no
+     un motivo para dar el reporte por perdido. La respuesta dice si salio, de
+     modo que al probarlo se sabe cual de las dos cosas fallo. */
+  var correo = true, fallo = '';
+  try {
+    MailApp.sendEmail(CORREO_REPORTES, asunto, cuerpo, opciones);
+  } catch (err) {
+    correo = false; fallo = err.message;
+    console.error('El reporte se guardo en la hoja pero el correo no salio: ' + err.message);
+  }
+  return { ok: true, guardado: guardado, correo: correo, detalleCorreo: fallo };
+}
+
+/**
+ * Deja el reporte en la pestaña "Reportes" (se crea sola la primera vez).
+ * La imagen no se guarda aqui —una captura en base64 no cabe en una celda y
+ * reventaria la hoja—: va adjunta al correo, y la columna dice si venia una.
+ */
+var PESTANA_REPORTES = "Reportes";
+
+function guardarReporte_(d) {
+  try {
+    var ss = obtenerHoja_();
+    var h = ss.getSheetByName(PESTANA_REPORTES);
+    if (!h) {
+      h = ss.insertSheet(PESTANA_REPORTES);
+      h.appendRow(['Fecha', 'Diapositiva', 'Modulo', 'Reporta', 'Descripcion',
+                   'Imagen', 'URL', 'Navegador']);
+      h.setFrozenRows(1);
+      h.setColumnWidth(5, 420);
+    }
+    h.appendRow([
+      d.fecha || new Date().toLocaleString('es-CO'),
+      String(d.diapositiva || '') + (d.total ? ' / ' + d.total : ''),
+      d.modulo || '',
+      d.nombre || '(anonimo)',
+      d.mensaje || '',
+      d.imagen ? 'si' : '',
+      d.url || '',
+      d.navegador || ''
+    ]);
+    return true;
+  } catch (err) {
+    /* Si ni guardar se puede, el correo sigue siendo la ultima oportunidad:
+       por eso esto no lanza. */
+    console.error('No se pudo guardar el reporte en la hoja: ' + err.message);
+    return false;
+  }
 }
 
 
@@ -2783,12 +2836,31 @@ function enviarCorreoReporte(d) {
  * ═══════════════════════════════════════════════════════════════════════════
  */
 var PESTANA_INGRESOS = "Ingresos";
+/* Cuanto se guardan los ingresos. Es el unico numero que hay que tocar:
+   30 = un mes  ·  7 = una semana  ·  1 = solo el dia anterior (24 horas). */
 var DIAS_INGRESOS    = 30;
 
 function limpiarIngresos() {
+  /* Candado a proposito. Esta es la unica funcion del script que BORRA filas,
+     y basta cambiar una letra arriba para apuntarla a Resultados. Si el nombre
+     no es exactamente "Ingresos", no borra nada y lo dice. */
+  if (PESTANA_INGRESOS !== 'Ingresos') {
+    Logger.log('ABORTADA: solo se limpia la pestaña "Ingresos", y PESTANA_INGRESOS dice "' +
+               PESTANA_INGRESOS + '". No se borro nada.');
+    return;
+  }
   var ss = obtenerHoja_();
   var h  = ss.getSheetByName(PESTANA_INGRESOS);
   if (!h) { Logger.log('No existe la pestaña "' + PESTANA_INGRESOS + '": nada que limpiar.'); return; }
+
+  /* Segundo candado: la hoja tiene que parecerse a la de ingresos. Si un dia
+     alguien renombra pestañas, esto evita borrar filas de otra cosa. */
+  var cab = h.getRange(1, 1, 1, Math.max(1, h.getLastColumn())).getValues()[0].map(String);
+  if (cab.indexOf('Codigo') < 0 || cab.indexOf('Equipo') < 0) {
+    Logger.log('ABORTADA: la pestaña "' + PESTANA_INGRESOS + '" no tiene las columnas ' +
+               'Codigo y Equipo, asi que no parece la de ingresos. No se borro nada.');
+    return;
+  }
 
   var filas = h.getLastRow();
   if (filas < 2) { Logger.log('La pestaña "' + PESTANA_INGRESOS + '" está vacía.'); return; }
