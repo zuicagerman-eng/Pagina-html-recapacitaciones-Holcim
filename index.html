@@ -6673,7 +6673,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-17-h";
+var VERSION_CURSO = "2026-09-17-i";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas preguntas tiene el examen EN TOTAL. Las
@@ -6890,6 +6890,20 @@ ponerLogo(document.getElementById('barLogo'),   LOGO_BARRA,   'imagenes/logo-bar
    para que la sala sepa como va de tiempo, y nada mas. */
 var MINUTOS_REINDUCCION = 60;
 
+/* ====== ARRANCAR LIMPIO ======
+   Ctrl+F5 recarga el archivo, pero NO borra lo que el curso guardo: el avance
+   y el arranque de la cuenta atras viven en el navegador, no en la pagina. Por
+   eso una version nueva puede parecer "la de antes" —sigue en la lamina donde
+   quedaste y con la cuenta ya gastada— aunque el archivo si se haya renovado.
+   Abriendo la direccion con ?nuevo=1 al final se borra lo guardado y el curso
+   empieza igual que para alguien que entra por primera vez. */
+try{
+  if(new URLSearchParams(location.search).get('nuevo')){
+    localStorage.removeItem('hse001_avance');
+    sessionStorage.removeItem('hse001_arranque');
+  }
+}catch(e){}
+
 (function(){
   var elReloj  = document.getElementById('htReloj'),
       elCuenta = document.getElementById('htCuenta');
@@ -6904,6 +6918,11 @@ var MINUTOS_REINDUCCION = 60;
      recargue. */
   var CLAVE = 'hse001_arranque', inicio = 0;
   try{ inicio = +sessionStorage.getItem(CLAVE) || 0; }catch(e){}
+  /* Si la hora guardada ya se agoto, se empieza otra vez. Sin esto, una pestana
+     abierta desde hace rato mostraba 0:00:00 para siempre y ninguna recarga la
+     movia: el contador dejaba de servir justo para lo que es, y de paso hacia
+     pensar que la pagina no se habia actualizado. */
+  if(inicio && (Date.now() - inicio) >= DURACION) inicio = 0;
   if(!inicio){
     inicio = Date.now();
     try{ sessionStorage.setItem(CLAVE, inicio); }catch(e){}
@@ -6947,9 +6966,23 @@ var MINUTOS_REINDUCCION = 60;
    Si el navegador bloquea el almacenamiento (incógnito, políticas de la
    empresa), el curso funciona igual, solo que sin recordar. */
 var CLAVE_AVANCE = 'hse001_avance';
+var HORAS_AVANCE = 24;      // lo guardado caduca pasado este tiempo
 var AVANCE = (function(){
-  try{ var t = localStorage.getItem(CLAVE_AVANCE); return t ? JSON.parse(t) : null; }
-  catch(e){ return null; }
+  try{
+    var t = localStorage.getItem(CLAVE_AVANCE);
+    if(!t) return null;
+    var a = JSON.parse(t);
+    /* Un avance de hace dias ya no es "donde quedaste": es un recuerdo que
+       estorba. Ofrecerlo hace que la persona retome un curso que ya no
+       recuerda, y que una version nueva parezca la vieja. Pasadas 24 horas se
+       borra y se entra limpio. */
+    var cuando = (a && a.fecha) ? Date.parse(a.fecha) : 0;
+    if(!cuando || (Date.now() - cuando) > HORAS_AVANCE * 3600 * 1000){
+      localStorage.removeItem(CLAVE_AVANCE);
+      return null;
+    }
+    return a;
+  }catch(e){ return null; }
 })();
 var avanceListo = false;   // no se guarda nada hasta que la persona elija
 
