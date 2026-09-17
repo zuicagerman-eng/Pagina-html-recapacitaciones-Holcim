@@ -6673,7 +6673,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-17-f";
+var VERSION_CURSO = "2026-09-17-g";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas preguntas tiene el examen EN TOTAL. Las
@@ -7421,6 +7421,7 @@ function goTo(i, dir){
   slides[idx].style.transform = 'translateX(0)';
   slides[idx].classList.add('active');
   slides[idx].scrollTop = 0;
+  olvidarScroll();
   if(dir < 0) rearmar(slides[idx]);
   reveal(slides[idx]);
   chrome();
@@ -7432,6 +7433,60 @@ function goTo(i, dir){
    gira la tarjeta, mueve el cursor, abre la pestaña. Sigue haciendo falta una
    pulsacion por interaccion —nadie se salta contenido— pero ya no hay que
    buscar con el dedo cual falta. */
+
+/* ====== BAJAR DENTRO DE LA LAMINA ANTES DE CAMBIARLA ======
+   En una pantalla baja —un portatil de 768px de alto, un movil— muchas laminas
+   no caben enteras. La flecha pasaba a la siguiente sin mas, asi que lo que
+   quedaba por debajo del borde no lo leia nadie: el aviso de "desliza" estaba,
+   pero avisar no es lo mismo que llevar. Ahora la flecha baja primero y solo
+   cambia de lamina cuando ya se llego al final; hacia atras, igual al reves.
+   En una pantalla donde la lamina cabe entera esto no hace nada, asi que el
+   comportamiento de siempre no cambia. */
+var SOLAPE_SCROLL = 72;        // se deja a la vista algo de lo ya leido
+var scrollDestino = null, scrollDeQuien = null, relojScroll = 0;
+
+function sinMovimiento(){
+  try{ return window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
+  catch(e){ return false; }
+}
+/* Con desplazamiento suave, scrollTop tarda en llegar a su sitio. Si se mirara
+   solo scrollTop, dos pulsaciones seguidas contarian desde donde aun no ha
+   terminado de bajar y la segunda avanzaria de menos. Por eso se recuerda a
+   donde vamos, y se olvida cuando el movimiento ya tuvo tiempo de acabar. */
+function posDeseada(s){
+  return (scrollDeQuien === s && scrollDestino !== null) ? scrollDestino : s.scrollTop;
+}
+function moverScroll(s, y){
+  var tope = s.scrollHeight - s.clientHeight;
+  y = Math.max(0, Math.min(y, tope));
+  scrollDeQuien = s; scrollDestino = y;
+  clearTimeout(relojScroll);
+  relojScroll = setTimeout(function(){ scrollDestino = null; scrollDeQuien = null; }, 650);
+  try{ s.scrollTo({ top:y, behavior: sinMovimiento() ? 'auto' : 'smooth' }); }
+  catch(e){ s.scrollTop = y; }
+  if(window.revisarScroll){ setTimeout(window.revisarScroll, 60); setTimeout(window.revisarScroll, 700); }
+}
+function olvidarScroll(){
+  clearTimeout(relojScroll); scrollDestino = null; scrollDeQuien = null;
+}
+function pasoScroll(s, dir){
+  if(!s) return false;
+  var tope = s.scrollHeight - s.clientHeight;
+  if(tope <= 8) return false;                        // cabe entera: nada que bajar
+  var y = posDeseada(s);
+  if(dir > 0 && y >= tope - 8) return false;         // ya esta al final
+  if(dir < 0 && y <= 8) return false;                // ya esta al principio
+  moverScroll(s, y + dir * Math.max(140, s.clientHeight - SOLAPE_SCROLL));
+  return true;
+}
+/* Acerca un elemento solo si de verdad esta fuera de la banda visible: mover la
+   lamina cuando ya se ve es un salto gratuito que desorienta. */
+function acercar(s, el){
+  if(!s || !el || s.scrollHeight - s.clientHeight <= 8) return;
+  var caja = el.getBoundingClientRect(), marco = s.getBoundingClientRect();
+  if(caja.top >= marco.top + 8 && caja.bottom <= marco.bottom - 8) return;
+  moverScroll(s, s.scrollTop + (caja.top - marco.top) - Math.max(24, s.clientHeight * 0.18));
+}
 
 /* Un mismo gesto sirve para todo si se mira en este orden: primero los mandos
    que el propio componente ya tiene, y solo al final el clic a pelo. */
@@ -7464,6 +7519,9 @@ function pasoInteractivo(dir){
 
   var pend = s.querySelector('.req:not(.done)');
   if(!pend) return false;
+  /* En una pantalla baja la tarjeta que toca puede estar por debajo del borde:
+     si no se acerca antes, la flecha "hace" algo que no se ve. */
+  acercar(s, pend);
 
   /* El deslizador suele ser hermano del elemento marcado, no hijo: se busca en
      la lamina, que en la practica no lleva dos. */
@@ -7504,16 +7562,25 @@ function next(){
   if(pasoInteractivo(1)) return;
   var r=reqStats(slides[idx]);
   if(r.total>0 && r.done<r.total){ toast('Explora todas las tarjetas para continuar ('+r.done+'/'+r.total+')'); return; }
+  if(pasoScroll(slides[idx], 1)) return;      // queda lamina por debajo: bajar antes de cambiar
   if(idx>=N-1) return;
   maxUnlocked = Math.max(maxUnlocked, idx+1);
   var iEx = iExamen();
   if(iEx >= 0 && idx+1 >= iEx) vioPresentacion = true;
   goTo(idx+1, 1);
 }
-function prev(){ if(pasoInteractivo(-1)) return; if(idx>0) goTo(idx-1, -1); }
+function prev(){ if(pasoInteractivo(-1)) return;
+  if(pasoScroll(slides[idx], -1)) return;     // subir antes de volver a la anterior
+  if(idx>0) goTo(idx-1, -1); }
 nextBtn.addEventListener('click', next);
 prevBtn.addEventListener('click', prev);
-document.addEventListener('keydown', function(e){ var ap=document.getElementById('admpanel'); if(ap&&ap.classList.contains('show'))return; var md=document.getElementById('pdfmodal'); if(md&&md.classList.contains('show'))return; var wc=document.getElementById('welcome'); if(wc&&!wc.classList.contains('hide'))return; /* Los mandos de presentacion mandan casi siempre AvPag/RePag, no flechas. */
+document.addEventListener('keydown', function(e){ var ap=document.getElementById('admpanel'); if(ap&&ap.classList.contains('show'))return; var md=document.getElementById('pdfmodal'); if(md&&md.classList.contains('show'))return; var wc=document.getElementById('welcome'); if(wc&&!wc.classList.contains('hide'))return;
+  /* Escribiendo la cedula o eligiendo una respuesta con el teclado, las flechas
+     son del campo: mueven el cursor o cambian de opcion. Si ademas cambiaran de
+     lamina, el examen se movaria solo mientras alguien teclea. */
+  var foco = e.target;
+  if(foco && foco.closest && foco.closest('input,select,textarea,[contenteditable="true"]')) return;
+  /* Los mandos de presentacion mandan casi siempre AvPag/RePag, no flechas. */
   if(e.key==='ArrowRight' || e.key==='PageDown') next();
   if(e.key==='ArrowLeft'  || e.key==='PageUp')   prev(); });
 /* reveal de la primera slide */
