@@ -6697,7 +6697,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-18-a";
+var VERSION_CURSO = "2026-09-18-b";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas preguntas tiene el examen EN TOTAL. Las
@@ -8351,16 +8351,29 @@ var ENCUESTA = (function(){
     // Opción B: enviar al Google Apps Script por POST (curso en GitHub Pages)
     if(REPORTE_URL && REPORTE_URL.indexOf('http')===0){
       rSend.disabled=true;
+      var cuerpo = JSON.stringify(datos);
+      /* Primero una peticion normal, que SI deja leer la respuesta: cuando
+         pasa, el curso puede decir "guardado" porque lo sabe. Si el navegador
+         la corta —no-cors era lo que habia justo por eso—, se reintenta a
+         ciegas y se confirma como antes, sin prometer de mas. */
       try{
-        fetch(REPORTE_URL, {
-          method:'POST',
-          mode:'no-cors',
-          headers:{'Content-Type':'text/plain;charset=utf-8'},
-          body: JSON.stringify(datos)
-        }).then(function(){ hecho(); }).catch(function(){ hecho(); });
-      }catch(e){ hecho(); }
-      // no-cors no deja leer la respuesta: confirmamos de forma optimista
-      setTimeout(hecho, 1200);
+        fetch(REPORTE_URL, { method:'POST',
+          headers:{'Content-Type':'text/plain;charset=utf-8'}, body: cuerpo })
+          .then(function(r){ return r.json(); })
+          .then(function(r){ hecho(!!(r && r.guardado)); })
+          .catch(function(){
+            /* El .catch no sobra: un fetch que falla NO lo recoge el try, se
+               queda como promesa rechazada y ensucia la consola con un error
+               que no significa nada. */
+            try{ fetch(REPORTE_URL, { method:'POST', mode:'no-cors',
+              headers:{'Content-Type':'text/plain;charset=utf-8'}, body: cuerpo })
+              .catch(function(){}); }catch(e){}
+            hecho(null);
+          });
+      }catch(e){ hecho(null); }
+      /* Tope de espera: la ventana no puede quedarse colgada si el script
+         tarda. Al cerrarse sola se confirma sin prometer que se guardo. */
+      setTimeout(function(){ hecho(null); }, 4000);
       return;
     }
 
@@ -8376,11 +8389,20 @@ var ENCUESTA = (function(){
     cerrar();
   }
   var hechoYa=false;
-  function hecho(){
+  /* 'estado' dice que se sabe de verdad:
+       true  → el script confirmo que lo guardo;
+       false → contesto, pero no pudo guardarlo;
+       null  → no se pudo leer la respuesta (es lo normal desde github.io).
+     Esto ultimo no es un fallo, pero tampoco es una confirmacion, y decir
+     "enviado" sin saberlo es justo lo que hizo que los reportes se perdieran
+     durante dias sin que nadie lo notara. */
+  function hecho(estado){
     if(hechoYa) return; hechoYa=true;
     rSend.disabled=false; cerrar(); rMsg.value='';
     quitarFoto();          // si no, la captura se colaria en el siguiente reporte
-    toast('✔ Reporte enviado. ¡Gracias!');
+    toast(estado === true  ? '✔ Reporte guardado. ¡Gracias!'
+        : estado === false ? '⚠ Se envió, pero el script no pudo guardarlo. Avisa a Salud y Seguridad.'
+        :                    '✔ Reporte enviado. ¡Gracias!');
   }
 
   rBtn.addEventListener('click', abrir);
