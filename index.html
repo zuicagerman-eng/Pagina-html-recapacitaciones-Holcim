@@ -6478,7 +6478,7 @@
             <div class="excampo" id="exCedCampo">
               <label for="exLlaveCed">Número de cédula</label>
               <input id="exLlaveCed" type="text" inputmode="numeric" autocomplete="off"
-                     placeholder="1020304050" maxlength="15">
+                     placeholder="Ej: 1020304050" maxlength="15">
             </div>
             <p class="exerr" id="exLlaveErr"></p>
             <button class="exbtn" id="exLlaveBtn" type="button">Continuar</button>
@@ -6500,7 +6500,7 @@
                  anterior, aqui se corrige y se vuelve a buscar, en vez de tener
                  que recargar y perder el avance de la presentacion. -->
             <div class="exbuscafila">
-              <input id="exCedula" type="text" inputmode="numeric" autocomplete="off" placeholder="1020304050" maxlength="15">
+              <input id="exCedula" type="text" inputmode="numeric" autocomplete="off" placeholder="Ej: 1020304050" maxlength="15">
               <button class="exbuscabtn" id="exBuscar" type="button" hidden>Buscar mis datos</button>
             </div>
             <p class="exerr" id="exBuscarMsg" style="min-height:0;margin-top:7px"></p>
@@ -6515,15 +6515,15 @@
           </div>
           <div class="excampo">
             <label for="exNombres">Nombres</label>
-            <input id="exNombres" class="exmayus" type="text" autocomplete="given-name" placeholder="DAVID ANDRÉS" maxlength="60">
+            <input id="exNombres" class="exmayus" type="text" autocomplete="given-name" placeholder="Ej: DAVID ANDRÉS" maxlength="60">
           </div>
           <div class="excampo">
             <label for="exApe1">Primer apellido</label>
-            <input id="exApe1" class="exmayus" type="text" autocomplete="family-name" placeholder="RESTREPO" maxlength="40">
+            <input id="exApe1" class="exmayus" type="text" autocomplete="family-name" placeholder="Ej: RESTREPO" maxlength="40">
           </div>
           <div class="excampo">
             <label for="exApe2">Segundo apellido <span class="exopc">(si no tienes, déjalo vacío)</span></label>
-            <input id="exApe2" class="exmayus" type="text" autocomplete="additional-name" placeholder="GÓMEZ" maxlength="40">
+            <input id="exApe2" class="exmayus" type="text" autocomplete="additional-name" placeholder="Ej: GÓMEZ" maxlength="40">
           </div>
           <div class="excampo">
             <label for="exTipo">Tipo de usuario</label>
@@ -6531,7 +6531,7 @@
           </div>
           <div class="excampo" id="exRazonCampo" hidden>
             <label for="exRazon">Empresa</label>
-            <input id="exRazon" class="exmayus" type="text" autocomplete="organization" placeholder="Razón social" maxlength="70">
+            <input id="exRazon" class="exmayus" type="text" autocomplete="organization" placeholder="Ej: SERVICIOS INDUSTRIALES S.A.S." maxlength="70">
           </div>
           <p class="exerr" id="exErr"></p>
           <button class="exdiagbtn" id="exDiagBtn" type="button" hidden>Ver detalle técnico ▾</button>
@@ -6697,7 +6697,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-17-m";
+var VERSION_CURSO = "2026-09-18-a";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas preguntas tiene el examen EN TOTAL. Las
