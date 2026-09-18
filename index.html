@@ -3792,6 +3792,24 @@
   .puepanel{margin-top:16px;border:2px dashed var(--green);border-radius:var(--radius);
     padding:20px 22px;text-align:center;background:rgba(255,255,255,.05);transition:opacity .35s,transform .35s}
   .slide.light .puepanel{background:#fff;box-shadow:var(--shadow)}
+  /* Dibujo de las dos medidas. Dos cifras en un parrafo cuestan de leer aunque
+     la frase sea correcta; viendolas sobre un borde se entienden de una. */
+  .dibalt{display:block;margin:10px auto 12px;max-width:330px}
+  .dibalt svg{width:100%;height:auto;display:block}
+  .dibalt .piso{fill:none;stroke:#9fb6cd;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+  .dibalt .obrero{fill:none;stroke:#f5b700;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+  .dibalt .cota{fill:none;stroke:#1bb4e4;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .dibalt .cotav{stroke:#8bbf3a}
+  .dibalt text{font:700 15px Arial,Helvetica,sans-serif;fill:#1bb4e4}
+  .dibalt text.v{fill:#8bbf3a}
+  /* En tema claro las cotas van sobre blanco: el cian y el verde de arriba se
+     quedan en 2,4 y 2,2 de contraste, ilegibles. Estos dan 5,8 y 5,1. */
+  .slide.light .dibalt .piso{stroke:#5c7086}
+  .slide.light .dibalt .cota{stroke:#0f6d92}
+  .slide.light .dibalt .cotav{stroke:#4a7a12}
+  .slide.light .dibalt text{fill:#0f6d92}
+  .slide.light .dibalt text.v{fill:#4a7a12}
+  .slide.light .dibalt .obrero{stroke:#b07800}
   .puepanel h3{font-size:19px;font-weight:800;color:var(--blue);margin-bottom:8px;line-height:1.25}
   .slide.dark .puepanel h3{color:#8fd6f2}
   .puepanel p{font-size:14.5px;line-height:1.55;color:var(--muted);max-width:62ch;margin:0 auto}
@@ -6697,7 +6715,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-18-c";
+var VERSION_CURSO = "2026-09-18-d";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas preguntas tiene el examen EN TOTAL. Las
@@ -8496,7 +8514,7 @@ var PUES = {
   ['Barreras, barandas, cubiertas en aperturas y bordes de caída','Las barreras físicas como pasamanos y barandas o cubiertas y señales de advertencia deben estar en su lugar para prevenir riesgos de caídas.','caida1(D82)'],
   ['Plan previo al trabajo','Compruebe si hay formas más seguras de realizar la tarea ANTES de comenzar. Realice una evaluación específica de los riesgos, los controles necesarios y autorice el trabajo a través de permisos de trabajo.','caida2(D82)'],
   ['Equipos certificados para realizar el trabajo','Las estructuras, plataformas y equipos de acceso a alturas (permanentes, temporales o móviles) deben estar certificados y diseñados, instalados, inspeccionados y aprobados para su uso por una persona autorizada y competente.','caida3(D82)'],
-  ['Sistema de protección personal contra caídas','Los dos metros se miden <b>en horizontal</b>: es lo cerca que estás del borde. Los 1,8 metros son <b>la caída</b>: lo que hay hasta el piso de abajo. Quien trabaje a menos de 2 metros de una abertura o borde desprotegido con una caída de 1,8 metros o más debe usar un sistema de protección personal contra caídas (restricción/suspensión), sujeto a un punto de anclaje autorizado.','caida4(D82)']]},
+  ['Sistema de protección personal contra caídas','<span class="dibalt"><svg viewBox="0 0 330 168" role="img" aria-label="Dibujo: los 2 metros se miden en el piso, desde el trabajador hasta el borde; los 1,8 metros son la altura de la caida, desde ese piso hasta el de abajo."><path class="piso" d="M8 84 H196 V152 H324"/><circle class="obrero" cx="58" cy="57" r="8"/><path class="obrero" d="M58 65 V79 M58 70 l-11 7 M58 70 l11 7 M58 79 l-8 5 M58 79 l8 5"/><path class="cota" d="M58 34 H196 M63 29 l-5 5 5 5 M191 29 l5 5 -5 5"/><path class="cota" d="M58 42 V78 M196 42 V80" stroke-dasharray="4 4"/><text x="127" y="26" text-anchor="middle">2 m</text><path class="cota cotav" d="M236 84 V152 M231 89 l5 -5 5 5 M231 147 l5 5 5 -5"/><path class="cota cotav" d="M198 84 H234 M198 152 H234" stroke-dasharray="4 4"/><text class="v" x="246" y="124">1,8 m</text></svg></span>Son <b>dos medidas distintas</b>. Los <b>2 m</b> se miden en el piso: es lo cerca que estás del borde. Los <b>1,8 m</b> se miden hacia abajo: es lo que caerías. <b>Si se cumplen las dos a la vez</b>, hay que usar sistema de protección personal contra caídas (restricción/suspensión) anclado a un punto autorizado.','caida4(D82)']]},
  energias:{n:'Contacto con Energías Peligrosas', c:[
   ['Barreras físicas','Las barreras físicas evitan que cualquier persona entre en contacto con los peligros de la energía en movimiento.','energias1(D82)'],
   ['Aislamiento de energía','Todas las fuentes de energía deben ser controladas a través del bloqueo, etiquetado y prueba.','energias2(D82)'],
