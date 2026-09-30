@@ -139,7 +139,7 @@
   .slide.light .jorbtns button.sec{background:rgba(11,37,69,.1);color:var(--ink)}
   .hudbar{position:absolute;left:0;bottom:-1px;height:3px;width:100%;background:rgba(255,255,255,.08)}
   #hudfill{height:100%;width:0;background:var(--grad);transition:width .45s ease}
-  @media(max-width:560px){.brand small{display:none}.brandlong{display:none}.step{font-size:11.5px}.brand .logo{width:26px;height:26px}}
+  @media(max-width:560px){.brand small{display:none}.brandlong{display:none}.step{font-size:11.5px}}
   /* Con cuatro botones en la barra, en pantallas de 360 px el contador se salia
      por la derecha. La palabra "Paso" es la que sobra: el numero se entiende
      solo, y asi caben los cuatro sin apretar el pulgar contra el borde. */
@@ -3958,6 +3958,15 @@
   .brand .logo{width:auto;height:32px;display:inline-flex;align-items:center;flex:none}
   .brand .logo img{height:32px;width:auto;max-width:150px;display:block}
   .brand .logo svg{width:32px;height:32px}
+  /* Con la palabra, el logo pasa de 31 a 139 px de ancho. Esos 108 px de mas
+     salen del titulo de al lado: medido, "HSE-001 . (Re) Induccion H&S" deja
+     de caber en una linea por debajo de 980 px. Asi que de ahi para abajo se
+     queda solo el simbolo, igual que estaba antes. */
+  .brand .logo.mini{display:none}
+  @media(max-width:979px){
+    .brand .logo.completo{display:none}
+    .brand .logo.mini{display:inline-flex}
+  }
 
   /* Resaltado en rojo de lo que le falta al usuario (botón de ayuda) */
   .falta{animation:faltaPulse 1s ease-in-out 4;position:relative;z-index:6;
@@ -4126,7 +4135,7 @@
 </head>
 <body>
 <header class="hud">
-  <div class="brand"><span class="logo" id="brandlogo"></span><span><b>HSE-001<span class="brandlong"> · (Re) Inducción H&amp;S</span></b><small id="modlabel">Módulos 1 · 2</small></span></div>
+  <div class="brand"><span class="logo completo" id="brandlogo"></span><span class="logo mini" id="brandlogoMini"></span><span><b>HSE-001<span class="brandlong"> · (Re) Inducción H&amp;S</span></b><small id="modlabel">Módulos 1 · 2</small></span></div>
   <div class="hudacc">
     <button class="fab" id="helpBtn" title="Ayuda: te resalta en rojo lo que falta por explorar" aria-label="Ayuda">
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.2 9a2.8 2.8 0 0 1 5.4 1c0 1.8-2.6 2-2.6 4"/><path d="M12 17h0"/></svg>
@@ -6697,7 +6706,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-30-a";
+var VERSION_CURSO = "2026-09-30-b";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas preguntas tiene el examen EN TOTAL. Las
@@ -6902,7 +6911,8 @@ function cargarMediosCercanos(){
     if(Math.abs(m.slide - idx) <= VENTANA_PRECARGA){ m.hecho = true; m.cargar(); }
   });
 }
-ponerLogo(document.getElementById('brandlogo'), LOGO_ESQUINA, 'imagenes/logo-esquina.png', logoSVG);
+ponerLogo(document.getElementById('brandlogo'),     LOGO_BARRA_NEG, 'imagenes/logo-barra-negativo.png', logoSVG);
+ponerLogo(document.getElementById('brandlogoMini'), LOGO_ESQUINA,   'imagenes/logo-esquina.png',        logoSVG);
 ponerLogo(document.getElementById('wlogo'),     LOGO_BARRA,   'imagenes/logo-barra.png',   '<span class="barlogo-txt">HOLCIM</span>');
 ponerLogo(document.getElementById('barLogo'),   LOGO_BARRA_NEG, 'imagenes/logo-barra-negativo.png', '<span class="barlogo-txt">HOLCIM</span>');
 /* ====== RELOJ Y CUENTA ATRAS ======
