@@ -6697,7 +6697,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-18-e";
+var VERSION_CURSO = "2026-09-30-a";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas preguntas tiene el examen EN TOTAL. Las
@@ -6827,11 +6827,16 @@ var BASE = "https://zuicagerman-eng.github.io/Pagina-html-recapacitaciones-Holci
 function asset(ruta){ return BASE + ruta; }   // helper: asset("imagenes/logo-barra.png")
 
 /* ====== LOGOS (sube tus PNG a la carpeta imagenes/) ======
-   - logo-esquina.png : logo pequeño de la esquina superior izquierda
-   - logo-barra.png   : logo de la barra intermedia (centro), separando los botones
+   - logo-esquina.png        : logo pequeño de la esquina superior izquierda
+   - logo-barra.png          : conjunto completo, para fondos claros (bienvenida, diploma)
+   - logo-barra-negativo.png : el mismo, con la palabra en blanco, para la barra intermedia
    Mientras no existan, se muestra un logo de respaldo. */
 var LOGO_ESQUINA = asset("imagenes/logo-esquina.png");
 var LOGO_BARRA   = asset("imagenes/logo-barra.png");
+/* El mismo conjunto en negativo. El logotipo de Holcim es azul marino, asi que
+   sobre la barra intermedia —que es azul marino tambien— se vuelve ilegible.
+   Esta version lleva la palabra en blanco y el simbolo intacto. */
+var LOGO_BARRA_NEG = asset("imagenes/logo-barra-negativo.png");
 
 /* Convierte automáticamente los recursos marcados con data-audio / data-img
    en URL absoluta (BASE). Así puedes escribir en el HTML:
@@ -6899,7 +6904,7 @@ function cargarMediosCercanos(){
 }
 ponerLogo(document.getElementById('brandlogo'), LOGO_ESQUINA, 'imagenes/logo-esquina.png', logoSVG);
 ponerLogo(document.getElementById('wlogo'),     LOGO_BARRA,   'imagenes/logo-barra.png',   '<span class="barlogo-txt">HOLCIM</span>');
-ponerLogo(document.getElementById('barLogo'),   LOGO_BARRA,   'imagenes/logo-barra.png',   '<span class="barlogo-txt">HOLCIM</span>');
+ponerLogo(document.getElementById('barLogo'),   LOGO_BARRA_NEG, 'imagenes/logo-barra-negativo.png', '<span class="barlogo-txt">HOLCIM</span>');
 /* ====== RELOJ Y CUENTA ATRAS ======
    Dos cosas distintas en la misma esquina:
      · la hora y la fecha, para que quien dirige la jornada no tenga que salir
@@ -9893,7 +9898,8 @@ var DIPLOMA = {
   fondo: 'imagenes/certificado(D95).png',
   /* El logo viene incrustado en la plantilla, que mide 2160x1215 y se dibuja
      sobre un lienzo de 2880x1620: se agranda un 33% y sale borroso. Encima se
-     pone el archivo del logo en alta —4004 px de ancho, de sobra—.
+     pone el archivo del logo en alta —2000 px de ancho, de sobra para los 346
+     que ocupa aqui al doble de escala—.
      Medido sobre la plantilla: ocupa de (1849,34) a (2107,93) de sus 2160 px
      de ancho, que llevados a 1440 son los numeros de abajo. La tapa lleva
      margen y cae sobre blanco puro (comprobado pixel a pixel), asi que no
