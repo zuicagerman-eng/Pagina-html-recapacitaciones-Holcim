@@ -6823,7 +6823,10 @@ var VIDEO_INICIO = 9;
    NO se sirve desde el propio Apps Script (por ejemplo desde GitHub Pages o
    pegado en el portal): por ahí viajan los reportes de problemas y los
    resultados del examen. Si el curso corre dentro de Apps Script, déjala vacía. */
-var REPORTE_URL   = "https://script.google.com/macros/s/AKfycbzkHY0ugVub450O7yNT08YagD1YMgSsdFGRIKUz9fnuxvABvzHQaFysxpmVCT15HqDs/exec";                       // ej: "https://script.google.com/macros/s/XXXX/exec"
+/* Desde el 2-oct-2026 es la URL /exec de la app de Capacitaciones (holcim-centro-formacion):
+   la cédula se busca en Personal, el examen y el PDF quedan en el libro y la carpeta de
+   Capacitaciones, y el aprobado de un trabajador Holcim pasa a GSTOR. */
+var REPORTE_URL   = "https://script.google.com/macros/s/AKfycbwvsZML04hyfx5kB6x5-QXDduVgIvmyli6U8gSxKB6Z7IWdxY-fJcWJBrAJGDqa8175/exec";                       // ej: "https://script.google.com/macros/s/XXXX/exec"
 var REPORTE_EMAIL = "german.zuica@holcim.com"; // correo de respaldo (modo "abrir correo")
 
 /* ====== BODEGA DE ARCHIVOS (imágenes, audio, etc.) ======
