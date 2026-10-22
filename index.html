@@ -117,6 +117,7 @@
 
   /* Resultado y repaso */
   .slide.light .exrevi h3{color:var(--ink)}
+  .slide.light .exavisorep{color:#5c7086}
   .slide.light .exguardado.ok{background:rgba(31,140,64,.12);border-color:rgba(31,140,64,.45);color:#14532a}
   .slide.light .exguardado.no{background:rgba(196,140,0,.14);border-color:rgba(196,140,0,.5);color:#6b4a00}
 
@@ -735,6 +736,10 @@
   .exguardado.no{background:rgba(245,183,0,.14);border:1px solid rgba(245,183,0,.5);color:#ffe9b0}
   .exrevi{margin-top:18px}
   .exrevi h3{font-size:15px;font-weight:800;color:#fff;margin-bottom:4px}
+  /* La pregunta que se va a volver a hacer: se marca, pero sin pintar de verde
+     la correcta —de eso se trata—. El borde es lo unico que la señala. */
+  .exq.exqrep{box-shadow:inset 3px 0 0 #e8a400}
+  .exavisorep{font-size:13px;color:#b9c9de;margin:0 0 10px;line-height:1.45}
 
   /* ====== PANEL DE ADMINISTRADOR ====== */
   #admbadge{position:fixed;left:50%;transform:translateX(-50%);top:8px;z-index:80;display:none;
@@ -6572,6 +6577,7 @@
         <div class="exguardado" id="exCert" hidden></div>
         <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:18px">
           <button class="exbtn" id="exDiploma" type="button" hidden>Descargar certificado (PDF)</button>
+          <button class="exbtn" id="exReintento" type="button" hidden>Responder las que fallé</button>
           <button class="exbtn sec" id="exRepetir" type="button">Presentar de nuevo</button>
         </div>
         <div class="exrevi" id="exRevision"></div>
@@ -6706,7 +6712,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-09-30-b";
+var VERSION_CURSO = "2026-10-22-a";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas preguntas tiene el examen EN TOTAL. Las
@@ -10327,8 +10333,17 @@ document.addEventListener('DOMContentLoaded', function(){
       inRazon=document.getElementById('exRazon'), campoRazon=document.getElementById('exRazonCampo'),
       elErr=document.getElementById('exErr'), btnIni=document.getElementById('exIniciar'),
       btnCal=document.getElementById('exCalificar'), btnRep=document.getElementById('exRepetir'),
+      btnCorr=document.getElementById('exReintento'),
       elCont=document.getElementById('exCont');
   var persona=null, sorteadas=[], respuestas=[], inicio=0;
+  /* "sorteadas" es lo que se esta respondiendo AHORA; al repetir trae solo las
+     falladas. El examen completo vive aparte, para que la nota salga sobre las
+     30 y no sobre las 6 que quedaron pendientes:
+       base      las 30 preguntas del intento, en su orden
+       acertadas que se resolvio ya, casilla por casilla. Lo acertado se queda.
+       detBase   el detalle de cada una, para el certificado y la hoja
+       intento   1, 2, 3... Se guarda en el registro, no en el certificado. */
+  var base=[], acertadas=[], detBase=[], intento=1;
 
   /* Los dos desplegables se arman con las listas de arriba: para cambiarlos no
      hay que tocar el HTML, solo TIPOS_USUARIO y SEDES. */
@@ -10953,7 +10968,14 @@ document.addEventListener('DOMContentLoaded', function(){
     tomadas = mezclar(obligatorias.slice()).concat(tomadas);
 
     // se baraja también el orden de las opciones, salvo en las de Verdadero/Falso
-    return tomadas.map(function(q){
+    return tomadas.map(vestir);
+  }
+
+  /* Prepara UNA pregunta para pintarla: baraja sus opciones y deja apuntado
+     cual es la correcta en el orden nuevo. Estaba dentro de sortear(); se saco
+     porque al repetir hay que rearmar preguntas de una en una. */
+  function vestir(q){
+    return (function(q){
       /* Un bloque V/F no tiene opciones que barajar; lo que se baraja son las
          afirmaciones, para que no se aprendan por su posicion en la lista. */
       if(q.matriz){
@@ -10970,7 +10992,17 @@ document.addEventListener('DOMContentLoaded', function(){
                  correcta:q.r.map(function(x){ return idx.indexOf(x); }).sort(function(a,b){ return a-b; }) };
       }
       return { q:q, orden:idx, correcta:idx.indexOf(q.r) };
-    });
+    })(q);
+  }
+
+  /* Al repetir, si la pregunta tiene gemela —el banco las guarda en parejas que
+     preguntan lo mismo de otra forma— sale la otra. Asi no se responde de
+     memoria la misma frase. Las obligatorias no tienen gemela: esas se repiten
+     igual, y por eso en el repaso no se enseña su respuesta. */
+  function otraDelGrupo(q){
+    if(!q.g) return q;
+    var hermanas = BANCO.filter(function(x){ return x.g === q.g && x !== q; });
+    return hermanas.length ? hermanas[Math.floor(Math.random() * hermanas.length)] : q;
   }
 
   function pintar(){
@@ -11329,9 +11361,7 @@ document.addEventListener('DOMContentLoaded', function(){
     try{ elDatos.scrollIntoView({ block:'start' }); }catch(e){}
   });
 
-  btnIni.addEventListener('click', function(){
-    var e = validar(); elErr.textContent = e; if(e) return;
-    sorteadas = sortear(); respuestas = new Array(sorteadas.length); inicio = Date.now();
+  function cabeceraExamen(){
     document.getElementById('exQuien').innerHTML =
       '<b>' + persona.nombre + '</b> · C.C. ' + persona.cedula +
       ' · ' + persona.tipo + ' · ' + persona.empresa +
@@ -11341,7 +11371,48 @@ document.addEventListener('DOMContentLoaded', function(){
          si aprueba. */
       ' — ' + (EXIGIR_OBLIGATORIAS && nObligatorias()
         ? 'Para aprobar, debes responder correctamente todas las preguntas obligatorias marcadas con ★ y obtener una calificación final mínima del ' + NOTA_MINIMA + '%.'
-        : 'Para aprobar, debes obtener una calificación final mínima del ' + NOTA_MINIMA + '%.');
+        : 'Para aprobar, debes obtener una calificación final mínima del ' + NOTA_MINIMA + '%.') +
+      /* En la repeticion hay que decir las dos cosas: que son solo las que
+         fallo, y que la nota sigue siendo sobre el examen entero. Si no, ver
+         "6 preguntas" y despues un 100% no cuadra por ningun lado. */
+      (intento > 1
+        ? '<br><b>Intento ' + intento + '</b> · solo las ' + sorteadas.length +
+          ' que fallaste. Las que ya acertaste siguen contando: la nota final es sobre las ' +
+          base.length + '.'
+        : '');
+  }
+
+  btnIni.addEventListener('click', function(){
+    var e = validar(); elErr.textContent = e; if(e) return;
+    sorteadas = sortear(); respuestas = new Array(sorteadas.length); inicio = Date.now();
+    /* El examen de este intento queda apartado: es contra el que se califica,
+       aunque despues solo se respondan las falladas. */
+    base = sorteadas.slice(); acertadas = new Array(base.length);
+    detBase = new Array(base.length); intento = 1;
+    cabeceraExamen();
+    pintar(); fase('preguntas');
+    try{ elPreg.scrollIntoView({block:'start'}); }catch(err){}
+  });
+
+  /* ====== REPETIR SOLO LAS FALLADAS ======
+     No se vuelve a empezar: se rearman unicamente las casillas sin resolver y
+     se responden esas. El tiempo no se reinicia —"inicio" se deja— para que la
+     duracion que se guarda sea la del examen completo, no la del ultimo asalto. */
+  if(btnCorr) btnCorr.addEventListener('click', function(){
+    var pendientes = [];
+    base.forEach(function(_, k){ if(!acertadas[k]) pendientes.push(k); });
+    if(!pendientes.length) return;
+    intento++;
+    sorteadas = pendientes.map(function(k){
+      var it = vestir(otraDelGrupo(base[k].q));
+      it.base = k;            // de que casilla del examen completo viene
+      return it;
+    });
+    respuestas = new Array(sorteadas.length);
+    elLista.innerHTML = '';
+    document.getElementById('exRevision').innerHTML = '';
+    btnCorr.hidden = true;
+    cabeceraExamen();
     pintar(); fase('preguntas');
     try{ elPreg.scrollIntoView({block:'start'}); }catch(err){}
   });
@@ -11357,7 +11428,10 @@ document.addEventListener('DOMContentLoaded', function(){
   });
 
   function calificar(){
-    var aciertos=0, detalle=[], obFalladas=0;
+    /* PRIMERA PASADA: calificar, sin pintar nada todavia. Lo que se le puede
+       enseñar a la persona depende de si aprobo, y eso no se sabe hasta haber
+       recorrido todas. */
+    var obFalladas = 0, ronda = [];
     sorteadas.forEach(function(it,i){
       var bien, resp, corr;
       if(it.q.matriz){
@@ -11387,32 +11461,27 @@ document.addEventListener('DOMContentLoaded', function(){
         resp = it.q.o[ it.orden[ respuestas[i] ] ];
         corr = it.q.o[ it.q.r ];
       }
-      if(bien) aciertos++;
-      if(it.q.ob && !bien) obFalladas++;
-      detalle.push({
-        n: i+1, modulo: it.q.m, pregunta: it.q.p,
-        respondio: resp, correcta: corr, acierto: bien
-      });
-      // se pinta la corrección sobre las mismas tarjetas
-      var caja = elLista.querySelector('.exq[data-q="'+i+'"]');
-      if(it.q.matriz){
-        caja.querySelectorAll('.mzfila').forEach(function(fila,k){
-          var esperada = +it.q.matriz[ it.filas[k] ][1];
-          fila.classList.add(respuestas[i][k] === esperada ? 'bien' : 'mal');
-          fila.querySelectorAll('input').forEach(function(inp){ inp.disabled = true; });
-        });
-      } else {
-        var elegidas = it.varias ? (respuestas[i] || []) : [respuestas[i]];
-        var buenas   = it.varias ? it.correcta : [it.correcta];
-        caja.querySelectorAll('.exopt').forEach(function(l,k){
-          l.classList.remove('sel');
-          if(buenas.indexOf(k) >= 0) l.classList.add('bien');
-          else if(elegidas.indexOf(k) >= 0) l.classList.add('mal');
-          l.querySelector('input').disabled = true;
-        });
-      }
+      /* El resultado se guarda en la casilla que esta pregunta ocupa dentro del
+         examen completo, no en el orden de esta ronda: al repetir, la ronda
+         trae solo las falladas y el orden ya no coincide. */
+      var b = (typeof it.base === 'number') ? it.base : i;
+      acertadas[b] = bien;
+      detBase[b] = { n: b+1, modulo: it.q.m, pregunta: it.q.p,
+                     respondio: resp, correcta: corr, acierto: bien };
+      ronda.push({ it:it, i:i, bien:bien });
     });
-    var pct = Math.round(aciertos * 100 / sorteadas.length);
+
+    /* La nota es del examen COMPLETO. Lo acertado en la primera vuelta sigue
+       contando, asi que quien repite responde 6 pero aprueba o no por las 30.
+       Sin esto, repetir 6 preguntas y sacar 6/6 daria 100% habiendo fallado. */
+    var aciertos = 0;
+    base.forEach(function(it,k){
+      if(acertadas[k]) aciertos++;
+      else if(it.q.ob) obFalladas++;
+    });
+    var total = base.length;
+    var detalle = detBase.slice();
+    var pct = Math.round(aciertos * 100 / total);
     /* Las obligatorias no se compensan con el resto: fallar una reprueba
        aunque el porcentaje llegue. Aprobar sabiendo siete de las ocho reglas
        que no se negocian no significa nada. */
@@ -11420,8 +11489,40 @@ document.addEventListener('DOMContentLoaded', function(){
     /* Hay que SUPERAR el minimo: con 90% justo se reprueba. Se compara con los
        aciertos en crudo y no con "pct", porque pct viene redondeado y un 89,6
        que se muestra como 90 no puede aprobar. */
-    var llegaNota = aciertos * 100 > NOTA_MINIMA * sorteadas.length;
+    var llegaNota = aciertos * 100 > NOTA_MINIMA * total;
     var aprobo = llegaNota && !porObligatorias;
+
+    /* SEGUNDA PASADA: pintar la correccion. De lo que fallo y va a repetir NO
+       se enseña cual era la buena: la misma pregunta se la vamos a volver a
+       hacer —las obligatorias no tienen gemela— y verla aqui convertiria el
+       segundo intento en un tramite. Al aprobar se enseña todo. */
+    ronda.forEach(function(r){
+      var it = r.it, i = r.i, tapar = !aprobo && !r.bien;
+      var caja = elLista.querySelector('.exq[data-q="'+i+'"]');
+      if(!caja) return;
+      if(tapar) caja.classList.add('exqrep');
+      if(it.q.matriz){
+        caja.querySelectorAll('.mzfila').forEach(function(fila,k){
+          var esperada = +it.q.matriz[ it.filas[k] ][1];
+          if(!tapar) fila.classList.add(respuestas[i][k] === esperada ? 'bien' : 'mal');
+          fila.querySelectorAll('input').forEach(function(inp){ inp.disabled = true; });
+        });
+      } else {
+        var elegidas = it.varias ? (respuestas[i] || []) : [respuestas[i]];
+        var buenas   = it.varias ? it.correcta : [it.correcta];
+        caja.querySelectorAll('.exopt').forEach(function(l,k){
+          l.classList.remove('sel');
+          /* Con "tapar" no se marca ninguna: ni la buena ni la que eligio. En
+             las de varias respuestas, señalar cual de sus marcas estaba bien ya
+             seria media respuesta. */
+          if(!tapar){
+            if(buenas.indexOf(k) >= 0) l.classList.add('bien');
+            else if(elegidas.indexOf(k) >= 0) l.classList.add('mal');
+          }
+          l.querySelector('input').disabled = true;
+        });
+      }
+    });
     var seg = Math.round((Date.now() - inicio) / 1000);
 
     document.getElementById('exMarca').className = 'exmarca ' + (aprobo ? 'ok' : 'no');
@@ -11431,7 +11532,7 @@ document.addEventListener('DOMContentLoaded', function(){
       '<b>' + persona.nombre + '</b> · C.C. ' + persona.cedula + '<br>' +
       persona.tipo + ' · ' + persona.empresa +
       (persona.razonSocial ? ' · ' + persona.razonSocial : '') + '<br>' +
-      aciertos + ' de ' + sorteadas.length + ' respuestas correctas · hay que superar el ' + NOTA_MINIMA + '%.' +
+      aciertos + ' de ' + total + ' respuestas correctas · hay que superar el ' + NOTA_MINIMA + '%.' +
       /* Sin estas lineas, sacar 90% y no aprobar es incomprensible. */
       (!llegaNota
         ? '<br>Te quedaste en el ' + NOTA_MINIMA + '% o por debajo: para aprobar hay que ' +
@@ -11444,14 +11545,33 @@ document.addEventListener('DOMContentLoaded', function(){
         : '') +
       (aprobo ? '<br>Descarga tu <b>certificado</b> con el botón de abajo. ' +
                 '<b>No cierres esta ventana</b> hasta que el aviso diga que terminó de guardarse.'
-              : '<br>Revisa abajo las preguntas falladas y presenta el examen de nuevo.');
+              : '<br>Abajo están las que fallaste. Puedes <b>responder solo esas</b>: ' +
+                'lo que ya acertaste no hay que volverlo a hacer.');
 
+    /* Se dice QUE fallo y de que modulo es, no cual era la respuesta: estas
+       mismas preguntas se vuelven a hacer. El detalle completo —con las
+       correctas— va en el PDF del certificado, que solo existe si aprobo. */
+    var faltan = [];
+    base.forEach(function(it, k){ if(!acertadas[k]) faltan.push({ it:it, k:k }); });
     document.getElementById('exRevision').innerHTML = aprobo ? '' :
-      '<h3>Preguntas para repasar</h3>' + detalle.filter(function(d){ return !d.acierto; }).map(function(d){
-        return '<div class="exq"><div class="qh"><span class="qn">'+d.n+'.</span><span>'+d.pregunta+'</span></div>' +
-               '<div class="exopts"><span class="exopt mal">Tu respuesta: '+d.respondio+'</span>' +
-               '<span class="exopt bien">Respuesta correcta: '+d.correcta+'</span></div></div>';
+      '<h3>Te faltan ' + faltan.length + (faltan.length === 1 ? ' pregunta' : ' preguntas') + '</h3>' +
+      '<p class="exavisorep">No te mostramos cuál era la correcta: estas mismas te las vamos a ' +
+      'volver a preguntar. Repasa el módulo que aparece al lado y vuelve a intentarlo.</p>' +
+      faltan.map(function(x){
+        var etq = x.it.q.m === 'EX' ? 'EX' : 'M' + x.it.q.m;
+        return '<div class="exq exqrep"><div class="qh"><span class="qn">' + (x.k+1) + '.</span>' +
+               '<span>' + x.it.q.p + (x.it.q.ob && EXIGIR_OBLIGATORIAS
+                 ? '<span class="qob">★ Obligatoria</span>' : '') + '</span>' +
+               '<span class="qm">' + etq + '</span></div></div>';
       }).join('');
+
+    /* El boton de repetir corto solo tiene sentido si quedo algo pendiente. */
+    if(btnCorr){
+      btnCorr.hidden = aprobo || !faltan.length;
+      btnCorr.textContent = faltan.length === 1
+        ? 'Responder la pregunta que fallé'
+        : 'Responder las ' + faltan.length + ' que fallé';
+    }
 
     var btnDip = document.getElementById('exDiploma');
     btnDip.hidden = !aprobo;
@@ -11468,7 +11588,7 @@ document.addEventListener('DOMContentLoaded', function(){
         sesion: SESION ? SESION.id : '',
         capacitacion: NOMBRE_CAPACITACION, fecha: fechaLarga(new Date()),
         resultado: 'APROBADO', puntaje: pct + '%',
-        aciertos: aciertos, total: sorteadas.length, respuestas: detalle
+        aciertos: aciertos, total: total, respuestas: detalle
       };
       btnDip.textContent = 'Descargar certificado (PDF)';
       btnDip.disabled = false;
@@ -11498,8 +11618,11 @@ document.addEventListener('DOMContentLoaded', function(){
          donde se presento el examen. */
       vinculo: (function(){ try{ return location.href.split('#')[0]; }catch(e){ return ''; } })(),
       fecha: new Date().toLocaleString('es-CO'),
-      aciertos: aciertos, total: sorteadas.length, porcentaje: pct,
+      aciertos: aciertos, total: total, porcentaje: pct,
       tipo: 'examen', aprobado: aprobo ? 'SÍ' : 'NO', segundos: seg,
+      /* Cuantas vueltas le costo. No sale en el certificado; sirve en la hoja
+         para ver que preguntas se estan fallando de verdad. */
+      intento: intento,
       /* De que jornada salio este examen. En individual se guarda igual, con
          la modalidad y los demas campos vacios: asi TODAS las filas dicen que
          fueron, y no hay que adivinarlo por el hueco. Apps Script anade estas
@@ -11677,6 +11800,10 @@ document.addEventListener('DOMContentLoaded', function(){
 
   btnRep.addEventListener('click', function(){
     respuestas = []; sorteadas = []; elLista.innerHTML = '';
+    /* Tambien el examen apartado: sin esto, el siguiente que use la tablet
+       heredaria las casillas que el anterior ya tenia resueltas. */
+    base = []; acertadas = []; detBase = []; intento = 1;
+    if(btnCorr) btnCorr.hidden = true;
     document.getElementById('exRevision').innerHTML = '';
     elErr.textContent = '';
     /* Si esto es una jornada y quien dirige ya presento lo suyo, al repetir

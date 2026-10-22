@@ -206,7 +206,7 @@ var URL_CURSO = "https://zuicagerman-eng.github.io/Pagina-html-recapacitaciones-
    siguen atendidos por el codigo viejo. Este sello es lo que permite verlo:
    comprobarPublicacion() se lo pregunta a la implementacion y compara.
    Subelo cada vez que cambie algo de fondo. */
-var VERSION_GS = "2026-09-17-b";
+var VERSION_GS = "2026-10-22-a";
 
 /* ═══════════════════════════════════════════════════════════════════════════
    LISTA DE PERSONAL  ·  la cédula como llave del examen
@@ -664,7 +664,13 @@ var PESTANA_DETALLE = "Respuestas";
 var COLUMNAS_RESUMEN = [
   'Fecha', 'Tipo_Usuario', 'ID_Identificacion', 'Nombre_Completo', 'Centro_Trabajo', 'Empresa',
   'Capacitacion', 'Puntaje', 'Resultado', 'Vinculo',
-  'Aciertos', 'Total', 'Duración (s)', 'Navegador'
+  'Aciertos', 'Total', 'Duración (s)', 'Navegador',
+  /* Cuantas vueltas le costo aprobar. Quien reprueba puede volver a responder
+     SOLO las que fallo, asi que un 100% en el intento 3 no es lo mismo que un
+     100% a la primera. Sin esta columna, en la hoja se ven iguales.
+     Es columna nueva: escribirPorEncabezado_ la agrega al final de la pestaña
+     que ya tienes, sin tocar ninguna fila anterior. */
+  'Intento'
 ];
 
 /** Devuelve la hoja de cálculo, creándola la primera vez si hace falta. */
@@ -1408,7 +1414,8 @@ function guardarExamen(d) {
     'Aciertos': d.aciertos,
     'Total': d.total,
     'Duración (s)': d.segundos,
-    'Navegador': d.navegador || ''
+    'Navegador': d.navegador || '',
+    'Intento': d.intento || 1
   };
   /* Se deja escrito DONDE se guardo, no solo que se guardo. Cuando una fila no
      aparece, la duda siempre es la misma —¿en que hoja y en que pestaña acabo?—
