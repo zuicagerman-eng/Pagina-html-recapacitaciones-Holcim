@@ -801,6 +801,8 @@
   .slide.dark .vhint.done{color:#b6f0c4;background:rgba(63,181,89,.16);border-color:rgba(63,181,89,.45)}
   .vhint svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2.2}
   .vskip{margin-top:8px;font-size:12.5px;color:#7f93b0;background:none;border:none;text-decoration:underline;cursor:pointer;font-family:var(--font)}
+  /* El contador va dentro del mismo aviso del video, sin robarle el sitio. */
+  .vcuenta{display:inline-block;color:#e8a400;font-weight:700;white-space:nowrap}
   /* ===== cards / generic ===== */
   .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
   @media(max-width:820px){.grid3{grid-template-columns:1fr 1fr}}
@@ -6712,7 +6714,7 @@
 /* Versión del curso. Sirve para saber de un vistazo si estás viendo la última
    o una copia vieja guardada en la caché del navegador. Se muestra abajo en la
    ventana de bienvenida y junto al contador de pasos al pasar el mouse. */
-var VERSION_CURSO = "2026-11-10-a";
+var VERSION_CURSO = "2026-11-10-b";
 var PIN_ADMIN = "2026";
 /* ====== EXAMEN FINAL ======
    PREGUNTAS_EXAMEN: cuántas preguntas tiene el examen EN TOTAL. Las
@@ -6817,6 +6819,11 @@ var CLAVE_JORNADA = 'Holcim2026**';
 var EXIGIR_OBLIGATORIAS = true;
 var EXIGIR_EXAMEN    = true;
 var EXIGIR_VIDEO_COMPLETO = true;   // pon false para no obligar a ver el video completo
+/* Minutos que hay que estar en la lamina del video antes de poder continuar sin
+   haberlo terminado. El contador NO corre con el curso abierto en otra lamina ni
+   con la pestaña en segundo plano: solo mientras la persona esta viendo esta.
+   Pon 0 para quitar el atajo y volver a exigir el video entero. */
+var MINUTOS_SALTAR_VIDEO = 5;
 /* Segundo en el que arranca el video de bienvenida: se saltan los primeros 9 s.
    Si algún día quieres el video completo, pon 0 (y quita el "#t=9s" del iframe). */
 var VIDEO_INICIO = 9;
@@ -7665,17 +7672,20 @@ document.addEventListener('keydown', function(e){ var ap=document.getElementById
 reveal(slides[0]); chrome();
 /* ====== VIDEO VIMEO ====== */
 var vplayer = null, vhint = document.getElementById('vhint'), vhintTxt = document.getElementById('vhintTxt'), vskip = document.getElementById('vskip');
-function videoListo(){
+function videoListo(saltado){
   videoEnded = true;
   vhint.classList.add('done');
-  vhintTxt.textContent = '¡Video completado! Ya puedes continuar.';
+  /* El mensaje no miente: si se lo salto, no dice "completado". */
+  vhintTxt.textContent = saltado
+    ? 'Puedes continuar. Si no viste el video completo, vuelve a esta lámina cuando puedas.'
+    : '¡Video completado! Ya puedes continuar.';
   vhint.querySelector('svg').innerHTML = '<path d="M5 13l4 4L19 7"/>';
   if(vskip) vskip.style.display='none';
   chrome();
 }
 try{
   vplayer = new Vimeo.Player(document.getElementById('vimeo1'));
-  vplayer.on('ended', videoListo);
+  vplayer.on('ended', function(){ videoListo(false); });
   /* El "#t=9s" del iframe ya arranca en el segundo 9; esto lo asegura además por
      API y evita que se pueda retroceder a los segundos recortados. */
   if(VIDEO_INICIO > 0){
@@ -7706,9 +7716,54 @@ setTimeout(function(){
   }
   if(vskip && document.body.classList.contains('admin')) vskip.style.display = 'inline-block';
 }, 15000);
+/* ====== CONTADOR PARA PODER SALTAR EL VIDEO ======
+   Hay gente que no logra terminarlo —red de planta, una tablet compartida, el
+   turno que empieza— y quedarse encerrado en esta lamina no ayuda a nadie. Tras
+   unos minutos EN ESTA LAMINA aparece la salida, y queda dicho que no lo vio.
+
+   El tiempo se cuenta aqui y no con un temporizador que arranque al abrir el
+   curso: si no, bastaria con dejar el curso abierto en cualquier otra lamina
+   para ganarse el atajo sin haber estado nunca delante del video. */
+var SEG_SALTAR_VIDEO = Math.max(0, Math.round(MINUTOS_SALTAR_VIDEO * 60));
+var segEnVideo = 0, saltoLibre = false;
+
+function enLaminaVideo(){
+  var s = slides[idx];
+  return !!(s && s.getAttribute('data-gate') === 'video');
+}
+function faltaParaSaltar(){
+  var falta = Math.max(0, SEG_SALTAR_VIDEO - segEnVideo);
+  var m = Math.floor(falta / 60), g = falta % 60;
+  return m + ':' + (g < 10 ? '0' : '') + g;
+}
+function abrirSalida(){
+  saltoLibre = true;
+  vhintTxt.innerHTML = 'Reproduce el video hasta el final para continuar. ' +
+    '<b class="vcuenta">¿No puedes verlo ahora? Ya puedes continuar.</b>';
+  if(vskip){
+    vskip.textContent = 'Continuar sin terminar el video';
+    vskip.style.display = 'inline-block';
+    /* En un celular el boton nace por debajo del pliegue: el aviso dice "ya
+       puedes continuar" y abajo no se ve nada. "acercar" solo mueve el scroll
+       si de verdad esta fuera de la franja visible, asi que en un computador
+       —donde ya se ve— no da el tiron. */
+    setTimeout(function(){ try{ acercar(slides[idx], vskip); }catch(e){} }, 60);
+  }
+}
+if(SEG_SALTAR_VIDEO > 0) setInterval(function(){
+  if(videoEnded || saltoLibre || !EXIGIR_VIDEO_COMPLETO) return;
+  if(!enLaminaVideo() || document.hidden) return;
+  segEnVideo++;
+  if(segEnVideo >= SEG_SALTAR_VIDEO){ abrirSalida(); return; }
+  vhintTxt.innerHTML = 'Reproduce el video hasta el final para continuar. ' +
+    '<b class="vcuenta">Podrás continuar sin terminarlo en ' + faltaParaSaltar() + '</b>';
+}, 1000);
+
 if(vskip) vskip.addEventListener('click', function(){
-  if(!document.body.classList.contains('admin')) return;
-  videoListo();
+  /* Dos puertas distintas: el administrador siempre, y cualquiera una vez que
+     el contador llego a cero. Sin una de las dos, el boton no hace nada. */
+  if(!saltoLibre && !document.body.classList.contains('admin')) return;
+  videoListo(true);
 });
 /* ====== FLIP ====== */
 document.querySelectorAll('.flip').forEach(function(f){
